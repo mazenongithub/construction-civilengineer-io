@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { CheckUserLogin } from './components/actions/api';
+import * as actions from './components/actions/api';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const Landing = () => {
+  return (<div> Hello Construction App </div>)
+}
+class App extends Component {
+  componentDidMount() {
+    this.checkuser()
+  }
+  async checkuser() {
+    let response = await CheckUserLogin();
+    console.log(response)
+  }
+  render() {
+    return (
+      <BrowserRouter>
+        <div className="general-container">
+
+          <Switch>
+            <Route exact path="/" component={Landing} />
+
+
+          </Switch>
+
+        </div>
+      </BrowserRouter>
+    );
+  }
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    myusermodel: state.myusermodel,
+    allusers: state.allusers
+  }
+}
+
+export default connect(mapStateToProps, actions)(App);
