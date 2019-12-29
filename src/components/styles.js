@@ -1,7 +1,26 @@
 export function MyStylesheet() {
     return ({
+        addRightMargin: {
+            marginRight: '5px'
+        },
+        addPadding: {
+            padding: '5px'
+        },
+        addMargin: {
+            margin: '3px'
+        },
+        addLeftMargin: {
+            marginLeft: '1%'
+        },
+        addMarginTop: {
+            marginTop: '5px'
+        },
+        fitToScreen: {
+            width: '96%',
+            margin: 'auto'
+        },
         addBottomMargin: {
-            marginBottom: '10px'
+            marginBottom: '5px'
         },
         generalContainer: {
             fontFamily: "'Nunito Sans', sans-serif"
@@ -20,12 +39,16 @@ export function MyStylesheet() {
         logoBorder: {
             borderRight: '5px solid',
             borderTop: '5px solid',
-            borderBottom: '5px solid'
+            borderBottom: '5px solid',
+            borderTopRightRadius: '33px',
+            borderBottomRightRadius: '33px'
         },
         iconBorder: {
             borderLeft: '5px solid',
             borderTop: '5px solid',
-            borderBottom: '5px solid'
+            borderBottom: '5px solid',
+            borderTopLeftRadius: '33px',
+            borderBottomLeftRadius: '33px'
         },
         flex1: {
             flex: 1,
@@ -70,6 +93,9 @@ export function MyStylesheet() {
         },
         thickBorder: {
             border: '2px solid'
+        },
+        addBorderRadius: {
+            borderRadius: '18px'
         },
         extraThickBorder: {
             border: '3px solid'

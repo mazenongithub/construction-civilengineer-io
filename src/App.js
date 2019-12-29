@@ -58,16 +58,16 @@ class App extends Component {
       <div style={{ ...styles.flex1 }}>
 
         <div style={{ ...styles.generalFlex }}>
-          <div style={{ ...styles.flex1, ...styles.headerBackground, ...styles.thickBorder }}>
-            <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
+          <div style={{ ...styles.flex1, ...styles.headerBackground, ...styles.thickBorder, ...styles.alignCenter, ...styles.addMargin, ...styles.addBorderRadius }}>
+            <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
           </div>
-          <div style={{ ...styles.flex2, ...styles.headerBackground, ...styles.thickBorder }}>
+          <div style={{ ...styles.flex2, ...styles.headerBackground, ...styles.thickBorder, ...styles.addMargin, ...styles.addBorderRadius }}>
             {Logo()}
           </div>
         </div>
 
         <div style={{ ...styles.generalFlex }}>
-          <div style={{ ...styles.flex2, ...styles.headerBackground, ...styles.thickBorder }}>
+          <div style={{ ...styles.flex2, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius, ...styles.addMargin, ...styles.addPadding }}>
             <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin }}>&nbsp;</div>
             <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin }}>&nbsp;</div>
             <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin }}>&nbsp;</div>
@@ -93,22 +93,22 @@ class App extends Component {
         <div style={{ ...styles.flex1 }}>
 
           <div style={{ ...styles.generalFlex }}>
-            <div style={{ ...styles.flex1, ...styles.headerBackground, ...styles.thickBorder }}>
-              <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
+            <div style={{ ...styles.flex1, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius, ...styles.addMargin }}>
+              <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
             </div>
-            <div style={{ ...styles.flex2, ...styles.headerBackground, ...styles.thickBorder }}>
+            <div style={{ ...styles.flex2, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius, ...styles.addMargin }}>
               {Logo()}
             </div>
           </div>
 
           <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-            <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer }}>
+            <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin }}>
               &nbsp;
                 </div>
-            <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer }}>
+            <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin }}>
               &nbsp;
                 </div>
-            <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer }}>
+            <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin }}>
               &nbsp;
                 </div>
           </div>
@@ -125,24 +125,24 @@ class App extends Component {
     const styles = MyStylesheet();
     return (
       <div style={{ ...styles.generalFlex }}>
-        <div style={{ ...styles.flex1, ...styles.extraThickBorder, ...styles.headerBackground, ...styles.openNav }}>
+        <div style={{ ...styles.flex1, ...styles.extraThickBorder, ...styles.addBorderRadius, ...styles.headerBackground, ...styles.openNav, ...styles.addRightMargin, ...styles.addLeftMargin }}>
 
-          <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
+          <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
 
-          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin }}></div>
-          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin }}></div>
-          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin }}></div>
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin }}></div>
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin }}></div>
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin }}></div>
 
 
         </div>
-        <div style={{ ...styles.flex3, ...styles.showBorder }}>
+        <div style={{ ...styles.flex3 }}>
 
-          <div style={{ ...styles.generalContainer, ...styles.headerBackground, ...styles.extraThickBorder }}>{Logo()}</div>
+          <div style={{ ...styles.generalContainer, ...styles.headerBackground, ...styles.extraThickBorder, ...styles.addBorderRadius, ...styles.addRightMargin }}>{Logo()}</div>
 
           <div style={{ ...styles.generalFlex, ...styles.regularFont }}>
-            <div style={{ ...styles.flex1, ...styles.navContainer, ...styles.thickBorder }}></div>
-            <div style={{ ...styles.flex1, ...styles.navContainer, ...styles.thickBorder }}></div>
-            <div style={{ ...styles.flex1, ...styles.navContainer, ...styles.thickBorder }}></div>
+            <div style={{ ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin }}></div>
+            <div style={{ ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin }}></div>
+            <div style={{ ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin }}></div>
           </div>
 
           <div style={styles.generalContainer}>
@@ -158,35 +158,37 @@ class App extends Component {
     const styles = MyStylesheet();
     return (
       <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-        <div style={{ ...styles.flex1, ...styles.showBorder }}>
+        <div style={{ ...styles.flex1 }}>
 
           <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-            <div style={{ ...styles.flex1, ...styles.showBorder }}>
+            <div style={{ ...styles.flex1 }}>
 
 
 
               <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
 
-                <div style={{ ...styles.flex1, ...styles.headerBackground, ...styles.iconBorder, ...styles.alignCenter }}>
+                <div style={{ ...styles.flex1, ...styles.headerBackground, ...styles.iconBorder, ...styles.alignCenter, ...styles.iconBorder, ...styles.addMarginTop, ...styles.addBottomMargin, ...styles.addLeftMargin }}>
                   <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
                 </div>
 
-                <div style={{ ...styles.flex3, ...styles.headerBackground, ...styles.logoBorder }}>
+                <div style={{ ...styles.flex3, ...styles.headerBackground, ...styles.logoBorder, ...styles.addMarginTop, ...styles.addBottomMargin, ...styles.addRightMargin }}>
+
                   {Logo()}
+
                 </div>
               </div>
 
               <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer }}>
+                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin }}>
                   &nbsp;
                 </div>
-                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer }}>
+                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin }}>
                   &nbsp;
                 </div>
-                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer }}>
+                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin }}>
                   &nbsp;
                 </div>
-                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer }}>
+                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin }}>
                   &nbsp;
                 </div>
               </div>
@@ -203,7 +205,7 @@ class App extends Component {
 
           <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
             <div style={{ ...styles.flex1, ...styles.showBorder }}>
-
+              &nbsp;
             </div>
           </div>
 
