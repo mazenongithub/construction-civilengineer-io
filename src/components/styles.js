@@ -3,14 +3,30 @@ export function MyStylesheet() {
         addRightMargin: {
             marginRight: '5px'
         },
+        addPadding15: {
+            padding: '15px'
+        },
         addPadding: {
             padding: '5px'
+        },
+        generalField: {
+            width: '95%',
+            padding: '3px'
         },
         addMargin: {
             margin: '3px'
         },
         addLeftMargin: {
             marginLeft: '1%'
+        },
+        topMargin15: {
+            marginTop: '15px'
+        },
+        alignBottom: {
+            verticalAlign: 'bottom'
+        },
+        addLeftMargin15: {
+            marginLeft: '15px'
         },
         addMarginTop: {
             marginTop: '5px'
@@ -21,6 +37,9 @@ export function MyStylesheet() {
         },
         addBottomMargin: {
             marginBottom: '5px'
+        },
+        bottomMargin15: {
+            marginBottom: '15px',
         },
         generalContainer: {
             fontFamily: "'Nunito Sans', sans-serif"
@@ -53,6 +72,10 @@ export function MyStylesheet() {
         flex1: {
             flex: 1,
         },
+        generalLink: {
+            textDecoration: 'none',
+            color: '#000000'
+        },
         flex2: {
             flex: 2,
         },
@@ -62,6 +85,12 @@ export function MyStylesheet() {
         alignCenter: {
             textAlign: 'center'
         },
+        margin10: {
+            margin: '10px'
+        },
+        alignRight: {
+            float: 'right'
+        },
         fontBold: {
             fontWeight: 600
         },
@@ -70,6 +99,9 @@ export function MyStylesheet() {
         },
         font30: {
             fontSize: '30px'
+        },
+        font24: {
+            fontSize: '24px'
         },
         font20: {
             fontSize: '20px'
@@ -86,7 +118,8 @@ export function MyStylesheet() {
 
         },
         generalButton: {
-            border: '0px'
+            border: '0px',
+            backgroundColor: '#FFFFFF'
         },
         headerBackground: {
             backgroundColor: '#808080'
