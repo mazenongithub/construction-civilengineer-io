@@ -106,6 +106,15 @@ export function MyStylesheet() {
         font20: {
             fontSize: '20px'
         },
+        font60: {
+            fontSize: '60px'
+        },
+        font72: {
+            fontSize: '72px'
+        },
+        font54: {
+            fontSize: '54px'
+        },
         generalFont: {
             fontFamily: "'Nunito Sans', sans-serif"
         },

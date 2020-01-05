@@ -1,6 +1,20 @@
 @import url('https://fonts.googleapis.com/css?family=Bebas+Neue|Nunito+Sans:400,600&display=swap');
 .logo-1{font-size:126px;fill:#d8a80f;stroke-width:3px;font-family:BebasNeue-Regular, Bebas Neue;letter-spacing:0.04em;}.logo-1,.logo-3,.logo-4,.logo-5,.logo-6{stroke:#000;stroke-miterlimit:10;}.logo-2{letter-spacing:0.04em;}.logo-3{fill:#e5e57f;}.logo-3,.logo-4,.logo-5,.logo-6{stroke-width:5px;}.logo-4{fill:#e0ac19;}.logo-5{fill:#d3d2cf;}.logo-6{fill:none;}
 .icon-1{fill:#f68c1e;}.icon-1,.icon-2,.icon-3{stroke:#000;stroke-miterlimit:10;}.icon-2{fill:#b1b2b1;}.icon-3{fill:#231002;}
+.folderIcon-1{fill:#edd354;stroke:#b79b13;stroke-miterlimit:10;}
+.scrollimagedown-1{fill:#ededed;stroke:#000;stroke-miterlimit:10;stroke-width:2px;}
+.newstripeconnecticon-1 {fill: #1f5aa6; stroke: #0d070d;}.newstripeconnecticon-1,.newstripeconnecticon-2 {  stroke-miterlimit: 10;} .newstripeconnecticon-2 { font-size: 49px; fill: #f2f2f2;  stroke: #0e2f59;  font-family: 'Nunito Sans', sans-serif;}.newstripeconnecticon-3 {letter-spacing: -0.01em;}.newstripeconnecticon-4 {  letter-spacing: 0em;}.newstripeconnecticon-5 { letter-spacing: 0em;}
+.googlesign-1{fill:#ff1102;}.googlesign-1,.googlesign-2{stroke:#000;stroke-miterlimit:10;}.googlesign-2{font-size:35px;fill:#fff;stroke-width:0.25px;font-family:'Nunito Sans', sans-serif;font-weight:600;}
+.applesign-1{fill:#8c8c8c;stroke:#000;}.applesign-1,.applesign-2{stroke-miterlimit:10;}.applesign-2{font-size:34.62px;fill:#f4f8f9;stroke:#050505;stroke-width:0.25px;font-family:'Nunito Sans', sans-serif;font-weight:600;}
+.checkclientidicon-1 {fill: #005c02;}.checkclientidicon-1,.checkclientidicon-2 { stroke: #001700; stroke-miterlimit: 10;}.checkclientidicon-2 {fill: #e8bc00; stroke-width: 0.5px;}
+.signupnow-1{fill:#d35e2a;stroke:#020100;}.signupnow-1,.signupnow-2{stroke-miterlimit:10;}.signupnow-2{font-size:34px;fill:#fff;stroke:#000;font-family:'Nunito Sans', sans-serif;font-weight:600;}.signupnow-3{letter-spacing:-0.01em;}
+.loginnow-1{fill:#006073;stroke:#006073;}.loginnow-1,.loginnow-2{stroke-miterlimit:10;}.loginnow-2{font-size:54.25px;fill:#fff;stroke:#000;stroke-width:0.25px;font-family:'Nunito Sans', sans-serif;font-weight:600;}.loginnow-3{letter-spacing:0em;}.loginnow-4{letter-spacing:-0.01em;}
+.registercompany-1{fill:#61dafb;}.registercompany-1,.registercompany-2{stroke:#202122;stroke-miterlimit:10;}.registercompany-2{font-size:39.75px;fill:#61666b;stroke-width:2px;font-family:'Nunito Sans', sans-serif;letter-spacing:0.05em;}.registercompany-3{letter-spacing:0.04em;}.registercompany-4{letter-spacing:0.04em;}
+.saveprojecticon-1{fill:#f03c3c;}.saveprojecticon-1,.saveprojecticon-2{stroke:#000;stroke-miterlimit:10;}.saveprojecticon-2{font-size:72px;fill:#f9f7f7;stroke-width:0.25px;font-family:'Nunito Sans', sans-serif;font-weight:600;}.saveprojecticon-3{letter-spacing:-0.01em;}.saveprojecticon-4{letter-spacing:0em;}.saveprojecticon-5{letter-spacing:-0.01em;}.saveprojecticon-6{letter-spacing:0em;}
+.savecompany-1{fill:#18453b;stroke:#000;stroke-miterlimit:10;}.savecompany-2{font-size:53px;fill:#f4f4f4;font-family:'Nunito Sans', sans-serif;font-weight:600;}.savecompany-3{letter-spacing:-0.01em;}.savecompany-4{letter-spacing:-0.01em;}
+.radio-open-1{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:2px;}
+.radioselect-1{fill:none;stroke-width:2px;}.radioselect-1,.radioselect-2{stroke:#000;stroke-miterlimit:10;}.radioselect-2{fill:red;}
+.removeicon-1{fill:#f41948;stroke:#000;stroke-miterlimit:10;stroke-width:0.5px;}
 .App {
   text-align: center;
   

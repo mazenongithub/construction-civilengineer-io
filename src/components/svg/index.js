@@ -29,3 +29,24 @@ export function goCheckIcon() {
 export function signUpNowIcon() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 217.81 52.51"><defs><style></style></defs><title>signupnow</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="signupnow-1" x="0.5" y="0.5" width="216.81" height="51.51" rx="6.76" /><text className="signupnow-2" transform="translate(6.99 34.18)">Sign Up N<tspan className="signupnow-3" x="157.42" y="0">o</tspan><tspan x="176.35" y="0">w</tspan></text></g></g></svg>)
 }
+export function removeIconSmall() {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.09 25.74"><defs><style></style></defs><title>removeIcon</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path className="removeicon-1" d="M23.87,17.89a4.52,4.52,0,0,1,0,6.29,4.33,4.33,0,0,1-6.21,0L13.05,19.5,8.43,24.18a4.33,4.33,0,0,1-6.2,0,4.53,4.53,0,0,1,0-6.29l4.61-4.67L1.53,7.83a4.49,4.49,0,0,1,0-6.28A4.27,4.27,0,0,1,4.64.25a4.28,4.28,0,0,1,3.09,1.3l5.32,5.38,5.31-5.38a4.36,4.36,0,0,1,6.21,0,4.52,4.52,0,0,1,0,6.28l-5.32,5.39Z" /></g></g></svg>)
+}
+export function radioOpen() {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 85 80"><defs><style></style></defs><title>radioopen</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><ellipse className="radio-open-1" cx="42.5" cy="40" rx="41.5" ry="39" /></g></g></svg>)
+}
+export function radioClosed() {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 85 80"><defs><style></style></defs><title>radioselect</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><ellipse className="radioselect-1" cx="42.5" cy="40" rx="41.5" ry="39" /><circle className="radioselect-2" cx="42.5" cy="40" r="20.5" /></g></g></svg>)
+}
+export function loginNowIcon() {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 382.14 85.83"><defs><style></style></defs><title>loginnow</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="loginnow-1" x="0.5" y="0.5" width="381.14" height="84.83" rx="17.7" /><text className="loginnow-2" transform="translate(49.48 58.9) scale(1.07 1)"><tspan className="loginnow-3">L</tspan><tspan x="29.57" y="0">ogin N</tspan><tspan className="loginnow-4" x="191.45" y="0">o</tspan><tspan x="221.66" y="0">w</tspan></text></g></g></svg>)
+}
+export function registerCompanyIcon() {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 405.67 69.18"><defs><style></style></defs><title>registercompany</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="registercompany-1" x="0.5" y="0.5" width="404.67" height="68.18" rx="10.64" /><text className="registercompany-2" transform="translate(25.17 46.51)">Regi<tspan className="registercompany-3" x="88.68" y="0">s</tspan><tspan x="109.55" y="0">ter </tspan><tspan className="registercompany-4" x="176.26" y="0">C</tspan><tspan x="204.76" y="0">ompany</tspan></text></g></g></svg>)
+}
+export function saveProjectIcon() {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 453.31 94.31"><defs><style></style></defs><title>saveproject</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="saveprojecticon-1" x="0.5" y="0.5" width="452.31" height="87.31" rx="16.03" /><text className="saveprojecticon-2" transform="translate(24.42 69.92)">Sa<tspan className="saveprojecticon-3" x="83.66" y="0">v</tspan><tspan className="saveprojecticon-4" x="120.6" y="0">e </tspan><tspan className="saveprojecticon-5" x="177.69" y="0">Pr</tspan><tspan x="249.55" y="0">oje</tspan><tspan className="saveprojecticon-6" x="345.67" y="0">c</tspan><tspan x="380.59" y="0">t</tspan></text></g></g></svg>)
+}
+export function saveCompanyIcon() {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 414.93 80.67"><defs><style></style></defs><title>savecompany</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="savecompany-1" x="0.5" y="0.5" width="413.93" height="79.67" rx="9.62" /><text className="savecompany-2" transform="translate(27.13 55.04)">Sa<tspan className="savecompany-3" x="61.59" y="0">v</tspan><tspan x="88.77" y="0">e </tspan><tspan className="savecompany-4" x="130.8" y="0">C</tspan><tspan x="166.15" y="0">ompany</tspan></text></g></g></svg>)
+}
