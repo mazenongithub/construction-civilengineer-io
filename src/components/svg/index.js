@@ -23,6 +23,9 @@ export function AppleSignIcon() {
 export function GoogleSignIcon() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184.14 49.86"><defs><style></style></defs><title>applesign</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="applesign-1" x="0.5" y="0.5" width="183.14" height="48.86" rx="4.68" /><text className="applesign-2" transform="translate(4.21 33.96)">Apple Sign</text></g></g></svg>)
 }
+export function addIcon() {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 114.39 66.72"><defs><style></style></defs><title>addIcon</title><g id="Layer_2" data-name="Layer 2"><g id="hide"><rect className="addicon-1" x="1" y="1" width="112.39" height="64.72" rx="5.02" /><text className="addicon-2" transform="translate(18.1 40.42) scale(1.04 1)">Add +</text></g></g></svg>)
+}
 export function goCheckIcon() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 54"><defs><style></style></defs><title>updatepasswordicon</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="checkclientidicon-1" x="0.5" y="0.5" width="63" height="53" /><polygon className="checkclientidicon-2" points="51.39 12.66 24.52 39.53 15.06 30.07 17.93 27.2 24.43 33.7 48.43 9.7 51.39 12.66" /></g></g></svg>)
 }

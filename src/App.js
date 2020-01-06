@@ -21,6 +21,7 @@ import Accounts from './components/accounts';
 import Construction from './components/construction';
 import BidSchedule from './components/bidschedule';
 import { Link } from 'react-router-dom';
+import { returnCompanyList } from './components/functions';
 
 
 class App extends Component {
@@ -46,9 +47,18 @@ class App extends Component {
     try {
       let response = await CheckUserLogin();
       console.log(response)
+
+      if (response.hasOwnProperty("allusers")) {
+        let companys = returnCompanyList(response.allusers);
+        this.props.reduxAllCompanys(companys)
+        this.props.reduxAllUsers(response.allusers);
+        delete response.allusers;
+
+      }
       if (response.hasOwnProperty("providerid")) {
         this.props.reduxUser(response)
       }
+
     } catch (err) {
       alert(err)
     }
@@ -79,39 +89,44 @@ class App extends Component {
     const styles = MyStylesheet();
     const regularFont = this.getRegularFont();
     if (myuser) {
-      const providerid = myuser.providerid;
-      const companyid = myuser.company.companyid;
-      return (
-        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-
+      if (myuser.hasOwnProperty("company")) {
+        const providerid = myuser.providerid;
+        const companyid = myuser.company.companyid;
+        return (
           <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-            <Link to={`/${providerid}/company/${companyid}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-              /employees
+
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+              <Link to={`/${providerid}/company/${companyid}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                /employees
                             </Link>
-          </div>
-          <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-            <Link to={`/${providerid}/company/${companyid}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-              /accounts
+            </div>
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+              <Link to={`/${providerid}/company/${companyid}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                /accounts
                              </Link>
-          </div>
-          <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-            <Link to={`/${providerid}/company/${companyid}/construction`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-              /construction
+            </div>
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+              <Link to={`/${providerid}/company/${companyid}/construction`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                /construction
                               </Link>
-          </div>
-          <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-            <Link to={`/${providerid}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-              /equipment
+            </div>
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+              <Link to={`/${providerid}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                /equipment
                                 </Link>
-          </div>
-          <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-            <Link to={`/${providerid}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-              /materials
+            </div>
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+              <Link to={`/${providerid}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                /materials
                                 </Link>
+            </div>
           </div>
-        </div>
-      )
-
+        )
+      } else {
+        return;
+      }
+    } else {
+      return;
     }
   }
   app400open() {
@@ -137,9 +152,7 @@ class App extends Component {
 
 
 
-            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin, ...styles.alignCenter }}>{this.handleprojectlink()}
-              {this.projectidlinks()}
-            </div>
+            {this.handleshowprojectlinks()}
           </div>
           <div style={{ ...styles.flex1, ...styles.showBorder }}>
 
@@ -260,10 +273,18 @@ class App extends Component {
     const headerFont = this.getHeaderFont();
 
     if (myuser) {
-      return (
-        <div style={{ ...styles.generalContainer }}>
-          <Link to={`/${myuser.providerid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /projects </Link>
-        </div>)
+      if (myuser.hasOwnProperty("company")) {
+        if (myuser.company.hasOwnProperty("projects")) {
+          return (
+            <div style={{ ...styles.generalContainer }}>
+              <Link to={`/${myuser.providerid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /projects </Link>
+            </div>)
+        } else {
+          return;
+        }
+      } else {
+        return;
+      }
     } else {
       return;
     }
@@ -274,6 +295,28 @@ class App extends Component {
     if (user) {
       return (
         <Link to={`/${user.providerid}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...styles.font40, ...styles.fontBold }}> /company </Link>)
+    } else {
+      return;
+    }
+  }
+  getcompanyprojects() {
+    let projects = false;
+    let myuser = this.getuser();
+    if (myuser.hasOwnProperty("company")) {
+      if (myuser.company.hasOwnProperty("projects")) {
+        projects = myuser.company.projects;
+      }
+    }
+    return projects;
+  }
+  handleshowprojectlinks() {
+    const styles = MyStylesheet();
+    let projects = this.getcompanyprojects();
+    if (projects) {
+      return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
+        {this.handleprojectlink()}
+        {this.projectidlinks()}
+      </div>)
     } else {
       return;
     }
@@ -294,10 +337,7 @@ class App extends Component {
             {this.showcompanylinks()}
           </div>
 
-          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
-            {this.handleprojectlink()}
-            {this.projectidlinks()}
-          </div>
+          {this.handleshowprojectlinks()}
 
 
         </div>
@@ -479,7 +519,9 @@ function mapStateToProps(state) {
   return {
     myusermodel: state.myusermodel,
     navigation: state.navigation,
-    projectid: state.projectid
+    projectid: state.projectid,
+    allusers: state.allusers,
+    allcompanys: state.allcompanys
   }
 }
 
