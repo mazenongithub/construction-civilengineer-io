@@ -154,7 +154,7 @@ class App extends Component {
 
             {this.handleshowprojectlinks()}
           </div>
-          <div style={{ ...styles.flex1, ...styles.showBorder }}>
+          <div style={{ ...styles.flex1 }}>
 
             <div style={{ ...styles.generalFlex, ...styles.regularFont }}>
               <div style={{ ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>{this.handleprofilelink()}</div>
@@ -309,11 +309,22 @@ class App extends Component {
     }
     return projects;
   }
+  handleshowprojectlinksnomenu() {
+    const styles = MyStylesheet();
+    let projects = this.getcompanyprojects();
+    if (projects) {
+      return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.alignCenter }}>
+        {this.handleprojectlink()}
+      </div>)
+    } else {
+      return;
+    }
+  }
   handleshowprojectlinks() {
     const styles = MyStylesheet();
     let projects = this.getcompanyprojects();
     if (projects) {
-      return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
+      return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter }}>
         {this.handleprojectlink()}
         {this.projectidlinks()}
       </div>)
@@ -329,10 +340,10 @@ class App extends Component {
 
           <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
 
-          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15 }}>
             {this.handleprofilelink()}
           </div>
-          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15 }}>
             {this.handlecompanylink()}
             {this.showcompanylinks()}
           </div>
@@ -387,8 +398,7 @@ class App extends Component {
                   {this.handleprofilelink()}
                 </div>
                 <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin }}>
-                  {this.handleprojectlink()}
-                  {this.projectidlinks()}
+                  {this.handleshowprojectlinksnomenu()}
                 </div>
                 <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin, ...styles.alignCenter }}>
                   {this.handleregisterlink()}

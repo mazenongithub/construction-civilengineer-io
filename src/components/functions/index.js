@@ -7,6 +7,15 @@ export function CreateCSI(csiid, csi, title) {
 export function CreateCompany(companyid, company, manager, address, city, contactstate, zipcode) {
     return ({ companyid, company, manager, address, city, contactstate, zipcode })
 }
+export function CreateRentalRate(month, week, day, hour) {
+    return ({ month, week, day, hour })
+}
+export function CreateEquipment(equipmentid, equipment, workinghours) {
+    return ({ equipmentid, equipment, workinghours })
+}
+export function CreateCostID(costid, cost, detail, timein) {
+    return ({ costid, cost, detail, timein })
+}
 export function returnCompanyList(allusers) {
     let companys = [];
 

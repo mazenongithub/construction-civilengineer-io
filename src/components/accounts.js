@@ -451,7 +451,8 @@ class Accounts extends Component {
             myaccounts.map(account => {
                 accounts.push(
                     <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...this.getactivebackground(account.accountid) }}>
-                        <span onClick={() => { this.makeaccountactive(account.accountid) }}>{account.account}  - {account.accountname}</span> <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
+                        <span onClick={() => { this.makeaccountactive(account.accountid) }}>{account.account}  - {account.accountname}</span>
+                        <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
                     </div>
                 )
 
