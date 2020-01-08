@@ -4,6 +4,9 @@ export function CreateAccount(accountid, account, accountname) {
 export function CreateCSI(csiid, csi, title) {
     return ({ csiid, csi, title })
 }
+export function CreateBenefit(benefitid, benefit, accountid, amount) {
+    return ({ benefitid, benefit, accountid, amount })
+}
 export function CreateCompany(companyid, company, manager, address, city, contactstate, zipcode) {
     return ({ companyid, company, manager, address, city, contactstate, zipcode })
 }

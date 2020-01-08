@@ -52,6 +52,9 @@ export function MyStylesheet() {
             width: '90%',
             margin: 'auto'
         },
+        marginAuto: {
+            margin: 'auto'
+        },
         regularFont: {
             fontFamily: "'Nunito Sans', sans-serif"
         },
