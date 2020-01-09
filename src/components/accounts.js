@@ -220,7 +220,7 @@ class Accounts extends Component {
                         <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
                             value={this.state.account_1}
                             onChange={event => { this.handleaccount_1(event.target.value) }} />
-                        />
+
                     </div>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.margin10 }}>
                         <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}

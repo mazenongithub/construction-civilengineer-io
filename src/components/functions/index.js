@@ -4,6 +4,10 @@ export function CreateAccount(accountid, account, accountname) {
 export function CreateCSI(csiid, csi, title) {
     return ({ csiid, csi, title })
 }
+export function CreateMyMaterial(materialid, material, accountid, csiid, unit, unitcost) {
+    return ({ materialid, material, accountid, csiid, unit, unitcost })
+
+}
 export function CreateBenefit(benefitid, benefit, accountid, amount) {
     return ({ benefitid, benefit, accountid, amount })
 }
@@ -18,6 +22,9 @@ export function CreateEquipment(equipmentid, equipment, workinghours) {
 }
 export function CreateCostID(costid, cost, detail, timein) {
     return ({ costid, cost, detail, timein })
+}
+export function CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, description, proposalid) {
+    return ({ laborid, providerid, milestoneid, csiid, timein, timeout, description, proposalid })
 }
 export function returnCompanyList(allusers) {
     let companys = [];
@@ -56,4 +63,48 @@ export function makeID(length) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+export function calculatetotalhours(timeout, timein) {
+
+    let datein = new Date(`${timein.replace(/-/g, '/')}`)
+    let dateout = new Date(`${timeout.replace(/-/g, '/')}`)
+    let totalhours = ((dateout.getTime() - datein.getTime()) / (1000 * 60 * 60)).toFixed(2)
+    return totalhours;
+}
+
+export function inputUTCStringForLaborID(timein) {
+
+    let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`)
+    let hours = datein.getHours();
+    let ampm
+    if (hours > 12) {
+        hours = hours - 12;
+        ampm = "PM"
+    }
+    else if (hours < 12) {
+        ampm = "AM"
+    }
+    else if (hours === 0) {
+        hours = 12;
+        ampm = "AM"
+    }
+    else if (hours === 12) {
+        ampm = "PM"
+    }
+    let minutes = datein.getMinutes();
+    if (minutes < 10) {
+        minutes = `0${minutes}`
+    }
+    let date = datein.getDate();
+    if (date < 10) {
+        date = `0${date}`
+    }
+    let year = datein.getFullYear()
+    let month = datein.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`
+    }
+    return (`${month}/${date}/${year} ${hours}:${minutes} ${ampm}`)
+
 }

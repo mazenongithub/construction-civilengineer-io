@@ -109,7 +109,7 @@ class Employees extends Component {
             if (user) {
                 let employees = this.getemployees();
                 if (employees) {
-                    // eslient-disable-next-line
+                    // eslint-disable-next-line
                     employees.map((employee, i) => {
                         if (employee.providerid === employeeid) {
                             key = i
@@ -130,7 +130,7 @@ class Employees extends Component {
             if (user) {
                 let employees = this.getemployees();
                 if (employees) {
-                    // eslient-disable-next-line
+                    // eslint-disable-next-line
                     employees.map(employee => {
                         if (employee.providerid === employeeid) {
                             activeemployee = employee;
@@ -621,6 +621,7 @@ class Employees extends Component {
         let employees = this.getemployees();
         let myemployees = [];
         if (employees) {
+            // eslint-disable-next-line
             employees.map(employee => {
                 myemployees.push(this.showmyemployee(employee.providerid))
 
@@ -652,6 +653,7 @@ class Employees extends Component {
         let allusers = this.getallusers();
         let user = false;
         if (allusers) {
+            // eslint-disable-next-line
             allusers.map(myuser => {
                 if (myuser.providerid === providerid) {
                     user = myuser;
@@ -808,6 +810,7 @@ class Employees extends Component {
             let totalbenefits = 0;
 
             if (employee.hasOwnProperty("benefits")) {
+                // eslint-disable-next-line
                 employee.benefits.benefit.map(benefit => {
                     totalbenefits += Number(benefit.amount);
 

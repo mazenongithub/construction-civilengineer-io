@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { Link } from 'react-router-dom';
-class Projects extends Component {
+class Project extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0 }
+        this.state = { render: '', width: 0, height: 0, activematerialid: '', materialid: '', material: '', accountid: '', csiid: '', unit: '', unitcost: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -19,6 +19,7 @@ class Projects extends Component {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
+
     gettitlefont() {
         const styles = MyStylesheet();
         if (this.state.width > 800) {
@@ -40,9 +41,9 @@ class Projects extends Component {
     getRegularFont() {
         const styles = MyStylesheet();
         if (this.state.width > 800) {
-            return (styles.font24)
+            return (styles.font30)
         } else {
-            return (styles.font20)
+            return (styles.font24)
         }
 
     }
@@ -55,37 +56,15 @@ class Projects extends Component {
         }
         return user;
     }
-    getcompany() {
-        let user = this.getuser();
-        let company = false;
-        if (user) {
-            if (user.hasOwnProperty("company")) {
-                company = user.company;
-            }
-        }
-        return (company)
-    }
-    showprojectids() {
-        let company = this.getcompany();
-        let projectids = [];
-        if (company) {
-            if (company.hasOwnProperty("projects")) {
-                // eslint-disable-next-line
-                company.projects.myproject.map(myproject => {
-                    projectids.push(this.showprojectid(myproject))
-                })
-            }
-        }
-        return projectids;
-    }
-    projectmenus(myproject) {
+
+    projectmenus() {
         const styles = MyStylesheet();
         const companyid = this.props.match.params.companyid;
         const regularFont = this.getRegularFont();
         const providerid = this.props.match.params.providerid;
-        const projectid = myproject.projectid;
+        const projectid = this.props.match.params.projectid
         if (this.state.width > 800) {
-            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={myproject.projectid}>
+            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1 }}>
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
@@ -172,7 +151,7 @@ class Projects extends Component {
         } else {
             return (
 
-                <div style={{ ...styles.generalFlex }} key={myproject.projectid}>
+                <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
 
                         <div style={{ ...styles.generalFlex }}>
@@ -259,62 +238,88 @@ class Projects extends Component {
 
         }
     }
-    showprojectid(myproject) {
-        const styles = MyStylesheet();
-        const headerFont = this.getHeaderFont();
-
-        //const projectid = myproject.projectid;
-        const providerid = this.props.match.params.providerid;
-        const companyid = this.props.match.params.companyid;
-
-        return (
-            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.flex1 }}>
-
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...headerFont, ...styles.generalFont, ...styles.alignCenter }}>
-                            <Link to={`/${providerid}/company/${companyid}/projects/${myproject.projectid}`} style={{ ...styles.generalLink, ...headerFont, ...styles.fontBold, ...styles.generalFont }}>
-                                {myproject.projectid} {myproject.title}
-                            </Link>
-                        </div>
-                    </div>
-
-                    {this.projectmenus(myproject)}
-                </div>
-            </div>
-
-
-        )
-
+    getproject() {
+        let projectid = this.props.match.params.projectid;
+        let myprojects = false;
+        let myuser = this.getuser();
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("projects")) {
+                    // eslint-disable-next-line
+                    myuser.company.projects.myproject.map(myproject => {
+                        if (myproject.projectid === projectid) {
+                            myprojects = myproject;
+                        }
+                    })
+                }
+            }
+        }
+        return myprojects;
     }
+    gettitle() {
+        let myproject = this.getproject();
+        if (myproject) {
+            return (myproject.title)
+        }
+    }
+
+    getlocation() {
+        let myproject = this.getproject();
+        if (myproject) {
+            return (`${myproject.address} ${myproject.city} ${myproject.projectstate} ${myproject.zipcode}`)
+        }
+    }
+
+    getscope() {
+        let myproject = this.getproject();
+        if (myproject) {
+            return (myproject.scope)
+        }
+    }
+
+
     render() {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
-        //const headerFont = this.getHeaderFont();
+        const regularFont = this.getRegularFont();
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
 
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...titleFont, ...styles.generalFont, ...styles.alignCenter, ...styles.fontBold }}>
-                            /:providerid/projects
-                         </div>
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
+                            /{this.props.match.params.projectid}
+                        </div>
                     </div>
 
+                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+                        <div style={{ ...styles.generalContainer }}>
+                            Title: {this.gettitle()}
+                        </div>
+                        <div style={{ ...styles.generalContainer }}>
+                            Location: {this.getlocation()}
+                        </div>
+                        <div style={{ ...styles.generalContainer }}>
+                            Scope: {this.getscope()}
+                        </div>
+                    </div>
 
-                    {this.showprojectids()}
+                    {this.projectmenus()}
 
                 </div>
             </div>
         )
     }
-}
 
+}
 function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
-        navigation: state.navigation
+        navigation: state.navigation,
+        projectid: state.projectid,
+        allusers: state.allusers,
+        allcompanys: state.allcompanys
     }
 }
 
-export default connect(mapStateToProps, actions)(Projects);
+export default connect(mapStateToProps, actions)(Project);
