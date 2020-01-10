@@ -19,6 +19,9 @@ export function CreateRentalRate(month, week, day, hour) {
 export function CreateEquipment(equipmentid, equipment, workinghours) {
     return ({ equipmentid, equipment, workinghours })
 }
+export function CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid) {
+    return ({ equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid })
+}
 export function CreateCostID(costid, cost, detail, timein) {
     return ({ costid, cost, detail, timein })
 }

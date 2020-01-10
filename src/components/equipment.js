@@ -357,16 +357,14 @@ class Equipment extends Component {
             if (this.state.activecostid) {
                 let activecost = this.getactiveequipmentcost();
                 activecost.cost = cost;
-
                 let j = this.getactiveequipmentcostkey();
                 myuser.company.equipment.myequipment[i].ownership.cost[j].cost = cost;
                 this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
 
-
             } else {
                 this.setState({ cost });
-                let costid = makeID(16);
+                let costid = makeID(16)
                 let datein = this.state.datein;
                 let detail = "";
                 let newcost = CreateCostID(costid, cost, detail, datein)

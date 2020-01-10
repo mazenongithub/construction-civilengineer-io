@@ -559,7 +559,7 @@ class ScheduleLabor extends Component {
 
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                        /{this.props.match.params.projectid}/schedulabor
+                        /schedulabor
                 </div>
                 </div>
 

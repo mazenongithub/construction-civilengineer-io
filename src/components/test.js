@@ -1,35 +1,37 @@
-function handleunitcost(unitcost) {
+function handlemilestoneid(milestoneid) {
     let myuser = this.getuser();
     if (myuser) {
         let myproject = this.getproject();
         if (myproject) {
             let i = this.getprojectkey();
-            if (this.state.activematerialid) {
-                let j = this.getactivematerialkey();
-                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unitcost = unitcost
-                this.props.reduxUser(myuser);
+
+            if (this.state.activeequipmentid) {
+                let j = this.getactiveequipmentkey();
+                myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].milestoneid = milestoneid;
+                this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
             } else {
-                let materialid = makeID(16);
-                let providerid = this.state.employeeid;
-                let csiid = this.state.csiid
-                let mymaterialid = this.state.mymaterialid;
+                let equipmentid = makeID(16)
+                let providerid = myuser.provderid;
+                let myequipmentid = this.state.myequipmentid;
+                let csiid = this.state.csiid;
                 let timein = this.state.timein;
-                let milestoneid = this.state.milestoneid;
-                let quantity = this.state.quantity;
-                let unit = this.state.unit;
-                let proposalid = "";
-                let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid);
-                if (myproject.hasOwnProperty("schedulematerials")) {
-                    myuser.company.projects.myproject[i].schedulematerials.mymaterial.push(newMaterial)
-                } else {
-                    let schedulematerials = { mymaterial: [newMaterial] }
-                    myuser.company.projects.myproject[i].schedulematerials = schedulematerials;
-                }
-                this.props.reduxUser(myuser);
-                this.setState({ activematerialid: newMaterial.materialid })
+                let timeout = this.state.timeout;
+                let proposalid = this.state.proposalid;
 
+                let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid)
+                if (myproject.hasOwnProperty("scheduleequipment")) {
+                    myuser.company.projects.myproject[i].scheduleequipment.myequipment.push(newEquipment)
+                } else {
+                    let scheduleequipment = { myequipment: [newEquipment] }
+                    myuser.company.projects.myproject[i].scheduleequipment = scheduleequipment;
+
+                }
+                this.props.reduxUser(myuser)
+                this.setState({ activeequipmentid: newEquipment.equipmentid })
             }
+
         }
+
     }
 }
