@@ -150,6 +150,7 @@ class ScheduleLabor extends Component {
         }
 
     }
+
     showlaborid(mylabor) {
         const styles = MyStylesheet();
         const removeIcon = this.getremoveicon();

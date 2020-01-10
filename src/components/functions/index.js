@@ -4,9 +4,8 @@ export function CreateAccount(accountid, account, accountname) {
 export function CreateCSI(csiid, csi, title) {
     return ({ csiid, csi, title })
 }
-export function CreateMyMaterial(materialid, material, accountid, csiid, unit, unitcost) {
-    return ({ materialid, material, accountid, csiid, unit, unitcost })
-
+export function CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid) {
+    return ({ materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid })
 }
 export function CreateBenefit(benefitid, benefit, accountid, amount) {
     return ({ benefitid, benefit, accountid, amount })
@@ -106,5 +105,21 @@ export function inputUTCStringForLaborID(timein) {
         month = `0${month}`
     }
     return (`${month}/${date}/${year} ${hours}:${minutes} ${ampm}`)
+
+}
+
+export function inputUTCStringForMaterialIDWithTime(timein) {
+    let newDate = new Date(`${timein.replace(/-/g, '/')} UTC`)
+    let date = newDate.getDate();
+    if (date < 10) {
+        date = `0${date}`
+    }
+    let year = newDate.getFullYear()
+    let month = newDate.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`
+    }
+
+    return (`${month}/${date}/${year}`);
 
 }
