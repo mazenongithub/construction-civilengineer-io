@@ -52,6 +52,30 @@ export function MyStylesheet() {
             width: '90%',
             margin: 'auto'
         },
+        bidField: {
+            maxWidth: '138px'
+        },
+        timedisplayContainer: {
+            minHeight: '60px',
+            maxWidth: '77px'
+        },
+
+        timeButton: {
+            width: '62px',
+            height: '41px'
+        },
+        timeinputField: {
+            width: '99%',
+            maxWidth: '65px'
+        },
+        timecellContainer: {
+            minHeight: '180px',
+            maxWidth: '77px'
+        },
+        majorDownIcon: {
+            width: '109px',
+            height: '66px'
+        },
         marginAuto: {
             margin: 'auto'
         },

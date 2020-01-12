@@ -1,37 +1,104 @@
-function handlemilestoneid(milestoneid) {
-    let myuser = this.getuser();
-    if (myuser) {
-        let myproject = this.getproject();
-        if (myproject) {
-            let i = this.getprojectkey();
+function showtimein() {
 
-            if (this.state.activeequipmentid) {
-                let j = this.getactiveequipmentkey();
-                myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].milestoneid = milestoneid;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
-            } else {
-                let equipmentid = makeID(16)
-                let providerid = myuser.provderid;
-                let myequipmentid = this.state.myequipmentid;
-                let csiid = this.state.csiid;
-                let timein = this.state.timein;
-                let timeout = this.state.timeout;
-                let proposalid = this.state.proposalid;
+    return (
+        <div style={{ ...styles.generalFlex }}>
+            <div style={{ ...styles.flex1 }}>
 
-                let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid)
-                if (myproject.hasOwnProperty("scheduleequipment")) {
-                    myuser.company.projects.myproject[i].scheduleequipment.myequipment.push(newEquipment)
-                } else {
-                    let scheduleequipment = { myequipment: [newEquipment] }
-                    myuser.company.projects.myproject[i].scheduleequipment = scheduleequipment;
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
 
-                }
-                this.props.reduxUser(myuser)
-                this.setState({ activeequipmentid: newEquipment.equipmentid })
-            }
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex3, ...styles.timedisplay - container, ...styles.regularFont }}>
+                                {this.timeinheader()}
+                            </div>
+                            <div style={{ ...styles.flex1, ...styles.timedisplay - container, ...styles.alignCenter }}>
+                                <button style={{ ...styles.generalButton, ...styles.majorDownIcon }} onClick={() => { this.activetimeincalendar() }}>{majorDownIcon()}</button>
+                            </div>
+                        </div>
 
-        }
+                    </div>
+                </div>
 
-    }
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timecell - container }}>
+
+                        <div style={{
+                            ...styles.timecell - module ...styles.showBorder, ...styles.alignCenter >
+                                <button className="general-button time-button" onClick={event => { this.timeinmonthup(event) }}>{DateArrowUp()}</button>
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <input type="text" className="timeinput-field ...styles.alignCenter titleFont" value={this.gettimeinmonth()} />
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <button className="general-button time-button" onClick={event => { this.timeinmonthdown(event) }}> {DateArrowDown()}</button>
+                        </div>
+
+                    </div>
+
+                    <div className="flex1 showBorder timecell-container ...styles.alignCenter">
+                        <div className="timecell-module showBorder">
+                            <button className="general-button time-button" onClick={event => { this.increasetimeinbyinc(event, (1000 * 60 * 60 * 24)) }}>{DateArrowUp()}</button>
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <input type="text" className="timeinput-field ...styles.alignCenter titleFont" value={this.gettimeinday()} />
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <button className="general-button time-button" onClick={event => { this.decreasetimeinbyinc(event, (1000 * 60 * 60 * 24)) }}> {DateArrowDown()}</button>
+                        </div>
+
+                    </div>
+                    <div className="flex1 showBorder timecell-container ...styles.alignCenter">
+                        <div className="timecell-module showBorder">
+                            <button className="time-button general-button" onClick={event => { this.timeinyearup(event) }}>{DateArrowUp()}</button>
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <input type="text" className="timeinput-field ...styles.alignCenter titleFont" value={this.gettimeinyear()} />
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <button className="time-button general-button" onClick={event => { this.timeinyeardown(event) }}> {DateArrowDown()}</button>
+                        </div>
+                    </div>
+
+                    <div className="flex1 showBorder timecell-container">
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <button className="time-button general-button ...styles.alignCenter" onClick={event => { this.increasetimeinbyinc(event, (1000 * 60 * 60)) }}>{DateArrowUp()}</button>
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <input type="text" className="timeinput-field ...styles.alignCenter titleFont" value={this.gettimeinhours()} />
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <button className="time-button general-button ...styles.alignCenter" onClick={event => { this.decreasetimeinbyinc(event, (1000 * 60 * 60)) }}> {DateArrowDown()}</button>
+                        </div>
+                    </div>
+
+                    <div className="flex1 showBorder timecell-container">
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <button className="time-button general-button ...styles.alignCenter" onClick={event => { this.increasetimeinbyinc(event, (1000 * 60)) }}>{DateArrowUp()}</button>
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <input type="text" className="timeinput-field ...styles.alignCenter titleFont" value={this.gettimeinminutes()} />
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <button className="time-button general-button ...styles.alignCenter" onClick={event => { this.decreasetimeinbyinc(event, (1000 * 60)) }} > {DateArrowDown()}</button>
+                        </div>
+                    </div>
+                    <div className="flex1 showBorder timecell-container ...styles.alignCenter">
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <button className="time-button general-button ...styles.alignCenter" onClick={() => { this.toggletimeinampm("up") }}>{DateArrowUp()}</button>
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <input type="text" className="timeinput-field ...styles.alignCenter titleFont" value={this.gettimeinampm()} />
+                        </div>
+                        <div className="timecell-module showBorder ...styles.alignCenter">
+                            <button className="time-button general-button ...styles.alignCenter" onClick={() => { this.toggletimeinampm("down") }}> {DateArrowDown()}</button>
+                        </div>
+                    </div>
+                </div>
+
+                {this.handlecalendartimein()}
+
+
+            </div>
+        </div>
+    )
 }
