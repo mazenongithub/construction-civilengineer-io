@@ -36,17 +36,18 @@ import {
 
 
 } from './functions'
+
 import { MyStylesheet } from './styles';
-class TimeIn {
-    gettimeinminutes() {
+class TimeOut {
+    gettimeoutminutes() {
         let minutes = "";
         let datein = {};
         if (this.state.activelaborid) {
             let mylabor = this.getactivelabor();
-            datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
         }
         else {
-            datein = this.state.timein;
+            datein = this.state.timeout;
         }
         minutes = datein.getMinutes();
         if (minutes < 10) {
@@ -55,12 +56,13 @@ class TimeIn {
         return minutes;
     }
 
-    toggletimeinampm(dir) {
-        const checkampmtimein = (dir) => {
+    toggletimeoutampm(dir) {
+
+        const checkampmtimeout = (dir) => {
 
             let validate = true;
-            let timein = this.getactivelabor().timein;
-            let ampm = AMPMfromTimeIn(timein)
+            let timeout = this.getactivelabor().timeout;
+            let ampm = AMPMfromTimeIn(timeout)
             if (ampm === "PM" && dir === "up") {
                 validate = false;
             } else if (ampm === "AM" && dir === "down") {
@@ -68,7 +70,11 @@ class TimeIn {
             }
             return validate;
 
+
         }
+
+
+
         let myuser = this.getuser();
         if (myuser) {
             let project = this.getproject();
@@ -77,12 +83,14 @@ class TimeIn {
                 let i = this.getprojectkey();
                 if (this.state.activelaborid) {
                     let j = this.getactivelaborkey()
-                    let validate = checkampmtimein(dir);
+                    let validate = checkampmtimeout(dir);
+
                     if (validate) {
                         let mylabor = this.getactivelabor();
-                        let timein = mylabor.timein;
-                        timein = toggleAMTimeString(mylabor.timein)
-                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = timein;
+                        let timeout = mylabor.timeout;
+                        timeout = toggleAMTimeString(mylabor.timeout)
+
+                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = timeout;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
 
@@ -90,8 +98,8 @@ class TimeIn {
                     } // if validate
 
                 } else {
-                    let datein = toggleAMDateObj(this.state.timein)
-                    this.setState({ timein: datein })
+                    let datein = toggleAMDateObj(this.state.timeout)
+                    this.setState({ timeout: datein })
                 }
 
             }
@@ -101,7 +109,7 @@ class TimeIn {
 
 
     }
-    handlecalendartimein() {
+    handlecalendartimeout() {
         let datein = {};
         const styles = MyStylesheet();
         const smallFont = this.getSmallFont()
@@ -111,13 +119,13 @@ class TimeIn {
 
 
                 let mylabor = this.getactivelabor()
-                let timein = mylabor.timein;
-                if (inputtimeDBoutputCalendarDaySeconds(timein) === dateencoded) {
+                let timeout = mylabor.timeout;
+                if (inputtimeDBoutputCalendarDaySeconds(timeout) === dateencoded) {
                     activeclass = "active-schedule-calendar"
                 }
             }
             else {
-                let datein = this.state.timein;
+                let datein = this.state.timeout;
                 if (inputDateObjOutputCalendarDaySeconds(datein) === dateencoded) {
                     activeclass = "active-schedule-calendar"
                 }
@@ -130,8 +138,8 @@ class TimeIn {
 
                 let mylabor = this.getactivelabor();
                 let laborid = mylabor.laborid;
-                let timein = mylabor.timein
-                let newtimein = inputDateSecActiveIDTimein(dateencoded, timein)
+                let timeout = mylabor.timeout
+                let newtimeout = inputDateSecActiveIDTimein(dateencoded, timeout)
                 if (this.props.projectsprovider.hasOwnProperty("length")) {
                     let projectid = this.props.projectid.projectid;
                     // eslint-disable-next-line
@@ -141,7 +149,7 @@ class TimeIn {
                                 // eslint-disable-next-line
                                 myproject.schedulelabor.mylabor.map((mylabor, j) => {
                                     if (mylabor.laborid === laborid) {
-                                        this.props.projectsprovider[i].schedulelabor.mylabor[j].timein = newtimein;
+                                        this.props.projectsprovider[i].schedulelabor.mylabor[j].timeout = newtimeout;
                                         let obj = this.props.projectsprovider;
                                         this.props.projectsProvider(obj);
                                         this.setState({ render: 'render' })
@@ -154,9 +162,9 @@ class TimeIn {
 
             }
             else {
-                let timein = inputDateObjandSecReturnObj(dateencoded, this.state.timein);
+                let timeout = inputDateObjandSecReturnObj(dateencoded, this.state.timeout);
 
-                this.setState({ timein, render: 'render' })
+                this.setState({ timeout, render: 'render' })
             }
         }
         const showdate = (dateobj, day) => {
@@ -184,10 +192,10 @@ class TimeIn {
         }
 
         if (this.state.activelaborid) {
-            let timein = this.getactivelabor().timein;
-            datein = inputDateTimeOutDateObj(timein)
+            let timeout = this.getactivelabor().timeout;
+            datein = inputDateTimeOutDateObj(timeout)
         } else {
-            datein = this.state.timein;
+            datein = this.state.timeout;
         }
 
         let gridcalender = [];
@@ -669,7 +677,7 @@ class TimeIn {
                 }
             })
         }
-        if (this.state.activetimeincalendar) {
+        if (this.state.activetimeoutcalendar) {
             return (<div className="general-flex">
                 <div className="flex-1 calendar-container">
                     <div className="laborcalendar-grid">
@@ -683,7 +691,7 @@ class TimeIn {
             return;
         }
     }
-    showcalendartimein() {
+    showcalendartimeout() {
 
 
 
@@ -692,18 +700,18 @@ class TimeIn {
     }
 
 
-    gettimeinampm() {
+    gettimeoutampm() {
         let ampm = "";
         let datein = {};
         if (this.state.activelaborid) {
 
             let mylabor = this.getactivelabor();
 
-            datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
 
         }
         else {
-            datein = this.state.timein;
+            datein = this.state.timeout;
 
         }
         let hours = datein.getHours();
@@ -715,17 +723,17 @@ class TimeIn {
         }
         return ampm;
     }
-    gettimeinmonth() {
+    gettimeoutmonth() {
         let month = "";
         let datein = {};
         if (this.state.activelaborid) {
 
             let mylabor = this.getactivelabor();
-            datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
             console.log("MONTHTIMEIN", datein)
         }
         else {
-            datein = this.state.timein;
+            datein = this.state.timeout;
         }
 
         month = datein.getMonth() + 1;
@@ -734,7 +742,7 @@ class TimeIn {
         }
         return `${month}/`;
     }
-    timeinmonthup(event) {
+    timeoutmonthup(event) {
         let myuser = this.getuser();
         if (myuser) {
             let myproject = this.getproject();
@@ -743,29 +751,29 @@ class TimeIn {
                 if (this.state.activelaborid) {
                     let j = this.getactivelaborkey();
                     let mylabor = this.getactivelabor()
-                    let newtimein = increaseDateStringByOneMonth(mylabor.timein);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
+                    let newtimeout = increaseDateStringByOneMonth(mylabor.timeout);
+                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
 
                 }
                 else {
-                    let newDate = addoneMonthDateObj(this.state.timein);
-                    this.setState({ timein: newDate })
+                    let newDate = addoneMonthDateObj(this.state.timeout);
+                    this.setState({ timeout: newDate })
                 }
             }
         }
     }
-    gettimeinday() {
+    gettimeoutday() {
         let day = "";
         let datein = {};
         if (this.state.activelaborid) {
             let mylabor = this.getactivelabor();
-            datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
         }
         else {
-            datein = this.state.timein;
+            datein = this.state.timeout;
         }
         day = datein.getDate();
         if (day < 10) {
@@ -773,38 +781,38 @@ class TimeIn {
         }
         return `${day}/`;
     }
-    gettimeinyear() {
+    gettimeoutyear() {
         let year = "";
         let datein = {};
         if (this.state.activelaborid) {
 
             let mylabor = this.getactivelabor();
 
-            datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
 
 
 
         }
         else {
-            datein = this.state.timein;
+            datein = this.state.timeout;
         }
         year = datein.getFullYear();
         let century = Math.floor(year / 100) * 100;
         year = year - century;
         return year;
     }
-    gettimeinhours() {
+    gettimeouthours() {
         let hours = "";
         let datein = {};
         if (this.state.activelaborid) {
 
             let mylabor = this.getactivelabor();
 
-            datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
 
         }
         else {
-            datein = this.state.timein;
+            datein = this.state.timeout;
         }
         hours = datein.getHours();
         if (hours > 12) {
@@ -817,7 +825,7 @@ class TimeIn {
 
         return `${hours}:`;
     }
-    increasetimeinbyinc(inc) {
+    increasetimeoutbyinc(inc) {
         let myuser = this.getuser();
         if (myuser) {
             let myproject = this.getproject();
@@ -827,8 +835,8 @@ class TimeIn {
                     let j = this.getactivelaborkey();
 
                     let mylabor = this.getactivelabor()
-                    let newtimein = increasedateStringbyInc(mylabor.timein, inc);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
+                    let newtimeout = increasedateStringbyInc(mylabor.timeout, inc);
+                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -837,8 +845,8 @@ class TimeIn {
                 }
 
                 else {
-                    let newDate = addincDateObj(this.state.timein, inc)
-                    this.setState({ timein: newDate })
+                    let newDate = addincDateObj(this.state.timeout, inc)
+                    this.setState({ timeout: newDate })
                 }
 
             }
@@ -846,7 +854,7 @@ class TimeIn {
         }
 
     }
-    decreasetimeinbyinc(inc) {
+    decreasetimeoutbyinc(inc) {
         let myuser = this.getuser()
         if (myuser) {
             let myproject = this.getproject();
@@ -855,21 +863,21 @@ class TimeIn {
                 if (this.state.activelaborid) {
                     let j = this.getactivelaborkey();
                     let mylabor = this.getactivelabor()
-                    let newtimein = decreasedateStringbyInc(mylabor.timein, inc);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
+                    let newtimeout = decreasedateStringbyInc(mylabor.timeout, inc);
+                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
 
 
                 }
                 else {
-                    let newDate = subtractincDateObj(this.state.timein, inc)
-                    this.setState({ timein: newDate })
+                    let newDate = subtractincDateObj(this.state.timeout, inc)
+                    this.setState({ timeout: newDate })
                 }
             }
         }
     }
-    timeinmonthdown(event) {
+    timeoutmonthdown(event) {
         let myuser = this.getuser();
         if (myuser) {
             let myproject = this.getproject();
@@ -878,155 +886,90 @@ class TimeIn {
                 if (this.state.activelaborid) {
                     let j = this.getactivelaborkey();
                     let mylabor = this.getactivelabor()
-                    let newtimein = decreaseDateStringByOneMonth(mylabor.timein);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
+                    let newtimeout = decreaseDateStringByOneMonth(mylabor.timeout);
+                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
 
                 }
                 else {
-                    let newDate = subtractMonthDateObj(this.state.timein);
-                    this.setState({ timein: newDate })
+                    let newDate = subtractMonthDateObj(this.state.timeout);
+                    this.setState({ timeout: newDate })
                 }
             }
 
-        }
-    }
-    timeinyearup(event) {
-        let myuser = this.getuser();
-        if (myuser) {
-            let myproject = this.getproject();
-            if (myproject) {
-                let i = this.getprojectkey();
-                if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();
-                    let mylabor = this.getactivelabor()
-                    let newtimein = increaseDateStringByOneYear(mylabor.timein);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
-
-
-                }
-                else {
-                    let newDate = addoneYearDateObj(this.state.timein);
-                    this.setState({ timein: newDate })
-                }
-
-            }
-
-        }
-    }
-
-    timeinyeardown(event) {
-        let myuser = this.getuser();
-        if (myuser) {
-            let myproject = this.getproject();
-            if (myproject) {
-                let i = this.getprojectkey();
-                if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();
-                    let mylabor = this.getactivelabor()
-                    let newtimein = decreaseDateStringByOneYear(mylabor.timein);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
-                }
-                else {
-                    let newDate = subtractoneYearDateObj(this.state.timein);
-                    this.setState({ timein: newDate })
-                }
-            }
-        }
-    }
-
-
-
-    timeoutyeardown(event) {
-        if (this.state.activelaborid) {
-            let laborid = this.state.activelaborid;
-            let mylabor = this.getactivelabor()
-            let newtimeout = decreaseDateStringByOneYear(mylabor.timeout);
-            if (this.props.projectsprovider.hasOwnProperty("length")) {
-                let projectid = this.props.projectid.projectid;
-                // eslint-disable-next-line
-                this.props.projectsprovider.map((myproject, i) => {
-                    if (myproject.projectid === projectid) {
-
-                        if (myproject.hasOwnProperty("schedulelabor")) {
-                            // eslint-disable-next-line
-                            myproject.schedulelabor.mylabor.map((mylabor, j) => {
-                                if (mylabor.laborid === laborid) {
-                                    this.props.projectsprovider[i].schedulelabor.mylabor[j].timeout = newtimeout
-                                    let obj = this.props.projectsprovider;
-                                    this.props.projectsProvider(obj);
-                                    this.setState({ render: 'render' })
-
-                                }
-                            })
-                        }
-
-                    }
-                })
-            }
-        }
-        else {
-            let newDate = subtractoneYearDateObj(this.state.timeout);
-            this.setState({ timeout: newDate })
         }
     }
     timeoutyearup(event) {
-        if (this.state.activelaborid) {
-            let laborid = this.state.activelaborid;
-            let mylabor = this.getactivelabor()
-            let newtimeout = increaseDateStringByOneYear(mylabor.timeout);
-            if (this.props.projectsprovider.hasOwnProperty("length")) {
-                let projectid = this.props.projectid.projectid;
-                // eslint-disable-next-line
-                this.props.projectsprovider.map((myproject, i) => {
-                    if (myproject.projectid === projectid) {
+        let myuser = this.getuser();
+        if (myuser) {
+            let myproject = this.getproject();
+            if (myproject) {
+                let i = this.getprojectkey();
+                if (this.state.activelaborid) {
+                    let j = this.getactivelaborkey();
+                    let mylabor = this.getactivelabor()
+                    let newtimeout = increaseDateStringByOneYear(mylabor.timeout);
+                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    this.props.reduxUser(myuser)
+                    this.setState({ render: 'render' })
 
-                        if (myproject.hasOwnProperty("schedulelabor")) {
-                            // eslint-disable-next-line
-                            myproject.schedulelabor.mylabor.map((mylabor, j) => {
-                                if (mylabor.laborid === laborid) {
-                                    this.props.projectsprovider[i].schedulelabor.mylabor[j].timeout = newtimeout
-                                    let obj = this.props.projectsprovider;
-                                    this.props.projectsProvider(obj);
-                                    this.setState({ render: 'render' })
 
-                                }
-                            })
-                        }
+                }
+                else {
+                    let newDate = addoneYearDateObj(this.state.timeout);
+                    this.setState({ timeout: newDate })
+                }
 
-                    }
-                })
             }
-        }
-        else {
-            let newDate = addoneYearDateObj(this.state.timeout);
-            this.setState({ timeout: newDate })
+
         }
     }
 
-    gettimein() {
-        let timein = "";
+    timeoutyeardown(event) {
+        let myuser = this.getuser();
+        if (myuser) {
+            let myproject = this.getproject();
+            if (myproject) {
+                let i = this.getprojectkey();
+                if (this.state.activelaborid) {
+                    let j = this.getactivelaborkey();
+                    let mylabor = this.getactivelabor()
+                    let newtimeout = decreaseDateStringByOneYear(mylabor.timeout);
+                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    this.props.reduxUser(myuser)
+                    this.setState({ render: 'render' })
+                }
+                else {
+                    let newDate = subtractoneYearDateObj(this.state.timeout);
+                    this.setState({ timeout: newDate })
+                }
+            }
+        }
+    }
+
+
+
+
+
+    gettimeout() {
+        let timeout = "";
         if (this.state.activelaborid) {
 
             let mylabor = this.getactivelabor();
-            timein = inputTimeInDateStringforPicker(mylabor.timein);
+            timeout = inputTimeInDateStringforPicker(mylabor.timeout);
         }
         else {
-            timein = inputDateObjOutputString(this.state.timein);
+            timeout = inputDateObjOutputString(this.state.timeout);
         }
-        return timein;
+        return timeout;
     }
-    handletimein(value) {
+    handletimeout(value) {
         if (this.state.activelaborid) {
             let laborid = this.state.activelaborid;
 
-            let timein = inputTimeDateOutputUTCString(value);
+            let timeout = inputTimeDateOutputUTCString(value);
             if (this.props.projectsprovider.hasOwnProperty("length")) {
                 let projectid = this.props.projectid.projectid;
                 // eslint-disable-next-line
@@ -1037,7 +980,7 @@ class TimeIn {
                             // eslint-disable-next-line
                             myproject.schedulelabor.mylabor.map((mylabor, j) => {
                                 if (mylabor.laborid === laborid) {
-                                    this.props.projectsprovider[i].schedulelabor.mylabor[j].timein = timein;
+                                    this.props.projectsprovider[i].schedulelabor.mylabor[j].timeout = timeout;
                                     let obj = this.props.projectsprovider;
                                     this.props.projectsProvider(obj);
                                     this.setState({ render: 'render' });
@@ -1051,37 +994,37 @@ class TimeIn {
             }
         }
         else {
-            let timein = inputDateTimeOutDateObj(value);
-            this.setState({ timein })
+            let timeout = inputDateTimeOutDateObj(value);
+            this.setState({ timeout })
         }
 
     }
 
 
-    activetimeincalendar() {
-        let activetimeincalendar = this.state.activetimeincalendar;
-        if (activetimeincalendar) {
-            activetimeincalendar = false;
+    activetimeoutcalendar() {
+        let activetimeoutcalendar = this.state.activetimeoutcalendar;
+        if (activetimeoutcalendar) {
+            activetimeoutcalendar = false;
         } else {
-            activetimeincalendar = true;
+            activetimeoutcalendar = true;
         }
-        this.setState({ activetimeincalendar })
+        this.setState({ activetimeoutcalendar })
     }
 
-    gettimeinheader() {
-        let timeinheader = "";
+    gettimeoutheader() {
+        let timeoutheader = "";
         if (this.state.activelaborid) {
             const mylabor = this.getactivelabor();
 
-            timeinheader = `Time In ${inputUTCStringForLaborID(mylabor.timein)}`
+            timeoutheader = `Time Out ${inputUTCStringForLaborID(mylabor.timeout)}`
         } else {
-            timeinheader = `Time In ${inputDateObjOutputCalendarString(this.state.timein)}`
+            timeoutheader = `Time Out ${inputDateObjOutputCalendarString(this.state.timeout)}`
         }
-        return timeinheader;
+        return timeoutheader;
     }
 
 
 
 
 }
-export default TimeIn
+export default TimeOut

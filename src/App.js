@@ -243,9 +243,9 @@ class App extends Component {
   getHeaderFont() {
     const styles = MyStylesheet();
     if (this.state.width > 800) {
-      return (styles.font60)
-    } else {
       return (styles.font40)
+    } else {
+      return (styles.font36)
     }
   }
   projectidlinks() {

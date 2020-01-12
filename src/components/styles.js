@@ -59,6 +59,9 @@ export function MyStylesheet() {
             minHeight: '60px',
             maxWidth: '77px'
         },
+        calendarContainer: {
+            maxWidth: '540px'
+        },
 
         timeButton: {
             width: '62px',
@@ -121,8 +124,14 @@ export function MyStylesheet() {
         fontBold: {
             fontWeight: 600
         },
+        font48: {
+            fontSize: '48px'
+        },
         font40: {
             fontSize: '40px'
+        },
+        font36: {
+            fontSize: '36px'
         },
         font30: {
             fontSize: '30px'
