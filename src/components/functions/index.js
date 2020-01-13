@@ -159,6 +159,131 @@ export function AMPMfromTimeIn(timein) {
     }
     return (ampm)
 }
+export function getmonth(dateobj) {
+
+    let month = dateobj.getMonth();
+    switch (month) {
+        case 0:
+            return ("January");
+        case 1:
+            return ("February");
+        case 2:
+            return ("March");
+        case 3:
+            return ("April");
+        case 4:
+            return ("May");
+        case 5:
+            return ("June");
+        case 6:
+            return ("July");
+        case 7:
+            return ("August");
+        case 8:
+            return ("September");
+        case 9:
+            return ("October");
+        case 10:
+            return ("November");
+        case 11:
+            return ("December");
+        default:
+            break;
+    }
+}
+export function makeDatefromTimein(timein) {
+    let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`)
+    let year = datein.getFullYear();
+    let month = datein.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`
+    }
+    let date = datein.getDate();
+    if (date < 10) {
+        date = `0${date}`
+    }
+
+    return (`${year}-${month}-${date}`)
+}
+export function makeDatefromObj(datein) {
+    let year = datein.getFullYear();
+    let month = datein.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`
+    }
+    let date = datein.getDate();
+    if (date < 10) {
+        date = `0${date}`
+    }
+
+    return (`${year}-${month}-${date}`)
+}
+export function inputDatePickerOutputDateObj(value) {
+
+    let offset = new Date().getTimezoneOffset() / 60
+    let sym = "+";
+    if (offset > 0) {
+        sym = "-";
+    }
+    if (Math.abs(offset) < 10) {
+        offset = `0${offset}`
+    }
+
+    let newDate = new Date(`${value.replace(/-/g, '-')} 00:00:00${sym}${offset}:00`)
+    return newDate;
+}
+
+
+export function formatDateforCalendarDisplay(datein) {
+    let month = getmonth(datein);
+    let year = datein.getFullYear();
+    return (`${month} ${year}`)
+}
+export function adjustdatefromcalendar(timein, value) {
+
+    let offset = new Date().getTimezoneOffset() / 60;
+    let sym = "";
+    if (offset < 0) {
+        offset = -offset;
+        sym = "+";
+    }
+    if (offset < 10) {
+        offset = `0${offset}`
+        sym = "-";
+    }
+    else {
+        sym = "-";
+    }
+
+    let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`)
+    let hours = datein.getHours();
+    let minutes = datein.getMinutes();
+    let seconds = datein.getSeconds();
+    let fakedate = new Date(`${value.replace(/-/g, '/')} ${hours}:${minutes}:${seconds}${sym}${2 * offset}:00`)
+    hours = fakedate.getHours();
+    if (hours < 10) {
+        hours = `0${hours}`
+    }
+    minutes = fakedate.getMinutes();
+    if (minutes < 10) {
+        minutes = `0${minutes}`
+    }
+    seconds = fakedate.getSeconds();
+    if (seconds < 10) {
+        seconds = `0${seconds}`
+    }
+    let month = fakedate.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`
+    }
+    let date = fakedate.getDate();
+    if (date < 10) {
+        date = `0${date}`
+    }
+    let year = fakedate.getFullYear();
+    return (`${year}-${month}-${date} ${hours}:${minutes}:${seconds}`)
+}
+
 export function toggleAMDateObj(datein) {
     let hours = datein.getHours();
     let newDate = {};
@@ -710,6 +835,7 @@ export function check_29_feb_leapyear(dateobj) {
     }
 
 }
+
 export function inputDateObjOutputCalendarDaySeconds(datein) {
     let offset = datein.getTimezoneOffset() / 60;
     let sym = "";

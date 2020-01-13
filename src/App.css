@@ -19,9 +19,38 @@
 .calendarIcon-1{fill:#fff;stroke:#2a678c;stroke-miterlimit:10;stroke-width:0.5px;}
 .datearrowup-1 {fill: #2a678c;stroke: #000;stroke-miterlimit: 10;}
 .datearrowdown-1 { fill: #2a678c; stroke: #000; stroke-miterlimit: 10;}
+.opendatemenu-1 {fill: #e6e6e6; stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.opendatemenu-2 {  fill: #666;}
+
+.dateyearup-1 {  fill: #e6e6e6;  stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.dateyearup-2 {  fill: #666;}
+.dateyeardown-1 {  fill: #e6e6e6;  stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.dateyeardown-2 {  fill: #666;}
+.datemonthdown-1 {  fill: #e6e6e6;  stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.datemonthdown-2 {  fill: #666;}
+.datemonthup-1 {  fill: #e6e6e6;  stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.datemonthup-2 {  fill: #666;}
+.closedatemenu-1 {
+  fill: #e6e6e6;
+  stroke: #000;
+}
+
+.closedatemenu-1,
+.closedatemenu-2 {
+  stroke-miterlimit: 10;
+  stroke-width: 2px;
+}
+
+.closedatemenu-2 {
+  fill: #666;
+  stroke: #666;
+}
 .App {
   text-align: center;
   
+}
+.calendar-grid {
+  max-width:540px;
+  display: grid;
+  grid-template-columns: 15% 14% 14% 14% 14% 14% 15%;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  margin:auto;
 }
 .laborcalendar-grid{
   margin:auto;

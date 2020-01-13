@@ -59,6 +59,13 @@ export function MyStylesheet() {
             minHeight: '60px',
             maxWidth: '77px'
         },
+        dateContainer: {
+            maxWidth: '64px',
+            maxHeight: '64px'
+        },
+        dateGridContainer: {
+            maxWidth: '540px'
+        },
         calendarContainer: {
             maxWidth: '540px'
         },
@@ -150,6 +157,9 @@ export function MyStylesheet() {
         },
         font54: {
             fontSize: '54px'
+        },
+        dateButton: {
+            width: '54px'
         },
         generalFont: {
             fontFamily: "'Nunito Sans', sans-serif"

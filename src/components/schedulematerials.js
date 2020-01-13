@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { saveProjectIcon, removeIconSmall } from './svg';
+import { saveProjectIcon, removeIconSmall, dateYearDown, dateYearUp, dateMonthDown, dateMonthUp } from './svg';
 import { inputUTCStringForMaterialIDWithTime, makeID, CreateMyMaterial } from './functions';
-
+import DateIn from './datein';
 class ScheduleMaterials extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activematerialid: '', material: '', timein: '2019-04-20 12:33:44', unit: '', quantity: '', unitcost: '', milestoneid: '', csiid: '', mymaterialid: '' }
+        this.state = { render: '', width: 0, height: 0, activematerialid: '', material: '', datein: new Date(), unit: '', quantity: '', unitcost: '', milestoneid: '', csiid: '', mymaterialid: '', calendar: 'open' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -46,6 +46,16 @@ class ScheduleMaterials extends Component {
             return (styles.font30)
         } else {
             return (styles.font24)
+        }
+
+    }
+
+    getSmallFont() {
+        const styles = MyStylesheet();
+        if (this.state.width > 800) {
+            return (styles.font24)
+        } else {
+            return (styles.font18)
         }
 
     }
@@ -728,6 +738,71 @@ class ScheduleMaterials extends Component {
         }
     }
 
+    showdatein() {
+        const styles = MyStylesheet();
+        const regularFont = this.getRegularFont();
+        const Datein = new DateIn();
+        const smallFont = this.getSmallFont();
+
+        return (
+            <div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex1, ...styles.calenderContainer }}>
+
+                    <div style={{ ...styles.dateinContainer, ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex5, ...regularFont, ...styles.generalFont }}>
+                            Enter Date <br /> <input type="date"
+                                value={Datein.getvalue.call(this)}
+                                style={{ ...styles.generalField, ...regularFont, ...styles.generalFont }}
+                                onChange={event => { Datein.handleChange.call(this, event.target.value) }} />
+                        </div>
+                        <div style={{ ...styles.flex1, ...smallFont, ...styles.generalFont }}>
+                            <button style={{ ...styles.dateButton, ...styles.generalButton }}
+                                onClick={() => { Datein.showCalender.call(this) }}
+                                id="btn-opendatemenu">
+                                {Datein.handleopendatemenu.call(this)}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.calendarContainer, ...styles.marginAuto }}>
+                        <div style={{ ...styles.flex1 }}>
+                            <button style={{ ...styles.dateButton, ...styles.generalButton }}
+                                onClick={() => { Datein.yeardown.call(this) }}> {dateYearDown()}</button>
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            <button style={{ ...styles.dateButton, ...styles.generalButton }}
+                                onClick={() => { Datein.decreasemonth.call(this) }}>{dateMonthDown()} </button>
+                        </div>
+                        <div style={{ ...styles.flex2, ...styles.smallFont, ...StyleSheet.alignCenter }}>
+                            {Datein.showdateforcalendar.call(this)}
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            <button style={{ ...styles.dateButton, ...styles.generalButton }}
+                                onClick={() => { Datein.increasemonth.call(this) }}>{dateMonthUp()} </button>
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            <button style={{ ...styles.dateButton, ...styles.generalButton }}
+                                onClick={() => { Datein.yearup.call(this) }}> {dateYearUp()}</button>
+                        </div>
+
+                    </div>
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...smallFont }}>
+
+                            <div className="calendar-grid">
+                                {Datein.showgrid.call(this)}
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        )
+
+    }
+
     render() {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
@@ -742,9 +817,9 @@ class ScheduleMaterials extends Component {
                 </div>
                 </div>
                 <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont }}>
-                        Time In
-                </div>
+                    <div style={{ ...styles.flex1 }}>
+                        {this.showdatein()}
+                    </div>
                 </div>
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
