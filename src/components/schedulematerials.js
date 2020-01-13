@@ -737,7 +737,51 @@ class ScheduleMaterials extends Component {
             return this.state.unitcost;
         }
     }
+    showdatemenu() {
+        const styles = MyStylesheet();
+        const Datein = new DateIn();
+        const smallFont = this.getSmallFont();
+        if (this.state.calendar === 'open') {
+            return (
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
+                        <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.calendarContainer, ...styles.marginAuto }}>
+                            <div style={{ ...styles.flex1 }}>
+                                <button style={{ ...styles.dateButton, ...styles.generalButton }}
+                                    onClick={() => { Datein.yeardown.call(this) }}> {dateYearDown()}</button>
+                            </div>
+                            <div style={{ ...styles.flex1 }}>
+                                <button style={{ ...styles.dateButton, ...styles.generalButton }}
+                                    onClick={() => { Datein.decreasemonth.call(this) }}>{dateMonthDown()} </button>
+                            </div>
+                            <div style={{ ...styles.flex2, ...styles.smallFont, ...StyleSheet.alignCenter }}>
+                                {Datein.showdateforcalendar.call(this)}
+                            </div>
+                            <div style={{ ...styles.flex1 }}>
+                                <button style={{ ...styles.dateButton, ...styles.generalButton }}
+                                    onClick={() => { Datein.increasemonth.call(this) }}>{dateMonthUp()} </button>
+                            </div>
+                            <div style={{ ...styles.flex1 }}>
+                                <button style={{ ...styles.dateButton, ...styles.generalButton }}
+                                    onClick={() => { Datein.yearup.call(this) }}> {dateYearUp()}</button>
+                            </div>
 
+                        </div>
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...styles.generalFont, ...smallFont }}>
+
+                                <div className="calendar-grid">
+                                    {Datein.showgrid.call(this)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>)
+        } else {
+            return;
+        }
+    }
     showdatein() {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
@@ -764,38 +808,7 @@ class ScheduleMaterials extends Component {
                         </div>
                     </div>
 
-                    <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.calendarContainer, ...styles.marginAuto }}>
-                        <div style={{ ...styles.flex1 }}>
-                            <button style={{ ...styles.dateButton, ...styles.generalButton }}
-                                onClick={() => { Datein.yeardown.call(this) }}> {dateYearDown()}</button>
-                        </div>
-                        <div style={{ ...styles.flex1 }}>
-                            <button style={{ ...styles.dateButton, ...styles.generalButton }}
-                                onClick={() => { Datein.decreasemonth.call(this) }}>{dateMonthDown()} </button>
-                        </div>
-                        <div style={{ ...styles.flex2, ...styles.smallFont, ...StyleSheet.alignCenter }}>
-                            {Datein.showdateforcalendar.call(this)}
-                        </div>
-                        <div style={{ ...styles.flex1 }}>
-                            <button style={{ ...styles.dateButton, ...styles.generalButton }}
-                                onClick={() => { Datein.increasemonth.call(this) }}>{dateMonthUp()} </button>
-                        </div>
-                        <div style={{ ...styles.flex1 }}>
-                            <button style={{ ...styles.dateButton, ...styles.generalButton }}
-                                onClick={() => { Datein.yearup.call(this) }}> {dateYearUp()}</button>
-                        </div>
-
-                    </div>
-
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...smallFont }}>
-
-                            <div className="calendar-grid">
-                                {Datein.showgrid.call(this)}
-                            </div>
-
-                        </div>
-                    </div>
+                    {this.showdatemenu()}
 
                 </div>
             </div>
