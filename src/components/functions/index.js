@@ -770,21 +770,11 @@ export function trailingzero(num) {
     }
 }
 export function inputDateTimeOutDateObj(timein) {
-    let offset = new Date().getTimezoneOffset() / 60
-    let sym = "";
-    if (offset > 0) {
-        sym = "-"
-    }
-    else {
-        sym = "+"
-        offset = -offset;
-    }
-    if (offset < 10) {
-        offset = `0${offset}`
-    }
-    let newDate = new Date(`${timein.replace(/-/g, '/')}:00${sym}${offset}:00`);
+
+    let newDate = new Date(`${timein.replace(/-/g, '/')} UTC`);
     return (newDate)
 }
+
 export function inputUTCStringAddOffsetString(timein) {
 
     let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`)
@@ -864,31 +854,20 @@ export function inputDateObjOutputCalendarDaySeconds(datein) {
     return dateinsec;
 }
 export function inputtimeDBoutputCalendarDaySeconds(timein) {
-    let offset = new Date().getTimezoneOffset() / 60;
-    let sym = "";
-    if (offset < 0) {
-        offset = -offset;
-        sym = "+";
-    }
-    else if (offset < 10) {
-        offset = `0${offset}`
-        sym = "-";
-    }
-    else {
-        sym = "-";
-    }
 
-
-    let dateobj = new Date(`${(timein.replace(/-/g, '/'))}${sym}${offset}:00`);
-    let daymonth = dateobj.getMonth() + 1;
-    if (daymonth < 10) {
-        daymonth = `0${daymonth}`
+    let datein = new Date(`${timein.replace(/-/g, '/')} UTC`);
+    let month = datein.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`
     }
-    let dayyear = dateobj.getFullYear();
-    let calendarday = dateobj.getDate();
-
-    let calendardateobj = new Date(`${dayyear}/${daymonth}/${calendarday} 00:00:00${sym}${offset}:00`);
-    return (calendardateobj.getTime());
+    let date = datein.getDate();
+    if (date < 10) {
+        date = `0${date}`
+    }
+    let year = datein.getFullYear();
+    let offset = getOffset();
+    let newDate = new Date(`${year}/${month}/${date} 00:00:00${offset}`)
+    return (newDate.getTime())
 }
 export function check_31(dateobj) {
     let month = dateobj.getMonth();

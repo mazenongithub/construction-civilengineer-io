@@ -10,7 +10,12 @@ class ScheduleLabor extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, employeeid: '', activelaborid: '', csiid: '', milestoneid: '', description: '', timein: new Date(), timeout: new Date(new Date().getTime() + (1000 * 60 * 60)), activetimeincalendar: true, activetimeoutcalendar: true }
+        this.state = {
+            render: '', width: 0, height: 0, employeeid: '', activelaborid: '', csiid: '', milestoneid: '', description: '',
+            timein: new Date(),
+            timeout: new Date(new Date().getTime() + (1000 * 60 * 60)),
+            activetimeincalendar: true, activetimeoutcalendar: true
+        }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
 
     }
