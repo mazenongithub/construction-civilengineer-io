@@ -90,7 +90,7 @@ class TimeOut {
                         let timeout = mylabor.timeout;
                         timeout = toggleAMTimeString(mylabor.timeout)
 
-                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = timeout;
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = timeout;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
 
@@ -121,13 +121,13 @@ class TimeOut {
                 let mylabor = this.getactivelabor()
                 let timeout = mylabor.timeout;
                 if (inputtimeDBoutputCalendarDaySeconds(timeout) === dateencoded) {
-                    activeclass = "active-schedule-calendar"
+                    activeclass = "active-actual-calendar"
                 }
             }
             else {
                 let datein = this.state.timeout;
                 if (inputDateObjOutputCalendarDaySeconds(datein) === dateencoded) {
-                    activeclass = "active-schedule-calendar"
+                    activeclass = "active-actual-calendar"
                 }
 
             }
@@ -136,24 +136,25 @@ class TimeOut {
         const setDay = (dateencoded) => {
             let myuser = this.getuser();
             if (myuser) {
+
                 if (this.state.activelaborid) {
                     let myproject = this.getproject();
                     if (myproject) {
+                        let i = this.getprojectkey();
+                        let j = this.getactivelaborkey();
                         let mylabor = this.getactivelabor();
                         let laborid = mylabor.laborid;
                         let timeout = mylabor.timeout
-                        let i = this.getprojectkey();
-                        let j = this.getactivelaborkey();
                         let newtimeout = inputDateSecActiveIDTimein(dateencoded, timeout)
-                        myuser.companies.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout;
-
-                        this.props.reduxUser(myuser);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout;
+                        this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
 
-                    }
-                }
 
-                else {
+                    }
+
+
+                } else {
                     let timeout = inputDateObjandSecReturnObj(dateencoded, this.state.timeout);
 
                     this.setState({ timeout, render: 'render' })
@@ -745,7 +746,7 @@ class TimeOut {
                     let j = this.getactivelaborkey();
                     let mylabor = this.getactivelabor()
                     let newtimeout = increaseDateStringByOneMonth(mylabor.timeout);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -829,7 +830,7 @@ class TimeOut {
 
                     let mylabor = this.getactivelabor()
                     let newtimeout = increasedateStringbyInc(mylabor.timeout, inc);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -857,7 +858,7 @@ class TimeOut {
                     let j = this.getactivelaborkey();
                     let mylabor = this.getactivelabor()
                     let newtimeout = decreasedateStringbyInc(mylabor.timeout, inc);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
 
@@ -880,7 +881,7 @@ class TimeOut {
                     let j = this.getactivelaborkey();
                     let mylabor = this.getactivelabor()
                     let newtimeout = decreaseDateStringByOneMonth(mylabor.timeout);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -904,7 +905,7 @@ class TimeOut {
                     let j = this.getactivelaborkey();
                     let mylabor = this.getactivelabor()
                     let newtimeout = increaseDateStringByOneYear(mylabor.timeout);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
 
@@ -930,7 +931,7 @@ class TimeOut {
                     let j = this.getactivelaborkey();
                     let mylabor = this.getactivelabor()
                     let newtimeout = decreaseDateStringByOneYear(mylabor.timeout);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 }
@@ -969,11 +970,11 @@ class TimeOut {
                 this.props.projectsprovider.map((myproject, i) => {
                     if (myproject.projectid === projectid) {
 
-                        if (myproject.hasOwnProperty("schedulelabor")) {
+                        if (myproject.hasOwnProperty("actuallabor")) {
                             // eslint-disable-next-line
-                            myproject.schedulelabor.mylabor.map((mylabor, j) => {
+                            myproject.actuallabor.mylabor.map((mylabor, j) => {
                                 if (mylabor.laborid === laborid) {
-                                    this.props.projectsprovider[i].schedulelabor.mylabor[j].timeout = timeout;
+                                    this.props.projectsprovider[i].actuallabor.mylabor[j].timeout = timeout;
                                     let obj = this.props.projectsprovider;
                                     this.props.projectsProvider(obj);
                                     this.setState({ render: 'render' });

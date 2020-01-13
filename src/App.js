@@ -13,6 +13,7 @@ import Register from './components/register';
 import Company from './components/company';
 import Projects from './components/projects';
 import ScheduleLabor from './components/schedulelabor';
+import ActualLabor from './components/actuallabor';
 import ScheduleMaterials from './components/schedulematerials';
 import ScheduleEquipment from './components/scheduleequipment';
 import Equipment from './components/equipment';
@@ -83,6 +84,7 @@ class App extends Component {
         <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule" component={BidSchedule} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedulelabor" component={ScheduleLabor} />
+        <Route exact path="/:providerid/company/:companyid/projects/:projectid/actuallabor" component={ActualLabor} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedulematerials" component={ScheduleMaterials} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/scheduleequipment" component={ScheduleEquipment} />
       </Switch>)

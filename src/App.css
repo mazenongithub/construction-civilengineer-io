@@ -25,21 +25,10 @@
 .dateyeardown-1 {  fill: #e6e6e6;  stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.dateyeardown-2 {  fill: #666;}
 .datemonthdown-1 {  fill: #e6e6e6;  stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.datemonthdown-2 {  fill: #666;}
 .datemonthup-1 {  fill: #e6e6e6;  stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.datemonthup-2 {  fill: #666;}
-.closedatemenu-1 {
-  fill: #e6e6e6;
-  stroke: #000;
-}
-
-.closedatemenu-1,
-.closedatemenu-2 {
-  stroke-miterlimit: 10;
-  stroke-width: 2px;
-}
-
-.closedatemenu-2 {
-  fill: #666;
-  stroke: #666;
-}
+.closedatemenu-1 {  fill: #e6e6e6;  stroke: #000;}.closedatemenu-1,.closedatemenu-2 {  stroke-miterlimit: 10;  stroke-width: 2px;}.closedatemenu-2 {  fill: #666;  stroke: #666;}
+.actualdatearrowdown-1 {  fill: #570b17;  stroke: #000;  stroke-miterlimit: 10;}
+.actualdatearrowup-1 {  fill: #570b17;  stroke: #000;  stroke-miterlimit: 10;}
+.calendarIcon-2{fill:#fff;stroke:#A62152;stroke-miterlimit:10;stroke-width:0.5px;}
 .App {
   text-align: center;
   
@@ -61,6 +50,9 @@
 }
 .active-schedule-calendar {
   background-color: #00b0cf;
+}
+.active-actual-calendar {
+  background-color: #F47373;
 }
 
 .App-logo {

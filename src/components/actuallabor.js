@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { saveProjectIcon, removeIconSmall, majorDownIcon, DateArrowDown, DateArrowUp } from './svg';
-import { inputUTCStringForLaborID, calculatetotalhours, makeID, CreateScheduleLabor, inputDateObjOutputAdjString } from './functions'
-import TimeIn from './timein';
-import TimeOut from './timeout'
-class ScheduleLabor extends Component {
+import { saveProjectIcon, removeIconSmall, actualmajorDownIcon, ActualDateArrowDown, ActualDateArrowUp } from './svg';
+import { inputUTCStringForLaborID, calculatetotalhours, makeID, CreateActualLabor, inputDateObjOutputAdjString } from './functions'
+import TimeIn from './actualtimein';
+import TimeOut from './actualtimeout'
+class ActualLabor extends Component {
 
     constructor(props) {
         super(props);
@@ -135,9 +135,9 @@ class ScheduleLabor extends Component {
         let myproject = this.getproject();
         let laborids = [];
 
-        if (myproject.hasOwnProperty("schedulelabor")) {
+        if (myproject.hasOwnProperty("actuallabor")) {
             // eslint-disable-next-line
-            myproject.schedulelabor.mylabor.map(mylabor => {
+            myproject.actuallabor.mylabor.map(mylabor => {
                 console.log(mylabor)
                 laborids.push(this.showlaborid(mylabor))
             })
@@ -175,14 +175,14 @@ class ScheduleLabor extends Component {
         const regularFont = this.getRegularFont();
         const csi = this.getcsibyid(mylabor.csiid);
         let employee = this.getemployeebyproviderid(mylabor.providerid)
-
-        let hourlyrate = this.gethourlyrate(employee.providerid)
-
+        console.log(mylabor, mylabor.laborrate)
+        let hourlyrate = Number(mylabor.laborrate)
+        console.log(hourlyrate)
         return (<div key={mylabor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...this.getactivelaborbackground(mylabor.laborid) }} onClick={() => { this.makelaboractive(mylabor.laborid) }}>
 
             {employee.firstname} {employee.lastname}: {mylabor.description} CSI:{csi.csi}-{csi.title}<br />
             From {inputUTCStringForLaborID(mylabor.timein)} to {inputUTCStringForLaborID(mylabor.timeout)}
-            ${Number(hourlyrate).toFixed(2)}/Hr x {calculatetotalhours(mylabor.timeout, mylabor.timein)} Hrs = ${(Number(calculatetotalhours(mylabor.timeout, mylabor.timein)) * Number(hourlyrate)).toFixed(2)}
+            ${Number(hourlyrate).toFixed(2)}/Hr x {calculatetotalhours(mylabor.timeout, mylabor.timein)} Hrs = ${(Number(calculatetotalhours(mylabor.timeout, mylabor.timein)) * hourlyrate).toFixed(2)}
             <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
         </div>)
     }
@@ -255,6 +255,7 @@ class ScheduleLabor extends Component {
         return options;
     }
     getemployeebyproviderid(providerid) {
+        console.log(providerid)
         let allusers = this.getallusers();
         let user = false;
         if (allusers) {
@@ -302,9 +303,9 @@ class ScheduleLabor extends Component {
         if (this.state.activelaborid) {
             let laborid = this.state.activelaborid;
             if (myproject) {
-                if (myproject.hasOwnProperty("schedulelabor")) {
+                if (myproject.hasOwnProperty("actuallabor")) {
                     // eslint-disable-next-line
-                    myproject.schedulelabor.mylabor.map((mylabor, i) => {
+                    myproject.actuallabor.mylabor.map((mylabor, i) => {
                         if (mylabor.laborid === laborid) {
                             key = i;
                         }
@@ -320,9 +321,9 @@ class ScheduleLabor extends Component {
         if (this.state.activelaborid) {
             let laborid = this.state.activelaborid;
             if (myproject) {
-                if (myproject.hasOwnProperty("schedulelabor")) {
+                if (myproject.hasOwnProperty("actuallabor")) {
                     // eslint-disable-next-line
-                    myproject.schedulelabor.mylabor.map(mylabor => {
+                    myproject.actuallabor.mylabor.map(mylabor => {
                         if (mylabor.laborid === laborid) {
                             labor = mylabor;
                         }
@@ -392,7 +393,7 @@ class ScheduleLabor extends Component {
             let i = this.getprojectkey();
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
-                myuser.company.projects.myproject[i].schedulelabor.mylabor[j].description = description;
+                myuser.company.projects.myproject[i].actuallabor.mylabor[j].description = description;
                 this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
 
@@ -404,8 +405,10 @@ class ScheduleLabor extends Component {
                 let csiid = this.state.csiid;
                 let timein = inputDateObjOutputAdjString(this.state.timein);
                 let timeout = inputDateObjOutputAdjString(this.state.timeout);
-                let proposalid = "";
-                let newlabor = CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, description, proposalid)
+                let invoiceid = "";
+                let profit = 0;
+                let laborrate = this.gethourlyrate(providerid)
+                let newlabor = CreateActualLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit)
                 this.createnewlabor(newlabor, myuser, i)
             }
 
@@ -417,7 +420,7 @@ class ScheduleLabor extends Component {
             let i = this.getprojectkey();
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
-                myuser.company.projects.myproject[i].schedulelabor.mylabor[j].csiid = csiid;
+                myuser.company.projects.myproject[i].actuallabor.mylabor[j].csiid = csiid;
                 this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
 
@@ -429,8 +432,10 @@ class ScheduleLabor extends Component {
                 let description = this.state.description;
                 let timein = inputDateObjOutputAdjString(this.state.timein);
                 let timeout = inputDateObjOutputAdjString(this.state.timeout);
-                let proposalid = "";
-                let newlabor = CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, description, proposalid)
+                let invoiceid = "";
+                let profit = 0;
+                let laborrate = this.gethourlyrate(providerid)
+                let newlabor = CreateActualLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit)
                 this.createnewlabor(newlabor, myuser, i)
             }
 
@@ -442,7 +447,7 @@ class ScheduleLabor extends Component {
             let i = this.getprojectkey();
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
-                myuser.company.projects.myproject[i].schedulelabor.mylabor[j].milestoneid = milestoneid;
+                myuser.company.projects.myproject[i].actuallabor.mylabor[j].milestoneid = milestoneid;
                 this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
 
@@ -454,8 +459,10 @@ class ScheduleLabor extends Component {
                 let description = this.state.description;
                 let timein = inputDateObjOutputAdjString(this.state.timein);
                 let timeout = inputDateObjOutputAdjString(this.state.timeout);
-                let proposalid = "";
-                let newlabor = CreateScheduleLabor(laborid, providerid, csiid, milestoneid, timein, timeout, description, proposalid)
+                let invoiceid = "";
+                let profit = 0;
+                let laborrate = this.gethourlyrate(providerid)
+                let newlabor = CreateActualLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, invoiceid, profit)
                 this.createnewlabor(newlabor, myuser, i)
             }
 
@@ -468,7 +475,7 @@ class ScheduleLabor extends Component {
             let i = this.getprojectkey();
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
-                myuser.company.projects.myproject[i].schedulelabor.mylabor[j].providerid = providerid;
+                myuser.company.projects.myproject[i].actuallabor.mylabor[j].providerid = providerid;
                 this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
 
@@ -480,9 +487,10 @@ class ScheduleLabor extends Component {
                 let timein = inputDateObjOutputAdjString(this.state.timein);
                 let timeout = inputDateObjOutputAdjString(this.state.timeout);
                 let milestoneid = this.state.milestoneid;
-                let proposalid = "";
-
-                let newlabor = CreateScheduleLabor(laborid, providerid, csiid, milestoneid, timein, timeout, description, proposalid)
+                let invoiceid = "";
+                let profit = 0;
+                let laborrate = this.gethourlyrate(providerid)
+                let newlabor = CreateActualLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, invoiceid, profit)
                 this.createnewlabor(newlabor, myuser, i)
             }
 
@@ -494,7 +502,7 @@ class ScheduleLabor extends Component {
             let i = this.getprojectkey();
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
-                myuser.company.projects.myproject[i].schedulelabor.mylabor[j].laborrate = laborrate;
+                myuser.company.projects.myproject[i].actuallabor.mylabor[j].laborrate = laborrate;
                 this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
 
@@ -507,7 +515,9 @@ class ScheduleLabor extends Component {
                 let timeout = inputDateObjOutputAdjString(this.state.timeout);
                 let milestoneid = this.state.milestoneid;
                 let providerid = this.state.employeeid;
-                let newlabor = CreateScheduleLabor(laborid, providerid, csiid, milestoneid, timein, timeout, description)
+                let profit = 0;
+                let laborrate = this.gethourlyrate(providerid)
+                let newlabor = CreateActualLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, profit)
                 this.createnewlabor(newlabor, myuser, i)
             }
 
@@ -516,11 +526,11 @@ class ScheduleLabor extends Component {
     createnewlabor(newlabor, myuser, i) {
         let myproject = this.getproject();
         if (myproject) {
-            if (myproject.hasOwnProperty("schedulelabor")) {
-                myuser.company.projects.myproject[i].schedulelabor.mylabor.push(newlabor)
+            if (myproject.hasOwnProperty("actuallabor")) {
+                myuser.company.projects.myproject[i].actuallabor.mylabor.push(newlabor)
             } else {
-                let schedulelabor = { mylabor: [newlabor] }
-                myuser.company.projects.myproject[i].schedulelabor = schedulelabor;
+                let actuallabor = { mylabor: [newlabor] }
+                myuser.company.projects.myproject[i].actuallabor = actuallabor;
             }
             this.props.reduxUser(myuser)
             this.setState({ activelaborid: newlabor.laborid })
@@ -581,7 +591,7 @@ class ScheduleLabor extends Component {
                         {timeoutheader}
                     </div>
                     <div style={{ ...styles.flex1, ...styles.timedisplayContainer, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...styles.majorDownIcon }} onClick={() => { Timeout.activetimeoutcalendar.call(this) }}>{majorDownIcon()}</button>
+                        <button style={{ ...styles.generalButton, ...styles.majorDownIcon }} onClick={() => { Timeout.activetimeoutcalendar.call(this) }}>{actualmajorDownIcon()}</button>
                     </div>
                 </div>
 
@@ -589,73 +599,73 @@ class ScheduleLabor extends Component {
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer, ...styles.alignCenter }}>
 
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timeout.timeoutmonthup.call(this) }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timeout.timeoutmonthup.call(this) }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeoutputField, ...regularFont, ...styles.generalFont }} value={Timeout.gettimeoutmonth.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={event => { Timeout.timeoutmonthdown.call(this) }}> {DateArrowDown()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={event => { Timeout.timeoutmonthdown.call(this) }}> {ActualDateArrowDown()}</button>
                         </div>
 
                     </div>
 
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timeout.increasetimeoutbyinc.call(this, (1000 * 60 * 60 * 24)) }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timeout.increasetimeoutbyinc.call(this, (1000 * 60 * 60 * 24)) }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timeout.gettimeoutday.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timeout.decreasetimeoutbyinc.call(this, (1000 * 60 * 60 * 24)) }}> {DateArrowDown()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timeout.decreasetimeoutbyinc.call(this, (1000 * 60 * 60 * 24)) }}> {ActualDateArrowDown()}</button>
                         </div>
 
                     </div>
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex }}>
-                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timeout.timeoutyearup.call(this) }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timeout.timeoutyearup.call(this) }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timeout.gettimeoutyear.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timeout.timeoutyeardown.call(this) }}> {DateArrowDown()}</button>
+                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timeout.timeoutyeardown.call(this) }}> {ActualDateArrowDown()}</button>
                         </div>
                     </div>
 
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer }}>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.increasetimeoutbyinc.call(this, (1000 * 60 * 60)) }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.increasetimeoutbyinc.call(this, (1000 * 60 * 60)) }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timeout.gettimeouthours.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.decreasetimeoutbyinc.call(this, (1000 * 60 * 60)) }}> {DateArrowDown()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.decreasetimeoutbyinc.call(this, (1000 * 60 * 60)) }}> {ActualDateArrowDown()}</button>
                         </div>
                     </div>
 
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer }}>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.increasetimeoutbyinc.call(this, (1000 * 60)) }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.increasetimeoutbyinc.call(this, (1000 * 60)) }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timeout.gettimeoutminutes.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.decreasetimeoutbyinc.call(this, (1000 * 60)) }} > {DateArrowDown()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.decreasetimeoutbyinc.call(this, (1000 * 60)) }} > {ActualDateArrowDown()}</button>
                         </div>
                     </div>
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.toggletimeoutampm.call(this, "up") }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.toggletimeoutampm.call(this, "up") }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeoutputField, ...regularFont, ...styles.generalFont }} value={Timeout.gettimeoutampm.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.toggletimeoutampm.call(this, "down") }}> {DateArrowDown()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timeout.toggletimeoutampm.call(this, "down") }}> {ActualDateArrowDown()}</button>
                         </div>
                     </div>
                 </div>
@@ -679,7 +689,7 @@ class ScheduleLabor extends Component {
                         {timeinheader}
                     </div>
                     <div style={{ ...styles.flex1, ...styles.timedisplayContainer, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...styles.majorDownIcon }} onClick={() => { Timein.activetimeincalendar.call(this) }}>{majorDownIcon()}</button>
+                        <button style={{ ...styles.generalButton, ...styles.majorDownIcon }} onClick={() => { Timein.activetimeincalendar.call(this) }}>{actualmajorDownIcon()}</button>
                     </div>
                 </div>
 
@@ -687,73 +697,73 @@ class ScheduleLabor extends Component {
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer, ...styles.alignCenter }}>
 
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.timeinmonthup.call(this) }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.timeinmonthup.call(this) }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinmonth.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={event => { Timein.timeinmonthdown.call(this) }}> {DateArrowDown()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={event => { Timein.timeinmonthdown.call(this) }}> {ActualDateArrowDown()}</button>
                         </div>
 
                     </div>
 
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.increasetimeinbyinc.call(this, (1000 * 60 * 60 * 24)) }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.increasetimeinbyinc.call(this, (1000 * 60 * 60 * 24)) }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinday.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.decreasetimeinbyinc.call(this, (1000 * 60 * 60 * 24)) }}> {DateArrowDown()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.decreasetimeinbyinc.call(this, (1000 * 60 * 60 * 24)) }}> {ActualDateArrowDown()}</button>
                         </div>
 
                     </div>
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex }}>
-                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timein.timeinyearup.call(this) }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timein.timeinyearup.call(this) }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinyear.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timein.timeinyeardown.call(this) }}> {DateArrowDown()}</button>
+                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timein.timeinyeardown.call(this) }}> {ActualDateArrowDown()}</button>
                         </div>
                     </div>
 
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer }}>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.increasetimeinbyinc.call(this, (1000 * 60 * 60)) }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.increasetimeinbyinc.call(this, (1000 * 60 * 60)) }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinhours.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.decreasetimeinbyinc.call(this, (1000 * 60 * 60)) }}> {DateArrowDown()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.decreasetimeinbyinc.call(this, (1000 * 60 * 60)) }}> {ActualDateArrowDown()}</button>
                         </div>
                     </div>
 
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer }}>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.increasetimeinbyinc.call(this, (1000 * 60)) }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.increasetimeinbyinc.call(this, (1000 * 60)) }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinminutes.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.decreasetimeinbyinc.call(this, (1000 * 60)) }} > {DateArrowDown()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.decreasetimeinbyinc.call(this, (1000 * 60)) }} > {ActualDateArrowDown()}</button>
                         </div>
                     </div>
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.toggletimeinampm.call(this, "up") }}>{DateArrowUp()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.toggletimeinampm.call(this, "up") }}>{ActualDateArrowUp()}</button>
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
                             <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinampm.call(this)} />
                         </div>
                         <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.toggletimeinampm.call(this, "down") }}> {DateArrowDown()}</button>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.toggletimeinampm.call(this, "down") }}> {ActualDateArrowDown()}</button>
                         </div>
                     </div>
                 </div>
@@ -814,7 +824,7 @@ class ScheduleLabor extends Component {
 
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                        /schedulelabor
+                        /actuallabor
                 </div>
                 </div>
 
@@ -889,4 +899,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, actions)(ScheduleLabor);
+export default connect(mapStateToProps, actions)(ActualLabor);

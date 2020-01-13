@@ -28,6 +28,10 @@ export function CreateCostID(costid, cost, detail, timein) {
 export function CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, description, proposalid) {
     return ({ laborid, providerid, milestoneid, csiid, timein, timeout, description, proposalid })
 }
+
+export function CreateActualLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit) {
+    return ({ laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit })
+}
 export function CreateBidScheduleItem(lineid, csiid, profit, unit, quantity) {
     return ({ lineid, csiid, profit, unit, quantity })
 }
