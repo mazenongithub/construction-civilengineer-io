@@ -130,7 +130,7 @@ class Project extends Component {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/schedulematerials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actualmaterials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                         /actualmaterials
                                     </Link>
                                 </div>
@@ -217,7 +217,7 @@ class Project extends Component {
 
                                 <div style={{ ...styles.generalFlex }}>
                                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                        <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/schedulematerials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                        <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actualmaterials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                             /actualmaterials
                                         </Link>
                                     </div>

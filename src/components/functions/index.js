@@ -7,6 +7,9 @@ export function CreateCSI(csiid, csi, title) {
 export function CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid) {
     return ({ materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid })
 }
+export function CreateActualMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit) {
+    return ({ materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit })
+}
 export function CreateBenefit(benefitid, benefit, accountid, amount) {
     return ({ benefitid, benefit, accountid, amount })
 }

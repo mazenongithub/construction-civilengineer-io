@@ -152,6 +152,9 @@ export function MyStylesheet() {
         font60: {
             fontSize: '60px'
         },
+        font18: {
+            fontSize: '18px'
+        },
         font72: {
             fontSize: '72px'
         },
