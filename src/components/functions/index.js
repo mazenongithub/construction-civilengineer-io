@@ -19,11 +19,17 @@ export function CreateCompany(companyid, company, manager, address, city, contac
 export function CreateRentalRate(month, week, day, hour) {
     return ({ month, week, day, hour })
 }
+export function CreateProposal(proposalid, providerid, updated, approved) {
+    return ({ proposalid, providerid, updated, approved })
+}
 export function CreateEquipment(equipmentid, equipment, workinghours) {
     return ({ equipmentid, equipment, workinghours })
 }
 export function CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid) {
     return ({ equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid })
+}
+export function CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, invoiceid, profit) {
+    return ({ equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, invoiceid, profit })
 }
 export function CreateCostID(costid, cost, detail, timein) {
     return ({ costid, cost, detail, timein })
@@ -31,12 +37,56 @@ export function CreateCostID(costid, cost, detail, timein) {
 export function CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, description, proposalid) {
     return ({ laborid, providerid, milestoneid, csiid, timein, timeout, description, proposalid })
 }
+export function UTCStringFormatDateforProposal(timeout) {
+    let newDate = new Date(`${timeout.replace(/-/g, '/')}-00:00`)
+    let month = newDate.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`
+    }
+    let day = newDate.getDate();
+    if (day < 10) {
+        day = `0${day}`
+    }
+    let year = newDate.getFullYear();
+    let century = Math.floor(year / 100) * 100;
+    year = year - century;
+    let hours = newDate.getHours();
+    let minutes = newDate.getMinutes();
+    if (minutes < 10) {
+        minutes = `0${minutes}`
+    }
+    let timeofday = "";
+    if (hours >= 12) {
+        timeofday = "pm"
+    }
+    else {
+        timeofday = "am"
+    }
+    if (hours > 12) {
+        hours = hours - 12;
+    }
+    return (`${month}/${day}/${year} on ${hours}:${minutes} ${timeofday}`)
+}
+
+export function sorttimes(timeina, timeinb) {
+    timeina = new Date(timeina.replace(/-/g, '/'))
+    timeinb = new Date(timeinb.replace(/-/g, '/'))
+    if (timeina < timeinb) {
+        return -1;
+    }
+    else if (timeinb > timeina) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
 
 export function CreateActualLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit) {
     return ({ laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit })
 }
-export function CreateBidScheduleItem(lineid, csiid, profit, unit, quantity) {
-    return ({ lineid, csiid, profit, unit, quantity })
+export function CreateBidScheduleItem(lineid, csiid, unit, quantity) {
+    return ({ lineid, csiid, unit, quantity })
 }
 export function inputDateSecActiveIDTimein(dateencoded, timein) {
     let newDate = new Date(dateencoded)
@@ -1040,7 +1090,7 @@ export function calculatetotalhours(timeout, timein) {
 
     let datein = new Date(`${timein.replace(/-/g, '/')}`)
     let dateout = new Date(`${timeout.replace(/-/g, '/')}`)
-    let totalhours = ((dateout.getTime() - datein.getTime()) / (1000 * 60 * 60)).toFixed(2)
+    let totalhours = ((dateout.getTime() - datein.getTime()) / (1000 * 60 * 60))
     return totalhours;
 }
 

@@ -140,7 +140,7 @@ class TimeOut {
                     let myproject = this.getproject();
                     if (myproject) {
                         let mylabor = this.getactivelabor();
-                        let laborid = mylabor.laborid;
+
                         let timeout = mylabor.timeout
                         let i = this.getprojectkey();
                         let j = this.getactivelaborkey();
