@@ -86,7 +86,7 @@ class PurchaseDate {
 
             let dateencoded = calendardate.getTime();
 
-            showday.push(<div
+            showday.push(<div key={dateencoded}
                 className={`${Datein.getactivedate.call(this, dateencoded)} calendar-date`}
                 onClick={() => { Datein.setDay.call(this, dateencoded) }}
             > {day}</div>)
@@ -775,7 +775,7 @@ class PurchaseDate {
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
-                        <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.calendarContainer, ...styles.marginAuto }}>
+                        <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.calendarContainer, ...styles.marginAuto, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex1 }}>
                                 <button style={{ ...styles.dateButton, ...styles.generalButton }}
                                     onClick={() => { Datein.yeardown.call(this) }}> {dateYearDown()}</button>
@@ -798,7 +798,7 @@ class PurchaseDate {
 
                         </div>
 
-                        <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex1, ...styles.generalFont, ...smallFont }}>
 
                                 <div className="calendar-grid">

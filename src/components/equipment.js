@@ -3,20 +3,22 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { radioOpen, radioClosed, saveCompanyIcon, removeIconSmall, openDetail, closeDetail } from './svg'
-import { CreateCostID, makeID, CreateRentalRate, CreateEquipment } from './functions';
+import { CreateCostID, makeID, CreateRentalRate, CreateEquipment, formatDateStringDisplay, DateStringFromDateObj } from './functions';
 import DynamicStyles from './dynamicstyles';
 import PurchaseDate from './purchasedate';
 import SaleDate from './saledate';
 import EquipmentDate from './equipmentdate';
+
 class Equipment extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activeequipmentid: '', equipment: '', ownership: '', activecostid: '', cost: '', purchasedate: new Date(), saledate: new Date(), purchasecalender: 'open', resaledate: '', detail: '', resalevalue: '', loaninterest: '', workinghours: '', showdetail: true, equipmentdate: new Date() }
+        this.state = { render: '', width: 0, height: 0, activeequipmentid: '', equipment: '', ownership: '', activecostid: '', cost: '', purchasedate: new Date(), saledate: new Date(), purchasecalender: 'open', resaledate: '', detail: '', resalevalue: '', loaninterest: '', workinghours: '', showdetail: true, equipmentdate: new Date(), costmenu: true }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        console.log(this.state)
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -139,7 +141,12 @@ class Equipment extends Component {
                 this.setState({ equipment })
                 let equipmentid = makeID(16);
                 let workinghours = 0;
-                let newEquipment = CreateEquipment(equipmentid, equipment, workinghours)
+                let ownership = "";
+                let purchasedate = DateStringFromDateObj(this.state.purchasedate);
+                let saledate = DateStringFromDateObj(this.state.saledate);
+                let loaninterest = 0;
+                let resalevalue = 0;
+                let newEquipment = CreateEquipment(equipmentid, equipment, workinghours, ownership, purchasedate, saledate, loaninterest, resalevalue)
 
                 if (myuser.company.hasOwnProperty("equipment")) {
                     myuser.company.equipment.myequipment.push(newEquipment);
@@ -160,7 +167,10 @@ class Equipment extends Component {
         if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    Equipment  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                    Equipment
+                </div>
+                <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont }}>
+                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
                         value={this.getequipment()}
                         onChange={event => { this.handleequipment(event.target.value) }}
                     />
@@ -275,8 +285,9 @@ class Equipment extends Component {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
         const removeIcon = this.getremoveicon()
-        return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...this.getactiveecostbackground(cost.costid) }} onClick={() => { this.makeequipmentcostactive(cost.costid) }}>
-            {cost.timein} {cost.cost}  {cost.detail} <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
+        return (<div key={cost.costid}
+            style={{ ...styles.generalContainer, ...regularFont, ...styles.bottomMargin15, ...styles.generalFont, ...this.getactiveecostbackground(cost.costid) }} onClick={() => { this.makeequipmentcostactive(cost.costid) }}>
+            {formatDateStringDisplay(cost.timein)} Cost:${Number(cost.cost).toFixed(2)}  Detail: {cost.detail} <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
         </div>)
 
 
@@ -480,7 +491,7 @@ class Equipment extends Component {
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1 }}>
 
-                                <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                     <div style={{ ...styles.flex1 }}>
                                         <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...styles.addRightMargin }}>
                                             {equipmentdate.showdatein.call(this)}
@@ -689,7 +700,7 @@ class Equipment extends Component {
             if (myequipment.ownershipstatus === 'rented' && this.state.showdetail) {
                 if (this.state.width > 800) {
                     return (
-                        <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex1 }}>
 
                                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
@@ -698,7 +709,7 @@ class Equipment extends Component {
                             </div>
                                 </div>
 
-                                <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                                         Month <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
                                             value={this.getmonth()}
@@ -713,7 +724,7 @@ class Equipment extends Component {
 
                                 </div>
 
-                                <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                                         Day <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
                                             value={this.getday()}
@@ -826,6 +837,7 @@ class Equipment extends Component {
         }
     }
     makequipmentactive(equipmentid) {
+        console.log("makeequipmentactive")
         if (this.state.activeequipmentid !== equipmentid) {
             this.setState({ activeequipmentid: equipmentid })
         } else {
@@ -863,7 +875,7 @@ class Equipment extends Component {
         const regularFont = this.getRegularFont();
         if (this.state.activeequipmentid) {
             return (
-                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, }}>
+                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
                     Account  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
                         value={this.getaccountid()}
                         onChange={event => { this.handleaccountid(event.target.value) }}>
@@ -902,7 +914,7 @@ class Equipment extends Component {
     handledetailicon() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
-        const hideDetail = dynamicstyles.gethidedetails.call(this)
+        const hideDetail = dynamicstyles.gethidedetails.call(this);
         if (this.state.activeequipmentid) {
             if (this.state.showdetail) {
                 return (<span>Hide Detail <button style={{ ...styles.generalButton, ...hideDetail }} onClick={() => { this.setState({ showdetail: false }) }}>{closeDetail()} </button></span>)
@@ -923,10 +935,10 @@ class Equipment extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
 
         if (this.state.activeequipmentid) {
-            return (<div style={{ ...styles.generalFlex, ...regularFont, ...styles.generalFont }}>
+            return (<div style={{ ...styles.generalFlex, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1 }}>
-                    Owned  <button style={{ ...styles.generalButton, ...radioButton, ...styles.addRightMargin }}>{this.handleOwnedIcon()}</button>
-                    Rented  <button style={{ ...styles.generalButton, ...radioButton, ...styles.addRightMargin, }}>  {this.handleRentedIcon()}</button>
+                    Owned  <button style={{ ...styles.generalButton, ...radioButton, ...styles.addRightMargin }} onClick={() => { this.handleOwned() }}>{this.handleOwnedIcon()}</button>
+                    Rented  <button style={{ ...styles.generalButton, ...radioButton, ...styles.addRightMargin }} onClick={() => { this.handleRented() }}>  {this.handleRentedIcon()}</button>
                     {this.handledetailicon()}
                 </div>
 
@@ -935,6 +947,97 @@ class Equipment extends Component {
         } else {
             return;
         }
+    }
+    handleOwned() {
+        let dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (this.state.activeequipmentid) {
+
+                let myequipment = this.getactiveequipment();
+                let i = this.getactiveequipmentkey();
+                if (myequipment.ownershipstatus !== 'owned') {
+                    myuser.company.equipment.myequipment[i].ownershipstatus = 'owned'
+
+                } else {
+                    myuser.company.equipment.myequipment[i].ownershipstatus = ''
+                }
+
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+
+            }
+
+        }
+    }
+
+    handleRented() {
+        let dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (this.state.activeequipmentid) {
+
+                let myequipment = this.getactiveequipment();
+                let i = this.getactiveequipmentkey();
+                if (myequipment.ownershipstatus !== 'rented') {
+                    myuser.company.equipment.myequipment[i].ownershipstatus = 'rented'
+
+                } else {
+                    myuser.company.equipment.myequipment[i].ownershipstatus = ''
+                }
+
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+
+            }
+
+        }
+
+    }
+    handleworkinghours(workinghours) {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (this.state.activeequipmentid) {
+                let i = this.getactiveequipmentkey();
+                myuser.company.equipment.myequipment[i].workinghours = workinghours;
+                this.props.reduxUser(myuser)
+                this.setState({ render: 'render' })
+
+            }
+
+        }
+
+    }
+    handleloaninterest(interest) {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (this.state.activeequipmentid) {
+                let i = this.getactiveequipmentkey();
+                myuser.company.equipment.myequipment[i].loaninterest = interest;
+                this.props.reduxUser(myuser)
+                this.setState({ render: 'render' })
+
+            }
+
+        }
+
+    }
+    handleresalevalue(resalevalue) {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (this.state.activeequipmentid) {
+                let i = this.getactiveequipmentkey();
+                myuser.company.equipment.myequipment[i].resalevalue = resalevalue;
+                this.props.reduxUser(myuser)
+                this.setState({ render: 'render' })
+
+            }
+
+        }
+
     }
     equipmentdetail() {
         const styles = MyStylesheet();
@@ -946,10 +1049,10 @@ class Equipment extends Component {
         if (this.state.activeequipmentid) {
             let myequipment = this.getactiveequipment();
             if (myequipment.ownershipstatus === 'owned' && this.state.showdetail) {
-                return (<div style={{ ...styles.generalFlex, ...regularFont, ...styles.generalFont }}>
+                return (<div style={{ ...styles.generalFlex, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }}>
                     <div style={{ ...styles.flex1 }}>
 
-                        <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex2 }}>
                                 {purchasedate.showdatein.call(this)}
                             </div>
@@ -957,10 +1060,11 @@ class Equipment extends Component {
                                 Loan Interest <br />
                                 <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
                                     value={this.getloaninterest()}
+                                    onChange={event => { this.handleloaninterest(event.target.value) }}
                                 />
                             </div>
                         </div>
-                        <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex2 }}>
                                 {saledate.showdatein.call(this)}
 
@@ -968,7 +1072,9 @@ class Equipment extends Component {
                             <div style={{ ...styles.flex1 }}>
                                 Resale Value <br />
                                 <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
-                                    value={this.getresalevalue()} />
+                                    value={this.getresalevalue()}
+                                    onChange={event => { this.handleresalevalue(event.target.value) }}
+                                />
                             </div>
                         </div>
                         <div style={{ ...styles.generalFlex }}>
@@ -976,6 +1082,7 @@ class Equipment extends Component {
                                 Estimated Annual Working Hours
                         <input type="text" style={{ ...styles.generalFont, ...regularFont }}
                                     value={this.getworkinghours()}
+                                    onChange={event => { this.handleworkinghours(event.target.value) }}
                                 />
                             </div>
 
@@ -990,6 +1097,49 @@ class Equipment extends Component {
         } else {
             return;
         }
+    }
+    showcostaccounts() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const hideDetail = dynamicstyles.gethidedetails.call(this);
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const iconmenu = () => {
+            if (this.state.costmenu) {
+                return (<span>Hide Cost Menu <button style={{ ...styles.generalButton, ...hideDetail }} onClick={() => { this.setState({ costmenu: false }) }}>{closeDetail()} </button></span>)
+            } else {
+                return (<span>Show Cost Menu <button style={{ ...styles.generalButton, ...hideDetail }} onClick={() => { this.setState({ costmenu: true }) }}>{openDetail()} </button></span>)
+            }
+        }
+        const costmenu = () => {
+            if (this.state.costmenu) {
+                return (<div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
+                        {this.showaccountmenu()}
+                        {this.showequipmentowned()}
+                    </div>
+                </div>)
+            }
+        }
+        if (this.state.activeequipmentid) {
+            let myequipment = this.getactiveequipment();
+            if (myequipment.ownershipstatus === 'owned') {
+                return (
+                    <div style={{ ...styles.flex }}>
+                        <div style={{ ...styles.flex1 }}>
+
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                    {iconmenu()}
+                                </div>
+                            </div>
+                            {costmenu()}
+                        </div>
+                    </div>
+                )
+            }
+
+        }
+
     }
     render() {
         const styles = MyStylesheet();
@@ -1008,10 +1158,10 @@ class Equipment extends Component {
                     </div>
 
                     {this.showequipment()}
+                    {this.showequipmentids()}
                     {this.showequipmentdetail()}
                     {this.equipmentdetail()}
-                    {this.showaccountmenu()}
-                    {this.showequipmentowned()}
+                    {this.showcostaccounts()}
                     {this.showrentalrates()}
 
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
@@ -1022,7 +1172,7 @@ class Equipment extends Component {
                         <button style={{ ...styles.generalButton, ...savecompanyicon }}>{saveCompanyIcon()}</button>
                     </div>
 
-                    {this.showequipmentids()}
+
                 </div>
             </div>
         )

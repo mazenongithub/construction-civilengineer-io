@@ -22,8 +22,8 @@ export function CreateRentalRate(month, week, day, hour) {
 export function CreateProposal(proposalid, providerid, updated, approved) {
     return ({ proposalid, providerid, updated, approved })
 }
-export function CreateEquipment(equipmentid, equipment, workinghours) {
-    return ({ equipmentid, equipment, workinghours })
+export function CreateEquipment(equipmentid, equipment, workinghours, ownershipstatus, purchasedate, saledate, loaninterest, resalevalue) {
+    return ({ equipmentid, equipment, workinghours, ownershipstatus, purchasedate, saledate, loaninterest, resalevalue })
 }
 export function CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid) {
     return ({ equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid })
@@ -168,19 +168,19 @@ export function decreaseCalendarDaybyOneYear(timein) {
 }
 export function decreaseCalendarDaybyOneMonth(timein) {
     let offset = getOffset();
-let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
-let currentMonth = datein.getMonth() + 1;
-let year = datein.getFullYear();
-let decreaseMonth = currentMonth;
-if(currentMonth === 1) {
-decreaseMonth = 12;
-year-=1
-} else {
-decreaseMonth-=1;
-}
+    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+    let currentMonth = datein.getMonth() + 1;
+    let year = datein.getFullYear();
+    let decreaseMonth = currentMonth;
+    if (currentMonth === 1) {
+        decreaseMonth = 12;
+        year -= 1
+    } else {
+        decreaseMonth -= 1;
+    }
 
-let day = datein.getDate();
- if (decreaseMonth < 10) {
+    let day = datein.getDate();
+    if (decreaseMonth < 10) {
         decreaseMonth = `0${decreaseMonth}`
     }
 
@@ -188,24 +188,24 @@ let day = datein.getDate();
         day = `0${day}`
     }
 
- let newDate = `${year}-${decreaseMonth}-${day}`
-return(newDate)
+    let newDate = `${year}-${decreaseMonth}-${day}`
+    return (newDate)
 }
 export function increaseCalendarDayOneMonth(timein) {
     let offset = getOffset();
-let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
-let currentMonth = datein.getMonth() + 1;
-let year = datein.getFullYear();
-let increaseMonth = currentMonth;
-if(currentMonth === 12) {
-increaseMonth = 1;
-year+=1
-} else {
-increaseMonth+=1;
-}
+    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+    let currentMonth = datein.getMonth() + 1;
+    let year = datein.getFullYear();
+    let increaseMonth = currentMonth;
+    if (currentMonth === 12) {
+        increaseMonth = 1;
+        year += 1
+    } else {
+        increaseMonth += 1;
+    }
 
-let day = datein.getDate();
- if (increaseMonth < 10) {
+    let day = datein.getDate();
+    if (increaseMonth < 10) {
         increaseMonth = `0${increaseMonth}`
     }
 
@@ -213,8 +213,8 @@ let day = datein.getDate();
         day = `0${day}`
     }
 
- let newDate = `${year}-${increaseMonth}-${day}`
-return(newDate)
+    let newDate = `${year}-${increaseMonth}-${day}`
+    return (newDate)
 }
 export function increaseCalendarDaybyOneYear(timein) {
     let offset = getOffset();
@@ -991,6 +991,20 @@ export function inputDateObjOutputCalendarDaySeconds(datein) {
     let dateinsec = new Date(`${month}/${day}/${year} 00:00:00${sym}${offset}:00`).getTime();
     return dateinsec;
 }
+export function formatDateStringDisplay(timein) {
+    timein.replace(/-/g, '/')
+    timein = timein.split('-')
+    let year = "";
+    let month = "";
+    let day = "";
+
+    if (timein.length === 3) {
+        year = timein[0]
+        month = timein[1]
+        day = timein[2]
+    }
+    return (`${month}/${day}/${year}`)
+}
 export function inputSecOutDateString(dateencoded) {
     const newDate = new Date(dateencoded)
     let year = newDate.getFullYear();
@@ -1297,6 +1311,18 @@ export function inputDateObjOutputAdjString(datein) {
     }
 
     return (`${year}-${month}-${day} ${hours}:${minutes}:00`)
+}
+export function DateStringFromDateObj(datein) {
+    let year = datein.getFullYear();
+    let month = datein.getMonth() + 1;
+    let day = datein.getDate();
+    if (month < 10) {
+        month = `0${month}`
+    }
+    if (day < 10) {
+        day = `0${day}`
+    }
+    return (`${year}-${month}-${day}`)
 }
 export function inputDateObjOutputCalendarString(datein) {
 

@@ -86,7 +86,7 @@ class SaleDate {
 
             let dateencoded = calendardate.getTime();
 
-            showday.push(<div
+            showday.push(<div key={dateencoded + 100}
                 className={`${Datein.getactivedate.call(this, dateencoded)} calendar-date`}
                 onClick={() => { Datein.setDay.call(this, dateencoded) }}
             > {day}</div>)

@@ -114,10 +114,13 @@ export function MyStylesheet() {
             color: '#000000'
         },
         flex2: {
-            flex: 2,
+            flex: 2
         },
         flex3: {
-            flex: 3,
+            flex: 3
+        },
+        flex4: {
+            flex: 4
         },
         alignCenter: {
             textAlign: 'center'

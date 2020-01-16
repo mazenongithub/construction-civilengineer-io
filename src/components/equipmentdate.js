@@ -86,7 +86,7 @@ class EquipmentDate {
 
             let dateencoded = calendardate.getTime();
 
-            showday.push(<div
+            showday.push(<div key={`${dateencoded}a`}
                 className={`${Datein.getactivedate.call(this, dateencoded)} calendar-date`}
                 onClick={() => { Datein.setDay.call(this, dateencoded) }}
             > {day}</div>)
@@ -837,7 +837,7 @@ class EquipmentDate {
 
                     <div style={{ ...styles.dateinContainer, ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex5, ...regularFont, ...styles.generalFont }}>
-                            Date  <br /> <input type="date"
+                            Enter Cost Date<br /> <input type="date"
                                 value={Datein.getvalue.call(this)}
                                 style={{ ...styles.generalField, ...regularFont, ...styles.generalFont }}
                                 onChange={event => { Datein.handleChange.call(this, event.target.value) }} />
