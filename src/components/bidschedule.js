@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { saveProjectIcon } from './svg';
-import { CreateBidScheduleItem, makeID, calculatetotalhours } from './functions'
+import { CreateBidScheduleItem, makeID, ProfitForLabor, DirectCostForMaterial, DirectCostForLabor, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment } from './functions'
+import DynamicStyles from './dynamicstyles'
 
 class BidSchedule extends Component {
     constructor(props) {
@@ -174,38 +174,7 @@ class BidSchedule extends Component {
         }
         return lineids;
     }
-    getcsibyid(csiid) {
-        let csi = false;
-        let company = this.getcompany();
-        if (company.hasOwnProperty("construction")) {
-            if (company.construction.hasOwnProperty("csicodes")) {
-                // eslint-disable-next-line
-                company.construction.csicodes.code.map(code => {
-                    if (code.csiid === csiid) {
-                        csi = code;
 
-                    }
-                })
-            }
-
-            if (!csi) {
-                if (company.construction.hasOwnProperty("civilengineer")) {
-                    if (company.construction.civilengineer.hasOwnProperty("csicodes")) {
-                        // eslint-disable-next-line
-                        company.construction.civilengineer.csicodes.code.map(code => {
-                            if (code.csiid === csiid) {
-                                csi = code;
-
-                            }
-                        })
-                    }
-
-                }
-            }
-
-        }
-        return csi;
-    }
     getcompany() {
         let myuser = this.getuser();
         let company = false;
@@ -279,8 +248,7 @@ class BidSchedule extends Component {
                 // eslint-disable-next-line
                 myproject.schedulelabor.mylabor.map(mylabor => {
                     if (mylabor.csiid === csiid) {
-                        let hourlyrate = this.gethourlyrate(mylabor.providerid)
-                        directcost += Number(calculatetotalhours(mylabor.timeout, mylabor.timein)) * Number(hourlyrate);
+                        directcost += DirectCostForLabor(mylabor)
 
                     }
                 })
@@ -289,7 +257,19 @@ class BidSchedule extends Component {
             if (myproject.hasOwnProperty("schedulematerials")) {
                 // eslint-disable-next-line
                 myproject.schedulematerials.mymaterial.map(mymaterial => {
-                    directcost += Number(mymaterial.quantity) * Number(mymaterial.unitcost)
+                    if (mymaterial.csiid === csiid) {
+                        directcost += DirectCostForMaterial(mymaterial)
+                    }
+
+                })
+            }
+
+            if (myproject.hasOwnProperty("scheduleequipment")) {
+                // eslint-disable-next-line
+                myproject.scheduleequipment.myequipment.map(myequipment => {
+                    if (myequipment.csiid === csiid) {
+                        directcost += DirectCostForMaterial(myequipment)
+                    }
 
                 })
             }
@@ -337,37 +317,85 @@ class BidSchedule extends Component {
         }
         return key;
     }
+
     getquantity(csiid) {
+        let quantity = 0;
+        const dynamicstyles = new DynamicStyles();
+        let myproposal = dynamicstyles.getmyproposals.call(this)
+        if (myproposal) {
+            // eslint-disable-next-line
+            myproposal.map(proposals => {
 
-        let scheduleitem = this.getscheduleitem(csiid);
+                if (proposals.hasOwnProperty("bidschedule")) {
+                    // eslint-disable-next-line
+                    proposals.bidschedule.biditem.map(item => {
+                        if (item.unit && item.unit !== 'Lump Sum' && item.csiid === csiid) {
+                            quantity += Number(item.quantity);
+                        }
+                    })
+                }
 
-        if (scheduleitem) {
-            return Number(scheduleitem.quantity);
-        } else {
-            return;
+
+            })
+
         }
+        return quantity;
 
     }
     getunit(csiid) {
+        let unit = ""
+        const dynamicstyles = new DynamicStyles();
+        let myproposal = dynamicstyles.getmyproposals.call(this)
+        if (myproposal) {
+            // eslint-disable-next-line
+            myproposal.map(proposals => {
 
-        let scheduleitem = this.getscheduleitem(csiid);
+                if (proposals.hasOwnProperty("bidschedule")) {
+                    // eslint-disable-next-line
+                    proposals.bidschedule.biditem.map(item => {
+                        if (item.csiid === csiid) {
+                            unit = item.unit
+                        }
+                    })
+                }
 
-        if (scheduleitem) {
-            return scheduleitem.unit;
-        } else {
-            return;
+
+            })
+
         }
+        return unit;
 
     }
     getprofit(csiid) {
+        const dynamicstyles = new DynamicStyles();
+        const myschedule = dynamicstyles.getAllSchedule.call(this);
+        let directcost = 0;
+        let profit = 0;
+        if (myschedule.length > 0) {
+            // eslint-disable-next-line
+            myschedule.map(item => {
+                if (item.hasOwnProperty("laborid")) {
+                    if (item.csiid === csiid) {
+                        directcost += DirectCostForLabor(item);
+                        profit += ProfitForLabor(item)
+                    }
+                }
+                else if (item.hasOwnProperty("materialid")) {
+                    if (item.csiid === csiid) {
+                        directcost += DirectCostForMaterial(item);
+                        profit += ProfitForMaterial(item)
+                    }
+                } else if (item.hasOwnProperty("equipmentid")) {
+                    if (item.csiid === csiid) {
+                        directcost += DirectCostForEquipment(item);
+                        profit += ProfitForEquipment(item)
+                    }
+                }
 
-        let scheduleitem = this.getscheduleitem(csiid);
-
-        if (scheduleitem) {
-            return scheduleitem.profit
-        } else {
-            return scheduleitem;
+            })
         }
+
+        return +Number((profit / directcost) * 100).toFixed(4)
 
     }
     getbidprice(csiid) {
@@ -434,10 +462,10 @@ class BidSchedule extends Component {
 
     }
     showbiditem(item) {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
-        const csi = this.getcsibyid(item.csiid);
-        const bidField = this.getbidfield()
+        const csi = dynamicstyles.getcsibyid.call(this, item.csiid);
         let profit = this.getprofit(item.csiid)
         let quantity = this.getquantity(item.csiid)
         let bidprice = Number(this.getbidprice(item.csiid)).toFixed(2);
@@ -448,21 +476,10 @@ class BidSchedule extends Component {
             return (
                 <tr>
                     <td>{csi.csi}-{csi.title}</td>
-                    <td style={{ ...styles.alignCenter }}>
-                        <input type="text" style={{ ...regularFont, ...styles.generalFont, ...bidField, ...styles.alignCenter }}
-                            value={quantity}
-                            onChange={event => { this.handlequantity(item.csiid, event.target.value) }}
-                        /></td>
-                    <td style={{ ...styles.alignCenter }}><input type="text" style={{ ...regularFont, ...styles.generalFont, ...bidField, ...styles.alignCenter }}
-                        value={unit}
-                        onChange={event => { this.handleunit(item.csiid, event.target.value) }}
-
-                    /></td>
-                    <td style={{ ...styles.alignCenter }}>{this.getdirectcost(csi.csiid)}</td>
-                    <td style={{ ...styles.alignCenter }}> <input type="text" style={{ ...regularFont, ...styles.generalFont, ...bidField, ...styles.alignCenter }}
-                        value={profit}
-                        onChange={event => { this.handleprofit(item.csiid, event.target.value) }}
-                    /></td>
+                    <td style={{ ...styles.alignCenter }}>{quantity} </td>
+                    <td style={{ ...styles.alignCenter }}> {unit}</td>
+                    <td style={{ ...styles.alignCenter }}>{directcost}</td>
+                    <td style={{ ...styles.alignCenter }}>{profit}</td>
                     <td style={{ ...styles.alignCenter }}>${bidprice}</td>
                     <td style={{ ...styles.alignCenter }}> {`$${unitprice}/${unit}`}</td>
                 </tr>)
@@ -479,18 +496,11 @@ class BidSchedule extends Component {
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Quantity <br />
-                                <input type="text" style={{ ...regularFont, ...styles.generalFont, ...bidField }}
-                                    value={quantity}
-                                    onChange={event => { this.handlequantity(item.csiid, event.target.value) }}
-                                />
+                                {quantity}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit <br />
-                                <input type="text" style={{ ...regularFont, ...styles.generalFont, ...bidField }}
-                                    value={unit}
-                                    onChange={event => { this.handleunit(item.csiid, event.target.value) }}
-
-                                />
+                                {unit}
                             </div>
                         </div>
 
@@ -501,9 +511,7 @@ class BidSchedule extends Component {
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Overhead And Profit % <br />
-                                <input type="text" style={{ ...regularFont, ...styles.generalFont, ...bidField }}
-                                    value={profit}
-                                    onChange={event => { this.handleprofit(item.csiid, event.target.value) }} />
+                                {profit}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Bid Price <br />
@@ -554,9 +562,9 @@ class BidSchedule extends Component {
     render() {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
-        const regularFont = this.getRegularFont();
-        const saveprojecticon = this.getsaveprojecticon();
         const headerFont = this.getHeaderFont();
+        const dynamicstyles = new DynamicStyles();
+
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -573,15 +581,9 @@ class BidSchedule extends Component {
                         </div>
                     </div>
 
-                    {this.showbidtable()}
+                    {dynamicstyles.showbidtable.call(this)}
 
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                        &nbsp;
-                     </div>
 
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...saveprojecticon }}>{saveProjectIcon()}</button>
-                    </div>
 
                 </div>
             </div>

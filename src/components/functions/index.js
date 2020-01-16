@@ -150,7 +150,88 @@ export function inputDateSecActiveIDTimein(dateencoded, timein) {
     }
     return (`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`)
 }
+export function decreaseCalendarDaybyOneYear(timein) {
+    let offset = getOffset();
+    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+    let currentYear = datein.getFullYear();
+    let decreaseYear = currentYear - 1;
+    let month = datein.getMonth() + 1;
+    let day = datein.getDate();
+    if (month < 10) {
+        month = `0${month}`
+    }
+    if (day < 10) {
+        day = `0${day}`
+    }
+    let newDate = `${decreaseYear}-${month}-${day}`
+    return (newDate)
+}
+export function decreaseCalendarDaybyOneMonth(timein) {
+    let offset = getOffset();
+let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+let currentMonth = datein.getMonth() + 1;
+let year = datein.getFullYear();
+let decreaseMonth = currentMonth;
+if(currentMonth === 1) {
+decreaseMonth = 12;
+year-=1
+} else {
+decreaseMonth-=1;
+}
 
+let day = datein.getDate();
+ if (decreaseMonth < 10) {
+        decreaseMonth = `0${decreaseMonth}`
+    }
+
+    if (day < 10) {
+        day = `0${day}`
+    }
+
+ let newDate = `${year}-${decreaseMonth}-${day}`
+return(newDate)
+}
+export function increaseCalendarDayOneMonth(timein) {
+    let offset = getOffset();
+let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+let currentMonth = datein.getMonth() + 1;
+let year = datein.getFullYear();
+let increaseMonth = currentMonth;
+if(currentMonth === 12) {
+increaseMonth = 1;
+year+=1
+} else {
+increaseMonth+=1;
+}
+
+let day = datein.getDate();
+ if (increaseMonth < 10) {
+        increaseMonth = `0${increaseMonth}`
+    }
+
+    if (day < 10) {
+        day = `0${day}`
+    }
+
+ let newDate = `${year}-${increaseMonth}-${day}`
+return(newDate)
+}
+export function increaseCalendarDaybyOneYear(timein) {
+    let offset = getOffset();
+    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+    let currentYear = datein.getFullYear();
+    let increaseYear = currentYear + 1;
+    let month = datein.getMonth() + 1;
+    let day = datein.getDate();
+    if (month < 10) {
+        month = `0${month}`
+    }
+    if (day < 10) {
+        day = `0${day}`
+    }
+    let newDate = `${increaseYear}-${month}-${day}`
+    return (newDate)
+}
 export function inputDateObjandSecReturnObj(dateencoded, datein) {
     let newDate = new Date(dateencoded);
     let month = newDate.getMonth() + 1;
@@ -910,6 +991,24 @@ export function inputDateObjOutputCalendarDaySeconds(datein) {
     let dateinsec = new Date(`${month}/${day}/${year} 00:00:00${sym}${offset}:00`).getTime();
     return dateinsec;
 }
+export function inputSecOutDateString(dateencoded) {
+    const newDate = new Date(dateencoded)
+    let year = newDate.getFullYear();
+    let month = newDate.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`
+    }
+    let day = newDate.getDate();
+    if (day < 10) {
+        day = `0${0}`
+    }
+    return (`${year}-${month}-${day}`)
+}
+export function inputDateStringOutputSeconds(timein) {
+    let offset = getOffset()
+    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`);
+    return (datein.getTime())
+}
 export function inputtimeDBoutputCalendarDaySeconds(timein) {
 
     let datein = new Date(`${timein.replace(/-/g, '/')} UTC`);
@@ -1084,6 +1183,25 @@ export function makeID(length) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+export function ProfitForMaterial(item) {
+    return (Number(item.quantity) * Number(item.unitcost)) * (Number(item.profit) / 100)
+}
+export function DirectCostForMaterial(item) {
+    return (Number(item.quantity) * Number(item.unitcost))
+}
+export function DirectCostForLabor(item) {
+    return (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.laborrate))
+}
+export function DirectCostForEquipment(item) {
+    return (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.equipmentrate))
+}
+export function ProfitForEquipment(item) {
+    return (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.equipmentrate)) * (Number(item.profit) / 100)
+}
+export function ProfitForLabor(item) {
+    return (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.laborrate)) * (Number(item.profit) / 100)
 }
 
 export function calculatetotalhours(timeout, timein) {

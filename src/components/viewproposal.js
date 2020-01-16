@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, calculatetotalhours } from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment } from './functions';
 
 class ViewProposal extends Component {
     constructor(props) {
@@ -28,7 +28,9 @@ class ViewProposal extends Component {
         let payitems = dynamicstyles.getbiditems.call(this)
 
         let items = [];
+        // eslint-disable-next-line
         payitems.map(item => {
+
             if (item.hasOwnProperty("laborid")) {
                 if (item.proposalid === proposalid) {
                     items.push(item)
@@ -120,15 +122,19 @@ class ViewProposal extends Component {
         let profit = 0;
         let directcost = 0;
         let items = this.proposalitemsbycsiid(csiid);
-
+        // eslint-disable-next-line
         items.map(item => {
             if (item.hasOwnProperty("laborid")) {
-                directcost += Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.laborrate);
-                profit += (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.laborrate)) * (Number(item.profit) / 100)
+                directcost += DirectCostForLabor(item);
+                profit += ProfitForLabor(item);
             }
             if (item.hasOwnProperty("materialid")) {
-                directcost += Number(item.quantity) * Number(item.unitcost)
-                profit += (Number(item.quantity) * Number(item.unitcost)) * (Number(item.profit) / 100)
+                directcost += DirectCostForMaterial(item);
+                profit += ProfitForMaterial(item);
+            }
+            if (item.hasOwnProperty("equipmentid")) {
+                directcost += DirectCostForEquipment(item);
+                profit += ProfitForEquipment(item);
             }
 
         })
@@ -137,7 +143,7 @@ class ViewProposal extends Component {
 
     }
     getquantity(csiid) {
-        const dynamicstyles = new DynamicStyles();
+
         let scheduleitem = this.getscheduleitem(csiid);
 
         if (scheduleitem) {
@@ -178,7 +184,7 @@ class ViewProposal extends Component {
         return key;
     }
     getscheduleitems() {
-        const dynamicstyles = new DynamicStyles();
+
         let scheduleitems = false;
         let myproposal = this.getproposal();
         if (myproposal) {
@@ -230,7 +236,7 @@ class ViewProposal extends Component {
         return bidprice;
     }
     getunitprice(csiid) {
-        const dynamicstyles = new DynamicStyles();
+
         let quantity = Number(this.getquantity(csiid));
         let bidprice = Number(this.getbidprice(csiid));
 
@@ -255,7 +261,7 @@ class ViewProposal extends Component {
 
                     if (mylabor.csiid === csiid && (mylabor.proposalid === proposalid)) {
 
-                        directcost += Number(calculatetotalhours(mylabor.timeout, mylabor.timein)) * Number(mylabor.laborrate);
+                        directcost += DirectCostForLabor(mylabor)
 
                     }
                 })
@@ -265,11 +271,21 @@ class ViewProposal extends Component {
                 // eslint-disable-next-line
                 myproject.schedulematerials.mymaterial.map(mymaterial => {
                     if (mymaterial.csiid === csiid && (mymaterial.proposalid === proposalid)) {
-                        directcost += Number(mymaterial.quantity) * Number(mymaterial.unitcost)
+                        directcost += DirectCostForMaterial(mymaterial)
                     }
 
                 })
             }
+        }
+
+        if (myproject.hasOwnProperty("scheduleequipment")) {
+            // eslint-disable-next-line
+            myproject.scheduleequipment.myequipment.map(myequipment => {
+                if (myequipment.csiid === csiid && (myequipment.proposalid === proposalid)) {
+                    directcost += DirectCostForEquipment(myequipment)
+                }
+
+            })
         }
 
         return directcost;
@@ -443,7 +459,7 @@ class ViewProposal extends Component {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles()
         const titleFont = dynamicstyles.gettitlefont.call(this)
-        const items = this.getbiditems();
+
 
         return (
             <div style={{ ...styles.generalFlex }}>

@@ -29,6 +29,10 @@
 .actualdatearrowdown-1 {  fill: #570b17;  stroke: #000;  stroke-miterlimit: 10;}
 .actualdatearrowup-1 {  fill: #570b17;  stroke: #000;  stroke-miterlimit: 10;}
 .calendarIcon-2{fill:#fff;stroke:#A62152;stroke-miterlimit:10;stroke-width:0.5px;}
+.createproposal-1{fill:#75c5c6;stroke:#156876;}.createproposal-2{font-size:24px;fill:#13254b;font-family:'Nunito Sans', sans-serif}.createproposal-3{letter-spacing:-0.01em;}
+.activecheck-1{fill:#df6108;stroke:#005e6a;stroke-miterlimit:10;stroke-width:0.25px;}
+.opendetail-1{fill:none;stroke-width:9px;}.opendetail-1,.opendetail-2{stroke:#000;stroke-miterlimit:10;}.opendetail-2{stroke-width:4px;}
+.closedetail-1{fill:none;stroke-width:9px;}.closedetail-1,.closedetail-2{stroke:#000;stroke-miterlimit:10;}.closedetail-2{stroke-width:4px;}
 .App {
   text-align: center;
   

@@ -1,6 +1,6 @@
 import React from 'react'
 import { MyStylesheet } from './styles';
-import { sorttimes, calculatetotalhours, makeID, CreateBidScheduleItem } from './functions'
+import { sorttimes } from './functions'
 
 
 class DynamicStyles {
@@ -27,6 +27,42 @@ class DynamicStyles {
         }
 
     }
+    gethidedetails() {
+        if (this.state.width > 1200) {
+            return ({
+                width: '105px',
+                height: '105px'
+            })
+        } else if (this.state.width > 800) {
+            return ({
+                width: '80px',
+                height: '80px'
+            })
+        } else {
+            return ({
+                width: '50px',
+                height: '50px'
+            })
+        }
+    }
+    getradiobutton() {
+        if (this.state.width > 1200) {
+            return ({
+                width: '80px',
+                height: '80px'
+            })
+        } else if (this.state.width > 800) {
+            return ({
+                width: '60px',
+                height: '60px'
+            })
+        } else {
+            return ({
+                width: '40px',
+                height: '40px'
+            })
+        }
+    }
     getSmallFont() {
         const styles = MyStylesheet();
         if (this.state.width > 800) {
@@ -36,7 +72,15 @@ class DynamicStyles {
         }
 
     }
-
+    getmyproposals() {
+        const dynamicstyles = new DynamicStyles();
+        let proposals = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("proposals")) {
+            proposals = myproject.proposals.myproposal;
+        }
+        return proposals;
+    }
     getAllSchedule() {
         const user = () => {
             let myuser = false;
@@ -191,13 +235,6 @@ class DynamicStyles {
         return equipment;
     }
 
-    getbidfield() {
-        if (this.state.width > 800) {
-            return ({ maxWidth: '138px' })
-        } else {
-            return ({ maxWidth: '90px' })
-        }
-    }
 
 
     getmyemployees() {
@@ -270,7 +307,7 @@ class DynamicStyles {
                 <table width="100%" border="1" style={{ ...regularFont, ...styles.generalFont }}>
                     <tr>
                         <td width="24%" style={{ ...styles.alignCenter }}>Line ID</td>
-                        <td width="12%" style={{ ...styles.alignCenter }}> Quantity</td>
+                        <td width="12%" style={{ ...styles.alignCenter }}>Quantity</td>
                         <td width="13%" style={{ ...styles.alignCenter }}>Unit</td>
                         <td width="13%" style={{ ...styles.alignCenter }}>Direct Cost</td>
                         <td width="13%" style={{ ...styles.alignCenter }}> Overhead and Profit %</td>

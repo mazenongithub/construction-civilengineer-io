@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { radioOpen, radioClosed, saveCompanyIcon, removeIconSmall } from './svg'
+import { radioOpen, radioClosed, saveCompanyIcon, removeIconSmall, openDetail, closeDetail } from './svg'
 import { CreateCostID, makeID, CreateRentalRate, CreateEquipment } from './functions';
-
+import DynamicStyles from './dynamicstyles';
+import PurchaseDate from './purchasedate';
+import SaleDate from './saledate';
+import EquipmentDate from './equipmentdate';
 class Equipment extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activeequipmentid: '', equipment: '', ownership: '', activecostid: '', cost: '', datein: '', detail: '' }
+        this.state = { render: '', width: 0, height: 0, activeequipmentid: '', equipment: '', ownership: '', activecostid: '', cost: '', purchasedate: new Date(), saledate: new Date(), purchasecalender: 'open', resaledate: '', detail: '', resalevalue: '', loaninterest: '', workinghours: '', showdetail: true, equipmentdate: new Date() }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -98,6 +101,31 @@ class Equipment extends Component {
             return (this.state.equipment)
         }
     }
+    getloaninterest() {
+        if (this.state.activeequipmentid) {
+            let equipment = this.getactiveequipment();
+            return (equipment.loaninterest)
+        } else {
+            return (this.state.loaninterest)
+        }
+    }
+    getworkinghours() {
+        if (this.state.activeequipmentid) {
+            let equipment = this.getactiveequipment();
+            return (equipment.workinghours)
+        } else {
+            return (this.state.workinghours)
+        }
+    }
+    getresalevalue() {
+        if (this.state.activeequipmentid) {
+            let equipment = this.getactiveequipment();
+            return (equipment.resalevalue)
+        } else {
+            return (this.state.resalevalue)
+        }
+    }
+
     handleequipment(equipment) {
         let myuser = this.getuser();
         if (myuser) {
@@ -199,31 +227,7 @@ class Equipment extends Component {
         }
 
     }
-    showicons() {
-        const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
 
-        if (this.state.width > 800) {
-            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    Owned {this.getowned()}  Rented {this.getrented()}
-                </div>
-            </div>)
-        } else {
-            return (
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-
-                        Owned {this.getowned()}
-                    </div>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        Rented  {this.getrented()}
-                    </div>
-                </div>
-            )
-        }
-
-    }
     getcompany() {
         let myuser = this.getuser();
         let company = false;
@@ -435,73 +439,84 @@ class Equipment extends Component {
     showaccountcost() {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
+        const dynamicstyles = new DynamicStyles();
+        const equipmentdate = new EquipmentDate();
+        const bidField = dynamicstyles.getbidfield.call(this)
         if (this.state.activeequipmentid) {
+            let myequipment = this.getactiveequipment();
+            if (myequipment.ownershipstatus === 'owned') {
 
-            if (this.state.width > 800) {
-                return (
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1 }}>
 
-                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                                    Date
-                                 </div>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                                    Cost <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                        value={this.getcost()}
-                                        onChange={event => { this.handlecost(event.target.value) }}
-                                    />
-                                </div>
-                            </div>
+                if (this.state.width > 800) {
+                    return (
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1 }}>
 
-                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                                Detail  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                    value={this.getdetail()}
-                                    onChange={event => { this.handledetail(event.target.value) }}
-                                />
-                            </div>
-
-                            {this.showequipmentcosts()}
-                        </div>
-                    </div>
-                )
-            } else {
-                return (
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1 }}>
-
-                            <div style={{ ...styles.generalFlex }}>
-                                <div style={{ ...styles.flex1 }}>
-                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...styles.addRightMargin }}>
-                                        Date
+                                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                    <div style={{ ...styles.flex2, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
+                                        {equipmentdate.showdatein.call(this)}
                                     </div>
-                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...styles.addLeftMargin }}>
-                                        Cost <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
+                                        Cost <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...bidField }}
                                             value={this.getcost()}
-                                            onChange={event => { this.handlecost(event.target.value) }} />
-                                    </div>
-
-                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                                        Detail <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                            value={this.getdetail()}
-                                            onChange={event => { this.handledetail(event.target.value) }}
+                                            onChange={event => { this.handlecost(event.target.value) }}
                                         />
                                     </div>
                                 </div>
-                            </div>
-                            <div style={{ ...styles.generalFlex }}>
-                                <div style={{ ...styles.flex1 }}>
-                                    {this.showequipmentcosts()}
-                                </div>
-                            </div>
 
+                                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+                                    Detail  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                        value={this.getdetail()}
+                                        onChange={event => { this.handledetail(event.target.value) }}
+                                    />
+                                </div>
+
+                                {this.showequipmentcosts()}
+                            </div>
                         </div>
-                    </div>
-                )
+                    )
+                } else {
+                    return (
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+
+                                <div style={{ ...styles.generalFlex }}>
+                                    <div style={{ ...styles.flex1 }}>
+                                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...styles.addRightMargin }}>
+                                            {equipmentdate.showdatein.call(this)}
+                                        </div>
+                                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...styles.addLeftMargin }}>
+                                            Cost <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                                value={this.getcost()}
+                                                onChange={event => { this.handlecost(event.target.value) }} />
+                                        </div>
+
+                                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+                                            Detail <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                                value={this.getdetail()}
+                                                onChange={event => { this.handledetail(event.target.value) }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ ...styles.generalFlex }}>
+                                    <div style={{ ...styles.flex1 }}>
+                                        {this.showequipmentcosts()}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    )
+                }
+            } else {
+                return;
             }
-        } else {
+        }
+        else {
             return;
         }
+
     }
     showequipmentowned() {
         const styles = MyStylesheet();
@@ -670,10 +685,55 @@ class Equipment extends Component {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
         if (this.state.activeequipmentid) {
-            if (this.state.width > 800) {
-                return (
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1 }}>
+            let myequipment = this.getactiveequipment();
+            if (myequipment.ownershipstatus === 'rented' && this.state.showdetail) {
+                if (this.state.width > 800) {
+                    return (
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+
+                                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                        Rental Rates
+                            </div>
+                                </div>
+
+                                <div style={{ ...styles.generalFlex }}>
+                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                        Month <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                            value={this.getmonth()}
+                                            onChange={event => { this.handlemonth(event.target.value) }}
+                                        />
+                                    </div>
+                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                        Week <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                            value={this.getweek()}
+                                            onChange={event => { this.handleweek(event.target.value) }} />
+                                    </div>
+
+                                </div>
+
+                                <div style={{ ...styles.generalFlex }}>
+                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                        Day <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                            value={this.getday()}
+                                            onChange={event => { this.handleday(event.target.value) }}
+                                        />
+                                    </div>
+                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                        Hour <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                            value={this.gethour()}
+                                            onChange={event => { this.handlehour(event.target.value) }} />
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>)
+                } else {
+                    return (<div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex, ...regularFont, ...styles.generalFont }}>
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
@@ -681,78 +741,37 @@ class Equipment extends Component {
                             </div>
                             </div>
 
-                            <div style={{ ...styles.generalFlex }}>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    Month <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                        value={this.getmonth()}
-                                        onChange={event => { this.handlemonth(event.target.value) }}
-                                    />
-                                </div>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    Week <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                        value={this.getweek()}
-                                        onChange={event => { this.handleweek(event.target.value) }} />
-                                </div>
-
+                            <div style={{ ...styles.generalContainer }}>
+                                Month <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                    value={this.getmonth()}
+                                    onChange={event => { this.handlemonth(event.target.value) }} />
                             </div>
-
-                            <div style={{ ...styles.generalFlex }}>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    Day <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                        value={this.getday()}
-                                        onChange={event => { this.handleday(event.target.value) }}
-                                    />
-                                </div>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    Hour <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                        value={this.gethour()}
-                                        onChange={event => { this.handlehour(event.target.value) }} />
-                                </div>
-
+                            <div style={{ ...styles.generalContainer }}>
+                                Week <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                    value={this.getweek()}
+                                    onChange={event => { this.handleweek(event.target.value) }}
+                                />
                             </div>
-
+                            <div style={{ ...styles.generalContainer }}>
+                                Day <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                    value={this.getday()}
+                                    onChange={event => { this.handleday(event.target.value) }}
+                                />
+                            </div>
+                            <div style={{ ...styles.generalContainer }}>
+                                Hour <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                    value={this.gethour()}
+                                    onChange={event => { this.handlehour(event.target.value) }}
+                                />
+                            </div>
                         </div>
-
                     </div>)
+
+                }
             } else {
-                return (<div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex, ...regularFont, ...styles.generalFont }}>
-
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                Rental Rates
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalContainer }}>
-                            Month <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                value={this.getmonth()}
-                                onChange={event => { this.handlemonth(event.target.value) }} />
-                        </div>
-                        <div style={{ ...styles.generalContainer }}>
-                            Week <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                value={this.getweek()}
-                                onChange={event => { this.handleweek(event.target.value) }}
-                            />
-                        </div>
-                        <div style={{ ...styles.generalContainer }}>
-                            Day <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                value={this.getday()}
-                                onChange={event => { this.handleday(event.target.value) }}
-                            />
-                        </div>
-                        <div style={{ ...styles.generalContainer }}>
-                            Hour <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                value={this.gethour()}
-                                onChange={event => { this.handlehour(event.target.value) }}
-                            />
-                        </div>
-                    </div>
-                </div>)
-
+                return;
             }
-        } else {
-            return;
+
         }
     }
     getsavecompanyicon() {
@@ -854,6 +873,124 @@ class Equipment extends Component {
 
         }
     }
+    handleOwnedIcon() {
+        if (this.state.activeequipmentid) {
+            let myequipment = this.getactiveequipment();
+            if (myequipment.ownershipstatus === 'owned') {
+                return (radioClosed())
+            } else {
+                return (radioOpen())
+            }
+
+        } else {
+            return (radioOpen())
+        }
+    }
+    handleRentedIcon() {
+        if (this.state.activeequipmentid) {
+            let myequipment = this.getactiveequipment();
+            if (myequipment.ownershipstatus === 'rented') {
+                return (radioClosed())
+            } else {
+                return (radioOpen())
+            }
+
+        } else {
+            return (radioOpen())
+        }
+    }
+    handledetailicon() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const hideDetail = dynamicstyles.gethidedetails.call(this)
+        if (this.state.activeequipmentid) {
+            if (this.state.showdetail) {
+                return (<span>Hide Detail <button style={{ ...styles.generalButton, ...hideDetail }} onClick={() => { this.setState({ showdetail: false }) }}>{closeDetail()} </button></span>)
+            } else {
+                return (<span>Show Detail <button style={{ ...styles.generalButton, ...hideDetail }} onClick={() => { this.setState({ showdetail: true }) }}>{openDetail()} </button></span>)
+            }
+
+
+        }
+
+
+
+    }
+    showequipmentdetail() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const radioButton = dynamicstyles.getradiobutton.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+
+        if (this.state.activeequipmentid) {
+            return (<div style={{ ...styles.generalFlex, ...regularFont, ...styles.generalFont }}>
+                <div style={{ ...styles.flex1 }}>
+                    Owned  <button style={{ ...styles.generalButton, ...radioButton, ...styles.addRightMargin }}>{this.handleOwnedIcon()}</button>
+                    Rented  <button style={{ ...styles.generalButton, ...radioButton, ...styles.addRightMargin, }}>  {this.handleRentedIcon()}</button>
+                    {this.handledetailicon()}
+                </div>
+
+            </div>)
+
+        } else {
+            return;
+        }
+    }
+    equipmentdetail() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const bidField = dynamicstyles.getbidfield.call(this);
+        const purchasedate = new PurchaseDate();
+        const saledate = new SaleDate();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        if (this.state.activeequipmentid) {
+            let myequipment = this.getactiveequipment();
+            if (myequipment.ownershipstatus === 'owned' && this.state.showdetail) {
+                return (<div style={{ ...styles.generalFlex, ...regularFont, ...styles.generalFont }}>
+                    <div style={{ ...styles.flex1 }}>
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex2 }}>
+                                {purchasedate.showdatein.call(this)}
+                            </div>
+                            <div style={{ ...styles.flex1 }}>
+                                Loan Interest <br />
+                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
+                                    value={this.getloaninterest()}
+                                />
+                            </div>
+                        </div>
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex2 }}>
+                                {saledate.showdatein.call(this)}
+
+                            </div>
+                            <div style={{ ...styles.flex1 }}>
+                                Resale Value <br />
+                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
+                                    value={this.getresalevalue()} />
+                            </div>
+                        </div>
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+                                Estimated Annual Working Hours
+                        <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                    value={this.getworkinghours()}
+                                />
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>)
+
+            } else {
+                return;
+            }
+        } else {
+            return;
+        }
+    }
     render() {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
@@ -871,7 +1008,8 @@ class Equipment extends Component {
                     </div>
 
                     {this.showequipment()}
-
+                    {this.showequipmentdetail()}
+                    {this.equipmentdetail()}
                     {this.showaccountmenu()}
                     {this.showequipmentowned()}
                     {this.showrentalrates()}

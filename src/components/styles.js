@@ -146,6 +146,9 @@ export function MyStylesheet() {
         font24: {
             fontSize: '24px'
         },
+        floatLeft: {
+            float: 'left'
+        },
         font20: {
             fontSize: '20px'
         },

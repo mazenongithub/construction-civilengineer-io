@@ -17,6 +17,7 @@ import ActualLabor from './components/actuallabor';
 import ScheduleMaterials from './components/schedulematerials';
 import ActualMaterials from './components/actualmaterials';
 import ScheduleEquipment from './components/scheduleequipment';
+import ActualEquipment from './components/actualequipment';
 import Equipment from './components/equipment';
 import Employees from './components/employees';
 import Accounts from './components/accounts';
@@ -24,6 +25,8 @@ import Construction from './components/construction';
 import BidSchedule from './components/bidschedule';
 import Materials from './components/materials';
 import Project from './components/project'
+import Proposals from './components/proposals'
+import ViewProposal from './components/viewproposal'
 import { Link } from 'react-router-dom';
 import { returnCompanyList } from './components/functions';
 
@@ -89,6 +92,9 @@ class App extends Component {
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedulematerials" component={ScheduleMaterials} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/actualmaterials" component={ActualMaterials} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/scheduleequipment" component={ScheduleEquipment} />
+        <Route exact path="/:providerid/company/:companyid/projects/:projectid/actualequipment" component={ActualEquipment} />
+        <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals" component={Proposals} />
+        <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals/:proposalid" component={ViewProposal} />
       </Switch>)
   }
 
