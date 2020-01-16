@@ -380,7 +380,7 @@ class Equipment extends Component {
             } else {
                 this.setState({ cost });
                 let costid = makeID(16)
-                let datein = this.state.datein;
+                let datein = DateStringFromDateObj(this.state.equipmentdate)
                 let detail = "";
                 let newcost = CreateCostID(costid, cost, detail, datein)
                 let equipment = this.getactiveequipment();
@@ -428,7 +428,7 @@ class Equipment extends Component {
             } else {
                 this.setState({ detail });
                 let costid = makeID(16);
-                let datein = this.state.datein;
+                let datein = DateStringFromDateObj(this.state.equipmentdate)
                 let cost = 0;
                 let newcost = CreateCostID(costid, cost, detail, datein)
                 let equipment = this.getactiveequipment();

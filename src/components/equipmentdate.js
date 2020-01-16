@@ -749,9 +749,8 @@ class EquipmentDate {
         if (this.state.activecostid) {
 
             let cost = this.getactiveequipmentcost();
-            console.log(cost)
-            let timein = cost.timein;
-            value = makeDatefromTimein(timein)
+            value = cost.timein;
+
 
         }
         else {
