@@ -138,12 +138,12 @@ class Projects extends Component {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/schedulelabor`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actuallabor`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                         /actuallabor
                                     </Link>
                                 </div>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/scheduleequipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actualequipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                         /actualequipment
                                     </Link>
                                 </div>
@@ -151,7 +151,7 @@ class Projects extends Component {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/schedulematerials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actualmaterials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                         /actualmaterials
                                     </Link>
                                 </div>

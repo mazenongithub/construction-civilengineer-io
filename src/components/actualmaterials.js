@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { saveProjectIcon, removeIconSmall, dateYearDown, dateYearUp, dateMonthDown, dateMonthUp } from './svg';
-import { inputUTCStringForMaterialIDWithTime, makeID, CreateActualMaterial } from './functions';
-import DateIn from './actualdatein';
+import { saveProjectIcon, removeIconSmall } from './svg';
+import { formatDateStringDisplay, makeID, CreateActualMaterial } from './functions';
+import ActualMaterialDate from './actualmaterialdate';
 class ActualMaterials extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activematerialid: '', material: '', datein: new Date(), unit: '', quantity: '', unitcost: '', milestoneid: '', csiid: '', mymaterialid: '', calendar: 'open' }
+        this.state = { render: '', width: 0, height: 0, activematerialid: '', material: '', datein: new Date(), unit: '', quantity: '', unitcost: '', milestoneid: '', csiid: '', mymaterialid: '', calender: 'open' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -223,7 +223,7 @@ class ActualMaterials extends Component {
         const milestone = this.getmilestonebyid(mymaterial.milestoneid)
         const material = this.getmymaterialfromid(mymaterial.mymaterialid)
         return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...this.getactivematerialbackground(mymaterial.materialid) }} onClick={() => { this.makematerialactive(mymaterial.materialid) }} key={mymaterial.materialid}>
-            {inputUTCStringForMaterialIDWithTime(mymaterial.timein)} <br />
+            {formatDateStringDisplay(mymaterial.timein)} <br />
             {material.material} CSI: {csi.csi}-{csi.title} Milestone: {milestone.milestone} <br />
             {mymaterial.quantity}  x ${mymaterial.unitcost}/{mymaterial.unit} = ${(mymaterial.quantity * mymaterial.unitcost).toFixed(2)}
             <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
@@ -743,91 +743,13 @@ class ActualMaterials extends Component {
             return this.state.unitcost;
         }
     }
-    showdatemenu() {
-        const styles = MyStylesheet();
-        const Datein = new DateIn();
-        const smallFont = this.getSmallFont();
-        console.log(smallFont)
-        if (this.state.calendar === 'open') {
-            return (
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
-                        <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.calendarContainer, ...styles.marginAuto }}>
-                            <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.dateButton, ...styles.generalButton }}
-                                    onClick={() => { Datein.yeardown.call(this) }}> {dateYearDown()}</button>
-                            </div>
-                            <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.dateButton, ...styles.generalButton }}
-                                    onClick={() => { Datein.decreasemonth.call(this) }}>{dateMonthDown()} </button>
-                            </div>
-                            <div style={{ ...styles.flex2, ...styles.alignCenter }}>
-                                {Datein.showdateforcalendar.call(this)}
-                            </div>
-                            <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.dateButton, ...styles.generalButton }}
-                                    onClick={() => { Datein.increasemonth.call(this) }}>{dateMonthUp()} </button>
-                            </div>
-                            <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.dateButton, ...styles.generalButton }}
-                                    onClick={() => { Datein.yearup.call(this) }}> {dateYearUp()}</button>
-                            </div>
-
-                        </div>
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...smallFont }}>
-
-                                <div className="calendar-grid">
-                                    {Datein.showgrid.call(this)}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>)
-        } else {
-            return;
-        }
-    }
-    showdatein() {
-        const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
-        const Datein = new DateIn();
-        const smallFont = this.getSmallFont();
-        console.log(smallFont)
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1, ...styles.calenderContainer }}>
-
-                    <div style={{ ...styles.dateinContainer, ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex5, ...regularFont, ...styles.generalFont }}>
-                            Enter Date <br /> <input type="date"
-                                value={Datein.getvalue.call(this)}
-                                style={{ ...styles.generalField, ...regularFont, ...styles.generalFont }}
-                                onChange={event => { Datein.handleChange.call(this, event.target.value) }} />
-                        </div>
-                        <div style={{ ...styles.flex1, ...smallFont, ...styles.generalFont }}>
-                            <button style={{ ...styles.dateButton, ...styles.generalButton }}
-                                onClick={() => { Datein.showCalender.call(this) }}
-                                id="btn-opendatemenu">
-                                {Datein.handleopendatemenu.call(this)}
-                            </button>
-                        </div>
-                    </div>
-
-                    {this.showdatemenu()}
-
-                </div>
-            </div>
-        )
-
-    }
 
     render() {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
         const regularFont = this.getRegularFont();
         const saveprojecticon = this.getsaveprojecticon();
+        const Datein = new ActualMaterialDate();
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
@@ -838,7 +760,7 @@ class ActualMaterials extends Component {
                 </div>
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
-                        {this.showdatein()}
+                        {Datein.showdatein.call(this)}
                     </div>
                 </div>
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>

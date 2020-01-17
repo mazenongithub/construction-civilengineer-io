@@ -34,8 +34,8 @@ export function CreateActualEquipment(equipmentid, myequipmentid, providerid, cs
 export function CreateCostID(costid, cost, detail, timein) {
     return ({ costid, cost, detail, timein })
 }
-export function CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, description, proposalid) {
-    return ({ laborid, providerid, milestoneid, csiid, timein, timeout, description, proposalid })
+export function CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid) {
+    return ({ laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid })
 }
 export function UTCStringFormatDateforProposal(timeout) {
     let newDate = new Date(`${timeout.replace(/-/g, '/')}-00:00`)
@@ -1014,7 +1014,7 @@ export function inputSecOutDateString(dateencoded) {
     }
     let day = newDate.getDate();
     if (day < 10) {
-        day = `0${0}`
+        day = `0${day}`
     }
     return (`${year}-${month}-${day}`)
 }

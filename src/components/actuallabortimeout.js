@@ -32,13 +32,11 @@ import {
     toggleAMTimeString,
     toggleAMDateObj,
     AMPMfromTimeIn
-
-
-
-} from './functions'
-
+} from './functions';
+import { actualmajorDownIcon, ActualDateArrowDown, ActualDateArrowUp } from './svg';
 import { MyStylesheet } from './styles';
-class TimeOut {
+import DynamicStyles from './dynamicstyles';
+class ActualLaborTimeOut {
     gettimeoutminutes() {
         let minutes = "";
         let datein = {};
@@ -55,42 +53,36 @@ class TimeOut {
         }
         return minutes;
     }
+    checkampmtimeout(dir) {
 
-    toggletimeoutampm(dir) {
-
-        const checkampmtimeout = (dir) => {
-
-            let validate = true;
-            let timeout = this.getactivelabor().timeout;
-            let ampm = AMPMfromTimeIn(timeout)
-            if (ampm === "PM" && dir === "up") {
-                validate = false;
-            } else if (ampm === "AM" && dir === "down") {
-                validate = false;
-            }
-            return validate;
-
-
+        let validate = true;
+        let timeout = this.getactivelabor().timeout;
+        let ampm = AMPMfromTimeIn(timeout)
+        if (ampm === "PM" && dir === "up") {
+            validate = false;
+        } else if (ampm === "AM" && dir === "down") {
+            validate = false;
         }
+        return validate;
 
-
-
-        let myuser = this.getuser();
+    }
+    toggletimeoutampm(dir) {
+        const dynamicstyles = new DynamicStyles();
+        const Timein = new ActualLaborTimeOut();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let project = this.getproject();
+            let project = dynamicstyles.getproject.call(this);
 
             if (project) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey()
-                    let validate = checkampmtimeout(dir);
-
+                    let j = this.getactivelaborkey();
+                    let validate = Timein.checkampmtimeout.call(this, dir);
                     if (validate) {
                         let mylabor = this.getactivelabor();
                         let timeout = mylabor.timeout;
                         timeout = toggleAMTimeString(mylabor.timeout)
-
-                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = timeout;
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = timeout;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
 
@@ -109,80 +101,82 @@ class TimeOut {
 
 
     }
-    handlecalendartimeout() {
-        let datein = {};
-        const styles = MyStylesheet();
-        const smallFont = this.getSmallFont()
-        const getactivedate = (dateencoded) => {
-            let activeclass = "";
-            if (this.state.activelaborid) {
-
-
-                let mylabor = this.getactivelabor()
-                let timeout = mylabor.timeout;
-                if (inputtimeDBoutputCalendarDaySeconds(timeout) === dateencoded) {
-                    activeclass = "active-schedule-calendar"
-                }
-            }
-            else {
-                let datein = this.state.timeout;
-                if (inputDateObjOutputCalendarDaySeconds(datein) === dateencoded) {
-                    activeclass = "active-schedule-calendar"
-                }
-
-            }
-            return activeclass;
-        }
-        const setDay = (dateencoded) => {
-            let myuser = this.getuser();
-            if (myuser) {
+    setDay(dateencoded) {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            let myproject = dynamicstyles.getproject.call(this);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activelaborid) {
-                    let myproject = this.getproject();
-                    if (myproject) {
-                        let mylabor = this.getactivelabor();
+                    let mylabor = this.getactivelabor();
+                    let timeout = mylabor.timeout
+                    let newtimeout = inputDateSecActiveIDTimein(dateencoded, timeout)
+                    let j = this.getactivelaborkey();
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout;
+                    this.props.reduxUser(myuser);
+                    this.setState({ render: 'render' })
 
-                        let timeout = mylabor.timeout
-                        let i = this.getprojectkey();
-                        let j = this.getactivelaborkey();
-                        let newtimeout = inputDateSecActiveIDTimein(dateencoded, timeout)
-                        myuser.companies.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout;
-
-                        this.props.reduxUser(myuser);
-                        this.setState({ render: 'render' })
-
-                    }
                 }
-
                 else {
                     let timeout = inputDateObjandSecReturnObj(dateencoded, this.state.timeout);
 
                     this.setState({ timeout, render: 'render' })
                 }
+
+            }
+
+        }
+    }
+    getactivedate(dateencoded) {
+        let activeclass = "";
+        if (this.state.activelaborid) {
+
+
+            let mylabor = this.getactivelabor()
+            let timeout = mylabor.timeout;
+            if (inputtimeDBoutputCalendarDaySeconds(timeout) === dateencoded) {
+                activeclass = "active-actual-calendar"
             }
         }
-        const showdate = (dateobj, day) => {
-
-            let showday = [];
-            if (day) {
-
-                let month = dateobj.getMonth() + 1;
-                month = trailingzero(month)
-                let year = dateobj.getFullYear();
-                let dayzero = trailingzero(day);
-                let offset = getOffset()
-                let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
-
-                let calendardate = new Date(timestring);
-
-                let dateencoded = calendardate.getTime();
-
-                showday.push(<div
-                    className={`${getactivedate(dateencoded)} calendar-date`}
-                    onClick={event => { setDay(dateencoded) }}
-                > {day}</div>)
+        else {
+            let datein = this.state.timeout;
+            if (inputDateObjOutputCalendarDaySeconds(datein) === dateencoded) {
+                activeclass = "active-actual-calendar"
             }
-            return showday;
+
         }
+        return activeclass;
+    }
+    showdate(dateobj, day) {
+        const Timein = new ActualLaborTimeOut()
+        let showday = [];
+        if (day) {
+
+            let month = dateobj.getMonth() + 1;
+            month = trailingzero(month)
+            let year = dateobj.getFullYear();
+            let dayzero = trailingzero(day);
+            let offset = getOffset()
+            let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
+
+            let calendardate = new Date(timestring);
+
+            let dateencoded = calendardate.getTime();
+
+            showday.push(<div
+                className={`${Timein.getactivedate.call(this, dateencoded)} calendar-date`}
+                onClick={() => { Timein.setDay.call(this, dateencoded) }}
+            > {day}</div>)
+        }
+        return showday;
+    }
+    handlecalendartimeout() {
+        const dynamicstyles = new DynamicStyles();
+        let datein = {};
+        const styles = MyStylesheet();
+        const Timein = new ActualLaborTimeOut();
+        const smallFont = dynamicstyles.getSmallFont.call(this)
 
         if (this.state.activelaborid) {
             let timeout = this.getactivelabor().timeout;
@@ -241,7 +235,7 @@ class TimeOut {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break;
@@ -255,10 +249,10 @@ class TimeOut {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 2);
+                            display = Timein.showdate.call(this, datein, 2);
                             break;
                         case "Tues":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break;
@@ -272,13 +266,13 @@ class TimeOut {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 3);
+                            display = Timein.showdate.call(this, datein, 3);
                             break;
                         case "Tues":
-                            display = showdate(datein, 2);
+                            display = Timein.showdate.call(this, datein, 2);
                             break;
                         case "Weds":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break;
@@ -292,16 +286,16 @@ class TimeOut {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 4);
+                            display = Timein.showdate.call(this, datein, 4);
                             break;
                         case "Tues":
-                            display = showdate(datein, 3);
+                            display = Timein.showdate.call(this, datein, 3);
                             break;
                         case "Weds":
-                            display = showdate(datein, 2);
+                            display = Timein.showdate.call(this, datein, 2);
                             break;
                         case "Thurs":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break
@@ -316,19 +310,19 @@ class TimeOut {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 5);
+                            display = Timein.showdate.call(this, datein, 5);
                             break;
                         case "Tues":
-                            display = showdate(datein, 4);
+                            display = Timein.showdate.call(this, datein, 4);
                             break;
                         case "Weds":
-                            display = showdate(datein, 3);
+                            display = Timein.showdate.call(this, datein, 3);
                             break;
                         case "Thurs":
-                            display = showdate(datein, 2);
+                            display = Timein.showdate.call(this, datein, 2);
                             break;
                         case "Fri":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break;
@@ -342,22 +336,22 @@ class TimeOut {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 6);
+                            display = Timein.showdate.call(this, datein, 6);
                             break;
                         case "Tues":
-                            display = showdate(datein, 5);
+                            display = Timein.showdate.call(this, datein, 5);
                             break;
                         case "Weds":
-                            display = showdate(datein, 4);
+                            display = Timein.showdate.call(this, datein, 4);
                             break;
                         case "Thurs":
-                            display = showdate(datein, 3);
+                            display = Timein.showdate.call(this, datein, 3);
                             break;
                         case "Fri":
-                            display = showdate(datein, 2);
+                            display = Timein.showdate.call(this, datein, 2);
                             break;
                         case "Sat":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break;
@@ -373,25 +367,25 @@ class TimeOut {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, i - 6);
+                            display = Timein.showdate.call(this, datein, i - 6);
                             break;
                         case "Tues":
-                            display = showdate(datein, i - 7);
+                            display = Timein.showdate.call(this, datein, i - 7);
                             break;
                         case "Weds":
-                            display = showdate(datein, i - 8);
+                            display = Timein.showdate.call(this, datein, i - 8);
                             break;
                         case "Thurs":
-                            display = showdate(datein, i - 9);
+                            display = Timein.showdate.call(this, datein, i - 9);
                             break;
                         case "Fri":
-                            display = showdate(datein, i - 10);
+                            display = Timein.showdate.call(this, datein, i - 10);
                             break;
                         case "Sat":
-                            display = showdate(datein, i - 11);
+                            display = Timein.showdate.call(this, datein, i - 11);
                             break;
                         case "Sun":
-                            display = showdate(datein, i - 12);
+                            display = Timein.showdate.call(this, datein, i - 12);
                             break;
                         default:
                             break;
@@ -409,25 +403,25 @@ class TimeOut {
                     let display = " ";
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         case "Tues":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         case "Weds":
-                            display = showdate(datein, 27);
+                            display = Timein.showdate.call(this, datein, 27);
                             break;
                         case "Thurs":
-                            display = showdate(datein, 26);
+                            display = Timein.showdate.call(this, datein, 26);
                             break;
                         case "Fri":
-                            display = showdate(datein, 25);
+                            display = Timein.showdate.call(this, datein, 25);
                             break;
                         case "Sat":
-                            display = showdate(datein, 24);
+                            display = Timein.showdate.call(this, datein, 24);
                             break;
                         case "Sun":
-                            display = showdate(datein, 23);
+                            display = Timein.showdate.call(this, datein, 23);
                             break;
                         default:
                             break;
@@ -440,25 +434,25 @@ class TimeOut {
                     let display = " ";
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Tues":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         case "Weds":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         case "Thurs":
-                            display = showdate(datein, 27);
+                            display = Timein.showdate.call(this, datein, 27);
                             break;
                         case "Fri":
-                            display = showdate(datein, 26);
+                            display = Timein.showdate.call(this, datein, 26);
                             break;
                         case "Sat":
-                            display = showdate(datein, 25);
+                            display = Timein.showdate.call(this, datein, 25);
                             break;
                         case "Sun":
-                            display = showdate(datein, 24);
+                            display = Timein.showdate.call(this, datein, 24);
                             break;
                         default:
                             break;
@@ -471,25 +465,25 @@ class TimeOut {
                     let display = " ";
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Tues":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Weds":
-                            display = showdate(datein, check_29_feb_leapyear(datein))
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein))
                             break;
                         case "Thurs":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         case "Fri":
-                            display = showdate(datein, 27);
+                            display = Timein.showdate.call(this, datein, 27);
                             break;
                         case "Sat":
-                            display = showdate(datein, 26);
+                            display = Timein.showdate.call(this, datein, 26);
                             break;
                         case "Sun":
-                            display = showdate(datein, 25);
+                            display = Timein.showdate.call(this, datein, 25);
                             break;
                         default:
                             break;
@@ -504,22 +498,22 @@ class TimeOut {
                         case "Mon":
                             break;
                         case "Tues":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Weds":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Thurs":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         case "Fri":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         case "Sat":
-                            display = showdate(datein, 27);
+                            display = Timein.showdate.call(this, datein, 27);
                             break;
                         case "Sun":
-                            display = showdate(datein, 26);
+                            display = Timein.showdate.call(this, datein, 26);
                             break;
                         default:
                             break;
@@ -536,19 +530,19 @@ class TimeOut {
                         case "Tues":
                             break;
                         case "Weds":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Thurs":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Fri":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         case "Sat":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         case "Sun":
-                            display = showdate(datein, 27);
+                            display = Timein.showdate.call(this, datein, 27);
                             break;
                         default:
                             break;
@@ -567,16 +561,16 @@ class TimeOut {
                         case "Weds":
                             break;
                         case "Thurs":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Fri":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Sat":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         case "Sun":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         default:
                             break;
@@ -597,13 +591,13 @@ class TimeOut {
                         case "Thurs":
                             break;
                         case "Fri":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Sat":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Sun":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         default:
                             break;
@@ -626,10 +620,10 @@ class TimeOut {
                         case "Fri":
                             break;
                         case "Sat":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Sun":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         default:
                             break;
@@ -654,7 +648,7 @@ class TimeOut {
                         case "Sat":
                             break;
                         case "Sun":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         default:
                             break;
@@ -684,12 +678,102 @@ class TimeOut {
             return;
         }
     }
-    showcalendartimeout() {
+    showtimeout() {
+        let Timein = new ActualLaborTimeOut();
+        let timeoutheader = Timein.gettimeoutheader.call(this);
+        const styles = MyStylesheet();
+        const regularFont = this.getRegularFont();
+        const maxWidth = styles.calendarContainer;
+        return (<div style={{ ...styles.generalFlex, ...maxWidth }}>
+            <div style={{ ...styles.flex1, ...styles.generalFont }}>
 
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex3, ...regularFont, ...styles.generalFont }}>
+                        {timeoutheader}
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.timedisplayContainer, ...styles.alignCenter }}>
+                        <button style={{ ...styles.generalButton, ...styles.actualmajorDownIcon }} onClick={() => { Timein.activetimeoutcalendar.call(this) }}>{actualmajorDownIcon()}</button>
+                    </div>
+                </div>
 
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer, ...styles.alignCenter }}>
 
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.timeoutmonthup.call(this) }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeoutmonth.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={event => { Timein.timeoutmonthdown.call(this) }}> {ActualDateArrowDown()}</button>
+                        </div>
 
+                    </div>
 
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.increasetimeoutbyinc.call(this, (1000 * 60 * 60 * 24)) }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeoutday.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.decreasetimeoutbyinc.call(this, (1000 * 60 * 60 * 24)) }}> {ActualDateArrowDown()}</button>
+                        </div>
+
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex }}>
+                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timein.timeoutyearup.call(this) }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeoutyear.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timein.timeoutyeardown.call(this) }}> {ActualDateArrowDown()}</button>
+                        </div>
+                    </div>
+
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer }}>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.increasetimeoutbyinc.call(this, (1000 * 60 * 60)) }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeouthours.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.decreasetimeoutbyinc.call(this, (1000 * 60 * 60)) }}> {ActualDateArrowDown()}</button>
+                        </div>
+                    </div>
+
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer }}>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.increasetimeoutbyinc.call(this, (1000 * 60)) }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeoutminutes.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.decreasetimeoutbyinc.call(this, (1000 * 60)) }} > {ActualDateArrowDown()}</button>
+                        </div>
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.toggletimeoutampm.call(this, "up") }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeoutampm.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.toggletimeoutampm.call(this, "down") }}> {ActualDateArrowDown()}</button>
+                        </div>
+                    </div>
+                </div>
+                {Timein.handlecalendartimeout.call(this)}
+
+            </div>
+        </div>)
     }
 
 
@@ -736,16 +820,17 @@ class TimeOut {
         return `${month}/`;
     }
     timeoutmonthup(event) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();
+                    let j = this.getactivelaborkey();;
                     let mylabor = this.getactivelabor()
                     let newtimeout = increaseDateStringByOneMonth(mylabor.timeout);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -819,17 +904,18 @@ class TimeOut {
         return `${hours}:`;
     }
     increasetimeoutbyinc(inc) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();
+                    let j = this.getactivelaborkey();;
 
                     let mylabor = this.getactivelabor()
                     let newtimeout = increasedateStringbyInc(mylabor.timeout, inc);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -848,16 +934,17 @@ class TimeOut {
 
     }
     decreasetimeoutbyinc(inc) {
-        let myuser = this.getuser()
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();
+                    let j = this.getactivelaborkey();;
                     let mylabor = this.getactivelabor()
                     let newtimeout = decreasedateStringbyInc(mylabor.timeout, inc);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
 
@@ -871,16 +958,17 @@ class TimeOut {
         }
     }
     timeoutmonthdown(event) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();
+                    let j = this.getactivelaborkey();;
                     let mylabor = this.getactivelabor()
                     let newtimeout = decreaseDateStringByOneMonth(mylabor.timeout);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -895,16 +983,17 @@ class TimeOut {
         }
     }
     timeoutyearup(event) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();
+                    let j = this.getactivelaborkey();;
                     let mylabor = this.getactivelabor()
                     let newtimeout = increaseDateStringByOneYear(mylabor.timeout);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
 
@@ -921,16 +1010,17 @@ class TimeOut {
     }
 
     timeoutyeardown(event) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();
+                    let j = this.getactivelaborkey();;
                     let mylabor = this.getactivelabor()
                     let newtimeout = decreaseDateStringByOneYear(mylabor.timeout);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = newtimeout
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 }
@@ -941,8 +1031,6 @@ class TimeOut {
             }
         }
     }
-
-
 
 
 
@@ -959,38 +1047,41 @@ class TimeOut {
         return timeout;
     }
     handletimeout(value) {
-        if (this.state.activelaborid) {
-            let laborid = this.state.activelaborid;
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (this.state.activelaborid) {
+                let laborid = this.state.activelaborid;
 
-            let timeout = inputTimeDateOutputUTCString(value);
-            if (this.props.projectsprovider.hasOwnProperty("length")) {
-                let projectid = this.props.projectid.projectid;
-                // eslint-disable-next-line
-                this.props.projectsprovider.map((myproject, i) => {
-                    if (myproject.projectid === projectid) {
+                let timeout = inputTimeDateOutputUTCString(value);
+                if (this.props.projectsprovider.hasOwnProperty("length")) {
+                    let projectid = this.props.projectid.projectid;
+                    // eslint-disable-next-line
+                    this.props.projectsprovider.map((myproject, i) => {
+                        if (myproject.projectid === projectid) {
 
-                        if (myproject.hasOwnProperty("schedulelabor")) {
-                            // eslint-disable-next-line
-                            myproject.schedulelabor.mylabor.map((mylabor, j) => {
-                                if (mylabor.laborid === laborid) {
-                                    this.props.projectsprovider[i].schedulelabor.mylabor[j].timeout = timeout;
-                                    let obj = this.props.projectsprovider;
-                                    this.props.projectsProvider(obj);
-                                    this.setState({ render: 'render' });
+                            if (myproject.hasOwnProperty("actuallabor")) {
+                                // eslint-disable-next-line
+                                myproject.actuallabor.mylabor.map((mylabor, j) => {
+                                    if (mylabor.laborid === laborid) {
+                                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = timeout;
+                                        this.props.reduxUser(myuser);
+                                        this.setState({ render: 'render' });
 
-                                }
-                            });
+                                    }
+                                });
+                            }
+
                         }
-
-                    }
-                });
+                    });
+                }
             }
-        }
-        else {
-            let timeout = inputDateTimeOutDateObj(value);
-            this.setState({ timeout })
-        }
+            else {
+                let timeout = inputDateTimeOutDateObj(value);
+                this.setState({ timeout })
+            }
 
+        }
     }
 
 
@@ -1020,4 +1111,4 @@ class TimeOut {
 
 
 }
-export default TimeOut
+export default ActualLaborTimeOut

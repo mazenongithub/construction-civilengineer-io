@@ -151,6 +151,23 @@ class DynamicStyles {
         return MySchedule
 
     }
+    getMaterialUnit(materialid) {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        let unit = "";
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("materials")) {
+                    myuser.company.materials.mymaterial.map(mymaterial => {
+                        if (mymaterial.materialid === materialid) {
+                            unit = mymaterial.unit;
+                        }
+                    })
+                }
+            }
+        }
+        return unit;
+    }
     getCheckButton() {
         if (this.state.width > 1200) {
             return ({

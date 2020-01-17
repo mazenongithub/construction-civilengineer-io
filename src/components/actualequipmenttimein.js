@@ -33,14 +33,16 @@ import {
     toggleAMDateObj,
     AMPMfromTimeIn
 } from './functions';
-
+import { actualmajorDownIcon, ActualDateArrowDown, ActualDateArrowUp } from './svg';
 import { MyStylesheet } from './styles';
-class TimeIn {
+import DynamicStyles from './dynamicstyles';
+class ActualEquipmentTimeIn {
     gettimeinminutes() {
         let minutes = "";
         let datein = {};
         if (this.state.activeequipmentid) {
             let myequipment = this.getactiveequipment();
+            console.log(myequipment)
             datein = new Date(inputUTCStringAddOffsetString(myequipment.timein).replace(/-/g, '/'));
         }
         else {
@@ -52,34 +54,35 @@ class TimeIn {
         }
         return minutes;
     }
+    checkampmtimein(dir) {
 
-    toggletimeinampm(dir) {
-        const checkampmtimein = (dir) => {
-
-            let validate = true;
-            let timein = this.getactiveequipment().timein;
-            let ampm = AMPMfromTimeIn(timein)
-            if (ampm === "PM" && dir === "up") {
-                validate = false;
-            } else if (ampm === "AM" && dir === "down") {
-                validate = false;
-            }
-            return validate;
-
+        let validate = true;
+        let timein = this.getactiveequipment().timein;
+        let ampm = AMPMfromTimeIn(timein)
+        if (ampm === "PM" && dir === "up") {
+            validate = false;
+        } else if (ampm === "AM" && dir === "down") {
+            validate = false;
         }
-        let myuser = this.getuser();
+        return validate;
+
+    }
+    toggletimeinampm(dir) {
+        const dynamicstyles = new DynamicStyles();
+        const Timein = new ActualEquipmentTimeIn();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let project = this.getproject();
+            let project = dynamicstyles.getproject.call(this);
 
             if (project) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey()
-                    let validate = checkampmtimein(dir);
+                    let j = this.getactiveequipmentkey();
+                    let validate = Timein.checkampmtimein.call(this, dir);
                     if (validate) {
-                        let myequipment = this.getactiveequipment();
-                        let timein = myequipment.timein;
-                        timein = toggleAMTimeString(myequipment.timein)
+                        let mylabor = this.getactiveequipment();
+                        let timein = mylabor.timein;
+                        timein = toggleAMTimeString(mylabor.timein)
                         myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = timein;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
@@ -99,80 +102,82 @@ class TimeIn {
 
 
     }
+    setDay(dateencoded) {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            let myproject = dynamicstyles.getproject.call(this);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkey.call(this);
+                if (this.state.activeequipmentid) {
+                    let mylabor = this.getactiveequipment();
+                    let timein = mylabor.timein
+                    let newtimein = inputDateSecActiveIDTimein(dateencoded, timein)
+                    let j = this.getactiveequipmentkey();
+                    myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein;
+                    this.props.reduxUser(myuser);
+                    this.setState({ render: 'render' })
+
+                }
+                else {
+                    let timein = inputDateObjandSecReturnObj(dateencoded, this.state.timein);
+
+                    this.setState({ timein, render: 'render' })
+                }
+
+            }
+
+        }
+    }
+    getactivedate(dateencoded) {
+        let activeclass = "";
+        if (this.state.activeequipmentid) {
+
+
+            let mylabor = this.getactiveequipment()
+            let timein = mylabor.timein;
+            if (inputtimeDBoutputCalendarDaySeconds(timein) === dateencoded) {
+                activeclass = "active-actual-calendar"
+            }
+        }
+        else {
+            let datein = this.state.timein;
+            if (inputDateObjOutputCalendarDaySeconds(datein) === dateencoded) {
+                activeclass = "active-actual-calendar"
+            }
+
+        }
+        return activeclass;
+    }
+    showdate(dateobj, day) {
+        const Timein = new ActualEquipmentTimeIn()
+        let showday = [];
+        if (day) {
+
+            let month = dateobj.getMonth() + 1;
+            month = trailingzero(month)
+            let year = dateobj.getFullYear();
+            let dayzero = trailingzero(day);
+            let offset = getOffset()
+            let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
+
+            let calendardate = new Date(timestring);
+
+            let dateencoded = calendardate.getTime();
+
+            showday.push(<div
+                className={`${Timein.getactivedate.call(this, dateencoded)} calendar-date`}
+                onClick={() => { Timein.setDay.call(this, dateencoded) }}
+            > {day}</div>)
+        }
+        return showday;
+    }
     handlecalendartimein() {
+        const dynamicstyles = new DynamicStyles();
         let datein = {};
         const styles = MyStylesheet();
-        const smallFont = this.getSmallFont()
-        const getactivedate = (dateencoded) => {
-            let activeclass = "";
-            if (this.state.activeequipmentid) {
-
-
-                let myequipment = this.getactiveequipment()
-                let timein = myequipment.timein;
-                if (inputtimeDBoutputCalendarDaySeconds(timein) === dateencoded) {
-                    activeclass = "active-actual-calendar"
-                }
-            }
-            else {
-                let datein = this.state.timein;
-                if (inputDateObjOutputCalendarDaySeconds(datein) === dateencoded) {
-                    activeclass = "active-actual-calendar"
-                }
-
-            }
-            return activeclass;
-        }
-        const setDay = (dateencoded) => {
-            let myuser = this.getmyuser();
-            if (myuser) {
-                let myproject = this.getproject();
-                if (myproject) {
-                    let i = this.getprojectkey();
-                    if (this.state.activeequipmentid) {
-                        let myequipment = this.getactiveequipment();
-                        let timein = myequipment.timein
-                        let newtimein = inputDateSecActiveIDTimein(dateencoded, timein)
-                        let j = this.getactiveequipmentkey();
-                        myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein;
-                        let obj = this.props.projectsprovider;
-                        this.props.projectsProvider(obj);
-                        this.setState({ render: 'render' })
-
-                    }
-                    else {
-                        let timein = inputDateObjandSecReturnObj(dateencoded, this.state.timein);
-
-                        this.setState({ timein, render: 'render' })
-                    }
-
-                }
-
-            }
-        }
-        const showdate = (dateobj, day) => {
-
-            let showday = [];
-            if (day) {
-
-                let month = dateobj.getMonth() + 1;
-                month = trailingzero(month)
-                let year = dateobj.getFullYear();
-                let dayzero = trailingzero(day);
-                let offset = getOffset()
-                let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
-
-                let calendardate = new Date(timestring);
-
-                let dateencoded = calendardate.getTime();
-
-                showday.push(<div
-                    className={`${getactivedate(dateencoded)} calendar-date`}
-                    onClick={event => { setDay(dateencoded) }}
-                > {day}</div>)
-            }
-            return showday;
-        }
+        const Timein = new ActualEquipmentTimeIn();
+        const smallFont = dynamicstyles.getSmallFont.call(this)
 
         if (this.state.activeequipmentid) {
             let timein = this.getactiveequipment().timein;
@@ -231,7 +236,7 @@ class TimeIn {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break;
@@ -245,10 +250,10 @@ class TimeIn {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 2);
+                            display = Timein.showdate.call(this, datein, 2);
                             break;
                         case "Tues":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break;
@@ -262,13 +267,13 @@ class TimeIn {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 3);
+                            display = Timein.showdate.call(this, datein, 3);
                             break;
                         case "Tues":
-                            display = showdate(datein, 2);
+                            display = Timein.showdate.call(this, datein, 2);
                             break;
                         case "Weds":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break;
@@ -282,16 +287,16 @@ class TimeIn {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 4);
+                            display = Timein.showdate.call(this, datein, 4);
                             break;
                         case "Tues":
-                            display = showdate(datein, 3);
+                            display = Timein.showdate.call(this, datein, 3);
                             break;
                         case "Weds":
-                            display = showdate(datein, 2);
+                            display = Timein.showdate.call(this, datein, 2);
                             break;
                         case "Thurs":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break
@@ -306,19 +311,19 @@ class TimeIn {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 5);
+                            display = Timein.showdate.call(this, datein, 5);
                             break;
                         case "Tues":
-                            display = showdate(datein, 4);
+                            display = Timein.showdate.call(this, datein, 4);
                             break;
                         case "Weds":
-                            display = showdate(datein, 3);
+                            display = Timein.showdate.call(this, datein, 3);
                             break;
                         case "Thurs":
-                            display = showdate(datein, 2);
+                            display = Timein.showdate.call(this, datein, 2);
                             break;
                         case "Fri":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break;
@@ -332,22 +337,22 @@ class TimeIn {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, 6);
+                            display = Timein.showdate.call(this, datein, 6);
                             break;
                         case "Tues":
-                            display = showdate(datein, 5);
+                            display = Timein.showdate.call(this, datein, 5);
                             break;
                         case "Weds":
-                            display = showdate(datein, 4);
+                            display = Timein.showdate.call(this, datein, 4);
                             break;
                         case "Thurs":
-                            display = showdate(datein, 3);
+                            display = Timein.showdate.call(this, datein, 3);
                             break;
                         case "Fri":
-                            display = showdate(datein, 2);
+                            display = Timein.showdate.call(this, datein, 2);
                             break;
                         case "Sat":
-                            display = showdate(datein, 1);
+                            display = Timein.showdate.call(this, datein, 1);
                             break;
                         default:
                             break;
@@ -363,25 +368,25 @@ class TimeIn {
                     let display = " "
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, i - 6);
+                            display = Timein.showdate.call(this, datein, i - 6);
                             break;
                         case "Tues":
-                            display = showdate(datein, i - 7);
+                            display = Timein.showdate.call(this, datein, i - 7);
                             break;
                         case "Weds":
-                            display = showdate(datein, i - 8);
+                            display = Timein.showdate.call(this, datein, i - 8);
                             break;
                         case "Thurs":
-                            display = showdate(datein, i - 9);
+                            display = Timein.showdate.call(this, datein, i - 9);
                             break;
                         case "Fri":
-                            display = showdate(datein, i - 10);
+                            display = Timein.showdate.call(this, datein, i - 10);
                             break;
                         case "Sat":
-                            display = showdate(datein, i - 11);
+                            display = Timein.showdate.call(this, datein, i - 11);
                             break;
                         case "Sun":
-                            display = showdate(datein, i - 12);
+                            display = Timein.showdate.call(this, datein, i - 12);
                             break;
                         default:
                             break;
@@ -399,25 +404,25 @@ class TimeIn {
                     let display = " ";
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         case "Tues":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         case "Weds":
-                            display = showdate(datein, 27);
+                            display = Timein.showdate.call(this, datein, 27);
                             break;
                         case "Thurs":
-                            display = showdate(datein, 26);
+                            display = Timein.showdate.call(this, datein, 26);
                             break;
                         case "Fri":
-                            display = showdate(datein, 25);
+                            display = Timein.showdate.call(this, datein, 25);
                             break;
                         case "Sat":
-                            display = showdate(datein, 24);
+                            display = Timein.showdate.call(this, datein, 24);
                             break;
                         case "Sun":
-                            display = showdate(datein, 23);
+                            display = Timein.showdate.call(this, datein, 23);
                             break;
                         default:
                             break;
@@ -430,25 +435,25 @@ class TimeIn {
                     let display = " ";
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Tues":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         case "Weds":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         case "Thurs":
-                            display = showdate(datein, 27);
+                            display = Timein.showdate.call(this, datein, 27);
                             break;
                         case "Fri":
-                            display = showdate(datein, 26);
+                            display = Timein.showdate.call(this, datein, 26);
                             break;
                         case "Sat":
-                            display = showdate(datein, 25);
+                            display = Timein.showdate.call(this, datein, 25);
                             break;
                         case "Sun":
-                            display = showdate(datein, 24);
+                            display = Timein.showdate.call(this, datein, 24);
                             break;
                         default:
                             break;
@@ -461,25 +466,25 @@ class TimeIn {
                     let display = " ";
                     switch (firstison) {
                         case "Mon":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Tues":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Weds":
-                            display = showdate(datein, check_29_feb_leapyear(datein))
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein))
                             break;
                         case "Thurs":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         case "Fri":
-                            display = showdate(datein, 27);
+                            display = Timein.showdate.call(this, datein, 27);
                             break;
                         case "Sat":
-                            display = showdate(datein, 26);
+                            display = Timein.showdate.call(this, datein, 26);
                             break;
                         case "Sun":
-                            display = showdate(datein, 25);
+                            display = Timein.showdate.call(this, datein, 25);
                             break;
                         default:
                             break;
@@ -494,22 +499,22 @@ class TimeIn {
                         case "Mon":
                             break;
                         case "Tues":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Weds":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Thurs":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         case "Fri":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         case "Sat":
-                            display = showdate(datein, 27);
+                            display = Timein.showdate.call(this, datein, 27);
                             break;
                         case "Sun":
-                            display = showdate(datein, 26);
+                            display = Timein.showdate.call(this, datein, 26);
                             break;
                         default:
                             break;
@@ -526,19 +531,19 @@ class TimeIn {
                         case "Tues":
                             break;
                         case "Weds":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Thurs":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Fri":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         case "Sat":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         case "Sun":
-                            display = showdate(datein, 27);
+                            display = Timein.showdate.call(this, datein, 27);
                             break;
                         default:
                             break;
@@ -557,16 +562,16 @@ class TimeIn {
                         case "Weds":
                             break;
                         case "Thurs":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Fri":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Sat":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         case "Sun":
-                            display = showdate(datein, 28);
+                            display = Timein.showdate.call(this, datein, 28);
                             break;
                         default:
                             break;
@@ -587,13 +592,13 @@ class TimeIn {
                         case "Thurs":
                             break;
                         case "Fri":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Sat":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         case "Sun":
-                            display = showdate(datein, check_29_feb_leapyear(datein));
+                            display = Timein.showdate.call(this, datein, check_29_feb_leapyear(datein));
                             break;
                         default:
                             break;
@@ -616,10 +621,10 @@ class TimeIn {
                         case "Fri":
                             break;
                         case "Sat":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         case "Sun":
-                            display = showdate(datein, check_30(datein));
+                            display = Timein.showdate.call(this, datein, check_30(datein));
                             break;
                         default:
                             break;
@@ -644,7 +649,7 @@ class TimeIn {
                         case "Sat":
                             break;
                         case "Sun":
-                            display = showdate(datein, check_31(datein));
+                            display = Timein.showdate.call(this, datein, check_31(datein));
                             break;
                         default:
                             break;
@@ -674,12 +679,102 @@ class TimeIn {
             return;
         }
     }
-    showcalendartimein() {
+    showtimein() {
+        let Timein = new ActualEquipmentTimeIn();
+        let timeinheader = Timein.gettimeinheader.call(this);
+        const styles = MyStylesheet();
+        const regularFont = this.getRegularFont();
+        const maxWidth = styles.calendarContainer;
+        return (<div style={{ ...styles.generalFlex, ...maxWidth }}>
+            <div style={{ ...styles.flex1, ...styles.generalFont }}>
 
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex3, ...regularFont, ...styles.generalFont }}>
+                        {timeinheader}
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.timedisplayContainer, ...styles.alignCenter }}>
+                        <button style={{ ...styles.generalButton, ...styles.actualmajorDownIcon }} onClick={() => { Timein.activetimeincalendar.call(this) }}>{actualmajorDownIcon()}</button>
+                    </div>
+                </div>
 
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer, ...styles.alignCenter }}>
 
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.timeinmonthup.call(this) }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinmonth.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={event => { Timein.timeinmonthdown.call(this) }}> {ActualDateArrowDown()}</button>
+                        </div>
 
+                    </div>
 
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.increasetimeinbyinc.call(this, (1000 * 60 * 60 * 24)) }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinday.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton }} onClick={() => { Timein.decreasetimeinbyinc.call(this, (1000 * 60 * 60 * 24)) }}> {ActualDateArrowDown()}</button>
+                        </div>
+
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex }}>
+                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timein.timeinyearup.call(this) }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinyear.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.timeButton, ...styles.generalButton }} onClick={() => { Timein.timeinyeardown.call(this) }}> {ActualDateArrowDown()}</button>
+                        </div>
+                    </div>
+
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer }}>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.increasetimeinbyinc.call(this, (1000 * 60 * 60)) }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinhours.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.decreasetimeinbyinc.call(this, (1000 * 60 * 60)) }}> {ActualDateArrowDown()}</button>
+                        </div>
+                    </div>
+
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.timedisplayContainer }}>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.increasetimeinbyinc.call(this, (1000 * 60)) }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinminutes.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.decreasetimeinbyinc.call(this, (1000 * 60)) }} > {ActualDateArrowDown()}</button>
+                        </div>
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter, ...styles.timecellContainer }}>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.toggletimeinampm.call(this, "up") }}>{ActualDateArrowUp()}</button>
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.timeinputField, ...regularFont, ...styles.generalFont }} value={Timein.gettimeinampm.call(this)} />
+                        </div>
+                        <div style={{ ...styles.timeDisplayContainer, ...styles.generalFlex, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...styles.timeButton, ...styles.alignCenter }} onClick={() => { Timein.toggletimeinampm.call(this, "down") }}> {ActualDateArrowDown()}</button>
+                        </div>
+                    </div>
+                </div>
+                {Timein.handlecalendartimein.call(this)}
+
+            </div>
+        </div>)
     }
 
 
@@ -688,9 +783,9 @@ class TimeIn {
         let datein = {};
         if (this.state.activeequipmentid) {
 
-            let myequipment = this.getactiveequipment();
+            let mylabor = this.getactiveequipment();
 
-            datein = new Date(inputUTCStringAddOffsetString(myequipment.timein).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
 
         }
         else {
@@ -711,8 +806,8 @@ class TimeIn {
         let datein = {};
         if (this.state.activeequipmentid) {
 
-            let myequipment = this.getactiveequipment();
-            datein = new Date(inputUTCStringAddOffsetString(myequipment.timein).replace(/-/g, '/'));
+            let mylabor = this.getactiveequipment();
+            datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
             console.log("MONTHTIMEIN", datein)
         }
         else {
@@ -726,15 +821,16 @@ class TimeIn {
         return `${month}/`;
     }
     timeinmonthup(event) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
-                    let myequipment = this.getactiveequipment()
-                    let newtimein = increaseDateStringByOneMonth(myequipment.timein);
+                    let j = this.getactiveequipmentkey();;
+                    let mylabor = this.getactiveequipment()
+                    let newtimein = increaseDateStringByOneMonth(mylabor.timein);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
 
                     this.props.reduxUser(myuser)
@@ -752,8 +848,8 @@ class TimeIn {
         let day = "";
         let datein = {};
         if (this.state.activeequipmentid) {
-            let myequipment = this.getactiveequipment();
-            datein = new Date(inputUTCStringAddOffsetString(myequipment.timein).replace(/-/g, '/'));
+            let mylabor = this.getactiveequipment();
+            datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
         }
         else {
             datein = this.state.timein;
@@ -769,9 +865,9 @@ class TimeIn {
         let datein = {};
         if (this.state.activeequipmentid) {
 
-            let myequipment = this.getactiveequipment();
+            let mylabor = this.getactiveequipment();
 
-            datein = new Date(inputUTCStringAddOffsetString(myequipment.timein).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
 
 
 
@@ -789,9 +885,9 @@ class TimeIn {
         let datein = {};
         if (this.state.activeequipmentid) {
 
-            let myequipment = this.getactiveequipment();
+            let mylabor = this.getactiveequipment();
 
-            datein = new Date(inputUTCStringAddOffsetString(myequipment.timein).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
 
         }
         else {
@@ -809,16 +905,17 @@ class TimeIn {
         return `${hours}:`;
     }
     increasetimeinbyinc(inc) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
+                    let j = this.getactiveequipmentkey();;
 
-                    let myequipment = this.getactiveequipment()
-                    let newtimein = increasedateStringbyInc(myequipment.timein, inc);
+                    let mylabor = this.getactiveequipment()
+                    let newtimein = increasedateStringbyInc(mylabor.timein, inc);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
 
                     this.props.reduxUser(myuser)
@@ -838,15 +935,16 @@ class TimeIn {
 
     }
     decreasetimeinbyinc(inc) {
-        let myuser = this.getuser()
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
-                    let myequipment = this.getactiveequipment()
-                    let newtimein = decreasedateStringbyInc(myequipment.timein, inc);
+                    let j = this.getactiveequipmentkey();;
+                    let mylabor = this.getactiveequipment()
+                    let newtimein = decreasedateStringbyInc(mylabor.timein, inc);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -861,15 +959,16 @@ class TimeIn {
         }
     }
     timeinmonthdown(event) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
-                    let myequipment = this.getactiveequipment()
-                    let newtimein = decreaseDateStringByOneMonth(myequipment.timein);
+                    let j = this.getactiveequipmentkey();;
+                    let mylabor = this.getactiveequipment()
+                    let newtimein = decreaseDateStringByOneMonth(mylabor.timein);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
 
                     this.props.reduxUser(myuser)
@@ -885,15 +984,16 @@ class TimeIn {
         }
     }
     timeinyearup(event) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
-                    let myequipment = this.getactiveequipment()
-                    let newtimein = increaseDateStringByOneYear(myequipment.timein);
+                    let j = this.getactiveequipmentkey();;
+                    let mylabor = this.getactiveequipment()
+                    let newtimein = increaseDateStringByOneYear(mylabor.timein);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -911,15 +1011,16 @@ class TimeIn {
     }
 
     timeinyeardown(event) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
-                    let myequipment = this.getactiveequipment()
-                    let newtimein = decreaseDateStringByOneYear(myequipment.timein);
+                    let j = this.getactiveequipmentkey();;
+                    let mylabor = this.getactiveequipment()
+                    let newtimein = decreaseDateStringByOneYear(mylabor.timein);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -934,79 +1035,12 @@ class TimeIn {
 
 
 
-    timeoutyeardown(event) {
-        if (this.state.activeequipmentid) {
-            let equipmentid = this.state.activeequipmentid;
-            let myequipment = this.getactiveequipment()
-            let newtimeout = decreaseDateStringByOneYear(myequipment.timeout);
-            if (this.props.projectsprovider.hasOwnProperty("length")) {
-                let projectid = this.props.projectid.projectid;
-                // eslint-disable-next-line
-                this.props.projectsprovider.map((myproject, i) => {
-                    if (myproject.projectid === projectid) {
-
-                        if (myproject.hasOwnProperty("actualequipment")) {
-                            // eslint-disable-next-line
-                            myproject.actualequipment.myequipment.map((myequipment, j) => {
-                                if (myequipment.equipmentid === equipmentid) {
-                                    this.props.projectsprovider[i].actualequipment.myequipment[j].timeout = newtimeout
-                                    let obj = this.props.projectsprovider;
-                                    this.props.projectsProvider(obj);
-                                    this.setState({ render: 'render' })
-
-                                }
-                            })
-                        }
-
-                    }
-                })
-            }
-        }
-        else {
-            let newDate = subtractoneYearDateObj(this.state.timeout);
-            this.setState({ timeout: newDate })
-        }
-    }
-    timeoutyearup(event) {
-        if (this.state.activeequipmentid) {
-            let equipmentid = this.state.activeequipmentid;
-            let myequipment = this.getactiveequipment()
-            let newtimeout = increaseDateStringByOneYear(myequipment.timeout);
-            if (this.props.projectsprovider.hasOwnProperty("length")) {
-                let projectid = this.props.projectid.projectid;
-                // eslint-disable-next-line
-                this.props.projectsprovider.map((myproject, i) => {
-                    if (myproject.projectid === projectid) {
-
-                        if (myproject.hasOwnProperty("actualequipment")) {
-                            // eslint-disable-next-line
-                            myproject.actualequipment.myequipment.map((myequipment, j) => {
-                                if (myequipment.equipmentid === equipmentid) {
-                                    this.props.projectsprovider[i].actualequipment.myequipment[j].timeout = newtimeout
-                                    let obj = this.props.projectsprovider;
-                                    this.props.projectsProvider(obj);
-                                    this.setState({ render: 'render' })
-
-                                }
-                            })
-                        }
-
-                    }
-                })
-            }
-        }
-        else {
-            let newDate = addoneYearDateObj(this.state.timeout);
-            this.setState({ timeout: newDate })
-        }
-    }
-
     gettimein() {
         let timein = "";
         if (this.state.activeequipmentid) {
 
-            let myequipment = this.getactiveequipment();
-            timein = inputTimeInDateStringforPicker(myequipment.timein);
+            let mylabor = this.getactiveequipment();
+            timein = inputTimeInDateStringforPicker(mylabor.timein);
         }
         else {
             timein = inputDateObjOutputString(this.state.timein);
@@ -1014,38 +1048,41 @@ class TimeIn {
         return timein;
     }
     handletimein(value) {
-        if (this.state.activeequipmentid) {
-            let equipmentid = this.state.activeequipmentid;
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (this.state.activeequipmentid) {
+                let laborid = this.state.activeequipmentid;
 
-            let timein = inputTimeDateOutputUTCString(value);
-            if (this.props.projectsprovider.hasOwnProperty("length")) {
-                let projectid = this.props.projectid.projectid;
-                // eslint-disable-next-line
-                this.props.projectsprovider.map((myproject, i) => {
-                    if (myproject.projectid === projectid) {
+                let timein = inputTimeDateOutputUTCString(value);
+                if (this.props.projectsprovider.hasOwnProperty("length")) {
+                    let projectid = this.props.projectid.projectid;
+                    // eslint-disable-next-line
+                    this.props.projectsprovider.map((myproject, i) => {
+                        if (myproject.projectid === projectid) {
 
-                        if (myproject.hasOwnProperty("actualequipment")) {
-                            // eslint-disable-next-line
-                            myproject.actualequipment.myequipment.map((myequipment, j) => {
-                                if (myequipment.equipmentid === equipmentid) {
-                                    this.props.projectsprovider[i].actualequipment.myequipment[j].timein = timein;
-                                    let obj = this.props.projectsprovider;
-                                    this.props.projectsProvider(obj);
-                                    this.setState({ render: 'render' });
+                            if (myproject.hasOwnProperty("actuallabor")) {
+                                // eslint-disable-next-line
+                                myproject.actualequipment.myequipment.map((mylabor, j) => {
+                                    if (mylabor.laborid === laborid) {
+                                        myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = timein;
+                                        this.props.reduxUser(myuser);
+                                        this.setState({ render: 'render' });
 
-                                }
-                            });
+                                    }
+                                });
+                            }
+
                         }
-
-                    }
-                });
+                    });
+                }
             }
-        }
-        else {
-            let timein = inputDateTimeOutDateObj(value);
-            this.setState({ timein })
-        }
+            else {
+                let timein = inputDateTimeOutDateObj(value);
+                this.setState({ timein })
+            }
 
+        }
     }
 
 
@@ -1062,9 +1099,9 @@ class TimeIn {
     gettimeinheader() {
         let timeinheader = "";
         if (this.state.activeequipmentid) {
-            const myequipment = this.getactiveequipment();
+            const mylabor = this.getactiveequipment();
 
-            timeinheader = `Time In ${inputUTCStringForLaborID(myequipment.timein)}`
+            timeinheader = `Time In ${inputUTCStringForLaborID(mylabor.timein)}`
         } else {
             timeinheader = `Time In ${inputDateObjOutputCalendarString(this.state.timein)}`
         }
@@ -1075,4 +1112,4 @@ class TimeIn {
 
 
 }
-export default TimeIn
+export default ActualEquipmentTimeIn
