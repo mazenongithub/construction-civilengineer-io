@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { CreateBidScheduleItem, makeID, ProfitForLabor, DirectCostForMaterial, DirectCostForLabor, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment } from './functions'
-import DynamicStyles from './dynamicstyles'
+import DynamicStyles from './dynamicstyles';
 import { Link } from 'react-router-dom';
 
-class BidSchedule extends Component {
+class Bid extends Component {
     constructor(props) {
         super(props);
         this.state = { render: '', width: 0, height: 0, csiids: [], biditems: [] }
@@ -123,27 +123,55 @@ class BidSchedule extends Component {
     }
     getbiditems() {
         let items = [];
-        let myproject = this.getproject()
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this)
         if (myproject) {
 
             let lineid = makeID(16);
             let profit = "";
             let unit = "";
             let quantity = "";
-            if (myproject.hasOwnProperty("schedulelabor")) {
+            if (myproject.hasOwnProperty("actuallabor")) {
                 // eslint-disable-next-line
-                myproject.schedulelabor.mylabor.map(mylabor => {
+                myproject.actuallabor.mylabor.map(mylabor => {
                     let csiid = mylabor.csiid;
-                    let insert = true;
+
+                    let insertlabor = true;
                     // eslint-disable-next-line
                     items.map(item => {
                         if (item.csiid === csiid) {
-                            insert = false;
+                            insertlabor = false;
 
                         }
                     })
 
-                    if (insert) {
+                    if (insertlabor) {
+
+                        let newItem = CreateBidScheduleItem(lineid, csiid, profit, unit, quantity)
+
+                        items.push(newItem)
+                    }
+
+                })
+
+            }
+            if (myproject.hasOwnProperty("actualmaterials")) {
+
+                // eslint-disable-next-line
+                myproject.actualmaterials.mymaterial.map(mymaterial => {
+                    let csiid = mymaterial.csiid;
+                    let insertmaterial = true;
+                    // eslint-disable-next-line
+                    items.map(item => {
+
+                        if (item.csiid === csiid) {
+                            insertmaterial = false;
+
+                        }
+                    })
+
+                    if (insertmaterial) {
+
                         let newItem = CreateBidScheduleItem(lineid, csiid, profit, unit, quantity)
                         items.push(newItem)
                     }
@@ -151,10 +179,26 @@ class BidSchedule extends Component {
                 })
 
             }
-            if (myproject.hasOwnProperty("schedulematerials")) {
+            if (myproject.hasOwnProperty("actualequipment")) {
+                // eslint-disable-next-line
+                myproject.actualequipment.myequipment.map(myequipment => {
+                    let csiid = myequipment.csiid;
+                    let insertequipment = true;
+                    // eslint-disable-next-line
+                    items.map(item => {
+                        if (item.csiid === csiid) {
+                            insertequipment = false;
 
-            }
-            if (myproject.hasOwnProperty("scheduleequipment")) {
+                        }
+                    })
+
+                    if (insertequipment) {
+
+                        let newItem = CreateBidScheduleItem(lineid, csiid, profit, unit, quantity)
+                        items.push(newItem)
+                    }
+
+                })
 
             }
 
@@ -166,6 +210,7 @@ class BidSchedule extends Component {
     }
     showbiditems() {
         let biditems = this.getbiditems();
+
         let lineids = [];
         if (biditems.length > 0) {
             // eslint-disable-next-line
@@ -241,35 +286,41 @@ class BidSchedule extends Component {
     }
 
     getdirectcost(csiid) {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
 
         let directcost = 0;
         if (myproject) {
-            if (myproject.hasOwnProperty("schedulelabor")) {
+            if (myproject.hasOwnProperty("actuallabor")) {
                 // eslint-disable-next-line
-                myproject.schedulelabor.mylabor.map(mylabor => {
+                myproject.actuallabor.mylabor.map(mylabor => {
                     if (mylabor.csiid === csiid) {
                         directcost += DirectCostForLabor(mylabor)
 
+
                     }
                 })
             }
 
-            if (myproject.hasOwnProperty("schedulematerials")) {
+            if (myproject.hasOwnProperty("actualmaterials")) {
                 // eslint-disable-next-line
-                myproject.schedulematerials.mymaterial.map(mymaterial => {
+                myproject.actualmaterials.mymaterial.map(mymaterial => {
                     if (mymaterial.csiid === csiid) {
                         directcost += DirectCostForMaterial(mymaterial)
+
                     }
 
                 })
             }
 
-            if (myproject.hasOwnProperty("scheduleequipment")) {
+            if (myproject.hasOwnProperty("actualequipment")) {
                 // eslint-disable-next-line
-                myproject.scheduleequipment.myequipment.map(myequipment => {
+                myproject.actualequipment.myequipment.map(myequipment => {
                     if (myequipment.csiid === csiid) {
+
                         directcost += DirectCostForEquipment(myequipment)
+
+
                     }
 
                 })
@@ -279,38 +330,39 @@ class BidSchedule extends Component {
         return directcost;
 
     }
-    getscheduleitems() {
-        let scheduleitems = false;
-        let myproject = this.getproject();
+    getactualitems() {
+        const dynamicstyles = new DynamicStyles();
+        let actualitems = false;
+        let myproject = dynamicstyles.getproject.call(this);
         if (myproject) {
-            if (myproject.hasOwnProperty("bidschedule")) {
-                scheduleitems = myproject.bidschedule.biditem
+            if (myproject.hasOwnProperty("bid")) {
+                actualitems = myproject.bid.biditem
             }
         }
-        return scheduleitems;
+        return actualitems;
     }
 
-    getscheduleitem(csiid) {
-        let scheduleitems = this.getscheduleitems();
+    getactualitem(csiid) {
+        let actualitems = this.getactualitems();
 
-        let scheduleitem = false;
-        if (scheduleitems) {
+        let actualitem = false;
+        if (actualitems) {
             // eslint-disable-next-line
-            scheduleitems.map(item => {
+            actualitems.map(item => {
                 if (item.csiid === csiid) {
-                    scheduleitem = item;
+                    actualitem = item;
                 }
             })
         }
-        return scheduleitem;
+        return actualitem;
     }
-    getscheduleitemkey(csiid) {
-        let scheduleitems = this.getscheduleitems();
+    getactualitemkey(csiid) {
+        let actualitems = this.getactualitems();
         let key = false;
-        if (scheduleitems) {
+        if (actualitems) {
             // eslint-disable-next-line
-            scheduleitems.map((item, i) => {
-                console.log(csiid, item)
+            actualitems.map((item, i) => {
+
                 if (item.csiid === csiid) {
                     key = i
                 }
@@ -318,20 +370,30 @@ class BidSchedule extends Component {
         }
         return key;
     }
-
+    getmyinvoices() {
+        const dynamicstyles = new DynamicStyles();
+        let invoices = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("invoices")) {
+            invoices = myproject.invoices.myinvoice;
+        }
+        return invoices;
+    }
     getquantity(csiid) {
         let quantity = 0;
         const dynamicstyles = new DynamicStyles();
-        let myproposal = dynamicstyles.getmyproposals.call(this)
-        if (myproposal) {
+        let myinvoice = dynamicstyles.getmyinvoices.call(this)
+        if (myinvoice) {
             // eslint-disable-next-line
-            myproposal.map(proposals => {
+            myinvoice.map(invoices => {
 
-                if (proposals.hasOwnProperty("bidschedule")) {
+                if (invoices.hasOwnProperty("bid")) {
                     // eslint-disable-next-line
-                    proposals.bidschedule.biditem.map(item => {
+                    invoices.bid.biditem.map(item => {
                         if (item.unit && item.unit !== 'Lump Sum' && item.csiid === csiid) {
                             quantity += Number(item.quantity);
+                        } else if (item.unit === 'Lump Sum') {
+                            quantity = 1;
                         }
                     })
                 }
@@ -346,14 +408,14 @@ class BidSchedule extends Component {
     getunit(csiid) {
         let unit = ""
         const dynamicstyles = new DynamicStyles();
-        let myproposal = dynamicstyles.getmyproposals.call(this)
-        if (myproposal) {
+        let myinvoice = dynamicstyles.getmyinvoices.call(this)
+        if (myinvoice) {
             // eslint-disable-next-line
-            myproposal.map(proposals => {
+            myinvoice.map(invoices => {
 
-                if (proposals.hasOwnProperty("bidschedule")) {
+                if (invoices.hasOwnProperty("bid")) {
                     // eslint-disable-next-line
-                    proposals.bidschedule.biditem.map(item => {
+                    invoices.bid.biditem.map(item => {
                         if (item.csiid === csiid) {
                             unit = item.unit
                         }
@@ -369,27 +431,30 @@ class BidSchedule extends Component {
     }
     getprofit(csiid) {
         const dynamicstyles = new DynamicStyles();
-        const myschedule = dynamicstyles.getAllSchedule.call(this);
+        const myactual = dynamicstyles.getAllActual.call(this);
         let directcost = 0;
         let profit = 0;
-        if (myschedule.length > 0) {
+        if (myactual.length > 0) {
             // eslint-disable-next-line
-            myschedule.map(item => {
+            myactual.map(item => {
                 if (item.hasOwnProperty("laborid")) {
                     if (item.csiid === csiid) {
                         directcost += DirectCostForLabor(item);
                         profit += ProfitForLabor(item)
+
                     }
                 }
                 else if (item.hasOwnProperty("materialid")) {
                     if (item.csiid === csiid) {
                         directcost += DirectCostForMaterial(item);
                         profit += ProfitForMaterial(item)
+
                     }
                 } else if (item.hasOwnProperty("equipmentid")) {
                     if (item.csiid === csiid) {
                         directcost += DirectCostForEquipment(item);
                         profit += ProfitForEquipment(item)
+
                     }
                 }
 
@@ -428,9 +493,9 @@ class BidSchedule extends Component {
         let myuser = this.getuser();
         if (myuser) {
             let i = this.getprojectkey();
-            let j = this.getscheduleitemkey(csiid);
+            let j = this.getactualitemkey(csiid);
 
-            myuser.company.projects.myproject[i].bidschedule.biditem[j].quantity = quantity;
+            myuser.company.projects.myproject[i].bid.biditem[j].quantity = quantity;
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' });
 
@@ -441,8 +506,8 @@ class BidSchedule extends Component {
         let myuser = this.getuser();
         if (myuser) {
             let i = this.getprojectkey();
-            let j = this.getscheduleitemkey(csiid);
-            myuser.company.projects.myproject[i].bidschedule.biditem[j].profit = profit;
+            let j = this.getactualitemkey(csiid);
+            myuser.company.projects.myproject[i].bid.biditem[j].profit = profit;
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' });
 
@@ -454,8 +519,8 @@ class BidSchedule extends Component {
         let myuser = this.getuser();
         if (myuser) {
             let i = this.getprojectkey();
-            let j = this.getscheduleitemkey(csiid);
-            myuser.company.projects.myproject[i].bidschedule.biditem[j].unit = unit;
+            let j = this.getactualitemkey(csiid);
+            myuser.company.projects.myproject[i].bid.biditem[j].unit = unit;
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' });
 
@@ -479,12 +544,12 @@ class BidSchedule extends Component {
         if (this.state.width > 1200) {
             return (
                 <tr>
-                    <td>   <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/bidschedule/${csi.csiid}`}> Line Item <br />
+                    <td><Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/bid/${csi.csiid}`}> Line Item <br />
                         {csi.csi}-{csi.title} </Link></td>
                     <td style={{ ...styles.alignCenter }}>{quantity} </td>
                     <td style={{ ...styles.alignCenter }}> {unit}</td>
-                    <td style={{ ...styles.alignCenter }}>${directcost}</td>
-                    <td style={{ ...styles.alignCenter }}>${profit}</td>
+                    <td style={{ ...styles.alignCenter }}>{directcost}</td>
+                    <td style={{ ...styles.alignCenter }}>{profit}</td>
                     <td style={{ ...styles.alignCenter }}>${bidprice}</td>
                     <td style={{ ...styles.alignCenter }}> {`$${unitprice}/${unit}`}</td>
                 </tr>)
@@ -496,7 +561,7 @@ class BidSchedule extends Component {
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont, ...styles.showBorder }}>
-                                <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/bidschedule/${csi.csiid}`}> Line Item <br />
+                                <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/bid/${csi.csiid}`}> Line Item <br />
                                     {csi.csi}-{csi.title} </Link>
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
@@ -516,7 +581,7 @@ class BidSchedule extends Component {
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Overhead And Profit % <br />
-                                ${profit}
+                                {profit}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Bid Price <br />
@@ -576,13 +641,13 @@ class BidSchedule extends Component {
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                            /bidschedule
+                            /bids
                         </div>
                     </div>
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.fontBold }}>
-                            Proposed Bid Schedule
+                            Actual Bid
                         </div>
                     </div>
 
@@ -603,4 +668,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, actions)(BidSchedule);
+export default connect(mapStateToProps, actions)(Bid);

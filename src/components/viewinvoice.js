@@ -4,8 +4,8 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment } from './functions';
-import { Link } from 'react-router-dom';
-class ViewProposal extends Component {
+import { Link } from 'react-router-dom'
+class ViewInvoice extends Component {
     constructor(props) {
         super(props)
         this.state = { width: 0, height: 0 }
@@ -22,38 +22,7 @@ class ViewProposal extends Component {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
-    getitems() {
-        const dynamicstyles = new DynamicStyles();
-        let proposalid = this.props.match.params.proposalid;
-        let payitems = dynamicstyles.getbiditems.call(this)
 
-        let items = [];
-        // eslint-disable-next-line
-        payitems.map(item => {
-
-            if (item.hasOwnProperty("laborid")) {
-                if (item.proposalid === proposalid) {
-                    items.push(item)
-                }
-
-            }
-            if (item.hasOwnProperty("materialid")) {
-                if (item.proposalid === proposalid) {
-                    items.push(item)
-                }
-
-            }
-            if (item.hasOwnProperty("equipmentid")) {
-                if (item.proposalid === proposalid) {
-                    items.push(item)
-                }
-
-            }
-
-        })
-
-        return items;
-    }
 
     showbiditems() {
 
@@ -69,10 +38,10 @@ class ViewProposal extends Component {
     }
     getbiditems() {
         let items = [];
-        let myproposal = this.getproposal();
-        if (myproposal.hasOwnProperty("bidschedule")) {
+        let myinvoice = this.getinvoice();
+        if (myinvoice.hasOwnProperty("bid")) {
             // eslint-disable-next-line
-            items = myproposal.bidschedule.biditem;
+            items = myinvoice.bid.biditem;
         }
 
 
@@ -81,33 +50,33 @@ class ViewProposal extends Component {
         return (items)
 
     }
-    proposalitemsbycsiid(csiid) {
-        const proposalid = this.props.match.params.proposalid;
+    invoiceitemsbycsiid(csiid) {
+        const invoiceid = this.props.match.params.invoiceid;
         const dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getproject.call(this);
         let items = [];
-        if (myproject.hasOwnProperty("schedulelabor")) {
+        if (myproject.hasOwnProperty("actuallabor")) {
             // eslint-disable-next-line
-            myproject.schedulelabor.mylabor.map(mylabor => {
-                if (mylabor.csiid === csiid && (mylabor.proposalid === proposalid)) {
+            myproject.actuallabor.mylabor.map(mylabor => {
+                if (mylabor.csiid === csiid && (mylabor.invoiceid === invoiceid)) {
                     items.push(mylabor)
                 }
             })
 
         }
-        if (myproject.hasOwnProperty("schedulematerials")) {
+        if (myproject.hasOwnProperty("actualmaterials")) {
             // eslint-disable-next-line
-            myproject.schedulematerials.mymaterial.map(mymaterial => {
-                if (mymaterial.csiid === csiid && (mymaterial.proposalid === proposalid)) {
+            myproject.actualmaterials.mymaterial.map(mymaterial => {
+                if (mymaterial.csiid === csiid && (mymaterial.invoiceid === invoiceid)) {
                     items.push(mymaterial)
                 }
             })
 
         }
-        if (myproject.hasOwnProperty("scheduleequipment")) {
+        if (myproject.hasOwnProperty("actualequipment")) {
             // eslint-disable-next-line
-            myproject.scheduleequipment.myequipment.map(myequipment => {
-                if (myequipment.csiid === csiid && (myequipment.proposalid === proposalid)) {
+            myproject.actualequipment.myequipment.map(myequipment => {
+                if (myequipment.csiid === csiid && (myequipment.invoiceid === invoiceid)) {
                     items.push(myequipment)
                 }
             })
@@ -121,7 +90,7 @@ class ViewProposal extends Component {
     getprofit(csiid) {
         let profit = 0;
         let directcost = 0;
-        let items = this.proposalitemsbycsiid(csiid);
+        let items = this.invoiceitemsbycsiid(csiid);
         // eslint-disable-next-line
         items.map(item => {
             if (item.hasOwnProperty("laborid")) {
@@ -144,77 +113,77 @@ class ViewProposal extends Component {
     }
     getquantity(csiid) {
 
-        let scheduleitem = this.getscheduleitem(csiid);
+        let actualitem = this.getactualitem(csiid);
 
-        if (scheduleitem) {
-            return Number(scheduleitem.quantity);
+        if (actualitem) {
+            return Number(actualitem.quantity);
         } else {
             return;
         }
 
     }
-    getproposal() {
-        let proposalid = this.props.match.params.proposalid;
-        let proposal = false;
+    getinvoice() {
+        let invoiceid = this.props.match.params.invoiceid;
+        let invoice = false;
         const dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getproject.call(this);
-        if (myproject.hasOwnProperty("proposals")) {
+        if (myproject.hasOwnProperty("invoices")) {
             // eslint-disable-next-line
-            myproject.proposals.myproposal.map(myproposal => {
-                if (myproposal.proposalid === proposalid) {
-                    proposal = myproposal;
+            myproject.invoices.myinvoice.map(myinvoice => {
+                if (myinvoice.invoiceid === invoiceid) {
+                    invoice = myinvoice;
                 }
             })
         }
-        return proposal;
+        return invoice;
     }
-    getproposalkey() {
-        let proposalid = this.props.match.params.proposalid;
+    getinvoicekey() {
+        let invoiceid = this.props.match.params.invoiceid;
         let key = false;
         const dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getproject.call(this);
-        if (myproject.hasOwnProperty("proposals")) {
+        if (myproject.hasOwnProperty("invoices")) {
             // eslint-disable-next-line
-            myproject.proposals.myproposal.map((myproposal, i) => {
-                if (myproposal.proposalid === proposalid) {
+            myproject.invoices.myinvoice.map((myinvoice, i) => {
+                if (myinvoice.invoiceid === invoiceid) {
                     key = i;
                 }
             })
         }
         return key;
     }
-    getscheduleitems() {
+    getactualitems() {
 
-        let scheduleitems = false;
-        let myproposal = this.getproposal();
-        if (myproposal) {
-            if (myproposal.hasOwnProperty("bidschedule")) {
-                scheduleitems = myproposal.bidschedule.biditem
+        let actualitems = false;
+        let myinvoice = this.getinvoice();
+        if (myinvoice) {
+            if (myinvoice.hasOwnProperty("bid")) {
+                actualitems = myinvoice.bid.biditem
             }
         }
-        return scheduleitems;
+        return actualitems;
     }
-    getscheduleitem(csiid) {
+    getactualitem(csiid) {
 
-        let scheduleitems = this.getscheduleitems();
+        let actualitems = this.getactualitems();
 
-        let scheduleitem = false;
-        if (scheduleitems) {
+        let actualitem = false;
+        if (actualitems) {
             // eslint-disable-next-line
-            scheduleitems.map(item => {
+            actualitems.map(item => {
                 if (item.csiid === csiid) {
-                    scheduleitem = item;
+                    actualitem = item;
                 }
             })
         }
-        return scheduleitem;
+        return actualitem;
     }
     getunit(csiid) {
 
-        let scheduleitem = this.getscheduleitem()
+        let actualitem = this.getactualitem()
 
-        if (scheduleitem) {
-            return scheduleitem.unit;
+        if (actualitem) {
+            return actualitem.unit;
         } else {
             return;
         }
@@ -252,14 +221,14 @@ class ViewProposal extends Component {
     getdirectcost(csiid) {
         const dynamicstyles = new DynamicStyles()
         let myproject = dynamicstyles.getproject.call(this)
-        let proposalid = this.props.match.params.proposalid;
+        let invoiceid = this.props.match.params.invoiceid;
         let directcost = 0;
         if (myproject) {
-            if (myproject.hasOwnProperty("schedulelabor")) {
+            if (myproject.hasOwnProperty("actuallabor")) {
                 // eslint-disable-next-line
-                myproject.schedulelabor.mylabor.map(mylabor => {
+                myproject.actuallabor.mylabor.map(mylabor => {
 
-                    if (mylabor.csiid === csiid && (mylabor.proposalid === proposalid)) {
+                    if (mylabor.csiid === csiid && (mylabor.invoiceid === invoiceid)) {
 
                         directcost += DirectCostForLabor(mylabor)
 
@@ -267,10 +236,10 @@ class ViewProposal extends Component {
                 })
             }
 
-            if (myproject.hasOwnProperty("schedulematerials")) {
+            if (myproject.hasOwnProperty("actualmaterials")) {
                 // eslint-disable-next-line
-                myproject.schedulematerials.mymaterial.map(mymaterial => {
-                    if (mymaterial.csiid === csiid && (mymaterial.proposalid === proposalid)) {
+                myproject.actualmaterials.mymaterial.map(mymaterial => {
+                    if (mymaterial.csiid === csiid && (mymaterial.invoiceid === invoiceid)) {
                         directcost += DirectCostForMaterial(mymaterial)
                     }
 
@@ -278,10 +247,10 @@ class ViewProposal extends Component {
             }
         }
 
-        if (myproject.hasOwnProperty("scheduleequipment")) {
+        if (myproject.hasOwnProperty("actualequipment")) {
             // eslint-disable-next-line
-            myproject.scheduleequipment.myequipment.map(myequipment => {
-                if (myequipment.csiid === csiid && (myequipment.proposalid === proposalid)) {
+            myproject.actualequipment.myequipment.map(myequipment => {
+                if (myequipment.csiid === csiid && (myequipment.invoiceid === invoiceid)) {
                     directcost += DirectCostForEquipment(myequipment)
                 }
 
@@ -292,12 +261,12 @@ class ViewProposal extends Component {
 
     }
 
-    getproposalitemkey(csiid) {
+    getinvoiceitemkey(csiid) {
         let key = false;
-        let myproposal = this.getproposal();
-        if (myproposal.hasOwnProperty("bidschedule")) {
+        let myinvoice = this.getinvoice();
+        if (myinvoice.hasOwnProperty("bid")) {
             // eslint-disable-next-line
-            myproposal.bidschedule.biditem.map((item, i) => {
+            myinvoice.bid.biditem.map((item, i) => {
                 if (item.csiid === csiid) {
                     key = i
                 }
@@ -312,9 +281,9 @@ class ViewProposal extends Component {
         let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            let k = this.getproposalitemkey(csiid);
-            let j = this.getproposalkey();
-            myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].quantity = quantity;
+            let k = this.getinvoiceitemkey(csiid);
+            let j = this.getinvoicekey();
+            myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].quantity = quantity;
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' })
         }
@@ -325,23 +294,17 @@ class ViewProposal extends Component {
         let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            let k = this.getproposalitemkey(csiid);
-            let j = this.getproposalkey();
-            myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].unit = unit;
+            let k = this.getinvoiceitemkey(csiid);
+            let j = this.getinvoicekey();
+            myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].unit = unit;
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' })
         }
 
     }
     showbiditem(item) {
+
         const dynamicstyles = new DynamicStyles();
-        let providerid = this.props.match.params.providerid;
-        let companyid = this.props.match.params.companyid;
-        let projectid = this.props.match.params.projectid;
-        let proposalid = this.props.match.params.proposalid;
-
-
-
         const styles = MyStylesheet();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const bidField = dynamicstyles.getbidfield.call(this)
@@ -352,11 +315,16 @@ class ViewProposal extends Component {
         let unitprice = +Number(this.getunitprice(item.csiid)).toFixed(4);
         let directcost = Number(this.getdirectcost(item.csiid)).toFixed(2);
         let unit = item.unit;
+        let providerid = this.props.match.params.providerid;
+        let companyid = this.props.match.params.companyid;
+        let projectid = this.props.match.params.projectid;
+        let invoiceid = this.props.match.params.invoiceid;
 
         if (this.state.width > 1200) {
             return (
                 <tr>
-                    <td><Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/proposals/${proposalid}/csi/${csi.csiid}`}>{csi.csi}-{csi.title}</Link></td>
+                    <td> <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/invoices/${invoiceid}/csi/${csi.csiid}`}> Line Item <br />
+                        {csi.csi}-{csi.title} </Link></td>
                     <td style={{ ...styles.alignCenter }}>
                         {quantity}
                     </td>
@@ -374,7 +342,7 @@ class ViewProposal extends Component {
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont, ...styles.showBorder }}>
-                                <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/proposals/${proposalid}/csi/${csi.csiid}`}> Line Item <br />
+                                <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/invoices/${invoiceid}/csi/${csi.csiid}`}> Line Item <br />
                                     {csi.csi}-{csi.title} </Link>
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
@@ -424,34 +392,34 @@ class ViewProposal extends Component {
     handlechangeprofit(profit, csiid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-        let proposalid = this.props.match.params.proposalid;
+        let invoiceid = this.props.match.params.invoiceid;
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
             let myproject = dynamicstyles.getproject.call(this);
-            if (myproject.hasOwnProperty("schedulelabor")) {
+            if (myproject.hasOwnProperty("actuallabor")) {
                 // eslint-disable-next-line
-                myproject.schedulelabor.mylabor.map((mylabor, j) => {
-                    if (mylabor.proposalid === proposalid && (mylabor.csiid === csiid)) {
-                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].profit = profit;
+                myproject.actuallabor.mylabor.map((mylabor, j) => {
+                    if (mylabor.invoiceid === invoiceid && (mylabor.csiid === csiid)) {
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].profit = profit;
                     }
 
                 })
 
             }
-            if (myproject.hasOwnProperty("schedulematerials")) {
+            if (myproject.hasOwnProperty("actualmaterials")) {
                 // eslint-disable-next-line
-                myproject.schedulematerials.mymaterial.map((mymaterial, j) => {
-                    if (mymaterial.proposalid === proposalid && (mymaterial.csiid === csiid)) {
-                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].profit = profit;
+                myproject.actualmaterials.mymaterial.map((mymaterial, j) => {
+                    if (mymaterial.invoiceid === invoiceid && (mymaterial.csiid === csiid)) {
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].profit = profit;
                     }
 
                 })
             }
-            if (myproject.hasOwnProperty("scheduleequipment")) {
+            if (myproject.hasOwnProperty("actualequipment")) {
                 // eslint-disable-next-line
-                myproject.scheduleequipment.myequipment.map((myequipment, j) => {
-                    if (myequipment.proposalid === proposalid && (myequipment.csiid === csiid)) {
-                        myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].profit = profit;
+                myproject.actualequipment.myequipment.map((myequipment, j) => {
+                    if (myequipment.invoiceid === invoiceid && (myequipment.csiid === csiid)) {
+                        myuser.company.projects.myproject[i].actualequipment.myequipment[j].profit = profit;
                     }
 
                 })
@@ -473,7 +441,7 @@ class ViewProposal extends Component {
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...titleFont, ...styles.alignCenter }}>
-                            /viewproposal/{this.props.match.params.proposalid}
+                            /viewinvoice/{this.props.match.params.invoiceid}
                         </div>
                     </div>
 
@@ -496,4 +464,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, actions)(ViewProposal);
+export default connect(mapStateToProps, actions)(ViewInvoice);

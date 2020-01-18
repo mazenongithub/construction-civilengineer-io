@@ -22,6 +22,9 @@ export function CreateRentalRate(month, week, day, hour) {
 export function CreateProposal(proposalid, providerid, updated, approved) {
     return ({ proposalid, providerid, updated, approved })
 }
+export function CreateInvoice(invoiceid, providerid, updated, approved) {
+    return ({ invoiceid, providerid, updated, approved })
+}
 export function CreateEquipment(equipmentid, equipment, workinghours, ownershipstatus, purchasedate, saledate, loaninterest, resalevalue) {
     return ({ equipmentid, equipment, workinghours, ownershipstatus, purchasedate, saledate, loaninterest, resalevalue })
 }
@@ -532,7 +535,7 @@ export function increaseDateStringByOneMonth(timein) {
     if (seconds < 10) {
         seconds = `0${seconds}`;
     }
-    console.log("ONEMONTHINCREASE", `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`)
+
     return (`${year}-${month}-${date} ${hours}:${minutes}:${seconds}`);
 }
 
@@ -1209,9 +1212,11 @@ export function DirectCostForLabor(item) {
     return (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.laborrate))
 }
 export function DirectCostForEquipment(item) {
+
     return (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.equipmentrate))
 }
 export function ProfitForEquipment(item) {
+
     return (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.equipmentrate)) * (Number(item.profit) / 100)
 }
 export function ProfitForLabor(item) {

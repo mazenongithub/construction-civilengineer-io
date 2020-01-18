@@ -81,6 +81,50 @@ class DynamicStyles {
         }
         return proposals;
     }
+    getmyinvoices() {
+        const dynamicstyles = new DynamicStyles();
+        let invoices = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("invoices")) {
+            invoices = myproject.invoices.myinvoice;
+        }
+        return invoices;
+    }
+    getAllActual() {
+        const dynamicstyles = new DynamicStyles();
+
+        let actuals = [];
+        let myproject = dynamicstyles.getproject.call(this)
+
+        if (myproject.hasOwnProperty("actuallabor")) {
+            // eslint-disable-next-line
+            myproject.actuallabor.mylabor.map(mylabor => {
+                actuals.push(mylabor)
+            })
+        }
+        if (myproject.hasOwnProperty("actualequipment")) {
+            // eslint-disable-next-line
+            myproject.actualequipment.myequipment.map(myequipment => {
+                actuals.push(myequipment)
+            })
+        }
+        if (myproject.hasOwnProperty("actualmaterials")) {
+            // eslint-disable-next-line
+            myproject.actualmaterials.mymaterial.map(mymaterial => {
+                actuals.push(mymaterial)
+            })
+
+        }
+
+        actuals.sort((a, b) => {
+            return sorttimes(a.timein, b.timein)
+        })
+
+
+        return actuals;
+
+    }
+
     getAllSchedule() {
         const user = () => {
             let myuser = false;
@@ -151,6 +195,142 @@ class DynamicStyles {
         return MySchedule
 
     }
+
+    showlinedetail() {
+        const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const totallabor = `$${Number(this.getlabortotal()).toFixed(2)}`
+        const totalmaterials = `$${Number(this.getmaterialtotal()).toFixed(2)}`
+        const totalequipment = `$${Number(this.getequipmenttotal()).toFixed(2)}`
+        const totalamount = `$${Number(this.getitemtotal()).toFixed(2)}`
+        const responsiveLayouts = () => {
+            if (this.state.width > 800) {
+                return (<div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Labor
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getlaboritems()}
+                                </div>
+
+
+                            </div>
+                            <div style={{ ...styles.flex1 }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Materials
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getmaterialitems()}
+                                </div>
+
+                            </div>
+                        </div>
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Equipment
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getequipmentitems()}
+                                </div>
+
+
+                            </div>
+                            <div style={{ ...styles.flex1, ...styles.showBorder }}>
+
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Labor {totallabor}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Materials {totalmaterials}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Equipment {totalequipment}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total {totalamount}
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>)
+
+            } else {
+                return (
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+
+                            <div style={{ ...styles.generalContainer }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Labor
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getlaboritems()}
+                                </div>
+
+                            </div>
+
+                            <div style={{ ...styles.generalContainer }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Materials
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getmaterialitems()}
+                                </div>
+
+
+                            </div>
+                            <div style={{ ...styles.generalContainer }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Equipment
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getequipmentitems()}
+                                </div>
+
+                            </div>
+                            <div style={{ ...styles.generalContainer }}>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Labor {totallabor}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Materials {totalmaterials}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Equipment {totalequipment}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total {totalamount}
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                )
+
+            }
+        }
+        return responsiveLayouts();
+
+    }
     getMaterialUnit(materialid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
@@ -158,6 +338,7 @@ class DynamicStyles {
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 if (myuser.company.hasOwnProperty("materials")) {
+                    // eslint-disable-next-line
                     myuser.company.materials.mymaterial.map(mymaterial => {
                         if (mymaterial.materialid === materialid) {
                             unit = mymaterial.unit;
@@ -386,6 +567,13 @@ class DynamicStyles {
             return (styles.font30)
         }
 
+    }
+    getremoveicon() {
+        if (this.state.width > 800) {
+            return ({ width: '47px', height: '47px' })
+        } else {
+            return ({ width: '36px', height: '36px' })
+        }
     }
     getRegularFont() {
         const styles = MyStylesheet();

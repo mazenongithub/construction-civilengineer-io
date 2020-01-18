@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { saveProjectIcon, removeIconSmall, actualmajorDownIcon, ActualDateArrowDown, ActualDateArrowUp } from './svg';
+import { saveProjectIcon, removeIconSmall } from './svg';
 import { inputUTCStringForLaborID, calculatetotalhours, makeID, CreateActualLabor, inputDateObjOutputAdjString } from './functions'
 import ActualLaborTimeOut from './actuallabortimeout'
 import DynamicStyles from './dynamicstyles';
