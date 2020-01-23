@@ -479,6 +479,8 @@ class ViewProposal extends Component {
 
                     {dynamicstyles.showbidtable.call(this)}
 
+                    {dynamicstyles.showsaveproject.call(this)}
+
                 </div>
             </div>
         )

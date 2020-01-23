@@ -2,12 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { GoogleSignIcon, AppleSignIcon, goCheckIcon, signUpNowIcon } from './svg'
-
+import { GoogleSignIcon, AppleSignIcon, goCheckIcon, signUpNowIcon } from './svg';
+import { RegisterUser } from './actions/api'
+import firebase from 'firebase/app';
+import { returnCompanyList } from './functions';
+import Profile from './profile';
+import 'firebase/auth';
+import DynamicStyles from './dynamicstyles';
 class Register extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0 }
+        this.state = { render: '', width: 0, height: 0, providerid: '', client: '', clientid: '', firstname: '', lastname: '', emailaddress: '', profileurl: '', phonenumber: '', provideridcheck: true }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -53,47 +58,21 @@ class Register extends Component {
         }
 
     }
-    getgocheckheight() {
-        if (this.state.width > 1200) {
-            return ({
-                width: '69px',
-                height: '69px'
-            })
-        } else if (this.state.width > 800) {
-            return ({
-                width: '59px',
-                height: '59px'
-            })
-        } else {
-            return ({
-                width: '49px',
-                height: '49px'
-            })
-        }
 
-    }
-    getsignupnow() {
-        if (this.state.width > 1200) {
-            return ({
-                width: '335px',
-                height: '65px'
-            })
-        } else if (this.state.width > 800) {
-            return ({
-                width: '216px',
-                height: '51px'
-            })
-        } else {
-            return ({
-                width: '177px',
-                height: '47x'
-            })
-        }
 
+    handlegoicon() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const goCheckHeight = dynamicstyles.getgocheckheight.call(this);
+        if (this.state.provideridcheck && this.state.providerid) {
+            return (<button style={{ ...styles.generalButton, ...goCheckHeight }}>{goCheckIcon()}</button>)
+        } else {
+            return;
+        }
     }
     showproviderid() {
-        let regularFont = this.getRegularFont();
-        const goCheckHeight = this.getgocheckheight();
+        const dynamicstyles = new DynamicStyles();
+        let regularFont = dynamicstyles.getRegularFont.call(this);
         const styles = MyStylesheet();
         if (this.state.width > 800) {
             return (
@@ -106,18 +85,17 @@ class Register extends Component {
                                 Create A Provider ID
                 </div>
                             <div style={{ ...styles.flex3 }}>
-                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }} />
+                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                    value={this.state.providerid}
+                                    onChange={event => { this.setState({ providerid: event.target.value }) }}
+                                />
                             </div>
                             <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.generalButton, ...goCheckHeight }}>{goCheckIcon()}</button>
+                                {this.handlegoicon()}
                             </div>
                         </div>
 
-                        <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                Your Profile will be hosted at {process.env.REACT_APP_CLIENT_API}/
-                    </div>
-                        </div>
+
 
 
                     </div>
@@ -137,18 +115,14 @@ class Register extends Component {
                         </div>
 
                         <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1 }}>
-                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }} />
+                            <div style={{ ...styles.flex3 }}>
+                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                    value={this.state.providerid}
+                                    onChange={event => { this.setState({ providerid: event.target.value }) }}
+                                />
                             </div>
                             <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.generalButton, ...goCheckHeight }}>{goCheckIcon()}</button>
-                            </div>
-                        </div>
-
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                                Your Profile will be hosted at {process.env.REACT_APP_CLIENT_API}/
+                                {this.handlegoicon()}
                             </div>
                         </div>
 
@@ -158,20 +132,97 @@ class Register extends Component {
 
         }
     }
+    async appleSignIn() {
+        let provider = new firebase.auth.OAuthProvider('apple.com');
+
+        provider.addScope('email');
+        provider.addScope('name');
+        try {
+            let result = await firebase.auth().signInWithPopup(provider)
+
+            // The signed-in user info.
+            var user = result.user;
+            console.log(user.providerData[0])
+            let client = 'apple';
+            let clientid = user.providerData[0].uid;
+            let firstname = '';
+            if (user.providerData[0].displayName) {
+                firstname = user.providerData[0].displayName.split(' ')[0]
+            }
+
+            let lastname = '';
+            if (user.providerData[0].displayName) {
+                lastname = user.providerData[0].displayName.split(' ')[1]
+            }
+            let emailaddress = user.providerData[0].email;
+            let profileurl = user.providerData[0].photoURL;
+            let phonenumber = user.phoneNumber;
+            this.setState({ client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber })
+
+
+
+
+        } catch (error) {
+
+            alert(error.message);
+
+        }
+
+
+    }
+    async googleSignIn() {
+
+
+        try {
+
+
+            let provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('email');
+            provider.addScope('profile');
+            let result = await firebase.auth().signInWithPopup(provider)
+            var user = result.user;
+            console.log(user.providerData[0]);
+            let client = 'google';
+            let clientid = user.providerData[0].uid;
+            let firstname = '';
+            if (user.providerData[0].displayName) {
+                firstname = user.providerData[0].displayName.split(' ')[0]
+            }
+
+            let lastname = '';
+            if (user.providerData[0].displayName) {
+                lastname = user.providerData[0].displayName.split(' ')[1]
+            }
+            let emailaddress = user.providerData[0].email;
+            let profileurl = user.providerData[0].photoURL;
+            let phonenumber = user.phoneNumber;
+            this.setState({ client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber })
+
+
+
+        } catch (error) {
+            alert(error)
+        }
+
+
+    }
     showloginbuttons() {
         let regularFont = this.getRegularFont();
         const loginButtonHeight = this.getloginbuttonheight();
         const styles = MyStylesheet();
+
         if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }}>
                 <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
                     Secure Your Sign In
                 </div>
                 <div style={{ ...styles.flex1 }}>
-                    <button style={{ ...styles.generalButton, ...loginButtonHeight }}>{GoogleSignIcon()}</button>
+                    <button style={{ ...styles.generalButton, ...loginButtonHeight }}
+                        onClick={() => { this.googleSignIn() }}>{GoogleSignIcon()}</button>
                 </div>
                 <div style={{ ...styles.flex1 }}>
-                    <button style={{ ...styles.generalButton, ...loginButtonHeight }}>{AppleSignIcon()}</button>
+                    <button style={{ ...styles.generalButton, ...loginButtonHeight }}
+                        onClick={() => { this.appleSignIn() }}>{AppleSignIcon()}</button>
                 </div>
             </div>)
 
@@ -189,11 +240,14 @@ class Register extends Component {
 
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.generalButton, ...loginButtonHeight }}>{GoogleSignIcon()}</button>
+                                <button style={{ ...styles.generalButton, ...loginButtonHeight }}
+                                    onClick={() => { this.googleSignIn() }}
+                                >{GoogleSignIcon()}</button>
 
                             </div>
                             <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.generalButton, ...loginButtonHeight }}>{AppleSignIcon()}</button>
+                                <button style={{ ...styles.generalButton, ...loginButtonHeight }}
+                                    onClick={() => { this.appleSignIn() }}> {AppleSignIcon()} </button>
 
                             </div>
                         </div>
@@ -206,58 +260,158 @@ class Register extends Component {
 
         }
     }
+    handleprofilemessage() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        if (this.state.provideridcheck) {
+            return (<div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                    Your Profile will be hosted at {process.env.REACT_APP_CLIENT_API}/{this.state.providerid}
+                </div>
+            </div>)
+        } else {
+            return (<div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                    {this.state.providerid} is taken, please choose another ID
+                </div>
+            </div>)
+        }
+    }
+    handleshowloginbuttons() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+
+        if (this.state.client) {
+            return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont }}>
+                Your SignIn is Secure with {this.state.client}
+            </div>)
+
+        } else {
+            return (this.showloginbuttons())
+        }
+    }
+
+    validateprovider() {
+        if (this.state.providerid) {
+            return (true)
+        } else {
+            return (false)
+        }
+
+    }
+
+
+    async registernewuser() {
+
+        const values = { providerid: this.state.providerid, client: this.state.client, clientid: this.state.clientid, firstname: this.state.firstname, lastname: this.state.lastname, emailaddress: this.state.emailaddress, profileurl: this.state.profileurl, phonenumber: this.state.phonenumber }
+        let response = await RegisterUser(values);
+        console.log(response)
+        if (response.hasOwnProperty("allusers")) {
+            let companys = returnCompanyList(response.allusers);
+            this.props.reduxAllCompanys(companys)
+            this.props.reduxAllUsers(response.allusers);
+            delete response.allusers;
+
+        }
+        if (response.hasOwnProperty("providerid")) {
+            this.props.reduxUser(response)
+        }
+
+    }
+    handlesignupnow() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const signupnow = dynamicstyles.getsignupnow.call(this)
+        let validateprovider = this.validateprovider();
+        if (validateprovider) {
+            return (<button style={{ ...styles.generalButton, ...signupnow, ...styles.addLeftMargin15 }}
+                onClick={() => { this.registernewuser() }}>{signUpNowIcon()}</button>)
+        } else {
+            return;
+        }
+    }
     render() {
         const styles = MyStylesheet();
-        //const regularFont = this.getRegularFont();
-        const headerFont = this.getHeaderFont();
-        const regularFont = this.getRegularFont();
-        const signupnow = this.getsignupnow()
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
+        const dynamicstyles = new DynamicStyles();
+        const headerFont = dynamicstyles.getHeaderFont.call(this);
+        const regularFont = dynamicstyles.getRegularFont.call(this);
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...headerFont, ...styles.alignCenter }}>
-                            Registration
+        const Register = () => {
+            return (
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...styles.generalFont, ...headerFont, ...styles.alignCenter }}>
+                                Registration
                         </div>
+                        </div>
+
+                        {this.handleshowloginbuttons()}
+                        {this.showproviderid()}
+                        {this.handleprofilemessage()}
+
+                        <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                Verify Your Info {this.handlesignupnow()}
+                            </div>
+                        </div>
+
+                        <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                Email Address <br />
+                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                    value={this.state.emailaddress}
+                                    onChange={event => { this.setState({ emailaddress: event.target.value }) }}
+                                />
+                            </div>
+
+                        </div>
+
+                        <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                First Name <br />
+                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                    value={this.state.firstname}
+                                    onChange={event => { this.setState({ firstname: event.target.value }) }}
+                                />
+                            </div>
+                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                Last Name <br />
+                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                    value={this.state.lastname}
+                                    onChange={event => { this.setState({ lastname: event.target.value }) }}
+                                />
+                            </div>
+                        </div>
+
+                        <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                Phone Number <br />
+                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                    value={this.state.phonenumber}
+                                    onChange={event => { this.setState({ phonenumber: event.target.value }) }}
+                                />
+                            </div>
+
+                        </div>
+
+
+
                     </div>
-
-                    {this.showloginbuttons()}
-                    {this.showproviderid()}
-
-                    <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                            Verify Your Info <button style={{ ...styles.generalButton, ...signupnow, ...styles.addLeftMargin15 }}>{signUpNowIcon()}</button>
-                        </div>
-                    </div>
-
-                    <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                            Email Address <br />
-                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }} />
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                            Profile URL<br />
-                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }} />
-                        </div>
-                    </div>
-
-                    <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                            First Name <br />
-                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }} />
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                            Last Name <br />
-                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }} />
-                        </div>
-                    </div>
-
-
-
                 </div>
-            </div>
-        )
+            )
+        }
+        const myuser = dynamicstyles.getuser.call(this);
+
+        if (myuser) {
+            return (<Profile />)
+        } else {
+            return (Register())
+        }
+
     }
 
 }
@@ -265,7 +419,10 @@ class Register extends Component {
 function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
-        navigation: state.navigation
+        navigation: state.navigation,
+        projectid: state.projectid,
+        allusers: state.allusers,
+        allcompanys: state.allcompanys
     }
 }
 

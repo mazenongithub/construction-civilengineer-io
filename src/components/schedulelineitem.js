@@ -26,7 +26,6 @@ class ScheduleLineItem extends Component {
         const dynamicstyles = new DynamicStyles();
         const schedule = dynamicstyles.getAllSchedule.call(this)
         let csiid = this.props.match.params.csiid;
-        let proposalid = this.props.match.params.proposalid;
         let laboritems = [];
         let items = [];
         // eslint-disable-next-line
@@ -49,9 +48,7 @@ class ScheduleLineItem extends Component {
         const dynamicstyles = new DynamicStyles();
         const schedule = dynamicstyles.getAllSchedule.call(this)
         let csiid = this.props.match.params.csiid;
-        let proposalid = this.props.match.params.proposalid;
         let laboritems = [];
-        let items = [];
         // eslint-disable-next-line
         schedule.map(item => {
             if ((item.hasOwnProperty("laborid")) && (item.csiid === csiid)) {
@@ -77,7 +74,6 @@ class ScheduleLineItem extends Component {
         const dynamicstyles = new DynamicStyles();
         const schedule = dynamicstyles.getAllSchedule.call(this)
         let csiid = this.props.match.params.csiid;
-        let proposalid = this.props.match.params.proposalid;
         let laboritems = [];
         let items = [];
         // eslint-disable-next-line
@@ -101,9 +97,7 @@ class ScheduleLineItem extends Component {
         const dynamicstyles = new DynamicStyles();
         const schedule = dynamicstyles.getAllSchedule.call(this)
         let csiid = this.props.match.params.csiid;
-        let proposalid = this.props.match.params.proposalid;
         let materialitems = [];
-        let items = [];
         // eslint-disable-next-line
         schedule.map(item => {
             if ((item.hasOwnProperty("materialid")) && item.csiid === csiid) {
@@ -131,7 +125,6 @@ class ScheduleLineItem extends Component {
         const dynamicstyles = new DynamicStyles();
         const schedule = dynamicstyles.getAllSchedule.call(this)
         let csiid = this.props.match.params.csiid;
-        let proposalid = this.props.match.params.proposalid;
         let laboritems = [];
         let items = [];
         // eslint-disable-next-line
@@ -158,7 +151,6 @@ class ScheduleLineItem extends Component {
         let csiid = this.props.match.params.csiid;
         let proposalid = this.props.match.params.proposalid;
         let laboritems = [];
-        let items = [];
         // eslint-disable-next-line
         schedule.map(item => {
             if ((item.hasOwnProperty("equipmentid")) && item.csiid === csiid && (item.proposalid === proposalid)) {

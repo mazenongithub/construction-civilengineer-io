@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { saveProjectIcon } from './svg';
-import { CreateScheduleEquipment, makeID, inputUTCStringForLaborID } from './functions'
 import ScheduleEquipmentTimeIn from './scheduleequipmenttimein';
 import ScheduleEquipmentTimeOut from './scheduleequipmenttimeout';
+import DynamicStyles from './dynamicstyles';
+import { CreateScheduleEquipment, makeID, inputUTCStringForLaborID } from './functions'
 
 class ScheduleEquipment extends Component {
     constructor(props) {
@@ -21,6 +21,9 @@ class ScheduleEquipment extends Component {
 
     }
     componentDidMount() {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        console.log(myuser)
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
 
@@ -579,7 +582,7 @@ class ScheduleEquipment extends Component {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
         const regularFont = this.getRegularFont();
-        const saveprojecticon = this.getsaveprojecticon();
+        const dynamicstyles = new DynamicStyles();
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }} >
@@ -621,13 +624,7 @@ class ScheduleEquipment extends Component {
                     </div>
 
 
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                        &nbsp;
-                     </div>
-
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...saveprojecticon }}>{saveProjectIcon()}</button>
-                    </div>
+                    {dynamicstyles.showsaveproject.call(this)}
 
                     {this.loadequipmentids()}
 

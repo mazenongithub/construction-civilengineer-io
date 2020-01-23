@@ -1,7 +1,11 @@
 import React from 'react'
 import { MyStylesheet } from './styles';
 import { sorttimes } from './functions'
-
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import { returnCompanyList, CreateUser } from './functions'
+import { saveCompanyIcon, saveProjectIcon } from './svg';
+import { SaveCompany, ClientLogin, SaveProject } from './actions/api';
 
 class DynamicStyles {
 
@@ -90,6 +94,242 @@ class DynamicStyles {
         }
         return invoices;
     }
+    async appleSignIn() {
+        let provider = new firebase.auth.OAuthProvider('apple.com');
+
+        provider.addScope('email');
+        provider.addScope('name');
+        try {
+            let result = await firebase.auth().signInWithPopup(provider)
+
+            // The signed-in user info.
+            var user = result.user;
+            console.log(user.providerData[0])
+            let client = 'apple';
+            let clientid = user.providerData[0].uid;
+            let firstname = '';
+            if (user.providerData[0].displayName) {
+                firstname = user.providerData[0].displayName.split(' ')[0]
+            }
+
+            let lastname = '';
+            if (user.providerData[0].displayName) {
+                lastname = user.providerData[0].displayName.split(' ')[1]
+            }
+            let emailaddress = user.providerData[0].email;
+            let profileurl = user.providerData[0].photoURL;
+            let phonenumber = user.phoneNumber;
+            let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber }
+            const response = await ClientLogin(values);
+            if (response.hasOwnProperty("allusers")) {
+                let companys = returnCompanyList(response.allusers);
+                this.props.reduxAllCompanys(companys)
+                this.props.reduxAllUsers(response.allusers);
+                delete response.allusers;
+
+            }
+            if (response.hasOwnProperty("providerid")) {
+                this.props.reduxUser(response)
+            }
+
+
+
+
+        } catch (error) {
+
+            alert(error.message);
+
+        }
+
+
+    }
+    getCompanyParams() {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+
+        let values = {}
+        let newuser = {};
+        let company = {};
+        if (myuser) {
+            if (myuser.hasOwnProperty("providerid")) {
+                newuser = CreateUser(myuser.providerid, myuser.client, myuser.clientid, myuser.firstname, myuser.lastname, myuser.emailaddress, myuser.phonenumber, myuser.profileurl)
+            }
+            if (myuser.hasOwnProperty("company")) {
+
+
+                if (myuser.company.hasOwnProperty("projects")) {
+
+
+                    company.companyid = myuser.company.companyid;
+                    company.manager = myuser.company.manager;
+                    company.address = myuser.company.address;
+                    company.city = myuser.company.city;
+                    company.contactstate = myuser.company.contactstate;
+                    company.zipcode = myuser.company.zipcode;
+                    company.construction = myuser.company.construction
+                    company.office = myuser.company.office;
+                    company.materials = myuser.company.materials;
+                    company.equipment = myuser.company.equipment;
+                }
+
+            }
+        }
+        values = { company, myuser: newuser }
+        return values;
+    }
+    async saveCompany() {
+        const dynamicstyles = new DynamicStyles()
+        let params = dynamicstyles.getCompanyParams.call(this)
+        let response = await SaveCompany(params);
+        console.log(response)
+        if (response.hasOwnProperty("allusers")) {
+            let companys = returnCompanyList(response.allusers);
+            this.props.reduxAllCompanys(companys)
+            this.props.reduxAllUsers(response.allusers);
+            delete response.allusers;
+
+        }
+        if (response.hasOwnProperty("providerid")) {
+            this.props.reduxUser(response)
+        }
+    }
+    async savemyproject() {
+        let dynamicstyles = new DynamicStyles();
+        let values = dynamicstyles.getCompanyParams.call(this);
+        let myproject = dynamicstyles.getproject.call(this);
+        values.project = myproject;
+        let response = await SaveProject(values)
+        console.log(response)
+        if (response.hasOwnProperty("allusers")) {
+            let companys = returnCompanyList(response.allusers);
+            this.props.reduxAllCompanys(companys)
+            this.props.reduxAllUsers(response.allusers);
+            delete response.allusers;
+
+        }
+        if (response.hasOwnProperty("providerid")) {
+            this.props.reduxUser(response)
+        }
+
+    }
+    showsaveproject() {
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const saveprojecticon = dynamicstyles.getsaveprojecticon.call(this);
+        const styles = MyStylesheet();
+        return (
+            <div style={{ ...styles.generalContainer }}>
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.topMargin15, ...styles.bottomMargin15 }}>
+                    &nbsp;
+            </div>
+
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...saveprojecticon }} onClick={() => { dynamicstyles.savemyproject.call(this) }}>{saveProjectIcon()}</button>
+                </div>
+            </div>)
+    }
+    showsavecompany() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const savecompanyicon = dynamicstyles.getsavecompanyicon.call(this)
+        return (<div style={{ ...styles.generalContainer }}>
+
+            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
+                &nbsp;
+                     </div>
+
+            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                <button style={{ ...styles.generalButton, ...savecompanyicon }} onClick={() => { dynamicstyles.saveCompany.call(this) }}>{saveCompanyIcon()}</button>
+            </div>
+
+        </div>
+        )
+    }
+    getsignupnow() {
+        if (this.state.width > 1200) {
+            return ({
+                width: '335px',
+                height: '65px'
+            })
+        } else if (this.state.width > 800) {
+            return ({
+                width: '216px',
+                height: '51px'
+            })
+        } else {
+            return ({
+                width: '177px',
+                height: '47x'
+            })
+        }
+
+    }
+    getgocheckheight() {
+        if (this.state.width > 1200) {
+            return ({
+                width: '69px',
+                height: '69px'
+            })
+        } else if (this.state.width > 800) {
+            return ({
+                width: '59px',
+                height: '59px'
+            })
+        } else {
+            return ({
+                width: '49px',
+                height: '49px'
+            })
+        }
+
+    }
+    async googleSignIn() {
+
+
+        try {
+
+
+            let provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('email');
+            provider.addScope('profile');
+            let result = await firebase.auth().signInWithPopup(provider)
+            var user = result.user;
+            console.log(user.providerData[0]);
+            let client = 'google';
+            let clientid = user.providerData[0].uid;
+            let firstname = '';
+            if (user.providerData[0].displayName) {
+                firstname = user.providerData[0].displayName.split(' ')[0]
+            }
+
+            let lastname = '';
+            if (user.providerData[0].displayName) {
+                lastname = user.providerData[0].displayName.split(' ')[1]
+            }
+            let emailaddress = user.providerData[0].email;
+            let profileurl = user.providerData[0].photoURL;
+            let phonenumber = user.phoneNumber;
+            let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber }
+            const response = await ClientLogin(values);
+            if (response.hasOwnProperty("allusers")) {
+                let companys = returnCompanyList(response.allusers);
+                this.props.reduxAllCompanys(companys)
+                this.props.reduxAllUsers(response.allusers);
+                delete response.allusers;
+
+            }
+            if (response.hasOwnProperty("providerid")) {
+                this.props.reduxUser(response)
+            }
+
+
+        } catch (error) {
+            alert(error)
+        }
+
+
+    }
     getAllActual() {
         const dynamicstyles = new DynamicStyles();
 
@@ -139,7 +379,7 @@ class DynamicStyles {
         const MyProject = () => {
             let project = false;
             const myuser = user();
-            console.log(myuser)
+
             if (myuser) {
 
                 if (myuser.hasOwnProperty("company")) {
@@ -160,7 +400,7 @@ class DynamicStyles {
         const schedule = () => {
             let schedules = [];
             let myproject = MyProject();
-            console.log(myproject)
+
 
             if (myproject.hasOwnProperty("schedulelabor")) {
                 // eslint-disable-next-line
@@ -191,7 +431,7 @@ class DynamicStyles {
         }
 
         let MySchedule = schedule();
-        console.log(MySchedule)
+
         return MySchedule
 
     }
@@ -369,13 +609,13 @@ class DynamicStyles {
                 user = this.props.myusermodel;
             }
         }
+
         return user;
     }
     getproject() {
 
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
-
         let projectid = this.props.match.params.projectid;
         let projects = false;
         if (myuser) {
@@ -547,6 +787,26 @@ class DynamicStyles {
 
         return key;
     }
+
+    getactualequipmentkeybyid(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        let key = false;
+
+
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("actualequipment")) {
+            // eslint-disable-next-line
+            myproject.actualequipment.myequipment.map((myequipment, i) => {
+                if (myequipment.equipmentid === equipmentid) {
+                    key = i;
+                }
+            })
+
+        }
+
+
+        return key;
+    }
     getcompany() {
         let dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
@@ -584,7 +844,26 @@ class DynamicStyles {
         }
 
     }
+    getsavecompanyicon() {
+        if (this.state.width > 1200) {
+            return ({
+                width: '413px',
+                height: '79px'
+            })
 
+        } else if (this.state.width > 800) {
+            return ({
+                width: '309px',
+                height: '67px'
+            })
+        } else {
+            return ({
+                width: '222px',
+                height: '46px'
+            })
+        }
+
+    }
     getsaveprojecticon() {
         if (this.state.width > 1200) {
             return ({
@@ -693,6 +972,22 @@ class DynamicStyles {
             return ({ maxWidth: '94px' })
         }
     }
+    getactuallaborprofitbyid(laborid) {
+        let dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let profit = 0;
+        if (myproject) {
+            if (myproject.hasOwnProperty("actuallabor")) {
+                // eslint-disable-next-line
+                myproject.actuallabor.mylabor.map(mylabor => {
+                    if (mylabor.laborid === laborid) {
+                        profit = mylabor.profit;
+                    }
+                })
+            }
+        }
+        return profit;
+    }
     getlaborprofitbyid(laborid) {
         let dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getproject.call(this);
@@ -703,6 +998,22 @@ class DynamicStyles {
                 myproject.schedulelabor.mylabor.map(mylabor => {
                     if (mylabor.laborid === laborid) {
                         profit = mylabor.profit;
+                    }
+                })
+            }
+        }
+        return profit;
+    }
+    getactualmaterialprofitbyid(materialid) {
+        let dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let profit = 0;
+        if (myproject) {
+            if (myproject.hasOwnProperty("actualmaterials")) {
+                // eslint-disable-next-line
+                myproject.actualmaterials.mymaterial.map(mymaterials => {
+                    if (mymaterials.materialid === materialid) {
+                        profit = mymaterials.profit;
                     }
                 })
             }
@@ -725,6 +1036,7 @@ class DynamicStyles {
         }
         return profit;
     }
+
     getequipmentprofitbyid(equipmentid) {
         let dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getproject.call(this);
@@ -740,6 +1052,44 @@ class DynamicStyles {
             }
         }
         return profit;
+    }
+    getactualequipmentprofitbyid(equipmentid) {
+        let dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let profit = 0;
+        if (myproject) {
+            if (myproject.hasOwnProperty("actualequipment")) {
+                // eslint-disable-next-line
+                myproject.actualequipment.myequipment.map(myequipment => {
+
+                    if (myequipment.equipmentid === equipmentid) {
+                        console.log(myequipment)
+                        profit = myequipment.profit;
+                    }
+                })
+            }
+        }
+        console.log(profit)
+        return profit;
+    }
+    getactualmaterialkeybyid(materialid) {
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let key = false;
+        if (myproject) {
+
+
+            if (myproject.hasOwnProperty("actualmaterials")) {
+                // eslint-disable-next-line
+                myproject.actualmaterials.mymaterial.map((mymaterial, i) => {
+                    if (mymaterial.materialid === materialid) {
+                        key = i
+                    }
+                })
+            }
+
+        }
+        return key;
     }
     getactivematerialkeybyid(materialid) {
         const dynamicstyles = new DynamicStyles();
@@ -769,6 +1119,26 @@ class DynamicStyles {
             if (myproject.hasOwnProperty("schedulelabor")) {
                 // eslint-disable-next-line
                 myproject.schedulelabor.mylabor.map((mylabor, i) => {
+                    if (mylabor.laborid === laborid) {
+                        key = i;
+                    }
+                })
+            }
+        }
+
+        return key;
+    }
+
+    getactuallaborkeybyid(laborid) {
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this)
+        let key = false;
+
+        if (myproject) {
+            if (myproject.hasOwnProperty("actuallabor")) {
+                // eslint-disable-next-line
+                myproject.actuallabor.mylabor.map((mylabor, i) => {
+
                     if (mylabor.laborid === laborid) {
                         key = i;
                     }

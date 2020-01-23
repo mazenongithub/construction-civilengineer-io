@@ -446,7 +446,7 @@ class ViewInvoice extends Component {
                     </div>
 
                     {dynamicstyles.showbidtable.call(this)}
-
+                    {dynamicstyles.showsaveproject.call(this)}
                 </div>
             </div>
         )

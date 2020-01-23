@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { addIcon, removeIconSmall } from './svg';
-import { makeID, CreateBenefit } from './functions';
+import { makeID, CreateBenefit, CreateEmployee } from './functions';
+import DynamicStyles from './dynamicstyles';
 
 class Employees extends Component {
     constructor(props) {
@@ -586,6 +587,26 @@ class Employees extends Component {
             return ({ width: '63px', height: '37px' })
         }
     }
+    addemployee(providerid) {
+        let workinghours = 0;
+        let newEmployee = CreateEmployee(providerid, workinghours);
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.office.hasOwnProperty("employees")) {
+                    myuser.company.office.employees.employee.push(newEmployee);
+                    this.props.reduxUser(myuser);
+                    this.setState({ render: 'render' })
+                } else {
+                    let employees = { employee: [newEmployee] };
+                    myuser.company.office.employees = employees;
+                    this.props.reduxUser(myuser);
+                    this.setState({ render: 'render' })
+                }
+            }
+        }
+    }
     showemployee(employee) {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
@@ -678,19 +699,26 @@ class Employees extends Component {
         const regularFont = this.getRegularFont();
         if (this.state.width > 800) {
             return (
-                <div style={{ ...styles.generalContainer, ...this.getactiveeemployeebackground(employee.providerid) }} key={`myemployee${employee.providerid}`}>
+                <div style={{ ...styles.generalContainer }} key={`myemployee${employee.providerid}`} >
                     <div style={{ ...styles.flex1 }}>
-                        <div style={{ ...styles.generalContainer, ...profilephoto, ...styles.showBorder, ...styles.marginAuto }}
-                            onClick={() => { this.makeemployeeactive(employee.providerid) }}
-                        >
+
+
+                        <div style={{ ...styles.generalFlex, ...this.getactiveeemployeebackground(employee.providerid) }} key={`myemployee${employee.providerid}`}>
+                            <div style={{ ...styles.flex1 }}>
+                                <div style={{ ...styles.generalContainer, ...profilephoto, ...styles.showBorder, ...styles.marginAuto }}
+                                    onClick={() => { this.makeemployeeactive(employee.providerid) }}
+                                >
+
+                                </div>
+                            </div>
+                            <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                {employee.firstname}  {employee.lastname}
+                            </div>
+                            <div style={{ ...styles.flex1 }}>
+                                <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
+                            </div>
 
                         </div>
-                    </div>
-                    <div style={{ ...styles.flex4 }}>
-                        {employee.firstname}  {employee.lastname}
-                    </div>
-                    <div style={{ ...styles.flex1 }}>
-                        <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
                     </div>
 
                 </div>
@@ -699,6 +727,8 @@ class Employees extends Component {
             return (
                 <div style={{ ...styles.generalContainer, ...this.getactiveeemployeebackground(employee.providerid) }} key={`myemployee${employee.providerid}`} >
                     <div style={{ ...styles.flex1 }}>
+
+
 
                         <div style={{ ...styles.generalContainer }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
@@ -709,8 +739,8 @@ class Employees extends Component {
                         </div>
 
 
-                        <div style={{ ...styles.generalContainer }}>
-                            <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont }}>
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
                                 {employee.firstname} {employee.lastname}
                             </div>
                             <div style={{ ...styles.flex1 }}>
@@ -850,9 +880,11 @@ class Employees extends Component {
         }
     }
     render() {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
         const regularFont = this.getRegularFont();
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -870,9 +902,16 @@ class Employees extends Component {
                     </div>
 
                     {this.showemployees()}
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.generalFont }}>
+                            My Employees
+                            </div>
+                    </div>
                     {this.showmyemployees()}
 
                     {this.handleemployeebenefits()}
+
+                    {dynamicstyles.showsavecompany.call(this)}
 
                 </div>
             </div>

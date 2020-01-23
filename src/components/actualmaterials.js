@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { saveProjectIcon, removeIconSmall } from './svg';
+import { removeIconSmall } from './svg';
 import { formatDateStringDisplay, makeID, CreateActualMaterial } from './functions';
 import ActualMaterialDate from './actualmaterialdate';
+import DynamicStyles from './dynamicstyles';
 class ActualMaterials extends Component {
     constructor(props) {
         super(props);
@@ -748,8 +749,9 @@ class ActualMaterials extends Component {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
         const regularFont = this.getRegularFont();
-        const saveprojecticon = this.getsaveprojecticon();
+
         const Datein = new ActualMaterialDate();
+        const dynamicstyles = new DynamicStyles();
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
@@ -780,17 +782,7 @@ class ActualMaterials extends Component {
 
                 {this.showquantitymenus()}
 
-                <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        &nbsp;
-                        </div>
-                </div>
-
-                <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15, ...styles.alignCenter }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        <button style={{ ...styles.generalButton, ...saveprojecticon }}>{saveProjectIcon()}</button>
-                    </div>
-                </div>
+                {dynamicstyles.showsaveproject.call(this)}
 
                 {this.showmaterialids()}
 

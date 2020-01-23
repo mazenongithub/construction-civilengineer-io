@@ -59,8 +59,8 @@ class Invoices extends Component {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
-                let j = dynamicstyles.getactiveequipmentkeybyid.call(this, equipmentid);
-                myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].profit = profit;
+                let j = dynamicstyles.getactualequipmentkeybyid.call(this, equipmentid);
+                myuser.company.projects.myproject[i].actualequipment.myequipment[j].profit = profit;
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
             }
@@ -74,8 +74,8 @@ class Invoices extends Component {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
-                let j = dynamicstyles.getactivematerialkeybyid.call(this, materialid);
-                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].profit = profit;
+                let j = dynamicstyles.getactualmaterialkeybyid.call(this, materialid);
+                myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].profit = profit;
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
             }
@@ -89,8 +89,8 @@ class Invoices extends Component {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
-                let j = dynamicstyles.getactivelaborkeybyid.call(this, laborid);
-                myuser.company.projects.myproject[i].schedulelabor.mylabor[j].profit = profit;
+                let j = dynamicstyles.getactuallaborkeybyid.call(this, laborid);
+                myuser.company.projects.myproject[i].actuallabor.mylabor[j].profit = profit;
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
             }
@@ -125,7 +125,7 @@ class Invoices extends Component {
 
                     <div style={{ ...styles.generalContainer }}>
                         Profit <input type="text" style={{ ...styles.generalField, ...smallFont, ...styles.generalFont, ...profitField }}
-                            value={dynamicstyles.getlaborprofitbyid.call(this, item.laborid)}
+                            value={dynamicstyles.getactuallaborprofitbyid.call(this, item.laborid)}
                             onChange={event => { this.handlelaborprofit(event.target.value, item.laborid) }}
                         />
                     </div>
@@ -161,19 +161,19 @@ class Invoices extends Component {
                 if (result === 'add') {
 
                     if (item.hasOwnProperty("laborid")) {
-                        j = dynamicstyles.getactivelaborkeybyid.call(this, item.laborid)
-                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].invoiceid = invoiceid;
+                        j = dynamicstyles.getactuallaborkeybyid.call(this, item.laborid)
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].invoiceid = invoiceid;
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     } else if (item.hasOwnProperty("materialid")) {
-                        j = dynamicstyles.getactivematerialkeybyid.call(this, item.materialid)
-                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].invoiceid = invoiceid;
+                        j = dynamicstyles.getactualmaterialkeybyid.call(this, item.materialid)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].invoiceid = invoiceid;
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     } else if (item.hasOwnProperty("equipmentid")) {
-                        j = dynamicstyles.getactiveequipmentkeybyid.call(this, item.equipmentid);
+                        j = dynamicstyles.getactualequipmentkeybyid.call(this, item.equipmentid);
 
-                        myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].invoiceid = invoiceid;
+                        myuser.company.projects.myproject[i].actualequipment.myequipment[j].invoiceid = invoiceid;
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     }
@@ -181,19 +181,19 @@ class Invoices extends Component {
                 } else if (result === 'remove') {
 
                     if (item.hasOwnProperty("laborid")) {
-                        j = dynamicstyles.getactivelaborkeybyid.call(this, item.laborid)
-                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].invoiceid = ""
+                        j = dynamicstyles.getactuallaborkeybyid.call(this, item.laborid)
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].invoiceid = ""
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     } else if (item.hasOwnProperty("materialid")) {
-                        j = dynamicstyles.getactivematerialkeybyid.call(this, item.materialid)
-                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].invoiceid = ""
+                        j = dynamicstyles.getactualmaterialkeybyid.call(this, item.materialid)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].invoiceid = ""
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     } else if (item.hasOwnProperty("equipmentid")) {
-                        j = dynamicstyles.getactiveequipmentkeybyid.call(this, item.equipmentid);
+                        j = dynamicstyles.getactualequipmentkeybyid.call(this, item.equipmentid);
 
-                        myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].invoiceid = ""
+                        myuser.company.projects.myproject[i].actualequipment.myequipment[j].invoiceid = ""
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     }
@@ -302,7 +302,7 @@ class Invoices extends Component {
 
                     <div style={{ ...styles.generalContainer }}>
                         Profit <input type="text" style={{ ...styles.generalField, ...smallFont, ...styles.generalFont, ...profitField }}
-                            value={dynamicstyles.getequipmentprofitbyid.call(this, item.equipmentid)}
+                            value={dynamicstyles.getactualequipmentprofitbyid.call(this, item.equipmentid)}
                             onChange={event => { this.handleequipmentprofit(event.target.value, item.equipmentid) }}
                         />
                     </div>
@@ -338,7 +338,7 @@ class Invoices extends Component {
 
                     <div style={{ ...styles.generalContainer }}>
                         Profit <input type="text" style={{ ...styles.generalField, ...smallFont, ...styles.generalFont, ...profitField }}
-                            value={dynamicstyles.getmaterialprofitbyid.call(this, item.materialid)}
+                            value={dynamicstyles.getactualmaterialprofitbyid.call(this, item.materialid)}
                             onChange={event => { this.handlematerialprofit(event.target.value, item.materialid) }} />
                     </div>
                 </div>
@@ -349,7 +349,7 @@ class Invoices extends Component {
     showallpayitems() {
         const dynamicstyles = new DynamicStyles();
         let items = [];
-        let payitems = dynamicstyles.getAllSchedule.call(this)
+        let payitems = dynamicstyles.getAllActual.call(this)
         if (payitems.hasOwnProperty("length")) {
             // eslint-disable-next-line
             payitems.map(item => {

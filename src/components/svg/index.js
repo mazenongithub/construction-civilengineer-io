@@ -32,10 +32,10 @@ export function scrollImageDown() {
 export function StripeConnectIcon() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 534 94"><defs><style></style></defs><title>stripeconnecticon</title><g id="Layer_2" data-name="Layer 2"><g id="guides"><rect className="newstripeconnecticon-1" x="0.5" y="0.5" width="533" height="93" rx="10.51" /><text className="newstripeconnecticon-2" transform="translate(48.81 57.54)"><tspan className="newstripeconnecticon-3">C</tspan><tspan x="32.68" y="0">onne</tspan><tspan className="newstripeconnecticon-4" x="141.36" y="0">c</tspan><tspan x="164.88" y="0">t With </tspan><tspan className="newstripeconnecticon-5" x="316.63" y="0">S</tspan><tspan x="346.72" y="0">tripe</tspan></text></g></g></svg>)
 }
-export function AppleSignIcon() {
+export function GoogleSignIcon() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182.14 49.86"><defs><style></style></defs><title>googlesign</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="googlesign-1" x="0.53" y="0.5" width="181.11" height="48.86" rx="5.84" /><text className="googlesign-2" transform="translate(7.82 35.75) scale(0.86 1)">Google Sign</text></g></g></svg>)
 }
-export function GoogleSignIcon() {
+export function AppleSignIcon() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184.14 49.86"><defs><style></style></defs><title>applesign</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="applesign-1" x="0.5" y="0.5" width="183.14" height="48.86" rx="4.68" /><text className="applesign-2" transform="translate(4.21 33.96)">Apple Sign</text></g></g></svg>)
 }
 export function majorDownIcon() {

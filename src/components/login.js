@@ -3,12 +3,15 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { GoogleSignIcon, AppleSignIcon, loginNowIcon } from './svg'
-
+import { LoginLocal } from './actions/api'
+import DynamicStyles from './dynamicstyles';
+import { returnCompanyList } from './functions';
+import Profile from './profile';
 
 class Login extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0 }
+        this.state = { render: '', width: 0, height: 0, client: '', clientid: '', firstname: '', lastname: '', profileurl: '', phonenumber: '', emailaddress: '', pass: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -70,7 +73,10 @@ class Login extends Component {
                     Email Address
                 </div>
                 <div style={{ ...styles.flex2, ...styles.regularFont, ...regularFontHeight }}>
-                    <input type="text" style={{ ...styles.addLeftMargin, ...styles.regularFont, ...regularFontHeight, ...styles.generalField }} />
+                    <input type="text" style={{ ...styles.addLeftMargin, ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
+                        value={this.state.emailaddress}
+                        onChange={event => { this.setState({ emailaddress: event.target.value }) }}
+                    />
 
                 </div>
 
@@ -79,7 +85,10 @@ class Login extends Component {
         } else {
             return (<div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
-                    Email Address <br /> <input type="text" style={{ ...styles.regularFont, ...regularFontHeight, ...styles.generalField }} />
+                    Email Address <br /> <input type="text" style={{ ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
+                        value={this.state.emailaddress}
+                        onChange={event => { this.setState({ emailaddress: event.target.value }) }}
+                    />
                 </div>
 
             </div>)
@@ -96,7 +105,10 @@ class Login extends Component {
                     Password
                 </div>
                 <div style={{ ...styles.flex2, ...styles.regularFont, ...regularFontHeight }}>
-                    <input type="password" style={{ ...styles.addLeftMargin, ...styles.regularFont, ...regularFontHeight, ...styles.generalField }} />
+                    <input type="password" style={{ ...styles.addLeftMargin, ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
+                        value={this.state.pass}
+                        onChange={event => { this.setState({ pass: event.target.value }) }}
+                    />
 
                 </div>
 
@@ -105,7 +117,10 @@ class Login extends Component {
         } else {
             return (<div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
-                    Password <br /> <input type="password" style={{ ...styles.regularFont, ...regularFontHeight, ...styles.generalField }} />
+                    Password <br /> <input type="password" style={{ ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
+                        value={this.state.pass}
+                        onChange={event => { this.setState({ pass: event.target.value }) }}
+                    />
                 </div>
 
             </div>)
@@ -123,41 +138,79 @@ class Login extends Component {
             return ({ width: '205px', height: '60px' })
         }
     }
+    async loginlocal() {
+        let emailaddress = this.state.emailaddress;
+        let pass = this.state.pass;
+        let values = { emailaddress, pass }
+        console.log(values)
+        let response = await LoginLocal(values)
+        console.log(response)
+        if (response.hasOwnProperty("allusers")) {
+            let companys = returnCompanyList(response.allusers);
+            this.props.reduxAllCompanys(companys)
+            this.props.reduxAllUsers(response.allusers);
+            delete response.allusers;
+
+        }
+        if (response.hasOwnProperty("providerid")) {
+            this.props.reduxUser(response)
+        }
+    }
     render() {
-        const styles = MyStylesheet();
-        const titleFont = this.getTitleFont();
-        const loginButtonHeight = this.getloginbuttonheight();
-        const loginnow = this.getloginnow()
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
+        const dynamicstyles = new DynamicStyles();
+        const Login = () => {
+            const styles = MyStylesheet();
+            const titleFont = this.getTitleFont();
+            const loginButtonHeight = this.getloginbuttonheight();
+            const loginnow = this.getloginnow()
 
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.addMarginTop, ...styles.addMarginBottom, ...styles.alignCenter, ...titleFont }}>
-                            Login
-                        </div>
-                    </div>
+            return (
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
 
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...loginButtonHeight }}>{GoogleSignIcon()}</button>
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1, ...styles.addMarginTop, ...styles.addMarginBottom, ...styles.alignCenter, ...titleFont }}>
+                                Login
                         </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...loginButtonHeight }}>{AppleSignIcon()}</button>
                         </div>
-                    </div>
-                    {this.showemailaddress()}
-                    {this.showpassword()}
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...loginnow }}>
-                                {loginNowIcon()}
-                            </button>
+
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                <button style={{ ...styles.generalButton, ...loginButtonHeight }} onClick={() => { dynamicstyles.googleSignIn.call(this) }}>{GoogleSignIcon()}</button>
+                            </div>
+                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                <button style={{ ...styles.generalButton, ...loginButtonHeight }} onClick={() => { dynamicstyles.appleSignIn.call(this) }}>{AppleSignIcon()}</button>
+                            </div>
+                        </div>
+                        {this.showemailaddress()}
+                        {this.showpassword()}
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                <button style={{ ...styles.generalButton, ...loginnow }} onClick={() => { this.loginlocal() }}>
+                                    {loginNowIcon()}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        )
+            )
+        }
+
+
+
+        const HandleDisplay = () => {
+            const myuser = dynamicstyles.getuser.call(this);
+            if (myuser) {
+                return (<Profile />)
+            } else {
+                return (Login())
+            }
+        }
+
+
+        return (HandleDisplay())
+
+
     }
 
 }

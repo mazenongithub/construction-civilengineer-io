@@ -1,3 +1,6 @@
+export function CreateUser(providerid, client, clientid, firstname, lastname, emailaddress, phonenumber, profileurl) {
+    return ({ providerid, client, clientid, firstname, lastname, emailaddress, phonenumber, profileurl })
+}
 export function CreateAccount(accountid, account, accountname) {
     return ({ accountid, account, accountname })
 }
@@ -1080,6 +1083,10 @@ export function getFirstIsOn(mydate) {
             return;
     }
 }
+
+export function CreateEmployee(providerid, workinghours) {
+    return ({ providerid, workinghours })
+}
 export function inputDateObjOutputString(dateobj) {
     let day = dateobj.getDate();
     let year = dateobj.getFullYear();
@@ -1368,4 +1375,416 @@ export function inputUTCStringForMaterialIDWithTime(timein) {
 
     return (`${month}/${date}/${year}`);
 
+}
+
+export function TestUser() {
+    let myuser = {
+        providerid: "mazen",
+        emailaddress: "mazen@civilengineer.io",
+        firstname: "Mazen",
+        lastname: "Khenaisser",
+        client: "apple",
+        clientid: "000353.66d2a1610de24944b898df602ab5e7a7.0305",
+        profileurl: "",
+        phonenumber: "916-823-1652",
+        stripe: "acct_1CCcFoKDR2Pptlfl",
+        company: {
+            companyid: "civilengineer-io",
+            manager: "mazen",
+            company: "civilengineer.io",
+            address: "5611 Loyalty Way",
+            city: "Elk Grove",
+            contactstate: "CA",
+            zipcode: "95757",
+            construction: {
+                civilengineer: {
+                    csicodes: {
+                        code: [
+                            {
+                                csiid: "yyyyyy",
+                                csi: "312635",
+                                title: "Excavation for Footing"
+                            }
+                        ]
+                    }
+                },
+                csicodes: {
+                    code: [
+                        {
+                            csiid: "yyyyyy",
+                            csi: "312635",
+                            title: "Excavation for Footing"
+                        }
+                    ]
+                }
+            },
+            office: {
+                civilengineer: {
+                    accounts: {
+                        account: [
+                            {
+                                accountid: "mysalarybenefit",
+                                account: "6200",
+                                accountname: "Salaries"
+                            },
+                            {
+                                accountid: "mylaptopbenefit",
+                                account: "6300",
+                                accountname: "My Laptop Benefit"
+                            },
+                            {
+                                accountid: "myequipmentaccount",
+                                account: "270001",
+                                accountname: "My Equipment Account"
+                            }
+                        ]
+                    }
+                },
+                accounts: {
+                    account: [
+                        {
+                            accountid: "mysalarybenefit",
+                            account: "6200",
+                            accountname: "Salaries"
+                        },
+                        {
+                            accountid: "mylaptopbenefit",
+                            account: "6300",
+                            accountname: "My Laptop Benefit"
+                        },
+                        {
+                            accountid: "myequipmentaccount",
+                            account: "270001",
+                            accountname: "My Equipment Account"
+                        }
+                    ]
+                },
+                employees: {
+                    employee: [
+                        {
+                            providerid: "mazen",
+                            workinghours: "600",
+                            benefits: {
+                                benefit: [
+                                    {
+                                        benefitid: "xxseedf",
+                                        benefit: "salary",
+                                        frequency: "annual",
+                                        accountid: "mysalarybenefit",
+                                        amount: "100000.0000"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            materials: {
+                mymaterial: [
+                    {
+                        materialid: "myfirstmaterial",
+                        accountid: "mylaptopbenefit",
+                        csiid: "yyyyyy",
+                        material: "myfirstmaterial",
+                        unit: "ea",
+                        unitcost: "1.0000"
+                    }
+                ]
+            },
+            equipment: {
+                myequipment: [
+                    {
+                        equipmentid: "myfirstequipment",
+                        equipment: "John Deer Skid Steer Loader",
+                        accountid: "myequipmentaccount",
+                        workinghours: "1700.0000",
+                        ownershipstatus: "owned",
+                        purchasedate: "2011-01-15",
+                        loaninterest: "5.4000",
+                        saledate: "2023-09-15",
+                        resalevalue: "8000.0000",
+                        ownership: {
+                            cost: [
+                                {
+                                    costid: "myfirstquipmentcost",
+                                    cost: "25000.0000",
+                                    detail: "purhcase",
+                                    timein: "2011-04-21"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        equipmentid: "myfirstrental",
+                        equipment: "D6Dozer",
+                        accountid: "myequipmentaccount",
+                        workinghours: "0.0000",
+                        ownershipstatus: "rented",
+                        purchasedate: "0000-00-00",
+                        loaninterest: "0.0000",
+                        saledate: "0000-00-00",
+                        resalevalue: "0.0000",
+                        rentalrates: {
+                            hour: "60.00",
+                            day: "400.00",
+                            week: "3500.00",
+                            month: "1500.00"
+                        }
+                    }
+                ]
+            },
+            projects: {
+                myproject: [
+                    {
+                        projectid: "constructionapp",
+                        title: "Title",
+                        address: "Address",
+                        city: "CityC",
+                        projectstate: "Ca",
+                        zipcode: "95757",
+                        scope: "Scope",
+                        projectteam: {
+                            myteam: [
+                                {
+                                    myprovider: "mazen",
+                                    role: "Lead App Developer"
+                                }
+                            ]
+                        },
+                        projectmilestones: {
+                            mymilestone: [
+                                {
+                                    milestoneid: "F7HX5X",
+                                    projectid: "constructionapp",
+                                    milestone: "Update to Web Client",
+                                    start: "2019-12-06",
+                                    completion: "2019-12-08"
+                                }
+                            ]
+                        },
+                        schedulelabor: {
+                            mylabor: [
+                                {
+                                    providerid: "mazen",
+                                    laborid: "03AZLOPT",
+                                    milestoneid: "F7HX5X",
+                                    csiid: "yyyyyy",
+                                    laborrate: "30.0000",
+                                    timein: "2019-12-08 21:04:00",
+                                    timeout: "2019-12-09 00:04:00",
+                                    description: "Refomatting Client Layouts",
+                                    proposalid: "R4WQ",
+                                    profit: "15.0000"
+                                }
+                            ]
+                        },
+                        actuallabor: {
+                            mylabor: [
+                                {
+                                    providerid: "mazen",
+                                    laborid: "C9JXIHOD",
+                                    milestoneid: "F7HX5X",
+                                    csiid: "yyyyyy",
+                                    laborrate: "30.0000",
+                                    timein: "2019-12-08 21:07:00",
+                                    timeout: "2019-12-09 00:07:00",
+                                    description: "Reformatting Web Client",
+                                    invoiceid: "POQV",
+                                    profit: "15.0000"
+                                }
+                            ]
+                        },
+                        schedulematerials: {
+                            mymaterial: [
+                                {
+                                    materialid: "ASDFASDFASDFAXZCVAS",
+                                    mymaterialid: "myfirstmaterial",
+                                    providerid: "mazen",
+                                    csiid: "yyyyyy",
+                                    accountid: "mylaptopbenefit",
+                                    timein: "2019-12-08",
+                                    milestoneid: "F7HX5X",
+                                    quantity: "1.00",
+                                    unit: "mon",
+                                    unitcost: "7.00",
+                                    proposalid: "R4WQ",
+                                    profit: "15.0000"
+                                }
+                            ]
+                        },
+                        actualmaterials: {
+                            mymaterial: [
+                                {
+                                    materialid: "SFASDFASF",
+                                    mymaterialid: "myfirstmaterial",
+                                    providerid: "mazen",
+                                    csiid: "yyyyyy",
+                                    timein: "2019-12-08",
+                                    accountid: "mylaptopbenefit",
+                                    milestoneid: "F7HX5X",
+                                    quantity: "1.00",
+                                    unit: "mon",
+                                    unitcost: "7.00",
+                                    material: {},
+                                    invoiceid: "POQV",
+                                    profit: "15.0000"
+                                }
+                            ]
+                        },
+                        scheduleequipment: {
+                            myequipment: [
+                                {
+                                    equipmentid: "blaablabal",
+                                    providerid: "mazen",
+                                    myequipmentid: "myfirstequipment",
+                                    accountid: "myequipmentaccount",
+                                    equipmentrate: "100.0000",
+                                    milestoneid: "F7HX5X",
+                                    csiid: "yyyyyy",
+                                    timein: "2019-12-26 00:00:00",
+                                    timeout: "2019-12-27 00:00:00",
+                                    proposalid: "R4WQ",
+                                    profit: "15.0000"
+                                }
+                            ]
+                        },
+                        actualequipment: {
+                            myequipment: [
+                                {
+                                    equipmentid: [
+                                        "myfirstlineid",
+                                        "myfirstlineid"
+                                    ],
+                                    myequipmentid: "myfirstequipment",
+                                    providerid: "mazen",
+                                    accountid: "myequipmentaccount",
+                                    equipmentrate: "100.0000",
+                                    milestoneid: "F7HX5X",
+                                    csiid: "yyyyyy",
+                                    timein: "2019-05-30 18:33:33",
+                                    timeout: "2019-05-30 22:33:33",
+                                    invoiceid: "POQV",
+                                    profit: "15.0000"
+                                }
+                            ]
+                        },
+                        proposals: {
+                            myproposal: [
+                                {
+                                    proposalid: "R4WQ",
+                                    providerid: "mazen",
+                                    updated: "2019-12-08 21:09:55",
+                                    approved: "2019-12-08 21:10:35",
+                                    bidschedule: {
+                                        biditem: [
+                                            {
+                                                lineid: "myfirstlineid",
+                                                csiid: "yyyyyy",
+                                                quantity: "50000.0000",
+                                                unit: "Yards"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        invoices: {
+                            myinvoice: [
+                                {
+                                    invoiceid: "POQV",
+                                    providerid: "mazen",
+                                    updated: "2019-12-08 21:10:04",
+                                    approved: "",
+                                    bid: {
+                                        biditem: [
+                                            {
+                                                lineid: "myfirstpayment",
+                                                csiid: "yyyyyy",
+                                                quantity: "55.0000",
+                                                unit: "yards"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        allusers: {
+            myuser: [
+                {
+                    providerid: "stevenatwater",
+                    emailaddress: "immaisoncrosby@gmail.com",
+                    firstname: "Steven",
+                    lastname: "Atwater",
+                    client: "google",
+                    clientid: "109676734658243948537",
+                    profileurl: "https://lh5.googleusercontent.com/-pwq6Zt4WHeY/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rfnjRVPJQYMRzgOWQD6aeRxVY7Nig/photo.jpg",
+                    stripe: ""
+                },
+                {
+                    providerid: "mazen",
+                    emailaddress: "mazen@civilengineer.io",
+                    firstname: "Mazen",
+                    lastname: "Khenaisser",
+                    client: "apple",
+                    clientid: "000353.66d2a1610de24944b898df602ab5e7a7.0305",
+                    profileurl: "",
+                    stripe: "acct_1CCcFoKDR2Pptlfl",
+                    company: {
+                        companyid: "civilengineer-io",
+                        company: "civilengineer.io",
+                        address: "5611 Loyalty Way",
+                        manager: "mazen",
+                        city: "Elk Grove",
+                        contactstate: "CA",
+                        zipcode: "95757"
+                    }
+                },
+                {
+                    providerid: "gusgfk",
+                    emailaddress: "gus.gfk@gmail.com",
+                    firstname: "Gus",
+                    lastname: "Khenaisser",
+                    client: "google",
+                    clientid: "116250742570414913162",
+                    profileurl: "",
+                    stripe: ""
+                },
+                {
+                    providerid: "gordonlum",
+                    emailaddress: "gocatlum@att.net",
+                    firstname: "Gordon",
+                    lastname: "Lum",
+                    client: "",
+                    clientid: "",
+                    profileurl: "",
+                    stripe: ""
+                },
+                {
+                    providerid: "selene",
+                    emailaddress: "ibarrolaselene5@gmail.com",
+                    firstname: "Selene",
+                    lastname: "ibarrola",
+                    client: "google",
+                    clientid: "100997823144314216130",
+                    profileurl: "",
+                    stripe: ""
+                },
+                {
+                    providerid: "allinone",
+                    emailaddress: "michaelicay@gmail.com",
+                    firstname: "Michael",
+                    lastname: "Icay",
+                    client: "google",
+                    clientid: "112500729328188710919",
+                    profileurl: "",
+                    stripe: ""
+                }
+            ]
+        }
+    }
+    return myuser
 }

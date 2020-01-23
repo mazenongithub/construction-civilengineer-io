@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { radioOpen, radioClosed, saveCompanyIcon, removeIconSmall, openDetail, closeDetail } from './svg'
+import { radioOpen, radioClosed, removeIconSmall, openDetail, closeDetail } from './svg'
 import { CreateCostID, makeID, CreateRentalRate, CreateEquipment, formatDateStringDisplay, DateStringFromDateObj } from './functions';
 import DynamicStyles from './dynamicstyles';
 import PurchaseDate from './purchasedate';
 import SaleDate from './saledate';
 import EquipmentDate from './equipmentdate';
-
 class Equipment extends Component {
     constructor(props) {
         super(props);
@@ -1144,8 +1143,7 @@ class Equipment extends Component {
     render() {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
-        const savecompanyicon = this.getsavecompanyicon();
-        const regularFont = this.getRegularFont;
+        const dynamicstyles = new DynamicStyles();
 
         return (
             <div style={{ ...styles.generalFlex }}>
@@ -1164,14 +1162,8 @@ class Equipment extends Component {
                     {this.showcostaccounts()}
                     {this.showrentalrates()}
 
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                        &nbsp;
-                     </div>
 
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...savecompanyicon }}>{saveCompanyIcon()}</button>
-                    </div>
-
+                    {dynamicstyles.showsavecompany.call(this)}
 
                 </div>
             </div>

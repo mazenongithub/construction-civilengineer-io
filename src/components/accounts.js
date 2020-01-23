@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { saveCompanyIcon, removeIconSmall } from './svg';
+import { removeIconSmall } from './svg';
 import { CreateAccount, makeID } from './functions';
+import DynamicStyles from './dynamicstyles';
 
 class Accounts extends Component {
     constructor(props) {
@@ -464,8 +465,7 @@ class Accounts extends Component {
     render() {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
-        const savecompanyicon = this.getsavecompanyicon();
-        const regularFont = this.getRegularFont();
+        const dynamicstyles = new DynamicStyles();
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -480,13 +480,7 @@ class Accounts extends Component {
                     {this.showaccount()}
                     {this.showmyaccounts()}
 
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                        &nbsp;
-                     </div>
-
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...savecompanyicon }}>{saveCompanyIcon()}</button>
-                    </div>
+                    {dynamicstyles.showsavecompany.call(this)}
 
                 </div>
             </div>

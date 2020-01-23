@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { saveProjectIcon, removeIconSmall } from './svg';
+import { removeIconSmall } from './svg';
 import { formatDateStringDisplay, makeID, CreateMyMaterial } from './functions';
 import ScheduleMaterialDate from './schedulematerialdate';
+import DynamicStyles from './dynamicstyles';
 
 class ScheduleMaterials extends Component {
     constructor(props) {
@@ -742,11 +743,12 @@ class ScheduleMaterials extends Component {
 
 
     render() {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const titleFont = this.gettitlefont();
-        const regularFont = this.getRegularFont();
-        const saveprojecticon = this.getsaveprojecticon();
+        const titleFont = dynamicstyles.gettitlefont.call(this);
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         const Datein = new ScheduleMaterialDate();
+
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
@@ -777,17 +779,8 @@ class ScheduleMaterials extends Component {
 
                 {this.showquantitymenus()}
 
-                <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        &nbsp;
-                        </div>
-                </div>
 
-                <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15, ...styles.alignCenter }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        <button style={{ ...styles.generalButton, ...saveprojecticon }}>{saveProjectIcon()}</button>
-                    </div>
-                </div>
+                {dynamicstyles.showsaveproject.call(this)}
 
                 {this.showmaterialids()}
 

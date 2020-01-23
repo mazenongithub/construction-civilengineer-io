@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { saveProjectIcon } from './svg';
 import { CreateActualEquipment, makeID, inputUTCStringForLaborID } from './functions'
 import ActualEquipmentTimeIn from './actualequipmenttimein';
 import ActualEquipmentTimeOut from './actualequipmenttimeout';
+import DynamicStyles from './dynamicstyles';
 class ActualEquipment extends Component {
     constructor(props) {
         super(props);
@@ -574,7 +574,7 @@ class ActualEquipment extends Component {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
         const regularFont = this.getRegularFont();
-        const saveprojecticon = this.getsaveprojecticon();
+        const dynamicstyles = new DynamicStyles();
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }} >
@@ -616,13 +616,7 @@ class ActualEquipment extends Component {
                     </div>
 
 
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                        &nbsp;
-                     </div>
-
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...saveprojecticon }}>{saveProjectIcon()}</button>
-                    </div>
+                    {dynamicstyles.showsaveproject.call(this)}
 
                     {this.loadequipmentids()}
 
