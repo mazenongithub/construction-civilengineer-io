@@ -15,6 +15,7 @@ class BidSchedule extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        this.props.reduxNavigation({ activeprojectid: this.props.match.params.projectid })
     }
 
     componentWillUnmount() {

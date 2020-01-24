@@ -144,6 +144,55 @@ export async function ClientLogin(values) {
         })
 
 }
+export async function ValidateCompanyID(companyid) {
+
+    var APIURL = `${process.env.REACT_APP_SERVER_API}/${companyid}/validatecompanyid`
+
+    return fetch(APIURL, {
+        method: 'get',
+        credentials: 'include'
+    })
+        .then(resp => {
+
+            if (!resp.ok) {
+                if (resp.status >= 400 && resp.status < 500) {
+                    return resp.json().then(data => {
+                        let err = { errorMessage: data.message };
+                        throw err;
+                    })
+                }
+                else {
+                    let err = { errorMessage: 'Please try again later, server is not responding' };
+                    throw err;
+                }
+            }
+
+            return resp.json();
+        })
+}
+export async function CheckProviderID(providerid) {
+
+    var APIURL = `https://api.civilengineer.io/projectmanagement/${providerid}/checkproviderid`
+
+    return fetch(APIURL)
+        .then(resp => {
+
+            if (!resp.ok) {
+                if (resp.status >= 400 && resp.status < 500) {
+                    return resp.json().then(data => {
+                        let err = { errorMessage: data.message };
+                        throw err;
+                    })
+                }
+                else {
+                    let err = { errorMessage: 'Please try again later, server is not responding' };
+                    throw err;
+                }
+            }
+
+            return resp.json();
+        })
+}
 export async function RegisterUser(values) {
 
     let APIURL = `${process.env.REACT_APP_SERVER_API}/register`;

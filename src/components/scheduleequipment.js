@@ -6,6 +6,7 @@ import ScheduleEquipmentTimeIn from './scheduleequipmenttimein';
 import ScheduleEquipmentTimeOut from './scheduleequipmenttimeout';
 import DynamicStyles from './dynamicstyles';
 import { CreateScheduleEquipment, makeID, inputUTCStringForLaborID } from './functions'
+import CSI from './csi'
 
 class ScheduleEquipment extends Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class ScheduleEquipment extends Component {
             render: '', width: 0, height: 0, activeequipmentid: '', myequipmentid: '',
             timein: new Date(),
             timeout: new Date(new Date().getTime() + (1000 * 60 * 60)),
-            milestoneid: '', csiid: ''
+            milestoneid: '', csiid: '', csi_1: '', csi_2: '', csi_3: ''
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
 
@@ -26,6 +27,7 @@ class ScheduleEquipment extends Component {
         console.log(myuser)
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        this.props.reduxNavigation({ activeprojectid: this.props.match.params.projectid })
 
     }
     componentWillUnmount() {
@@ -264,14 +266,11 @@ class ScheduleEquipment extends Component {
     showmilestones() {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
+        const csi = new CSI();
         if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    CSI  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                        value={this.getcsiid()}
-                        onChange={event => { this.handlecsiid(event.target.value) }}>
-
-                        {this.loadcsiids()}</select>
+                    {csi.showCSI.call(this)}
                 </div>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                     MilestoneID
@@ -288,12 +287,7 @@ class ScheduleEquipment extends Component {
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                            CSI  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                                value={this.getcsiid()}
-                                onChange={event => { this.handlecsiid(event.target.value) }}>
-                                <option value={false}>Select A CSI</option>
-                                {this.loadcsiids()}
-                            </select>
+                            {csi.showCSI.call(this)}
                         </div>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
                             MilestoneID
@@ -376,11 +370,22 @@ class ScheduleEquipment extends Component {
         return equipment;
     }
     makeequipmentactive(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        let csi_1 = "";
+        let csi_2 = "";
+        let csi_3 = "";
+
 
         if (this.state.activeequipmentid === equipmentid) {
-            this.setState({ activeequipmentid: false })
+
+            this.setState({ activeequipmentid: false, csi_1, csi_2, csi_3, csiid: '' })
         } else {
-            this.setState({ activeequipmentid: equipmentid })
+            let myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, equipmentid);
+            let csi = dynamicstyles.getcsibyid.call(this, myequipment.csiid);
+            csi_1 = csi.csi.substr(0, 2)
+            csi_2 = csi.csi.substr(2, 2)
+            csi_3 = csi.csi.substr(4, 2)
+            this.setState({ activeequipmentid: equipmentid, csi_1, csi_2, csi_3 })
         }
     }
     getmilestones() {
@@ -488,6 +493,12 @@ class ScheduleEquipment extends Component {
         }
     }
     handlecsiid(csiid) {
+        const dynamicstyles = new DynamicStyles();
+        const csi = dynamicstyles.getcsibyid.call(this, csiid);
+        let csi_1 = csi.csi.substr(0, 2)
+        let csi_2 = csi.csi.substr(2, 2)
+        let csi_3 = csi.csi.substr(4, 2)
+        this.setState({ csi_1, csi_2, csi_3 })
         let myuser = this.getuser();
         if (myuser) {
             let myproject = this.getproject();
@@ -562,13 +573,24 @@ class ScheduleEquipment extends Component {
         }
     }
     getcsiid() {
+        const dynamicstyles = new DynamicStyles();
+        let csi = false;
         if (this.state.activeequipmentid) {
             let myequipment = this.getactiveequipment();
-            console.log(myequipment)
-            return myequipment.csiid;
+            if (myequipment) {
+                csi = dynamicstyles.getcsibyid.call(this, myequipment.csiid)
+            }
+
         } else {
-            return (this.state.csiid)
+            csi = dynamicstyles.getcsibyid.call(this, this.state.csiid)
         }
+
+        if (csi) {
+            return (`${csi.csi}-${csi.title}`)
+        } else {
+            return "";
+        }
+
     }
     getmilestoneid() {
         if (this.state.activeequipmentid) {

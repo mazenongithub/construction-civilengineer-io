@@ -7,6 +7,7 @@ import { inputUTCStringForLaborID, calculatetotalhours, makeID, CreateScheduleLa
 import ScheduleLaborTimeIn from './schedulelabortimein';
 import ScheduleLaborTimeOut from './schedulelabortimeout';
 import DynamicStyles from './dynamicstyles';
+import CSI from './csi';
 
 class ScheduleLabor extends Component {
 
@@ -16,7 +17,8 @@ class ScheduleLabor extends Component {
             render: '', width: 0, height: 0, employeeid: '', activelaborid: '', csiid: '', milestoneid: '', description: '',
             timein: new Date(),
             timeout: new Date(new Date().getTime() + (1000 * 60 * 60)),
-            activetimeincalendar: true, activetimeoutcalendar: true
+            activetimeincalendar: true, activetimeoutcalendar: true,
+            csi_1: ''
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
 
@@ -24,6 +26,7 @@ class ScheduleLabor extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        this.props.reduxNavigation({ activeprojectid: this.props.match.params.projectid })
 
     }
     componentWillUnmount() {
@@ -140,7 +143,7 @@ class ScheduleLabor extends Component {
         if (myproject.hasOwnProperty("schedulelabor")) {
             // eslint-disable-next-line
             myproject.schedulelabor.mylabor.map(mylabor => {
-                console.log(mylabor)
+
                 laborids.push(this.showlaborid(mylabor))
             })
 
@@ -155,11 +158,24 @@ class ScheduleLabor extends Component {
         }
     }
     makelaboractive(laborid) {
-        console.log(laborid)
+
+        const dynamicstyles = new DynamicStyles();
+        let csi_1 = "";
+        let csi_2 = "";
+        let csi_3 = "";
         if (this.state.activelaborid === laborid) {
-            this.setState({ activelaborid: false })
+
+            this.setState({ activelaborid: false, csi_1, csi_2, csi_3 })
         } else {
-            this.setState({ activelaborid: laborid })
+
+            let mylabor = dynamicstyles.getschedulelaborbyid.call(this, laborid);
+            if (mylabor) {
+                let csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid)
+                csi_1 = csi.csi.substr(0, 2)
+                csi_2 = csi.csi.substr(2, 2)
+                csi_3 = csi.csi.substr(4, 2)
+            }
+            this.setState({ activelaborid: laborid, csi_1, csi_2, csi_3 })
         }
     }
     getactivelaborbackground(laborid) {
@@ -332,7 +348,7 @@ class ScheduleLabor extends Component {
     getemployee() {
         if (this.state.activelaborid) {
             let mylabor = this.getactivelabor();
-            console.log(mylabor)
+
             if (mylabor) {
                 return (mylabor.providerid)
 
@@ -345,23 +361,29 @@ class ScheduleLabor extends Component {
     }
 
     getcsiid() {
+        const dynamicstyles = new DynamicStyles();
+        let csi = false;
         if (this.state.activelaborid) {
             let mylabor = this.getactivelabor();
-            console.log(mylabor)
             if (mylabor) {
-                return (mylabor.csiid)
-
-
+                csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid)
             }
 
         } else {
-            return (this.state.csiid);
+            csi = dynamicstyles.getcsibyid.call(this, this.state.csiid)
         }
+
+        if (csi) {
+            return (`${csi.csi}-${csi.title}`)
+        } else {
+            return ""
+        }
+
     }
     getmilestoneid() {
         if (this.state.activelaborid) {
             let mylabor = this.getactivelabor();
-            console.log(mylabor)
+
             if (mylabor) {
                 return (mylabor.milestoneid)
             }
@@ -373,7 +395,7 @@ class ScheduleLabor extends Component {
     getdescription() {
         if (this.state.activelaborid) {
             let mylabor = this.getactivelabor();
-            console.log(mylabor)
+
             if (mylabor) {
                 return (mylabor.description)
             }
@@ -412,6 +434,11 @@ class ScheduleLabor extends Component {
     }
     handlecsiid(csiid) {
         const dynamicstyles = new DynamicStyles();
+        let csi = dynamicstyles.getcsibyid.call(this, csiid)
+        let csi_1 = csi.csi.substr(0, 2)
+        let csi_2 = csi.csi.substr(2, 2)
+        let csi_3 = csi.csi.substr(4, 2)
+        this.setState({ csi_1, csi_2, csi_3 })
         let myuser = this.getuser();
         if (myuser) {
             let i = this.getprojectkey();
@@ -582,6 +609,7 @@ class ScheduleLabor extends Component {
         const titleFont = this.gettitlefont();
         const regularFont = this.getRegularFont();
         const dynamicstyles = new DynamicStyles();
+        const csi = new CSI();
 
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
@@ -609,13 +637,7 @@ class ScheduleLabor extends Component {
 
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        CSI
-                        <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                            value={this.getcsiid()}
-                            onChange={event => { this.handlecsiid(event.target.value) }}>
-                            <option value={false}>Select A CSI</option>
-                            {this.loadcsiids()}
-                        </select>
+                        {csi.showCSI.call(this)}
                     </div>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                         MilestoneID

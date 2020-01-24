@@ -31,6 +31,24 @@ class DynamicStyles {
         }
 
     }
+    getRegisterIcon() {
+        if (this.state.width > 1200) {
+            return ({
+                width: '404px',
+                height: '68px'
+            })
+        } else if (this.state.width > 800) {
+            return ({
+                width: '264px',
+                height: '53px'
+            })
+        } else {
+            return ({
+                width: '162px',
+                height: '42px'
+            })
+        }
+    }
     gethidedetails() {
         if (this.state.width > 1200) {
             return ({
@@ -1110,6 +1128,82 @@ class DynamicStyles {
         }
         return key;
     }
+    getschedulematerialbyid(materialid) {
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let material = false;
+        if (myproject) {
+
+
+            if (myproject.hasOwnProperty("schedulematerials")) {
+                // eslint-disable-next-line
+                myproject.schedulematerials.mymaterial.map((mymaterial, i) => {
+                    if (mymaterial.materialid === materialid) {
+                        material = mymaterial;
+                    }
+                })
+            }
+
+        }
+        return material;
+    }
+    getactualmaterialbyid(materialid) {
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let material = false;
+        if (myproject) {
+
+
+            if (myproject.hasOwnProperty("actualmaterials")) {
+                // eslint-disable-next-line
+                myproject.actualmaterials.mymaterial.map((mymaterial, i) => {
+                    if (mymaterial.materialid === materialid) {
+                        material = mymaterial;
+                    }
+                })
+            }
+
+        }
+        return material;
+    }
+    getscheduleequipmentbyid(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let equipment = false;
+        if (myproject) {
+
+
+            if (myproject.hasOwnProperty("scheduleequipment")) {
+                // eslint-disable-next-line
+                myproject.scheduleequipment.myequipment.map((myequipment, i) => {
+                    if (myequipment.equipmentid === equipmentid) {
+                        equipment = myequipment;
+                    }
+                })
+            }
+
+        }
+        return equipment;
+    }
+    getactualequipmentbyid(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let equipment = false;
+        if (myproject) {
+
+
+            if (myproject.hasOwnProperty("actualequipment")) {
+                // eslint-disable-next-line
+                myproject.actualequipment.myequipment.map((myequipment, i) => {
+                    if (myequipment.equipmentid === equipmentid) {
+                        equipment = myequipment;
+                    }
+                })
+            }
+
+        }
+        return equipment;
+    }
     getactivelaborkeybyid(laborid) {
         const dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getproject.call(this)
@@ -1127,6 +1221,42 @@ class DynamicStyles {
         }
 
         return key;
+    }
+    getactuallaborbyid(laborid) {
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this)
+        let labor = false
+
+        if (myproject) {
+            if (myproject.hasOwnProperty("actuallabor")) {
+                // eslint-disable-next-line
+                myproject.actuallabor.mylabor.map((mylabor, i) => {
+                    if (mylabor.laborid === laborid) {
+                        labor = mylabor;
+                    }
+                })
+            }
+        }
+
+        return labor;
+    }
+    getschedulelaborbyid(laborid) {
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this)
+        let labor = false
+
+        if (myproject) {
+            if (myproject.hasOwnProperty("schedulelabor")) {
+                // eslint-disable-next-line
+                myproject.schedulelabor.mylabor.map((mylabor, i) => {
+                    if (mylabor.laborid === laborid) {
+                        labor = mylabor;
+                    }
+                })
+            }
+        }
+
+        return labor;
     }
 
     getactuallaborkeybyid(laborid) {

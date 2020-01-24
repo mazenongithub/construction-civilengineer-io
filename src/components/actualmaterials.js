@@ -6,15 +6,17 @@ import { removeIconSmall } from './svg';
 import { formatDateStringDisplay, makeID, CreateActualMaterial } from './functions';
 import ActualMaterialDate from './actualmaterialdate';
 import DynamicStyles from './dynamicstyles';
+import CSI from './csi';
 class ActualMaterials extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activematerialid: '', material: '', datein: new Date(), unit: '', quantity: '', unitcost: '', milestoneid: '', csiid: '', mymaterialid: '', calender: 'open' }
+        this.state = { render: '', width: 0, height: 0, activematerialid: '', material: '', datein: new Date(), unit: '', quantity: '', unitcost: '', milestoneid: '', csiid: '', mymaterialid: '', calender: 'open', csi_1: '', csi_2: '', csi_3: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        this.props.reduxNavigation({ activeprojectid: this.props.match.params.projectid })
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -202,10 +204,20 @@ class ActualMaterials extends Component {
         return milestone;
     }
     makematerialactive(materialid) {
+        const dynamicstyles = new DynamicStyles();
+        let csi_1 = "";
+        let csi_2 = "";
+        let csi_3 = "";
         if (this.state.activematerialid === materialid) {
-            this.setState({ activematerialid: false })
+            this.setState({ activematerialid: false, csi_1, csi_2, csi_3, csiid: '' })
         } else {
-            this.setState({ activematerialid: materialid })
+            let mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid);
+            let csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid);
+            csi_1 = csi.csi.substr(0, 2)
+            csi_2 = csi.csi.substr(2, 2)
+            csi_3 = csi.csi.substr(4, 2)
+            this.setState({ activematerialid: materialid, csi_1, csi_2, csi_3 })
+
         }
     }
     getactivematerialbackground(materialid) {
@@ -267,16 +279,12 @@ class ActualMaterials extends Component {
     showmilestonemenus() {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
+        const csi = new CSI();
         if (this.state.width > 800) {
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        CSI  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                            value={this.getcsiid()}
-                            onChange={event => { this.handlecsiid(event.target.valie) }}>
-                            <option value={false}>Select A CSI</option>
-                            {this.loadcsiids()}
-                        </select>
+                        {csi.showCSI.call(this)}
                     </div>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                         MilestoneID  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
@@ -291,12 +299,7 @@ class ActualMaterials extends Component {
             return (
                 <div style={{ ...styles.generalContainer }}>
                     <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        CSI  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                            value={this.getcsiid()}
-                            onChange={event => { this.handlecsiid(event.target.value) }}>
-                            <option value={false}>Select A CSI</option>
-                            {this.loadcsiids()}
-                        </select>
+                        {csi.showCSI.call(this)}
                     </div>
                     <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         MilestoneID  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
@@ -423,7 +426,13 @@ class ActualMaterials extends Component {
     }
 
     handlecsiid(csiid) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
+        const csi = dynamicstyles.getcsibyid.call(this, csiid);
+        let csi_1 = csi.csi.substr(0, 2)
+        let csi_2 = csi.csi.substr(2, 2)
+        let csi_3 = csi.csi.substr(4, 2)
+        this.setState({ csi_1, csi_2, csi_3 })
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
@@ -700,13 +709,24 @@ class ActualMaterials extends Component {
         }
     }
     getcsiid() {
+        const dynamicstyles = new DynamicStyles();
+        let csi = false;
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
-            return mymaterial.csiid;
+            if (mymaterial) {
+                csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid)
+            }
+
         } else {
-            return this.state.csiid;
+            csi = dynamicstyles.getcsibyid.call(this, this.state.csiid)
         }
+
+        if (csi) {
+            return (`${csi.csi}-${csi.title}`)
+        } else {
+            return "";
+        }
+
     }
     getmilestoneid() {
         if (this.state.activematerialid) {

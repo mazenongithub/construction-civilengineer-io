@@ -44,6 +44,10 @@ export function MyStylesheet() {
         generalContainer: {
             fontFamily: "'Nunito Sans', sans-serif"
         },
+        csiField: {
+            maxWidth: '120px',
+            border: '1px solid'
+        },
         generalFlex: {
             display: 'flex',
             flexDirection: 'row',

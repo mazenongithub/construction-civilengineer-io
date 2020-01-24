@@ -4,12 +4,13 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { registerCompanyIcon, scrollImageDown, addIcon } from './svg';
 import { Link } from 'react-router-dom';
-import { LoadAllUsers, RegisterNewCompany, AddExistingCompany } from './actions/api';
-import { returnCompanyList, CreateCompany } from './functions';
+import { LoadAllUsers, RegisterNewCompany, AddExistingCompany, ValidateCompanyID } from './actions/api';
+import { returnCompanyList, CreateCompany, validateProviderID } from './functions';
+import DynamicStyles from './dynamicstyles';
 class Company extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, companyid: '', company: '' }
+        this.state = { render: '', width: 0, height: 0, companyid: '', company: '', companyidcheck: true }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -89,6 +90,21 @@ class Company extends Component {
             return (`/${user.providerid}`)
         }
     }
+    async validatecompanyid(companyid) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+        if (myuser) {
+            let response = await ValidateCompanyID(companyid);
+            console.log(response)
+            if (response.hasOwnProperty("invalid")) {
+                this.setState({ companyidcheck: false, message: response.invalid })
+            } else if (response.hasOwnProperty("valid")) {
+                let message = `Your Company Will be Hosted at ${process.env.REACT_APP_CLIENT_API}/company/${companyid}`
+                this.setState({ companyidcheck: true, message })
+            }
+
+        }
+    }
     showcompanyid() {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
@@ -104,6 +120,7 @@ class Company extends Component {
                                 <input type="text" style={{ ...styles.addLeftMargin, ...regularFont, ...styles.generalFont }}
                                     value={this.state.companyid}
                                     onChange={event => { this.setState({ companyid: event.target.value }) }}
+                                    onBlur={event => { this.validatecompanyid(event.target.value) }}
                                 />
                             </div>
                         </div>
@@ -258,24 +275,7 @@ class Company extends Component {
             </div>)
         }
     }
-    getRegisterIcon() {
-        if (this.state.width > 1200) {
-            return ({
-                width: '404px',
-                height: '68px'
-            })
-        } else if (this.state.width > 800) {
-            return ({
-                width: '264px',
-                height: '53px'
-            })
-        } else {
-            return ({
-                width: '162px',
-                height: '42px'
-            })
-        }
-    }
+
     getArrowHeight() {
         if (this.state.width > 800) {
             return (
@@ -454,44 +454,97 @@ class Company extends Component {
         }
 
     }
+    validatenewcompany() {
+        let validate = {};
+        validate.validate = true;
+        validate.message = ""
+        if (!this.state.companyid) {
+            validate.validate = false;
+            validate.message += `Company ID is missing `
+        } else {
+            let validatecompanyid = validateProviderID(this.state.companyid);
+            if (validatecompanyid) {
+                validate.validate = false;
+                validate.message += validatecompanyid;
+            }
+
+        }
+        if (!this.state.companyidcheck) {
+            validate.validate = false;
+            validate.message += `Company ID is taken `
+        }
+
+        if (!this.state.company) {
+            validate.validate = false;
+            validate.message += `Company Name is missing `
+        }
+        return validate;
+
+    }
     async registernewcompany() {
         let myuser = this.getuser();
-        if (window.confirm(`Are you sure you want to register CompanyID: ${this.state.companyid} Company: ${this.state.company}?`)) {
-            if (myuser) {
-                let companyid = this.state.companyid;
-                let company = this.state.company;
-                let manager = myuser.providerid;
-                let address = "";
-                let city = "";
-                let contactstate = "";
-                let zipcode = "";
-                let newCompany = CreateCompany(companyid, company, manager, address, city, contactstate, zipcode)
+        let validate = this.validatenewcompany();
+        if (validate.validate) {
+            if (window.confirm(`Are you sure you want to register CompanyID: ${this.state.companyid} Company: ${this.state.company}?`)) {
+                if (myuser) {
 
-                try {
+                    let companyid = this.state.companyid;
+                    let company = this.state.company;
+                    let manager = myuser.providerid;
+                    let address = "";
+                    let city = "";
+                    let contactstate = "";
+                    let zipcode = "";
+                    let newCompany = CreateCompany(companyid, company, manager, address, city, contactstate, zipcode)
 
-                    let response = await RegisterNewCompany(newCompany);
-                    console.log(response)
-                    if (response.hasOwnProperty("allusers")) {
-                        let companys = returnCompanyList(response.allusers);
-                        this.props.reduxAllCompanys(companys)
-                        this.props.reduxAllUsers(response.allusers);
-                        delete response.allusers;
+                    try {
 
+                        let response = await RegisterNewCompany(newCompany);
+                        console.log(response)
+                        if (response.hasOwnProperty("allusers")) {
+                            let companys = returnCompanyList(response.allusers);
+                            this.props.reduxAllCompanys(companys)
+                            this.props.reduxAllUsers(response.allusers);
+                            delete response.allusers;
+
+                        }
+                        if (response.hasOwnProperty("providerid")) {
+                            this.props.reduxUser(response)
+                        }
+                    } catch (err) {
+                        alert(err)
                     }
-                    if (response.hasOwnProperty("providerid")) {
-                        this.props.reduxUser(response)
-                    }
-                } catch (err) {
-                    alert(err)
+
                 }
-
             }
+        } else {
+            this.setState({ message: validate.message })
+        }
+    }
+    handleregisternewcompany() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const registerIcon = dynamicstyles.getRegisterIcon.call(this);
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        if (this.state.companyidcheck) {
+            return (
+                <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont }}>
+                    <button style={{ ...styles.generalButton, ...registerIcon }} onClick={() => { this.registernewcompany() }}>
+                        {registerCompanyIcon()}
+                    </button> <br />
+                    {this.state.message}
+                </div>
+            )
+        } else {
+            return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont }}>
+                {this.state.message}
+            </div>)
         }
     }
     showaddnewcompany() {
         const styles = MyStylesheet();
-        const registerIcon = this.getRegisterIcon();
-        const headerFont = this.getHeaderFont();
+        const dynamicstyles = new DynamicStyles();
+        const headerFont = dynamicstyles.getHeaderFont.call(this);
         let myuser = this.getuser();
         if (myuser) {
             if (!myuser.hasOwnProperty("company")) {
@@ -515,9 +568,7 @@ class Company extends Component {
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...styles.bottomMargin15, ...styles.alignCenter }}>
 
-                                <button style={{ ...styles.generalButton, ...registerIcon }} onClick={() => { this.registernewcompany() }}>
-                                    {registerCompanyIcon()}
-                                </button>
+                                {this.handleregisternewcompany()}
 
                             </div>
                         </div>

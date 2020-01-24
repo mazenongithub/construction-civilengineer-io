@@ -1376,6 +1376,57 @@ export function inputUTCStringForMaterialIDWithTime(timein) {
     return (`${month}/${date}/${year}`);
 
 }
+export function validateProviderID(value) {
+    const reg_ex = /^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,34}(?:[A-Za-z0-9_]))?)$/
+    const test = reg_ex.test(value);
+    value = value.trim();
+    let errmsg = false;
+    if (!value) {
+        errmsg = " ProviderID is required ";
+
+    }
+    else if (value.length > 36) {
+        errmsg = " ProviderID should be less than 36 characters";
+    }
+    else if (!test) {
+        errmsg = ` Invalid Provider ID format ${value} `;
+    }
+
+    return errmsg;
+}
+export function validatePhoneNumber(val) {
+    let errmsg = "";
+
+    var reg_ex = /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/
+    var test = reg_ex.test(val)
+    if (val.length === 0) {
+        errmsg += "Phone Number is required ";
+
+    }
+    else if (!test) {
+        errmsg += ` ${val} is an invalid phonenumber format `
+
+    }
+
+    return errmsg;
+}
+export function validateEmail(value) {
+    var reg_ex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
+    var test = reg_ex.test(value)
+    let errmsg = false;
+    if (!value) {
+        errmsg += `Email Address is required `
+
+    }
+
+
+    else if (!test) {
+
+        errmsg += ` Email Address ${value} format is invalid `;
+
+    }
+    return errmsg;
+}
 
 export function TestUser() {
     let myuser = {
