@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
-import { formatDateStringDisplay, makeID, CreateActualMaterial } from './functions';
+import { formatDateStringDisplay, makeID, CreateActualMaterial, makeDatefromObj } from './functions';
 import ActualMaterialDate from './actualmaterialdate';
 import DynamicStyles from './dynamicstyles';
 import CSI from './csi';
@@ -404,7 +404,7 @@ class ActualMaterials extends Component {
                     let providerid = this.state.employeeid;
                     let milestoneid = this.state.milestoneid;
                     let csiid = this.state.csiid;
-                    let timein = this.state.timein;
+                    let timein = makeDatefromObj(this.state.datein);
                     let quantity = this.state.quantity;
                     let unit = this.state.unit;
                     let unitcost = this.state.unitcost;
@@ -447,7 +447,7 @@ class ActualMaterials extends Component {
                     let providerid = this.state.employeeid;
                     let milestoneid = this.state.milestoneid;
                     let mymaterialid = this.state.mymaterialid;
-                    let timein = this.state.timein;
+                    let timein = makeDatefromObj(this.state.datein);
                     let quantity = this.state.quantity;
                     let unit = this.state.unit;
                     let unitcost = this.state.unitcost;
@@ -484,7 +484,7 @@ class ActualMaterials extends Component {
                     let providerid = this.state.employeeid;
                     let csiid = this.state.csiid
                     let mymaterialid = this.state.mymaterialid;
-                    let timein = this.state.timein;
+                    let timein = makeDatefromObj(this.state.datein);
                     let quantity = this.state.quantity;
                     let unit = this.state.unit;
                     let unitcost = this.state.unitcost;
@@ -521,7 +521,7 @@ class ActualMaterials extends Component {
                     let providerid = this.state.employeeid;
                     let csiid = this.state.csiid
                     let mymaterialid = this.state.mymaterialid;
-                    let timein = this.state.timein;
+                    let timein = makeDatefromObj(this.state.datein);
                     let milestoneid = this.state.milestoneid;
                     let unit = this.state.unit;
                     let unitcost = this.state.unitcost;
@@ -558,7 +558,7 @@ class ActualMaterials extends Component {
                     let providerid = this.state.employeeid;
                     let csiid = this.state.csiid
                     let mymaterialid = this.state.mymaterialid;
-                    let timein = this.state.timein;
+                    let timein = makeDatefromObj(this.state.datein);
                     let milestoneid = this.state.milestoneid;
                     let quantity = this.state.quantity;
                     let unitcost = this.state.unitcost;
@@ -594,7 +594,7 @@ class ActualMaterials extends Component {
                     let providerid = this.state.employeeid;
                     let csiid = this.state.csiid
                     let mymaterialid = this.state.mymaterialid;
-                    let timein = this.state.timein;
+                    let timein = makeDatefromObj(this.state.datein);
                     let milestoneid = this.state.milestoneid;
                     let quantity = this.state.quantity;
                     let unit = this.state.unit;

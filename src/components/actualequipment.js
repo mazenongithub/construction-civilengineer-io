@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { CreateActualEquipment, makeID, inputUTCStringForLaborID } from './functions'
+import { CreateActualEquipment, makeID, inputUTCStringForLaborID, inputDateObjOutputAdjString } from './functions'
 import ActualEquipmentTimeIn from './actualequipmenttimein';
 import ActualEquipmentTimeOut from './actualequipmenttimeout';
 import DynamicStyles from './dynamicstyles';
@@ -268,6 +268,7 @@ class ActualEquipment extends Component {
                     <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
                         value={this.getmilestoneid()}
                         onChange={event => { this.handlemilestoneid(event.target.value) }}>
+                        <option value={false}>Select Project Milestone</option>
                         {this.loadmilestoneids()}
                     </select>
                 </div>
@@ -463,8 +464,8 @@ class ActualEquipment extends Component {
                     let providerid = myuser.provderid;
                     let csiid = this.state.csiid;
                     let milestoneid = this.state.milestoneid;
-                    let timein = this.state.timein;
-                    let timeout = this.state.timeout;
+                    let timein = inputDateObjOutputAdjString(this.state.timein);
+                    let timeout = inputDateObjOutputAdjString(this.state.timeout)
                     let invoiceid = this.state.invoiceid;
                     let profit = 0;
 
@@ -508,8 +509,8 @@ class ActualEquipment extends Component {
                     let providerid = myuser.provderid;
                     let myequipmentid = this.state.myequipmentid;
                     let milestoneid = this.state.milestoneid;
-                    let timein = this.state.timein;
-                    let timeout = this.state.timeout;
+                    let timein = inputDateObjOutputAdjString(this.state.timein);
+                    let timeout = inputDateObjOutputAdjString(this.state.timeout);
                     let invoiceid = this.state.invoiceid;
 
                     let newEquipment = CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, invoiceid)
@@ -545,8 +546,8 @@ class ActualEquipment extends Component {
                     let providerid = myuser.provderid;
                     let myequipmentid = this.state.myequipmentid;
                     let csiid = this.state.csiid;
-                    let timein = this.state.timein;
-                    let timeout = this.state.timeout;
+                    let timein = inputDateObjOutputAdjString(this.state.timein);
+                    let timeout = inputDateObjOutputAdjString(this.state.timeout);
                     let invoiceid = this.state.invoiceid;
 
                     let newEquipment = CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, invoiceid)

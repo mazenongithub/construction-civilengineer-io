@@ -5,7 +5,7 @@ import { MyStylesheet } from './styles';
 import ScheduleEquipmentTimeIn from './scheduleequipmenttimein';
 import ScheduleEquipmentTimeOut from './scheduleequipmenttimeout';
 import DynamicStyles from './dynamicstyles';
-import { CreateScheduleEquipment, makeID, inputUTCStringForLaborID } from './functions'
+import { CreateScheduleEquipment, makeID, inputUTCStringForLaborID, inputDateObjOutputAdjString } from './functions'
 import CSI from './csi'
 
 class ScheduleEquipment extends Component {
@@ -277,6 +277,7 @@ class ScheduleEquipment extends Component {
                     <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
                         value={this.getmilestoneid()}
                         onChange={event => { this.handlemilestoneid(event.target.value) }}>
+                        <option value={false}>Select A Project Milestone</option>
                         {this.loadmilestoneids()}
                     </select>
                 </div>
@@ -472,8 +473,8 @@ class ScheduleEquipment extends Component {
                     let providerid = myuser.provderid;
                     let csiid = this.state.csiid;
                     let milestoneid = this.state.milestoneid;
-                    let timein = this.state.timein;
-                    let timeout = this.state.timeout;
+                    let timein = inputDateObjOutputAdjString(this.state.timein);
+                    let timeout = inputDateObjOutputAdjString(this.state.timeout)
                     let proposalid = this.state.proposalid;
 
                     let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid)
@@ -515,8 +516,9 @@ class ScheduleEquipment extends Component {
                     let providerid = myuser.provderid;
                     let myequipmentid = this.state.myequipmentid;
                     let milestoneid = this.state.milestoneid;
-                    let timein = this.state.timein;
-                    let timeout = this.state.timeout;
+                    let timein = inputDateObjOutputAdjString(this.state.timein);
+                    let timeout = inputDateObjOutputAdjString(this.state.timeout);
+                    console.log(timein, timeout)
                     let proposalid = this.state.proposalid;
 
                     let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid)
@@ -552,8 +554,8 @@ class ScheduleEquipment extends Component {
                     let providerid = myuser.provderid;
                     let myequipmentid = this.state.myequipmentid;
                     let csiid = this.state.csiid;
-                    let timein = this.state.timein;
-                    let timeout = this.state.timeout;
+                    let timein = inputDateObjOutputAdjString(this.state.timein);
+                    let timeout = inputDateObjOutputAdjString(this.state.timeout)
                     let proposalid = this.state.proposalid;
 
                     let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid)
