@@ -964,6 +964,40 @@ class DynamicStyles {
         }
         return user;
     }
+    getcsipropertybyid(csiid) {
+        let csi = false;
+        let dynamicstyles = new DynamicStyles();
+        let company = dynamicstyles.getcompany.call(this);
+        let property = false;
+        if (company.hasOwnProperty("construction")) {
+            if (company.construction.hasOwnProperty("csicodes")) {
+                // eslint-disable-next-line
+                company.construction.csicodes.code.map(code => {
+                    if (code.csiid === csiid) {
+                        property = 'user'
+
+                    }
+                })
+            }
+
+            if (!csi) {
+                if (company.construction.hasOwnProperty("civilengineer")) {
+                    if (company.construction.civilengineer.hasOwnProperty("csicodes")) {
+                        // eslint-disable-next-line
+                        company.construction.civilengineer.csicodes.code.map(code => {
+                            if (code.csiid === csiid) {
+                                property = 'civilengineer'
+
+                            }
+                        })
+                    }
+
+                }
+            }
+
+        }
+        return property;
+    }
     getcsibyid(csiid) {
         let csi = false;
         let dynamicstyles = new DynamicStyles();

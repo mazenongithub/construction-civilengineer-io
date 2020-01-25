@@ -5,6 +5,7 @@ import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
 import { CreateCSI, makeID } from './functions';
 import DynamicStyles from './dynamicstyles';
+import CSI from './csi'
 
 class Construction extends Component {
     constructor(props) {
@@ -118,18 +119,26 @@ class Construction extends Component {
         return activecsi;
     }
     handlecsititle(title) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             if (this.state.activecsiid) {
-                let i = this.getactivecsikey();
+                let property = dynamicstyles.getcsipropertybyid.call(this, this.state.activecsiid)
 
-                myuser.company.construction.csicodes.code[i].title = title;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+                if (property !== 'civilengineer' || myuser.providerid === 'mazen') {
+                    let i = this.getactivecsikey();
+
+                    myuser.company.construction.csicodes.code[i].title = title;
+                    this.props.reduxUser(myuser)
+                    this.setState({ render: 'render' })
+                }
             } else {
                 this.setState({ title });
                 let csiid = makeID(16);
-                let csi = '000000';
+                let csi_1 = (this.state.csi_1).substr(0, 2)
+                let csi_2 = (this.state.csi_2).substr(0, 2)
+                let csi_3 = (this.state.csi_3).substr(0, 2)
+                let csi = `${csi_1}${csi_2}${csi_3}`
                 let newcode = CreateCSI(csiid, csi, title);
                 if (myuser.company.construction.hasOwnProperty("csicodes")) {
                     myuser.company.construction.csicodes.code.push(newcode)
@@ -306,12 +315,7 @@ class Construction extends Component {
                         </div>
 
 
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                            Title  <input type="text"
-                                value={this.getcsititle()}
-                                onChange={event => { this.handlecsititle(event.target.value) }}
-                                style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin15 }} />
-                        </div>
+
 
                     </div>
                 </div>
@@ -417,8 +421,9 @@ class Construction extends Component {
         return csi;
     }
     makecsiactive(csiid) {
+        const dynamicstyles = new DynamicStyles()
         if (this.state.activecsiid !== csiid) {
-            let code = this.getcsibyid(csiid);
+            let code = dynamicstyles.getcsibyid.call(this, csiid);
             let csi = code.csi;
             let csi_1 = csi.substr(0, 2)
             let csi_2 = csi.substr(2, 2)
@@ -427,7 +432,7 @@ class Construction extends Component {
             this.setState({ activecsiid: csiid, csi_1, csi_2, csi_3 })
 
         } else {
-            this.setState({ activecsiid: '', csi_1: '', csi_2: '', csi_3: '' })
+            this.setState({ activecsiid: '', csi_1: '', csi_2: '', csi_3: '', title: '' })
         }
 
 
@@ -440,11 +445,30 @@ class Construction extends Component {
             <span onClick={() => { this.makecsiactive(code.csiid) }}>{code.csi}  - {code.title}</span> <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
         </div>)
     }
+    getcsiid() {
+        const dynamicstyles = new DynamicStyles();
+        if (this.state.activecsiid) {
+            let csiid = this.state.activecsiid;
+            let csi = dynamicstyles.getcsibyid.call(this, csiid)
+            return (`${csi.csi}-${csi.title}`)
+        } else {
+            return ""
+        }
+
+
+    }
+    handlecsiid(csiid) {
+        this.makecsiactive(csiid)
+
+    }
     render() {
         const styles = MyStylesheet();
-        const titleFont = this.gettitlefont();
-
         const dynamicstyles = new DynamicStyles();
+        const titleFont = dynamicstyles.gettitlefont.call(this);
+        const csi = new CSI();
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+
+
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -455,8 +479,16 @@ class Construction extends Component {
                         </div>
                     </div>
 
-                    {this.showcsi()}
-                    {this.showmycsicodes()}
+                    {csi.showCSI.call(this)}
+
+                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+                        Title  <input type="text"
+                            value={this.getcsititle()}
+                            onChange={event => { this.handlecsititle(event.target.value) }}
+                            style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin15 }} />
+                    </div>
+
+
 
                     {dynamicstyles.showsavecompany.call(this)}
 
