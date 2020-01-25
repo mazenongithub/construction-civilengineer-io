@@ -215,26 +215,15 @@ class Accounts extends Component {
 
                 <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
                     <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                        Account
+
                     </div>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.margin10 }}>
-                        <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
+                        Account <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
                             value={this.state.account_1}
                             onChange={event => { this.handleaccount_1(event.target.value) }} />
 
                     </div>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.margin10 }}>
-                        <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                            value={this.state.account_2}
-                            onChange={event => { this.handleaccount_2(event.target.value) }} />
-                        />
-                    </div>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.margin10 }}>
-                        <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                            value={this.state.account_3}
-                            onChange={event => { this.handleaccount_3(event.target.value) }} />
 
-                    </div>
                     <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont }}>
                         &nbsp;
                     </div>
@@ -314,7 +303,7 @@ class Accounts extends Component {
         }
         return accounts;
     }
-    handleaccount(accountname) {
+    handleaccountname(accountname) {
         let myuser = this.getuser();
         if (myuser) {
             if (this.state.activeaccountid) {
@@ -331,8 +320,8 @@ class Accounts extends Component {
                 }
             } else {
                 let accountid = makeID(16);
-                let account = '000000'
-                let newaccount = CreateAccount(accountid, account, accountname)
+                let account = this.state.account
+                let newaccount = CreateAccount(accountid, account, accountname, myuser.providerid)
 
                 if (myuser.company.office.hasOwnProperty("accounts")) {
                     myuser.company.office.accounts.account.push(newaccount)
@@ -341,7 +330,7 @@ class Accounts extends Component {
                     myuser.company.office.accounts = accounts;
                 }
                 this.props.reduxUser(myuser)
-                this.setState({ activeaccountid: accountid, account_1: '00', account_2: '00', account_3: '00' })
+                this.setState({ activeaccountid: accountid })
 
             }
         }
@@ -362,7 +351,7 @@ class Accounts extends Component {
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                         Account Name <input type="text"
-                            onChange={event => { this.handleaccount(event.target.value) }}
+                            onChange={event => { this.handleaccountname(event.target.value) }}
                             value={this.getaccountname()}
                             style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }} />
                     </div>
@@ -426,7 +415,7 @@ class Accounts extends Component {
             this.setState({ activeaccountid: accountid, account_1, account_2, account_3 })
 
         } else {
-            this.setState({ activeaccountid: '', account_1: '', account_2: '', account_3: '' })
+            this.setState({ activeaccountid: '', account_1: '', account_2: '', account_3: '', account: '', accountname: '' })
         }
 
 
@@ -462,10 +451,47 @@ class Accounts extends Component {
         }
         return accounts;
     }
+    getaccount() {
+        if (this.state.activeaccountid) {
+            let account = this.getactiveaccount();
+            return (account.account)
+        } else {
+            return (this.state.account)
+        }
+    }
+    handleaccount(account) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+
+            if (this.state.activeaccountid) {
+                let i = this.getactiveaccountkey();
+                myuser.company.office.accounts.account[i].account = account;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+
+            } else {
+                let accountid = makeID(16);
+                let accountname = this.state.accountname
+                let newaccount = CreateAccount(accountid, account, accountname, myuser.providerid)
+
+                if (myuser.company.office.hasOwnProperty("accounts")) {
+                    myuser.company.office.accounts.account.push(newaccount)
+                } else {
+                    let accounts = { account: [newaccount] }
+                    myuser.company.office.accounts = accounts;
+                }
+                this.props.reduxUser(myuser)
+                this.setState({ activeaccountid: accountid })
+            }
+
+        }
+    }
     render() {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
         const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this)
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -476,7 +502,26 @@ class Accounts extends Component {
                         </div>
                     </div>
 
-                    {this.showaccounts()}
+
+                    <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
+
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.margin10 }}>
+                            Account Number <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
+                                value={this.getaccount()}
+                                onChange={event => { this.handleaccount(event.target.value) }} />
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
                     {this.showaccount()}
                     {this.showmyaccounts()}
 
