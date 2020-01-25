@@ -7,6 +7,7 @@ import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths,
 import { saveCompanyIcon, saveProjectIcon } from './svg';
 import { SaveCompany, ClientLogin, SaveProject } from './actions/api';
 
+
 class DynamicStyles {
 
 
@@ -83,6 +84,15 @@ class DynamicStyles {
                 width: '40px',
                 height: '40px'
             })
+        }
+    }
+    getMaxWidth() {
+        if (this.state.width > 1200) {
+            return ({ maxWidth: '900px' })
+        } else if (this.state.width > 800) {
+            return ({ maxWidth: '600px' })
+        } else {
+            return ({ maxWidth: '400px' })
         }
     }
     getSmallFont() {
@@ -210,6 +220,10 @@ class DynamicStyles {
         if (response.hasOwnProperty("providerid")) {
             this.props.reduxUser(response)
         }
+        if (response.hasOwnProperty("message")) {
+            let dateupdated = inputUTCStringForLaborID(response.lastupdated)
+            this.setState({ message: `${response.message} Last Updated ${dateupdated}` })
+        }
     }
     async savemyproject() {
         let dynamicstyles = new DynamicStyles();
@@ -254,8 +268,8 @@ class DynamicStyles {
         return (<div style={{ ...styles.generalContainer }}>
 
             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                &nbsp;
-                     </div>
+                {this.state.message}
+            </div>
 
             <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                 <button style={{ ...styles.generalButton, ...savecompanyicon }} onClick={() => { dynamicstyles.saveCompany.call(this) }}>{saveCompanyIcon()}</button>
@@ -1045,25 +1059,7 @@ class DynamicStyles {
         console.log(profit)
         return profit;
     }
-    getactualmaterialkeybyid(materialid) {
-        const dynamicstyles = new DynamicStyles();
-        let myproject = dynamicstyles.getproject.call(this);
-        let key = false;
-        if (myproject) {
 
-
-            if (myproject.hasOwnProperty("actualmaterials")) {
-                // eslint-disable-next-line
-                myproject.actualmaterials.mymaterial.map((mymaterial, i) => {
-                    if (mymaterial.materialid === materialid) {
-                        key = i
-                    }
-                })
-            }
-
-        }
-        return key;
-    }
     getactivematerialkeybyid(materialid) {
         const dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getproject.call(this);
@@ -1083,25 +1079,7 @@ class DynamicStyles {
         }
         return key;
     }
-    getschedulematerialbyid(materialid) {
-        const dynamicstyles = new DynamicStyles();
-        let myproject = dynamicstyles.getproject.call(this);
-        let material = false;
-        if (myproject) {
 
-
-            if (myproject.hasOwnProperty("schedulematerials")) {
-                // eslint-disable-next-line
-                myproject.schedulematerials.mymaterial.map((mymaterial, i) => {
-                    if (mymaterial.materialid === materialid) {
-                        material = mymaterial;
-                    }
-                })
-            }
-
-        }
-        return material;
-    }
     getschedulematerialkeybyid(materialid) {
         const dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getproject.call(this);
@@ -1342,7 +1320,7 @@ class DynamicStyles {
         const csi = dynamicstyles.getcsibyid.call(this, equipment.csiid)
         const totalhours = +Number(calculatetotalhours(equipment.timeout, equipment.timein)).toFixed(2)
         const equipmentrate = `$${+Number(equipment.equipmentrate).toFixed(2)}/hr`
-        const profit = Number(equipment.profit / 100);
+
         const amount = (calculatetotalhours(equipment.timeout, equipment.timein) * Number(equipment.equipmentrate))
         return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...this.getactivematerialbackground(equipment.equipmentid) }} key={equipment.equipmentid}
             onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>

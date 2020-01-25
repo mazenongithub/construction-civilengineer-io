@@ -20,7 +20,6 @@
 .datearrowup-1 {fill: #2a678c;stroke: #000;stroke-miterlimit: 10;}
 .datearrowdown-1 { fill: #2a678c; stroke: #000; stroke-miterlimit: 10;}
 .opendatemenu-1 {fill: #e6e6e6; stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.opendatemenu-2 {  fill: #666;}
-
 .dateyearup-1 {  fill: #e6e6e6;  stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.dateyearup-2 {  fill: #666;}
 .dateyeardown-1 {  fill: #e6e6e6;  stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.dateyeardown-2 {  fill: #666;}
 .datemonthdown-1 {  fill: #e6e6e6;  stroke: #000;  stroke-miterlimit: 10;  stroke-width: 2px;}.datemonthdown-2 {  fill: #666;}
@@ -34,6 +33,7 @@
 .opendetail-1{fill:none;stroke-width:9px;}.opendetail-1,.opendetail-2{stroke:#000;stroke-miterlimit:10;}.opendetail-2{stroke-width:4px;}
 .closedetail-1{fill:none;stroke-width:9px;}.closedetail-1,.closedetail-2{stroke:#000;stroke-miterlimit:10;}.closedetail-2{stroke-width:4px;}
 .createinvoice-1{fill:#f39b6e;stroke:#ea692b;}.createinvoice-2{font-size:55.29px;fill:#0d0d0d;font-family:NunitoSans-Regular, Nunito Sans;}.createinvoice-3{letter-spacing:-0.01em;}.createinvoice-4{letter-spacing:-0.01em;}
+.blueplus-1{fill:#13059b;stroke:#000;stroke-miterlimit:10;}
 .App {
   text-align: center;
   

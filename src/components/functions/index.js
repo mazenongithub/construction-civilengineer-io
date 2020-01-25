@@ -7,6 +7,10 @@ export function CreateAccount(accountid, account, accountname) {
 export function CreateCSI(csiid, csi, title) {
     return ({ csiid, csi, title })
 }
+
+export function CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost) {
+    return ({ materialid, material, providerid, accountid, csiid, unit, unitcost })
+}
 export function CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit) {
     return ({ materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit })
 }

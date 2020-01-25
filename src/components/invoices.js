@@ -4,7 +4,7 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import { activeCheckIcon, CreateInvoiceIcon } from './svg'
-import { UTCStringFormatDateforProposal, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime } from './functions'
+import { UTCStringFormatDateforProposal } from './functions'
 import { Link } from 'react-router-dom';
 
 class Invoices extends Component {

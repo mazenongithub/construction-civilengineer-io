@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
-import { CreateMyMaterial, makeID } from './functions';
+import { CreateMaterial, makeID } from './functions';
 import DynamicStyles from './dynamicstyles';
+import CSI from './csi'
 
 class Materials extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activematerialid: '', materialid: '', material: '', accountid: '', csiid: '', unit: '', unitcost: '' }
+        this.state = { render: '', width: 0, height: 0, activematerialid: '', materialid: '', material: '', accountid: '', csiid: '', unit: '', unitcost: '', csi_1: '', csi_2: '', csi_3: '', message: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -84,9 +85,13 @@ class Materials extends Component {
         }
         return options;
     }
+
+
     handleselectmenus() {
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const csi = new CSI();
         if (this.state.width > 800) {
             return (
                 <div style={{ ...styles.generalFlex }}>
@@ -95,7 +100,7 @@ class Materials extends Component {
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
                                 Account <br />
-                                <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
                                     onChange={event => { this.handleaccountid(event.target.value) }}
                                     value={this.getaccountid()}>
                                     <option value={false}>Select An Account</option>
@@ -104,13 +109,7 @@ class Materials extends Component {
                             </div>
 
                             <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
-                                CSI <br />
-                                <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                    onChange={event => { this.handlecsiid(event.target.value) }}
-                                    value={this.getcsiid()}>
-                                    <option value={false}>Select An CSI</option>
-                                    {this.loadcsiids()}
-                                </select>
+                                {csi.showCSI.call(this)}
                             </div>
 
                         </div>
@@ -127,7 +126,7 @@ class Materials extends Component {
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
                                 Account <br />
-                                <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
                                     onChange={event => { this.handleaccountid(event.target.value) }}
                                     value={this.getaccountid()}>
                                     <option value={false}>Select An Account</option>
@@ -138,13 +137,7 @@ class Materials extends Component {
 
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                CSI <br />
-                                <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.addMargin }}
-                                    onChange={event => { this.handlecsiid(event.target.value) }}
-                                    value={this.getcsiid()}>
-                                    <option value={false}>Select An CSI</option>
-                                    {this.loadcsiids()}
-                                </select>
+                                {csi.showCSI.call(this)}
                             </div>
                         </div>
 
@@ -394,13 +387,27 @@ class Materials extends Component {
     }
 
     getcsiid() {
+        const dynamicstyles = new DynamicStyles();
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
+            console.log(mymaterial)
             if (mymaterial) {
-                return mymaterial.csiid;
+                let csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid)
+                if (csi) {
+                    return (`${csi.csi}-${csi.title}`);
+                } else {
+                    return;
+                }
+
             }
         } else {
-            return this.state.csiid;
+            let csi = dynamicstyles.getcsibyid.call(this, this.state.csiid)
+            if (csi) {
+                return (`${csi.csi}-${csi.title}`);
+            } else {
+                return;
+            }
+
         }
     }
 
@@ -420,7 +427,8 @@ class Materials extends Component {
                 let csiid = this.state.csiid;
                 let unit = this.state.unit;
                 let unitcost = this.state.unitcost;
-                let newMaterial = CreateMyMaterial(materialid, material, accountid, csiid, unit, unitcost)
+                let providerid = myuser.providerid;
+                let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
                 this.createnewmaterial(newMaterial)
             }
         }
@@ -435,6 +443,15 @@ class Materials extends Component {
                 this.setState({ render: 'render' })
 
 
+            } else {
+                let materialid = makeID(16);
+                let accountid = this.state.accountid;
+                let csiid = this.state.csiid;
+                let unit = this.state.unit;
+                let material = this.state.material;
+                let providerid = myuser.providerid;
+                let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
+                this.createnewmaterial(newMaterial)
             }
         }
     }
@@ -449,6 +466,15 @@ class Materials extends Component {
                 this.setState({ render: 'render' })
 
 
+            } else {
+                let materialid = makeID(16);
+                let unitcost = this.state.unitcost;
+                let csiid = this.state.csiid;
+                let unit = this.state.unit;
+                let material = this.state.material;
+                let providerid = myuser.providerid;
+                let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
+                this.createnewmaterial(newMaterial)
             }
         }
     }
@@ -462,11 +488,26 @@ class Materials extends Component {
                 this.setState({ render: 'render' })
 
 
+            } else {
+                let materialid = makeID(16);
+                let unitcost = this.state.unitcost;
+                let csiid = this.state.csiid;
+                let accountid = this.state.accountid;
+                let material = this.state.material;
+                let providerid = myuser.providerid;
+                let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
+                this.createnewmaterial(newMaterial)
             }
         }
     }
     handlecsiid(csiid) {
+        let dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
+        const csi = dynamicstyles.getcsibyid.call(this, csiid);
+        let csi_1 = csi.csi.substr(0, 2)
+        let csi_2 = csi.csi.substr(2, 2)
+        let csi_3 = csi.csi.substr(4, 2)
+        this.setState({ csi_1, csi_2, csi_3 })
         if (myuser) {
             if (this.state.activematerialid) {
                 let i = this.getactivematerialkey();
@@ -474,6 +515,17 @@ class Materials extends Component {
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
 
+
+            } else {
+
+                let materialid = makeID(16);
+                let accountid = this.state.accountid;
+                let material = this.state.material;
+                let unit = this.state.unit;
+                let unitcost = this.state.unitcost;
+                let providerid = myuser.providerid;
+                let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
+                this.createnewmaterial(newMaterial)
 
             }
         }
@@ -497,6 +549,7 @@ class Materials extends Component {
         const regularFont = this.getRegularFont();
         const titleFont = this.gettitlefont();
         const dynamicstyles = new DynamicStyles();
+        const maxWidth = dynamicstyles.getMaxWidth.call(this)
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -509,7 +562,7 @@ class Materials extends Component {
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                            Material <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                            Create A Material <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField, ...maxWidth }}
                                 value={this.getmaterial()}
                                 onChange={event => { this.handlematerial(event.target.value) }}
                             />
@@ -530,12 +583,9 @@ class Materials extends Component {
                             />
                         </div>
                     </div>
-
                     {this.handleselectmenus()}
                     {dynamicstyles.showsavecompany.call(this)}
-
                     {this.showmaterialids()}
-
                 </div>
             </div>
         )
