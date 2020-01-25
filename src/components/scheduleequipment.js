@@ -5,7 +5,7 @@ import { MyStylesheet } from './styles';
 import ScheduleEquipmentTimeIn from './scheduleequipmenttimein';
 import ScheduleEquipmentTimeOut from './scheduleequipmenttimeout';
 import DynamicStyles from './dynamicstyles';
-import { CreateScheduleEquipment, makeID, inputUTCStringForLaborID, inputDateObjOutputAdjString } from './functions'
+import { CreateScheduleEquipment, makeID, inputDateObjOutputAdjString, calculatetotalhours } from './functions'
 import CSI from './csi'
 
 class ScheduleEquipment extends Component {
@@ -15,19 +15,16 @@ class ScheduleEquipment extends Component {
             render: '', width: 0, height: 0, activeequipmentid: '', myequipmentid: '',
             timein: new Date(),
             timeout: new Date(new Date().getTime() + (1000 * 60 * 60)),
-            milestoneid: '', csiid: '', csi_1: '', csi_2: '', csi_3: ''
+            milestoneid: '', csiid: '', csi_1: '', csi_2: '', csi_3: '', proposalid: ''
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
 
 
     }
     componentDidMount() {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
-        console.log(myuser)
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.props.reduxNavigation({ activeprojectid: this.props.match.params.projectid })
+        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
 
     }
     componentWillUnmount() {
@@ -409,19 +406,7 @@ class ScheduleEquipment extends Component {
         }
 
     }
-    showequipmentid(equipment) {
-        const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
-        const myequipment = this.getequipmentfromid(equipment.myequipmentid);
-        const milestone = this.getmilestonebyid(equipment.milestoneid)
-        const csi = this.getcsibyid(equipment.csiid)
-        return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...this.getactivematerialbackground(equipment.equipmentid) }} key={equipment.equipmentid}
-            onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>
-            {myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
-            CSI: {csi.csi} - {csi.title} <br />
-            Milestone: {milestone.milestone}
-        </div>)
-    }
+
     getmilestonebyid(milestoneid) {
         let milestones = this.getmilestones();
         let milestone = false;
@@ -436,6 +421,7 @@ class ScheduleEquipment extends Component {
         return milestone;
     }
     loadequipmentids() {
+        const dynamicstyles = new DynamicStyles();
         let equipmentids = this.getequipmentids();
         let ids = [];
 
@@ -443,7 +429,7 @@ class ScheduleEquipment extends Component {
             // eslint-disable-next-line
             equipmentids.map(equipment => {
 
-                ids.push(this.showequipmentid(equipment))
+                ids.push(dynamicstyles.showequipmentid.call(this, equipment))
             })
         }
         return ids;
@@ -457,27 +443,35 @@ class ScheduleEquipment extends Component {
         }
     }
     handleequipment(myequipmentid) {
-        let myuser = this.getuser();
+
+        const dynamicstyles = new DynamicStyles()
+        let myuser = dynamicstyles.getuser.call(this);
+
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
                 let i = this.getprojectkey();
-
+                let equipmentrate = 0;
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();
+                    let myequipment = this.getactiveequipment();
+                    equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, myequipment.timein, myequipment.timeout);
                     myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].myequipmentid = myequipmentid;
+                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate;
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 } else {
                     let equipmentid = makeID(16)
-                    let providerid = myuser.provderid;
+                    let providerid = myuser.providerid;
                     let csiid = this.state.csiid;
                     let milestoneid = this.state.milestoneid;
                     let timein = inputDateObjOutputAdjString(this.state.timein);
                     let timeout = inputDateObjOutputAdjString(this.state.timeout)
                     let proposalid = this.state.proposalid;
+                    let profit = 0;
+                    equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout);
 
-                    let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid)
+                    let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit)
                     if (myproject.hasOwnProperty("scheduleequipment")) {
                         myuser.company.projects.myproject[i].scheduleequipment.myequipment.push(newEquipment)
                     } else {
@@ -513,15 +507,16 @@ class ScheduleEquipment extends Component {
                     this.setState({ render: 'render' })
                 } else {
                     let equipmentid = makeID(16)
-                    let providerid = myuser.provderid;
+                    let providerid = myuser.providerid;
                     let myequipmentid = this.state.myequipmentid;
                     let milestoneid = this.state.milestoneid;
                     let timein = inputDateObjOutputAdjString(this.state.timein);
                     let timeout = inputDateObjOutputAdjString(this.state.timeout);
-                    console.log(timein, timeout)
-                    let proposalid = this.state.proposalid;
 
-                    let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid)
+                    let proposalid = this.state.proposalid;
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid(myequipmentid);
+                    let profit = 0;
+                    let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit)
                     if (myproject.hasOwnProperty("scheduleequipment")) {
                         myuser.company.projects.myproject[i].scheduleequipment.myequipment.push(newEquipment)
                     } else {
@@ -538,6 +533,7 @@ class ScheduleEquipment extends Component {
         }
     }
     handlemilestoneid(milestoneid) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         if (myuser) {
             let myproject = this.getproject();
@@ -551,14 +547,15 @@ class ScheduleEquipment extends Component {
                     this.setState({ render: 'render' })
                 } else {
                     let equipmentid = makeID(16)
-                    let providerid = myuser.provderid;
+                    let providerid = myuser.providerid;
                     let myequipmentid = this.state.myequipmentid;
                     let csiid = this.state.csiid;
                     let timein = inputDateObjOutputAdjString(this.state.timein);
                     let timeout = inputDateObjOutputAdjString(this.state.timeout)
                     let proposalid = this.state.proposalid;
-
-                    let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid)
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid(myequipmentid);
+                    let profit = 0;
+                    let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit)
                     if (myproject.hasOwnProperty("scheduleequipment")) {
                         myuser.company.projects.myproject[i].scheduleequipment.myequipment.push(newEquipment)
                     } else {
@@ -602,11 +599,60 @@ class ScheduleEquipment extends Component {
             return (this.state.milestoneid)
         }
     }
-    render() {
-        const styles = MyStylesheet();
-        const titleFont = this.gettitlefont();
-        const regularFont = this.getRegularFont();
+    gettotalhours() {
+        let totalhours = "";
+        if (this.state.activeequipmentid) {
+            let myequipment = this.getactiveequipment();
+            if (myequipment) {
+                let timein = myequipment.timein;
+                let timeout = myequipment.timeout;
+                totalhours = calculatetotalhours(timeout, timein)
+            }
+
+
+        }
+        return totalhours;
+    }
+    getequipmentrate() {
+        let equipmentrate = 0;
+        if (this.state.activeequipmentid) {
+            let myequipment = this.getactiveequipment();
+            equipmentrate = myequipment.equipmentrate;
+        }
+        return equipmentrate;
+    }
+    handleequipmentrate(equipmentrate) {
         const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (this.state.activeequipmentid) {
+                let i = dynamicstyles.getprojectkey.call(this);
+                let j = this.getactiveequipmentkey();
+                myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            }
+        }
+
+    }
+    getamount() {
+        let amount = 0;
+        if (this.state.activeequipmentid) {
+            let myequipment = this.getactiveequipment();
+            let totalhours = calculatetotalhours(myequipment.timeout, myequipment.timein);
+            let rate = Number(myequipment.equipmentrate);
+            amount = totalhours * rate;
+        }
+        return amount;
+    }
+    render() {
+        const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
+        const titleFont = dynamicstyles.gettitlefont.call(this);
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+
+        const totalhours = +Number(this.gettotalhours()).toFixed(2)
+        const amount = `$${Number(this.getamount()).toFixed(2)}`
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }} >
@@ -638,12 +684,19 @@ class ScheduleEquipment extends Component {
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.addPadding }}>
                             Total Hours <br />
+                            {totalhours}
                         </div>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.addPadding }}>
                             Rate <br />
+                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.alignCenter }}
+                                value={this.getequipmentrate()}
+                                onChange={event => { this.handleequipmentrate(event.target.value) }}
+                            />
+
                         </div>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.addPadding }}>
                             Amount <br />
+                            {amount}
                         </div>
                     </div>
 

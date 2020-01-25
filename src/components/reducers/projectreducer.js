@@ -1,8 +1,8 @@
-import { PROJECTID } from '../actions/types';
+import { PROJECT } from '../actions/types';
 
 export default function (state = {}, action) {
     switch (action.type) {
-        case PROJECTID:
+        case PROJECT:
             return action.payload;
         default:
             return state;

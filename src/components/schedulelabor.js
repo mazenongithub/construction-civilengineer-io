@@ -26,7 +26,7 @@ class ScheduleLabor extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.props.reduxNavigation({ activeprojectid: this.props.match.params.projectid })
+        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
 
     }
     componentWillUnmount() {
@@ -426,7 +426,8 @@ class ScheduleLabor extends Component {
                 let timeout = inputDateObjOutputAdjString(this.state.timeout);
                 let proposalid = "";
                 let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
-                let newlabor = CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid)
+                let profit = 0;
+                let newlabor = CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid, profit)
                 this.createnewlabor(newlabor, myuser, i)
             }
 
@@ -457,8 +458,9 @@ class ScheduleLabor extends Component {
                 let timein = inputDateObjOutputAdjString(this.state.timein);
                 let timeout = inputDateObjOutputAdjString(this.state.timeout);
                 let proposalid = "";
-                let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
-                let newlabor = CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid)
+                let laborrate = dynamicstyles.gethourlyrate.call(this, providerid);
+                let profit = 0;
+                let newlabor = CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid, profit)
                 this.createnewlabor(newlabor, myuser, i)
             }
 
@@ -485,7 +487,8 @@ class ScheduleLabor extends Component {
                 let timeout = inputDateObjOutputAdjString(this.state.timeout);
                 let proposalid = "";
                 let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
-                let newlabor = CreateScheduleLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, proposalid)
+                let profit = 0;
+                let newlabor = CreateScheduleLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, proposalid, profit)
                 this.createnewlabor(newlabor, myuser, i)
             }
 
@@ -513,7 +516,8 @@ class ScheduleLabor extends Component {
                 let milestoneid = this.state.milestoneid;
                 let proposalid = "";
                 let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
-                let newlabor = CreateScheduleLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, proposalid)
+                let profit = 0;
+                let newlabor = CreateScheduleLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, proposalid, profit)
                 this.createnewlabor(newlabor, myuser, i)
             }
 
@@ -540,7 +544,9 @@ class ScheduleLabor extends Component {
                 let milestoneid = this.state.milestoneid;
                 let providerid = this.state.employeeid;
                 let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
-                let newlabor = CreateScheduleLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description)
+                let profit = 0;
+                let proposalid = "";
+                let newlabor = CreateScheduleLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, proposalid, profit)
                 this.createnewlabor(newlabor, myuser, i)
             }
 

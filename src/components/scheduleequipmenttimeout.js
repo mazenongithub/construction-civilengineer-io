@@ -42,7 +42,7 @@ class ScheduleEquipmentTimeOut {
         let datein = {};
         if (this.state.activeequipmentid) {
             let myequipment = this.getactiveequipment();
-            console.log(myequipment)
+
             datein = new Date(inputUTCStringAddOffsetString(myequipment.timeout).replace(/-/g, '/'));
         }
         else {
@@ -80,9 +80,11 @@ class ScheduleEquipmentTimeOut {
                     let j = this.getactiveequipmentkey();
                     let validate = Timein.checkampmtimeout.call(this, dir);
                     if (validate) {
-                        let mylabor = this.getactiveequipment();
-                        let timeout = mylabor.timeout;
-                        timeout = toggleAMTimeString(mylabor.timeout)
+                        let myequipment = this.getactiveequipment();
+                        let timeout = myequipment.timeout;
+                        timeout = toggleAMTimeString(myequipment.timeout)
+                        let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipment.myequipmentid, myequipment.timein, timeout)
+                        myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate
                         myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = timeout;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
@@ -110,10 +112,12 @@ class ScheduleEquipmentTimeOut {
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let mylabor = this.getactiveequipment();
-                    let timeout = mylabor.timeout
+                    let myequipment = this.getactiveequipment();
+                    let timeout = myequipment.timeout
                     let newtimeout = inputDateSecActiveIDTimein(dateencoded, timeout)
                     let j = this.getactiveequipmentkey();
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipment.myequipmentid, myequipment.timein, newtimeout)
+                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate
                     myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = newtimeout;
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
@@ -134,8 +138,8 @@ class ScheduleEquipmentTimeOut {
         if (this.state.activeequipmentid) {
 
 
-            let mylabor = this.getactiveequipment()
-            let timeout = mylabor.timeout;
+            let myequipment = this.getactiveequipment()
+            let timeout = myequipment.timeout;
             if (inputtimeDBoutputCalendarDaySeconds(timeout) === dateencoded) {
                 activeclass = "active-schedule-calendar"
             }
@@ -783,9 +787,9 @@ class ScheduleEquipmentTimeOut {
         let datein = {};
         if (this.state.activeequipmentid) {
 
-            let mylabor = this.getactiveequipment();
+            let myequipment = this.getactiveequipment();
 
-            datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(myequipment.timeout).replace(/-/g, '/'));
 
         }
         else {
@@ -806,9 +810,9 @@ class ScheduleEquipmentTimeOut {
         let datein = {};
         if (this.state.activeequipmentid) {
 
-            let mylabor = this.getactiveequipment();
-            datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
-            console.log("MONTHTIMEIN", datein)
+            let myequipment = this.getactiveequipment();
+            datein = new Date(inputUTCStringAddOffsetString(myequipment.timeout).replace(/-/g, '/'));
+
         }
         else {
             datein = this.state.timeout;
@@ -829,8 +833,10 @@ class ScheduleEquipmentTimeOut {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();;
-                    let mylabor = this.getactiveequipment()
-                    let newtimeout = increaseDateStringByOneMonth(mylabor.timeout);
+                    let myequipment = this.getactiveequipment()
+                    let newtimeout = increaseDateStringByOneMonth(myequipment.timeout);
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipment.myequipmentid, myequipment.timein, newtimeout)
+                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate
                     myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
@@ -848,8 +854,8 @@ class ScheduleEquipmentTimeOut {
         let day = "";
         let datein = {};
         if (this.state.activeequipmentid) {
-            let mylabor = this.getactiveequipment();
-            datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
+            let myequipment = this.getactiveequipment();
+            datein = new Date(inputUTCStringAddOffsetString(myequipment.timeout).replace(/-/g, '/'));
         }
         else {
             datein = this.state.timeout;
@@ -865,9 +871,9 @@ class ScheduleEquipmentTimeOut {
         let datein = {};
         if (this.state.activeequipmentid) {
 
-            let mylabor = this.getactiveequipment();
+            let myequipment = this.getactiveequipment();
 
-            datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(myequipment.timeout).replace(/-/g, '/'));
 
 
 
@@ -885,9 +891,9 @@ class ScheduleEquipmentTimeOut {
         let datein = {};
         if (this.state.activeequipmentid) {
 
-            let mylabor = this.getactiveequipment();
+            let myequipment = this.getactiveequipment();
 
-            datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
+            datein = new Date(inputUTCStringAddOffsetString(myequipment.timeout).replace(/-/g, '/'));
 
         }
         else {
@@ -914,8 +920,10 @@ class ScheduleEquipmentTimeOut {
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();;
 
-                    let mylabor = this.getactiveequipment()
-                    let newtimeout = increasedateStringbyInc(mylabor.timeout, inc);
+                    let myequipment = this.getactiveequipment()
+                    let newtimeout = increasedateStringbyInc(myequipment.timeout, inc);
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipment.myequipmentid, myequipment.timein, newtimeout)
+                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate
                     myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
@@ -943,8 +951,10 @@ class ScheduleEquipmentTimeOut {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();;
-                    let mylabor = this.getactiveequipment()
-                    let newtimeout = decreasedateStringbyInc(mylabor.timeout, inc);
+                    let myequipment = this.getactiveequipment()
+                    let newtimeout = decreasedateStringbyInc(myequipment.timeout, inc);
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipment.myequipmentid, myequipment.timein, newtimeout)
+                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate
                     myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -967,8 +977,10 @@ class ScheduleEquipmentTimeOut {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();;
-                    let mylabor = this.getactiveequipment()
-                    let newtimeout = decreaseDateStringByOneMonth(mylabor.timeout);
+                    let myequipment = this.getactiveequipment()
+                    let newtimeout = decreaseDateStringByOneMonth(myequipment.timeout);
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipment.myequipmentid, myequipment.timein, newtimeout)
+                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate
                     myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
@@ -992,8 +1004,10 @@ class ScheduleEquipmentTimeOut {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();;
-                    let mylabor = this.getactiveequipment()
-                    let newtimeout = increaseDateStringByOneYear(mylabor.timeout);
+                    let myequipment = this.getactiveequipment()
+                    let newtimeout = increaseDateStringByOneYear(myequipment.timeout);
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipment.myequipmentid, myequipment.timein, newtimeout)
+                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate
                     myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -1019,8 +1033,10 @@ class ScheduleEquipmentTimeOut {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();;
-                    let mylabor = this.getactiveequipment()
-                    let newtimeout = decreaseDateStringByOneYear(mylabor.timeout);
+                    let myequipment = this.getactiveequipment()
+                    let newtimeout = decreaseDateStringByOneYear(myequipment.timeout);
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipment.myequipmentid, myequipment.timein, newtimeout)
+                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate
                     myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
@@ -1039,8 +1055,8 @@ class ScheduleEquipmentTimeOut {
         let timeout = "";
         if (this.state.activeequipmentid) {
 
-            let mylabor = this.getactiveequipment();
-            timeout = inputTimeInDateStringforPicker(mylabor.timeout);
+            let myequipment = this.getactiveequipment();
+            timeout = inputTimeInDateStringforPicker(myequipment.timeout);
         }
         else {
             timeout = inputDateObjOutputString(this.state.timeout);
@@ -1052,30 +1068,16 @@ class ScheduleEquipmentTimeOut {
         let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             if (this.state.activeequipmentid) {
-                let laborid = this.state.activeequipmentid;
-
+                let myequipment = this.getactiveequipment();
+                let i = dynamicstyles.getprojectkey.call(this);
+                let j = this.getactiveequipmentkey();
                 let timeout = inputTimeDateOutputUTCString(value);
-                if (this.props.projectsprovider.hasOwnProperty("length")) {
-                    let projectid = this.props.projectid.projectid;
-                    // eslint-disable-next-line
-                    this.props.projectsprovider.map((myproject, i) => {
-                        if (myproject.projectid === projectid) {
+                let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipment.myequipmentid, myequipment.timein, timeout)
+                myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate
+                myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = timeout;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' });
 
-                            if (myproject.hasOwnProperty("schedulelabor")) {
-                                // eslint-disable-next-line
-                                myproject.scheduleequipment.myequipment.map((mylabor, j) => {
-                                    if (mylabor.laborid === laborid) {
-                                        myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = timeout;
-                                        this.props.reduxUser(myuser);
-                                        this.setState({ render: 'render' });
-
-                                    }
-                                });
-                            }
-
-                        }
-                    });
-                }
             }
             else {
                 let timeout = inputDateTimeOutDateObj(value);
@@ -1099,9 +1101,9 @@ class ScheduleEquipmentTimeOut {
     gettimeoutheader() {
         let timeoutheader = "";
         if (this.state.activeequipmentid) {
-            const mylabor = this.getactiveequipment();
+            const myequipment = this.getactiveequipment();
 
-            timeoutheader = `Time Out ${inputUTCStringForLaborID(mylabor.timeout)}`
+            timeoutheader = `Time Out ${inputUTCStringForLaborID(myequipment.timeout)}`
         } else {
             timeoutheader = `Time Out ${inputDateObjOutputCalendarString(this.state.timeout)}`
         }

@@ -14,9 +14,10 @@ class ActualMaterials extends Component {
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
+        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.props.reduxNavigation({ activeprojectid: this.props.match.params.projectid })
+
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -313,9 +314,20 @@ class ActualMaterials extends Component {
 
         }
     }
+    getamount() {
+        let amount = 0;
+        if (this.state.activematerialid) {
+            let mymaterial = this.getactivematerial();
+            if (mymaterial) {
+                amount = Number(mymaterial.quantity) * Number(mymaterial.unitcost);
+            }
+        }
+        return amount;
+    }
     showquantitymenus() {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
+        const amount = `$${this.getamount().toFixed(2)}`;
         if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
@@ -338,7 +350,8 @@ class ActualMaterials extends Component {
                     />
                 </div>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                    Amount
+                    Amount <br />
+                    {amount}
                 </div>
             </div>
             )

@@ -17,7 +17,7 @@ class ScheduleMaterials extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.props.reduxNavigation({ activeprojectid: this.props.match.params.projectid })
+        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -313,9 +313,20 @@ class ScheduleMaterials extends Component {
 
         }
     }
+    getamount() {
+        let amount = 0;
+        if (this.state.activematerialid) {
+            let mymaterial = this.getactivematerial();
+            if (mymaterial) {
+                amount = Number(mymaterial.quantity) * Number(mymaterial.unitcost);
+            }
+        }
+        return amount;
+    }
     showquantitymenus() {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
+        const amount = `$${this.getamount().toFixed(2)}`;
         if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
@@ -338,7 +349,8 @@ class ScheduleMaterials extends Component {
                     />
                 </div>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                    Amount
+                    Amount <br />
+                    {amount}
                 </div>
             </div>
             )
@@ -409,7 +421,8 @@ class ScheduleMaterials extends Component {
                     let unit = this.state.unit;
                     let unitcost = this.state.unitcost;
                     let proposalid = "";
-                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid);
+                    let profit = 0;
+                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit);
                     if (myproject.hasOwnProperty("schedulematerials")) {
                         myuser.company.projects.myproject[i].schedulematerials.mymaterial.push(newMaterial)
                     } else {
@@ -451,7 +464,8 @@ class ScheduleMaterials extends Component {
                     let unit = this.state.unit;
                     let unitcost = this.state.unitcost;
                     let proposalid = "";
-                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid);
+                    let profit = 0;
+                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit);
                     if (myproject.hasOwnProperty("schedulematerials")) {
                         myuser.company.projects.myproject[i].schedulematerials.mymaterial.push(newMaterial)
                     } else {
@@ -487,7 +501,8 @@ class ScheduleMaterials extends Component {
                     let unit = this.state.unit;
                     let unitcost = this.state.unitcost;
                     let proposalid = "";
-                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid);
+                    let profit = 0;
+                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit);
                     if (myproject.hasOwnProperty("schedulematerials")) {
                         myuser.company.projects.myproject[i].schedulematerials.mymaterial.push(newMaterial)
                     } else {
@@ -523,7 +538,8 @@ class ScheduleMaterials extends Component {
                     let unit = this.state.unit;
                     let unitcost = this.state.unitcost;
                     let proposalid = "";
-                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid);
+                    let profit = 0;
+                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit);
                     if (myproject.hasOwnProperty("schedulematerials")) {
                         myuser.company.projects.myproject[i].schedulematerials.mymaterial.push(newMaterial)
                     } else {
@@ -559,7 +575,8 @@ class ScheduleMaterials extends Component {
                     let quantity = this.state.quantity;
                     let unitcost = this.state.unitcost;
                     let proposalid = "";
-                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid);
+                    let profit = 0;
+                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit);
                     if (myproject.hasOwnProperty("schedulematerials")) {
                         myuser.company.projects.myproject[i].schedulematerials.mymaterial.push(newMaterial)
                     } else {
@@ -594,7 +611,8 @@ class ScheduleMaterials extends Component {
                     let quantity = this.state.quantity;
                     let unit = this.state.unit;
                     let proposalid = "";
-                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid);
+                    let profit = 0;
+                    let newMaterial = CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit);
                     if (myproject.hasOwnProperty("schedulematerials")) {
                         myuser.company.projects.myproject[i].schedulematerials.mymaterial.push(newMaterial)
                     } else {

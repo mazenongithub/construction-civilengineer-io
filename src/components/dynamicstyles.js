@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser } from './functions'
+import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID } from './functions'
 import { saveCompanyIcon, saveProjectIcon } from './svg';
 import { SaveCompany, ClientLogin, SaveProject } from './actions/api';
 
@@ -1184,6 +1184,121 @@ class DynamicStyles {
 
         }
         return equipment;
+    }
+    showequipmentid(equipment) {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const myequipment = dynamicstyles.getequipmentfromid.call(this, equipment.myequipmentid);
+        const milestone = dynamicstyles.getmilestonebyid.call(this, equipment.milestoneid)
+        const csi = dynamicstyles.getcsibyid.call(this, equipment.csiid)
+        const totalhours = +Number(calculatetotalhours(equipment.timeout, equipment.timein)).toFixed(2)
+        const equipmentrate = `$${+Number(equipment.equipmentrate).toFixed(2)}/hr`
+        const amount = `$${Number(calculatetotalhours(equipment.timeout, equipment.timein) * Number(equipment.equipmentrate)).toFixed(2)}`
+        return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...this.getactivematerialbackground(equipment.equipmentid) }} key={equipment.equipmentid}
+            onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>
+            {myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
+            CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone} <br />
+            Total Hours: {totalhours} x  {equipmentrate} = {amount}
+        </div>)
+    }
+    getequipmentrentalratebyid(equipmentid, timein, timeout) {
+        const dynamicstyles = new DynamicStyles();
+        const myequipment = dynamicstyles.getequipmentfromid.call(this, equipmentid);
+        const hourlyrate = Number(myequipment.rentalrates.hour);
+        const dailyrate = Number(myequipment.rentalrates.day);
+        const weeklyrate = Number(myequipment.rentalrates.week);
+        const monthlyrate = Number(myequipment.rentalrates.month);
+        const rentalObj = getEquipmentRentalObj(timein, timeout);
+        console.log(rentalObj)
+        const hours = rentalObj.hours;
+        const days = rentalObj.days;
+        const weeks = rentalObj.weeks;
+        const months = rentalObj.months;
+        let rentalcost = (hourlyrate * hours) + (days * dailyrate) + (weeks * weeklyrate) + (months * monthlyrate);
+        let totalhours = calculatetotalhours(timeout, timein);
+        let rentalrate = rentalcost / totalhours;
+        return rentalrate;
+
+    }
+    calculateequipmentratebyid(equipmentid, timein, timeout) {
+
+        const dynamicstyles = new DynamicStyles();
+        const myequipment = dynamicstyles.getequipmentfromid.call(this, equipmentid);
+        let equipmentrate = 0;
+        if (myequipment.ownershipstatus === 'owned') {
+            equipmentrate = dynamicstyles.calculateequipmentratebyownership.call(this, equipmentid)
+        } else if (myequipment.ownershipstatus === 'rented') {
+            equipmentrate = dynamicstyles.getequipmentrentalratebyid.call(this, equipmentid, timein, timeout)
+        }
+        return equipmentrate;
+
+    }
+    calculateequipmentratebyownership(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        const myequipment = dynamicstyles.getequipmentfromid.call(this, equipmentid);
+        const i = Number(Number(myequipment.loaninterest) / 100) / 12;
+        const workinghours = Math.round(Number(myequipment.workinghours) / 12);
+        let equipmentrate = 0;
+
+        const P = () => {
+            let P = 0;
+            const costs = dynamicstyles.getequipmentcostsbyid.call(this, myequipment.equipmentid)
+            // eslint-disable-next-line
+            costs.map(cost => {
+                let n = calculateTotalMonths(myequipment.purchasedate, cost.timein);
+
+                let F = Number(cost.cost)
+
+                P += FutureCostPresent(i, n, F);
+                console.log(n, F, P)
+
+            })
+            return (P)
+        }
+        const Period = () => {
+            let purchasedate = myequipment.purchasedate;
+            let saledate = myequipment.saledate;
+            let totalmonths = calculateTotalMonths(purchasedate, saledate)
+            return (totalmonths)
+        }
+        const AFactor = () => {
+            const T = Period();
+            return (AmmortizeFactor(i, T))
+        }
+
+        equipmentrate = (P() * AFactor()) / (workinghours);
+        console.log(P(), AFactor(), workinghours, equipmentrate)
+        return equipmentrate;
+    }
+    getequipmentcostsbyid(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        let costs = false;
+        if (myuser) {
+
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("equipment")) {
+                    // eslint-disable-next-line
+                    myuser.company.equipment.myequipment.map(myequipment => {
+                        if (myequipment.equipmentid === equipmentid) {
+
+                            if (myequipment.hasOwnProperty("ownership")) {
+
+                                costs = myequipment.ownership.cost
+                            }
+
+                        }
+                    })
+
+                }
+
+
+
+            }
+
+        }
+        return costs;
     }
     getactualequipmentbyid(equipmentid) {
         const dynamicstyles = new DynamicStyles();

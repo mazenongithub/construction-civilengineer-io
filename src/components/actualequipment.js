@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { CreateActualEquipment, makeID, inputUTCStringForLaborID, inputDateObjOutputAdjString } from './functions'
+import { CreateActualEquipment, makeID, inputDateObjOutputAdjString, calculatetotalhours } from './functions'
 import ActualEquipmentTimeIn from './actualequipmenttimein';
 import ActualEquipmentTimeOut from './actualequipmenttimeout';
 import DynamicStyles from './dynamicstyles';
@@ -14,7 +14,8 @@ class ActualEquipment extends Component {
             render: '', width: 0, height: 0, activeequipmentid: '', myequipmentid: '',
             timein: new Date(),
             timeout: new Date(new Date().getTime() + (1000 * 60 * 60)),
-            milestoneid: '', csiid: '', csi_1: '', csi_2: '', csi_3: ''
+            milestoneid: '', csiid: '', csi_1: '', csi_2: '', csi_3: '',
+            invoiceid: ''
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
 
@@ -23,7 +24,7 @@ class ActualEquipment extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.props.reduxNavigation({ activeprojectid: this.props.match.params.projectid })
+        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
 
     }
     componentWillUnmount() {
@@ -400,19 +401,7 @@ class ActualEquipment extends Component {
         }
 
     }
-    showequipmentid(equipment) {
-        const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
-        const myequipment = this.getequipmentfromid(equipment.myequipmentid);
-        const milestone = this.getmilestonebyid(equipment.milestoneid)
-        const csi = this.getcsibyid(equipment.csiid)
-        return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...this.getactivematerialbackground(equipment.equipmentid) }} key={equipment.equipmentid}
-            onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>
-            {myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
-            CSI: {csi.csi} - {csi.title} <br />
-            Milestone: {milestone.milestone}
-        </div>)
-    }
+
     getmilestonebyid(milestoneid) {
         let milestones = this.getmilestones();
         let milestone = false;
@@ -428,13 +417,14 @@ class ActualEquipment extends Component {
     }
     loadequipmentids() {
         let equipmentids = this.getequipmentids();
+        const dynamicstyles = new DynamicStyles();
         let ids = [];
 
         if (equipmentids) {
             // eslint-disable-next-line
             equipmentids.map(equipment => {
 
-                ids.push(this.showequipmentid(equipment))
+                ids.push(dynamicstyles.showequipmentid.call(this, equipment))
             })
         }
         return ids;
@@ -448,28 +438,32 @@ class ActualEquipment extends Component {
         }
     }
     handleequipment(myequipmentid) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
                 let i = this.getprojectkey();
-
+                let equipmentrate = 0;
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();
+                    const myequipment = this.getactiveequipment();
+                    equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, myequipment.timein, myequipment.timeout);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].myequipmentid = myequipmentid;
+                    myuser.company.projects.myproject[i].actualequipment.myequipment[j].equipmentrate = equipmentrate;
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 } else {
                     let equipmentid = makeID(16)
-                    let providerid = myuser.provderid;
+                    let providerid = myuser.providerid;
                     let csiid = this.state.csiid;
                     let milestoneid = this.state.milestoneid;
                     let timein = inputDateObjOutputAdjString(this.state.timein);
                     let timeout = inputDateObjOutputAdjString(this.state.timeout)
                     let invoiceid = this.state.invoiceid;
                     let profit = 0;
-
-                    let newEquipment = CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, invoiceid, profit)
+                    equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout);
+                    let newEquipment = CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit)
                     if (myproject.hasOwnProperty("actualequipment")) {
                         myuser.company.projects.myproject[i].actualequipment.myequipment.push(newEquipment)
                     } else {
@@ -506,14 +500,16 @@ class ActualEquipment extends Component {
                     this.setState({ render: 'render' })
                 } else {
                     let equipmentid = makeID(16)
-                    let providerid = myuser.provderid;
+                    let providerid = myuser.providerid;
                     let myequipmentid = this.state.myequipmentid;
                     let milestoneid = this.state.milestoneid;
                     let timein = inputDateObjOutputAdjString(this.state.timein);
                     let timeout = inputDateObjOutputAdjString(this.state.timeout);
                     let invoiceid = this.state.invoiceid;
+                    let equipmentrate = 0
 
-                    let newEquipment = CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, invoiceid)
+                    let profit = 0;
+                    let newEquipment = CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit)
                     if (myproject.hasOwnProperty("actualequipment")) {
                         myuser.company.projects.myproject[i].actualequipment.myequipment.push(newEquipment)
                     } else {
@@ -530,7 +526,8 @@ class ActualEquipment extends Component {
         }
     }
     handlemilestoneid(milestoneid) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
@@ -543,14 +540,15 @@ class ActualEquipment extends Component {
                     this.setState({ render: 'render' })
                 } else {
                     let equipmentid = makeID(16)
-                    let providerid = myuser.provderid;
+                    let providerid = myuser.providerid;
                     let myequipmentid = this.state.myequipmentid;
                     let csiid = this.state.csiid;
                     let timein = inputDateObjOutputAdjString(this.state.timein);
                     let timeout = inputDateObjOutputAdjString(this.state.timeout);
                     let invoiceid = this.state.invoiceid;
-
-                    let newEquipment = CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, invoiceid)
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid(myequipmentid);
+                    let profit = 0;
+                    let newEquipment = CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit)
                     if (myproject.hasOwnProperty("actualequipment")) {
                         myuser.company.projects.myproject[i].actualequipment.myequipment.push(newEquipment)
                     } else {
@@ -594,11 +592,59 @@ class ActualEquipment extends Component {
             return (this.state.milestoneid)
         }
     }
+    gettotalhours() {
+        let totalhours = "";
+        if (this.state.activeequipmentid) {
+            let myequipment = this.getactiveequipment();
+            if (myequipment) {
+                let timein = myequipment.timein;
+                let timeout = myequipment.timeout;
+                totalhours = calculatetotalhours(timeout, timein)
+            }
+
+
+        }
+        return totalhours;
+    }
+    getequipmentrate() {
+        let equipmentrate = 0;
+        if (this.state.activeequipmentid) {
+            let myequipment = this.getactiveequipment();
+            equipmentrate = myequipment.equipmentrate;
+        }
+        return equipmentrate;
+    }
+    handleequipmentrate(equipmentrate) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (this.state.activeequipmentid) {
+                let i = dynamicstyles.getprojectkey.call(this);
+                let j = this.getactiveequipmentkey();
+                myuser.company.projects.myproject[i].actualequipment.myequipment[j].equipmentrate = equipmentrate;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            }
+        }
+
+    }
+    getamount() {
+        let amount = 0;
+        if (this.state.activeequipmentid) {
+            let myequipment = this.getactiveequipment();
+            let totalhours = calculatetotalhours(myequipment.timeout, myequipment.timein);
+            let rate = Number(myequipment.equipmentrate);
+            amount = totalhours * rate;
+        }
+        return amount;
+    }
     render() {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
         const regularFont = this.getRegularFont();
         const dynamicstyles = new DynamicStyles();
+        const totalhours = +Number(this.gettotalhours()).toFixed(2)
+        const amount = `$${Number(this.getamount()).toFixed(2)}`
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }} >
@@ -630,12 +676,18 @@ class ActualEquipment extends Component {
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.addPadding }}>
                             Total Hours <br />
+                            {totalhours}
                         </div>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.addPadding }}>
                             Rate <br />
+                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.alignCenter }}
+                                value={this.getequipmentrate()}
+                                onChange={event => { this.handleequipmentrate(event.target.value) }}
+                            />
                         </div>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.addPadding }}>
                             Amount <br />
+                            {amount}
                         </div>
                     </div>
 

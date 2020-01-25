@@ -7,8 +7,8 @@ export function CreateAccount(accountid, account, accountname) {
 export function CreateCSI(csiid, csi, title) {
     return ({ csiid, csi, title })
 }
-export function CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid) {
-    return ({ materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid })
+export function CreateMyMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit) {
+    return ({ materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit })
 }
 export function CreateActualMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit) {
     return ({ materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit })
@@ -31,17 +31,31 @@ export function CreateInvoice(invoiceid, providerid, updated, approved) {
 export function CreateEquipment(equipmentid, equipment, workinghours, ownershipstatus, purchasedate, saledate, loaninterest, resalevalue) {
     return ({ equipmentid, equipment, workinghours, ownershipstatus, purchasedate, saledate, loaninterest, resalevalue })
 }
-export function CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid) {
-    return ({ equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, proposalid })
+export function CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit) {
+    return ({ equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit })
 }
-export function CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, invoiceid, profit) {
-    return ({ equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, invoiceid, profit })
+export function CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit) {
+    return ({ equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit })
 }
 export function CreateCostID(costid, cost, detail, timein) {
     return ({ costid, cost, detail, timein })
 }
-export function CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid) {
-    return ({ laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid })
+export function CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid, profit) {
+    return ({ laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid, profit })
+}
+export function calculateTotalMonths(purchasedate, saledate) {
+    //     let purchasedate = '2018-05-24';
+    // let saledate = '2025-01-24'
+    const datePurchase = new Date(`${purchasedate.replace(/-/g, '/')} UTC`);
+    const saleDate = new Date(`${saledate.replace(/-/g, '/')} UTC`);
+    const datePurchaseYear = datePurchase.getFullYear();
+    const purchaseMonth = datePurchase.getMonth() + 1;
+    const saleDateYear = saleDate.getFullYear();
+    const saleMonth = saleDate.getMonth() + 1;
+    const yearsinterval = saleDateYear - datePurchaseYear;
+    const monthInterval = saleMonth - purchaseMonth;
+    const totalMonths = (yearsinterval) * 12 + monthInterval;
+    return (totalMonths)
 }
 export function UTCStringFormatDateforProposal(timeout) {
     let newDate = new Date(`${timeout.replace(/-/g, '/')}-00:00`)
@@ -1360,7 +1374,94 @@ export function inputDateObjOutputCalendarString(datein) {
     }
     return (`${month}/${day}/${year} ${hours}:${minutes} ${ampm}`)
 }
+export function getEquipmentRentalObj(timein, timeout) {
+    // let timein = '2021-03-06 17:52:33';
+    // let timeout = '2021-04-17 19:52:33';
 
+    let datein = new Date(`${timein.replace(/-/g, '/')} UTC`);
+    let offset = datein.getTimezoneOffset() / 60;
+    let sym = "";
+    if (offset < 0) {
+        offset = -offset;
+        sym = "+"
+    } else {
+        sym = "-"
+    }
+    if (offset < 10) {
+        offset = `0${offset}`
+    }
+    offset = `${sym}${offset}:00`
+    let dateout = new Date(`${timeout.replace(/-/g, '/')} UTC`);
+    let dateinYear = datein.getFullYear();
+    let dateoutYear = dateout.getFullYear();
+    let dateinMonth = datein.getMonth() + 1;
+    let dateoutMonth = dateout.getMonth() + 1;
+    let dateoutDate = dateout.getDate();
+    let dateinDate = datein.getDate();
+    let months = 0;
+    let weeks = 0;
+    let days = 0;
+    let hours = 0;
+    hours = (dateout.getTime() - datein.getTime()) / (1000 * 3600);
+
+
+    if (dateoutYear !== dateinYear) {
+
+
+        months += (dateoutYear - dateinYear) * 12;
+        months += dateoutMonth - dateinMonth;
+        if (dateoutDate < dateinDate) {
+            months -= 1
+        }
+    } else if (dateoutMonth !== dateinMonth) {
+        if (dateoutDate > dateinDate) {
+            months += 1
+        }
+    }
+
+    if (months > 0) {
+
+        let monthCutoff = dateoutMonth;
+        if (monthCutoff < 10) {
+            monthCutoff = `0${monthCutoff}`
+        }
+        let dayCutoff = dateinDate
+        if (dayCutoff < 10) {
+            dayCutoff = `0${dayCutoff}`
+        }
+        let yearCutoff = dateoutYear
+        let hourCutoff = datein.getHours()
+        if (hourCutoff < 10) {
+            hourCutoff = `0${hourCutoff}`
+        }
+        let minuteCutoff = datein.getMinutes();
+        if (minuteCutoff < 10) {
+            minuteCutoff = `0${minuteCutoff}`
+        }
+        let secondCutoff = datein.getSeconds();
+        if (secondCutoff < 10) {
+            secondCutoff = `0${secondCutoff}`
+        }
+        let cutDate = `${yearCutoff}-${monthCutoff}-${dayCutoff} ${hourCutoff}:${minuteCutoff}:${secondCutoff}`
+        let cutOffDate = new Date(`${cutDate.replace(/-/g, '/')}${offset}`)
+        let timecutoff = cutOffDate.getTime();
+        hours = (dateout.getTime() - timecutoff) / (1000 * 3600)
+    }
+
+
+    if (hours > (24 * 7)) {
+        weeks = Math.floor(hours / (24 * 7))
+        hours = hours - (weeks * 24 * 7);
+    }
+    if (hours > 24) {
+        days = Math.floor(hours / 24)
+        hours = hours - (24 * days)
+    }
+
+    let obj = { hours, days, weeks, months }
+
+    return (obj)
+}
 export function inputUTCStringForMaterialIDWithTime(timein) {
     let newDate = new Date(`${timein.replace(/-/g, '/')} UTC`)
     let date = newDate.getDate();
@@ -1409,6 +1510,21 @@ export function validatePhoneNumber(val) {
     }
 
     return errmsg;
+}
+export function AmmortizeFactor(i, n) {
+    // let i = (.16 / 12);
+    // let n = 80;
+    const num = i * Math.pow((1 + i), n)
+    const deno = Math.pow((1 + i), n) - 1;
+    const factor = num / deno;
+    return factor;
+}
+export function FutureCostPresent(i, n, F) {
+    // let F=540;
+    // let i=(.058/12);
+    // let n = 40;
+    return (F * (Math.pow((1 + i), n)))
+
 }
 export function validateEmail(value) {
     var reg_ex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
@@ -1548,19 +1664,19 @@ export function TestUser() {
                         equipmentid: "myfirstequipment",
                         equipment: "John Deer Skid Steer Loader",
                         accountid: "myequipmentaccount",
-                        workinghours: "1700.0000",
+                        workinghours: "2888",
                         ownershipstatus: "owned",
-                        purchasedate: "2011-01-15",
-                        loaninterest: "5.4000",
-                        saledate: "2023-09-15",
-                        resalevalue: "8000.0000",
+                        purchasedate: "2018-05-24",
+                        loaninterest: "5.8",
+                        saledate: "2025-09-15",
+                        resalevalue: "1000",
                         ownership: {
                             cost: [
                                 {
                                     costid: "myfirstquipmentcost",
-                                    cost: "25000.0000",
+                                    cost: "125000.00",
                                     detail: "purhcase",
-                                    timein: "2011-04-21"
+                                    timein: "2018-05-24"
                                 }
                             ]
                         }
@@ -1702,10 +1818,7 @@ export function TestUser() {
                         actualequipment: {
                             myequipment: [
                                 {
-                                    equipmentid: [
-                                        "myfirstlineid",
-                                        "myfirstlineid"
-                                    ],
+                                    equipmentid: "myfirstlineid",
                                     myequipmentid: "myfirstequipment",
                                     providerid: "mazen",
                                     accountid: "myequipmentaccount",

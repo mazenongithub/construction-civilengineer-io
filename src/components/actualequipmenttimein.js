@@ -42,7 +42,7 @@ class ActualEquipmentTimeIn {
         let datein = {};
         if (this.state.activeequipmentid) {
             let myequipment = this.getactiveequipment();
-            console.log(myequipment)
+
             datein = new Date(inputUTCStringAddOffsetString(myequipment.timein).replace(/-/g, '/'));
         }
         else {
@@ -808,7 +808,7 @@ class ActualEquipmentTimeIn {
 
             let mylabor = this.getactiveequipment();
             datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
-            console.log("MONTHTIMEIN", datein)
+
         }
         else {
             datein = this.state.timein;

@@ -42,7 +42,7 @@ class ActualEquipmentTimeOut {
         let datein = {};
         if (this.state.activeequipmentid) {
             let myequipment = this.getactiveequipment();
-            console.log(myequipment)
+
             datein = new Date(inputUTCStringAddOffsetString(myequipment.timeout).replace(/-/g, '/'));
         }
         else {
@@ -808,7 +808,7 @@ class ActualEquipmentTimeOut {
 
             let mylabor = this.getactiveequipment();
             datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
-            console.log("MONTHTIMEIN", datein)
+
         }
         else {
             datein = this.state.timeout;

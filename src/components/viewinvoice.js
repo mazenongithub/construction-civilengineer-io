@@ -14,7 +14,7 @@ class ViewInvoice extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.props.reduxNavigation({ activeprojectid: this.props.match.params.projectid })
+        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
 
     }
     componentWillUnmount() {
