@@ -964,6 +964,22 @@ class DynamicStyles {
         }
         return user;
     }
+    getsearchimage() {
+        if (this.state.width > 1200) {
+            return ({ width: '168px', height: '152px' })
+        } else {
+            return ({ width: '115px', height: '97px' })
+        }
+    }
+    getAddCompany() {
+        if (this.state.width > 1200) {
+            return ({ width: '138px', height: '85px' })
+        } else if (this.state.width > 800) {
+            return ({ width: '112px', height: '64px' })
+        } else {
+            return ({ width: '63px', height: '37px' })
+        }
+    }
     getcsipropertybyid(csiid) {
         let csi = false;
         let dynamicstyles = new DynamicStyles();

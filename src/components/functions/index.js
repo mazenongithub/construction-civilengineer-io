@@ -1558,7 +1558,6 @@ export function TestUser() {
         clientid: "000353.66d2a1610de24944b898df602ab5e7a7.0305",
         profileurl: "",
         phonenumber: "916-823-1652",
-        stripe: "acct_1CCcFoKDR2Pptlfl",
         company: {
             companyid: "civilengineer-io",
             manager: "mazen",
@@ -1590,42 +1589,24 @@ export function TestUser() {
                 }
             },
             office: {
-                civilengineer: {
-                    accounts: {
-                        account: [
-                            {
-                                accountid: "mysalarybenefit",
-                                account: "6200",
-                                accountname: "Salaries"
-                            },
-                            {
-                                accountid: "mylaptopbenefit",
-                                account: "6300",
-                                accountname: "My Laptop Benefit"
-                            },
-                            {
-                                accountid: "myequipmentaccount",
-                                account: "270001",
-                                accountname: "My Equipment Account"
-                            }
-                        ]
-                    }
-                },
                 accounts: {
                     account: [
                         {
                             accountid: "mysalarybenefit",
                             account: "6200",
+                            providerid: "mazen",
                             accountname: "Salaries"
                         },
                         {
                             accountid: "mylaptopbenefit",
                             account: "6300",
+                            providerid: "mazen",
                             accountname: "My Laptop Benefit"
                         },
                         {
                             accountid: "myequipmentaccount",
                             account: "270001",
+                            providerid: "mazen",
                             accountname: "My Equipment Account"
                         }
                     ]
@@ -1655,10 +1636,20 @@ export function TestUser() {
                     {
                         materialid: "myfirstmaterial",
                         accountid: "mylaptopbenefit",
+                        providerid: "mazen",
                         csiid: "yyyyyy",
                         material: "myfirstmaterial",
                         unit: "ea",
-                        unitcost: "1.0000"
+                        unitcost: "4.0000"
+                    },
+                    {
+                        materialid: "E1WLVS0W7L264EPW",
+                        accountid: "mysalarybenefit",
+                        providerid: "mazen",
+                        csiid: "yyyyyy",
+                        material: "new material",
+                        unit: "Ea",
+                        unitcost: "7.0000"
                     }
                 ]
             },
@@ -1668,19 +1659,19 @@ export function TestUser() {
                         equipmentid: "myfirstequipment",
                         equipment: "John Deer Skid Steer Loader",
                         accountid: "myequipmentaccount",
-                        workinghours: "2888",
+                        workinghours: "1700.0000",
                         ownershipstatus: "owned",
                         purchasedate: "2018-05-24",
-                        loaninterest: "5.8",
-                        saledate: "2025-09-15",
-                        resalevalue: "1000",
+                        loaninterest: "5.4000",
+                        saledate: "2021-09-14",
+                        resalevalue: "8000.0000",
                         ownership: {
                             cost: [
                                 {
                                     costid: "myfirstquipmentcost",
-                                    cost: "125000.00",
+                                    cost: "25000.0000",
                                     detail: "purhcase",
-                                    timein: "2018-05-24"
+                                    timein: "2011-04-21"
                                 }
                             ]
                         }
@@ -1742,7 +1733,7 @@ export function TestUser() {
                                     csiid: "yyyyyy",
                                     laborrate: "30.0000",
                                     timein: "2019-12-08 21:04:00",
-                                    timeout: "2019-12-09 00:04:00",
+                                    timeout: "2019-12-09 01:04:00",
                                     description: "Refomatting Client Layouts",
                                     proposalid: "R4WQ",
                                     profit: "15.0000"
@@ -1795,7 +1786,7 @@ export function TestUser() {
                                     milestoneid: "F7HX5X",
                                     quantity: "1.00",
                                     unit: "mon",
-                                    unitcost: "7.00",
+                                    unitcost: "9.00",
                                     material: {},
                                     invoiceid: "POQV",
                                     profit: "15.0000"
@@ -1830,6 +1821,19 @@ export function TestUser() {
                                     milestoneid: "F7HX5X",
                                     csiid: "yyyyyy",
                                     timein: "2019-05-30 18:33:33",
+                                    timeout: "2019-05-31 00:33:33",
+                                    invoiceid: "POQV",
+                                    profit: "15.0000"
+                                },
+                                {
+                                    equipmentid: "sdewerwewcwwer",
+                                    myequipmentid: "myfirstequipment",
+                                    providerid: "mazen",
+                                    accountid: "myequipmentaccount",
+                                    equipmentrate: "100.0000",
+                                    milestoneid: "F7HX5X",
+                                    csiid: "yyyyyy",
+                                    timein: "2019-05-30 18:33:33",
                                     timeout: "2019-05-30 22:33:33",
                                     invoiceid: "POQV",
                                     profit: "15.0000"
@@ -1848,7 +1852,7 @@ export function TestUser() {
                                             {
                                                 lineid: "myfirstlineid",
                                                 csiid: "yyyyyy",
-                                                quantity: "50000.0000",
+                                                quantity: "40000.0000",
                                                 unit: "Yards"
                                             }
                                         ]
@@ -1868,7 +1872,7 @@ export function TestUser() {
                                             {
                                                 lineid: "myfirstpayment",
                                                 csiid: "yyyyyy",
-                                                quantity: "55.0000",
+                                                quantity: "44.0000",
                                                 unit: "yards"
                                             }
                                         ]
@@ -1939,7 +1943,16 @@ export function TestUser() {
                     client: "google",
                     clientid: "100997823144314216130",
                     profileurl: "",
-                    stripe: ""
+                    stripe: "",
+                    company: {
+                        companyid: "civilengineer-io",
+                        company: "civilengineer.io",
+                        address: "5611 Loyalty Way",
+                        manager: "mazen",
+                        city: "Elk Grove",
+                        contactstate: "CA",
+                        zipcode: "95757"
+                    }
                 },
                 {
                     providerid: "allinone",

@@ -5,11 +5,12 @@ import { MyStylesheet } from './styles';
 import { addIcon, removeIconSmall } from './svg';
 import { makeID, CreateBenefit, CreateEmployee } from './functions';
 import DynamicStyles from './dynamicstyles';
+import FindEmployee from './findemployee';
 
 class Employees extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activeemployeeid: '', activebenefitid: '', amount: "", accountid: '', benefit: '' }
+        this.state = { render: '', width: 0, height: 0, activeemployeeid: '', search: '', activebenefitid: '', amount: "", accountid: '', benefit: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -578,15 +579,7 @@ class Employees extends Component {
         return employees;
 
     }
-    getAddCompany() {
-        if (this.state.width > 1200) {
-            return ({ width: '138px', height: '85px' })
-        } else if (this.state.width > 800) {
-            return ({ width: '112px', height: '64px' })
-        } else {
-            return ({ width: '63px', height: '37px' })
-        }
-    }
+
     addemployee(providerid) {
         let workinghours = 0;
         let newEmployee = CreateEmployee(providerid, workinghours);
@@ -699,7 +692,7 @@ class Employees extends Component {
         const regularFont = this.getRegularFont();
         if (this.state.width > 800) {
             return (
-                <div style={{ ...styles.generalContainer }} key={`myemployee${employee.providerid}`} >
+                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }} key={`myemployee${employee.providerid}`} >
                     <div style={{ ...styles.flex1 }}>
 
 
@@ -711,7 +704,7 @@ class Employees extends Component {
 
                                 </div>
                             </div>
-                            <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                            <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont }}>
                                 {employee.firstname}  {employee.lastname}
                             </div>
                             <div style={{ ...styles.flex1 }}>
@@ -725,7 +718,7 @@ class Employees extends Component {
             )
         } else {
             return (
-                <div style={{ ...styles.generalContainer, ...this.getactiveeemployeebackground(employee.providerid) }} key={`myemployee${employee.providerid}`} >
+                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...this.getactiveeemployeebackground(employee.providerid) }} key={`myemployee${employee.providerid}`} >
                     <div style={{ ...styles.flex1 }}>
 
 
@@ -883,8 +876,8 @@ class Employees extends Component {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
-        const regularFont = this.getRegularFont();
         const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const findemployee = new FindEmployee();
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -895,13 +888,8 @@ class Employees extends Component {
                         </div>
                     </div>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                            Find An Employee By name  <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }} />
-                        </div>
-                    </div>
+                    {findemployee.showEmployeeSearch.call(this)}
 
-                    {this.showemployees()}
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.generalFont }}>
                             My Employees
