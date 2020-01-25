@@ -1,46 +1,16 @@
-gettotalhours() {
-    let totalhours = "";
-    if (this.state.activeequipmentid) {
-        let myequipment = this.getactiveequipment();
-        if (myequipment) {
-            let timein = myequipment.timein;
-            let timeout = myequipment.timeout;
-            totalhours = calculatetotalhours(timeout, timein)
-        }
-
-
-    }
-    return totalhours;
-}
-getequipmentrate() {
-    let equipmentrate = 0;
-    if (this.state.activeequipmentid) {
-        let myequipment = this.getactiveequipment();
-        equipmentrate = myequipment.equipmentrate;
-    }
-    return equipmentrate;
-}
-handleequipmentrate(equipmentrate) {
-    const dynamicstyles = new DynamicStyles();
-    const myuser = dynamicstyles.getuser.call(this);
-    if (myuser) {
-        if (this.state.activeequipmentid) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = this.getactiveequipmentkey();
-            myuser.company.projects.myproject[i].actualequipment.myequipment[j].equipmentrate = equipmentrate;
-            this.props.reduxUser(myuser);
-            this.setState({ render: 'render' })
+getlaborprofitbyid(laborid) {
+    let dynamicstyles = new DynamicStyles();
+    let myproject = dynamicstyles.getproject.call(this);
+    let profit = 0;
+    if (myproject) {
+        if (myproject.hasOwnProperty("actuallabor")) {
+            // eslint-disable-next-line
+            myproject.actuallabor.mylabor.map(mylabor => {
+                if (mylabor.laborid === laborid) {
+                    profit = mylabor.profit;
+                }
+            })
         }
     }
-
-}
-getamount() {
-    let amount = 0;
-    if (this.state.activeequipmentid) {
-        let myequipment = this.getactiveequipment();
-        let totalhours = calculatetotalhours(myequipment.timeout, myequipment.timein);
-        let rate = Number(myequipment.equipmentrate);
-        amount = totalhours * rate;
-    }
-    return amount;
+    return profit;
 }

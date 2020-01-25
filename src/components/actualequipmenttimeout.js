@@ -1101,9 +1101,9 @@ class ActualEquipmentTimeOut {
         if (this.state.activeequipmentid) {
             const mylabor = this.getactiveequipment();
 
-            timeoutheader = `Time In ${inputUTCStringForLaborID(mylabor.timeout)}`
+            timeoutheader = `Time Out ${inputUTCStringForLaborID(mylabor.timeout)}`
         } else {
-            timeoutheader = `Time In ${inputDateObjOutputCalendarString(this.state.timeout)}`
+            timeoutheader = `Time Out ${inputDateObjOutputCalendarString(this.state.timeout)}`
         }
         return timeoutheader;
     }

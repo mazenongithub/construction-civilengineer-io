@@ -25,6 +25,54 @@ class Proposals extends Component {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
+    getequipmentprofitbyid(equipmentid) {
+        let dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let profit = 0;
+        if (myproject) {
+            if (myproject.hasOwnProperty("scheduleequipment")) {
+                // eslint-disable-next-line
+                myproject.scheduleequipment.myequipment.map(myequipment => {
+                    if (myequipment.equipmentid === equipmentid) {
+                        profit = myequipment.profit;
+                    }
+                })
+            }
+        }
+        return profit;
+    }
+    getlaborprofitbyid(laborid) {
+        let dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let profit = 0;
+        if (myproject) {
+            if (myproject.hasOwnProperty("schedulelabor")) {
+                // eslint-disable-next-line
+                myproject.schedulelabor.mylabor.map(mylabor => {
+                    if (mylabor.laborid === laborid) {
+                        profit = mylabor.profit;
+                    }
+                })
+            }
+        }
+        return profit;
+    }
+    getmaterialprofitbyid(materialid) {
+        let dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let profit = 0;
+        if (myproject) {
+            if (myproject.hasOwnProperty("schedulematerials")) {
+                // eslint-disable-next-line
+                myproject.schedulematerials.mymaterial.map(mymaterials => {
+                    if (mymaterials.materialid === materialid) {
+                        profit = mymaterials.profit;
+                    }
+                })
+            }
+        }
+        return profit;
+    }
     getactiveproposalkey() {
         let dynamicstyles = new DynamicStyles();
         let key = false;
@@ -47,7 +95,7 @@ class Proposals extends Component {
 
         return key;
     }
-    getactiveproposalbackground(item) {
+    getactivebackground(item) {
         if (item.proposalid === this.state.activeproposalid) {
             return ({ backgroundColor: '#93CCE5' })
         }
@@ -97,45 +145,7 @@ class Proposals extends Component {
             }
         }
     }
-    showlaboritem(item) {
-        const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const smallFont = dynamicstyles.getSmallFont.call(this)
-        const amount = (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.laborrate))
-        const employee = dynamicstyles.getemployeebyproviderid.call(this, item.providerid);
-        const csi = dynamicstyles.getcsibyid.call(this, item.csiid)
-        const totalhours = Number(calculatetotalhours(item.timeout, item.timein))
-        const profitField = dynamicstyles.getprofitfield.call(this)
-        const getprofit = () => {
-            if (item.profit) {
-                return Number(1 + (item.profit / 100))
-            } else {
-                return 1;
-            }
-        }
-        const profit = getprofit();
 
-
-        return (
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
-
-                <div style={{ ...styles.flex3, ...this.getactiveproposalbackground(item) }} onClick={() => { this.addItemtoProposal(item) }}>
-                    {employee.firstname} {employee.lastname} TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)} CSI {csi.csi}-{csi.title}  Total Hours {totalhours.toFixed(2)} Hrs at  ${item.laborrate} =  ${amount.toFixed(2)}  x {profit} = ${Number(amount * profit).toFixed(2)}
-                </div>
-                <div style={{ ...styles.flex1 }}>
-
-                    <div style={{ ...styles.generalContainer }}>
-                        Profit <input type="text" style={{ ...styles.generalField, ...smallFont, ...styles.generalFont, ...profitField }}
-                            value={dynamicstyles.getlaborprofitbyid.call(this, item.laborid)}
-                            onChange={event => { this.handlelaborprofit(event.target.value, item.laborid) }}
-                        />
-                    </div>
-                </div>
-            </div>
-        )
-
-
-    }
     checkproposalitem(item) {
         let result = 'add';
         if (item.proposalid === this.state.activeproposalid) {
@@ -143,7 +153,8 @@ class Proposals extends Component {
         }
         return result;
     }
-    addItemtoProposal(item) {
+
+    addItem(item) {
 
 
 
@@ -284,68 +295,62 @@ class Proposals extends Component {
             </div>)
         }
     }
-    showequipmentitem(item) {
-        let dynamicstyles = new DynamicStyles()
-        const styles = MyStylesheet();
-        const smallFont = dynamicstyles.getSmallFont.call(this);
-        const myequipment = dynamicstyles.getequipmentfromid.call(this, item.myequipmentid);
-        const csi = dynamicstyles.getcsibyid.call(this, item.csiid)
-        const totalhours = Number(calculatetotalhours(item.timeout, item.timein))
-        const profitField = dynamicstyles.getprofitfield.call(this)
-        return (
 
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
 
-                <div style={{ ...styles.flex3, ...this.getactiveproposalbackground(item) }} onClick={() => { this.addItemtoProposal(item) }}>
-                    {myequipment.equipment} CSI: {csi.csi} - {csi.title}   TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)}  Total Hours:{totalhours.toFixed(2)}
-                </div>
-                <div style={{ ...styles.flex1 }}>
-
-                    <div style={{ ...styles.generalContainer }}>
-                        Profit <input type="text" style={{ ...styles.generalField, ...smallFont, ...styles.generalFont, ...profitField }}
-                            value={dynamicstyles.getequipmentprofitbyid.call(this, item.equipmentid)}
-                            onChange={event => { this.handleequipmentprofit(event.target.value, item.equipmentid) }}
-                        />
-                    </div>
-                </div>
-            </div>
-        )
-
-    }
-    showmaterialitem(item) {
-        const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles()
-        const profitField = dynamicstyles.getprofitfield.call(this)
-        const getprofit = () => {
-            if (item.profit) {
-                return Number(1 + (item.profit / 100))
-            } else {
-                return 1;
-            }
+    handlelaborrate(laborrate, laborid) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            let i = dynamicstyles.getprojectkey.call(this);
+            let j = dynamicstyles.getactivelaborkeybyid.call(this, laborid)
+            myuser.company.projects.myproject[i].schedulelabor.mylabor[j].laborrate = laborrate;
+            this.props.reduxUser(myuser);
+            this.setState({ render: 'render' })
         }
-        const profit = getprofit();
-        const csi = dynamicstyles.getcsibyid.call(this, item.csiid)
-        const material = dynamicstyles.getmymaterialfromid.call(this, item.mymaterialid)
-        const amount = Number(item.quantity * item.unitcost);
-        const smallFont = dynamicstyles.getSmallFont.call(this)
-        return (
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
-
-                <div style={{ ...styles.flex3, ...this.getactiveproposalbackground(item) }} onClick={() => { this.addItemtoProposal(item) }}>
-                    {inputUTCStringForMaterialIDWithTime(item.timein)} {material.material} CSI: {csi.csi}-{csi.title}
-                    {item.quantity}  x ${item.unitcost}/{item.unit} = ${amount.toFixed(2)} x {profit} = ${Number(amount * profit).toFixed(2)}
-                </div>
-                <div style={{ ...styles.flex1 }}>
-
-                    <div style={{ ...styles.generalContainer }}>
-                        Profit <input type="text" style={{ ...styles.generalField, ...smallFont, ...styles.generalFont, ...profitField }}
-                            value={dynamicstyles.getmaterialprofitbyid.call(this, item.materialid)}
-                            onChange={event => { this.handlematerialprofit(event.target.value, item.materialid) }} />
-                    </div>
-                </div>
-            </div>
-        )
-
+    }
+    handleequipmentrate(equipmentrate, equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            let i = dynamicstyles.getprojectkey.call(this);
+            let j = dynamicstyles.getactiveequipmentkeybyid.call(this, equipmentid);
+            myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate;
+            this.props.reduxUser(myuser);
+            this.setState({ render: 'render' })
+        }
+    }
+    handlematerialunit(unit, materialid) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            let i = dynamicstyles.getprojectkey.call(this);
+            let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
+            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unit = unit;
+            this.props.reduxUser(myuser)
+            this.setState({ render: 'render' })
+        }
+    }
+    handlematerialunitcost(unitcost, materialid) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            let i = dynamicstyles.getprojectkey.call(this);
+            let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
+            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unitcost = unitcost;
+            this.props.reduxUser(myuser)
+            this.setState({ render: 'render' })
+        }
+    }
+    handlematerialquantity(quantity, materialid) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            let i = dynamicstyles.getprojectkey.call(this);
+            let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
+            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].quantity = quantity;
+            this.props.reduxUser(myuser)
+            this.setState({ render: 'render' })
+        }
     }
     showallpayitems() {
         const dynamicstyles = new DynamicStyles();
@@ -355,14 +360,14 @@ class Proposals extends Component {
             // eslint-disable-next-line
             payitems.map(item => {
                 if (item.hasOwnProperty("laborid")) {
-                    items.push(this.showlaboritem(item))
+                    items.push(dynamicstyles.showlaboritem.call(this, item))
                 }
                 if (item.hasOwnProperty("materialid")) {
-                    items.push(this.showmaterialitem(item))
+                    items.push(dynamicstyles.showmaterialitem.call(this, item))
 
                 }
                 if (item.hasOwnProperty("equipmentid")) {
-                    items.push(this.showequipmentitem(item))
+                    items.push(dynamicstyles.showequipmentitem.call(this, item))
 
                 }
 
