@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { GoogleSignIcon, AppleSignIcon, goCheckIcon, signUpNowIcon } from './svg';
-import { RegisterUser, CheckProviderID } from './actions/api'
+import { GoogleSignIcon, AppleSignIcon, goCheckIcon, RegisterNowIcon } from './svg';
+import { RegisterUser } from './actions/api'
 import firebase from 'firebase/app';
-import { returnCompanyList, validatePhoneNumber, validateEmail, validateProviderID } from './functions';
+import { returnCompanyList, validateEmail, validateProviderID, validatePassword } from './functions';
 import Profile from './profile';
 import 'firebase/auth';
 import DynamicStyles from './dynamicstyles';
 class Register extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, providerid: '', client: '', clientid: '', firstname: '', lastname: '', emailaddress: '', profileurl: '', phonenumber: '', provideridcheck: true, message: '' }
+        this.state = { render: '', width: 0, height: 0, providerid: '', client: '', clientid: '', firstname: '', lastname: '', emailaddress: '', profileurl: '', phonenumber: '', provideridcheck: true, message: '', emailcheck: true, passwordcheck: false, pass: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -25,40 +25,6 @@ class Register extends Component {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
-    getRegularFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font30)
-        }
-        return (styles.font24)
-    }
-    getHeaderFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font40)
-        }
-        return (styles.font30)
-    }
-    getloginbuttonheight() {
-        if (this.state.width > 1200) {
-            return ({
-                width: '279px',
-                height: '63px'
-            })
-        } else if (this.state.width > 800) {
-            return ({
-                width: '181px',
-                height: '48px'
-            })
-        } else {
-            return ({
-                width: '148px',
-                height: '40px'
-            })
-        }
-
-    }
-
 
     handlegoicon() {
         const styles = MyStylesheet();
@@ -68,6 +34,15 @@ class Register extends Component {
             return (<button style={{ ...styles.generalButton, ...goCheckHeight }}>{goCheckIcon()}</button>)
         } else {
             return;
+        }
+    }
+    handleproviderid(providerid) {
+        this.setState({ providerid })
+        const errmsg = validateProviderID(providerid);
+        if (errmsg) {
+            this.setState({ provideridcheck: false, message: errmsg })
+        } else {
+            this.setState({ provideridcheck: true, message: "" })
         }
     }
     showproviderid() {
@@ -83,20 +58,18 @@ class Register extends Component {
                         <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }}>
                             <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont }}>
                                 Create A Provider ID
-                </div>
+                            </div>
                             <div style={{ ...styles.flex3 }}>
                                 <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
                                     value={this.state.providerid}
-                                    onChange={event => { this.setState({ providerid: event.target.value }) }}
-                                    onBlur={event => { this.verifyProviderID(event.target.value) }}
+                                    onChange={event => { this.handleproviderid(event.target.value) }}
+                                    onBlur={event => { dynamicstyles.verifyProviderID.call(this, event.target.value) }}
                                 />
                             </div>
                             <div style={{ ...styles.flex1 }}>
                                 {this.handlegoicon()}
                             </div>
                         </div>
-
-
 
 
                     </div>
@@ -119,7 +92,8 @@ class Register extends Component {
                             <div style={{ ...styles.flex3 }}>
                                 <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
                                     value={this.state.providerid}
-                                    onChange={event => { this.setState({ providerid: event.target.value }) }}
+                                    onChange={event => { this.handleproviderid(event.target.value) }}
+                                    onBlur={event => { dynamicstyles.verifyProviderID.call(this, event.target.value) }}
                                 />
                             </div>
                             <div style={{ ...styles.flex1 }}>
@@ -208,8 +182,9 @@ class Register extends Component {
 
     }
     showloginbuttons() {
-        let regularFont = this.getRegularFont();
-        const loginButtonHeight = this.getloginbuttonheight();
+        const dynamicstyles = new DynamicStyles()
+        let regularFont = dynamicstyles.getRegularFont.call(this)
+        const loginButtonHeight = dynamicstyles.getloginbuttonheight.call(this);
         const styles = MyStylesheet();
 
         if (this.state.width > 800) {
@@ -277,28 +252,30 @@ class Register extends Component {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
-        let providerid = this.state.providerid;
-        let validateproviderid = validateProviderID(providerid);
-        if (!validateproviderid) {
-            if (this.state.provideridcheck) {
-                return (<div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        Your Profile will be hosted at {process.env.REACT_APP_CLIENT_API}/{this.state.providerid}
-                    </div>
-                </div>)
-            } else {
-                return (<div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        {this.state.providerid} is taken, please choose another ID
-                </div>
-                </div>)
-            }
 
-        } else if (this.state.providerid) {
+        if (this.state.provideridcheck) {
             return (<div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    Invalid Provider ID {this.state.providerid}
+                    Your Profile will be hosted at {process.env.REACT_APP_CLIENT_API}/{this.state.providerid}
                 </div>
+            </div>)
+        } else {
+            return;
+        }
+
+
+    }
+
+    showregisternow() {
+        const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
+        const registerIcon = dynamicstyles.getRegisterIcon.call(this);
+        const validate = this.validateprovider();
+
+
+        if (!validate) {
+            return (<div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                <button style={{ ...styles.generalButton, ...registerIcon }} onClick={() => { this.registernewuser() }}>{RegisterNowIcon()}</button>
             </div>)
         } else {
             return;
@@ -319,98 +296,38 @@ class Register extends Component {
         }
     }
 
+
     validateprovider() {
-        if (this.state.providerid) {
-            return (true)
-        } else {
-            return (false)
+
+        let errmsg = false;
+
+        if (!this.state.emailcheck) {
+            errmsg += validateEmail(this.state.emailaddress)
+            errmsg += this.state.message;
         }
 
-    }
-
-    validatenewuser() {
-        let validate = {};
-        validate.validate = true;
-        validate.message = "";
-        if (!this.state.client || !this.state.clientid) {
-            validate.validate = false;
-            validate.message += `Please Add your Client Either Apple or Google `
-        }
         if (!this.state.provideridcheck) {
-            validate.validate = false;
-            validate.message += `Provider ID ${this.state.providerid} is taken `
-        } else {
-            let validateprovider = validateProviderID(this.state.providerid);
-            if (validateprovider) {
-                validate.validate = false;
-                validate.message += `Invalid Provider ID ${validateprovider} `
-            }
+            errmsg += validateProviderID(this.state.providerid);
+            errmsg += this.state.message;
         }
 
-        if (!this.state.emailaddress) {
-            validate.validate = false;
-            validate.message += `Please Add Email Address `
-        } else {
-            let emailvalidation = validateEmail(this.state.emailaddress);
-            if (emailvalidation) {
-                validate.validate = false;
-                validate.message += `Invalid Email Address ${emailvalidation} `
-            }
+        if (!this.state.client || !this.state.clientid) {
+            errmsg += `Missing Client ID`
         }
 
-        if (!this.state.phonenumber) {
-            validate.validate = false;
-            validate.message += `Please Add Phone Number `
-        } else {
-            let phonevalidation = validatePhoneNumber(this.state.phonenumber);
-
-            if (phonevalidation) {
-                validate.validate = false;
-                validate.message += `Invalid Phone Number ${this.state.emailaddress} `
-            }
-
+        if (!this.state.passwordcheck) {
+            errmsg += validatePassword(this.state.pass);
         }
 
-        if (!this.state.firstname) {
-            validate.validate = false;
-            validate.message += `Please Add Your First Name `
-        }
-        if (!this.state.lastname) {
-            validate.validate = false;
-            validate.message += `Please Add Your Last Name `
-        }
-
-        return validate;
+        return errmsg;
     }
 
 
-    async verifyProviderID() {
-        let providerid = this.state.providerid;
-
-        let errmsg = validateProviderID(providerid);
-        if (errmsg) {
-            this.setState({ provideridcheck: false })
-        }
-        else {
-            let response = await CheckProviderID(providerid)
-            console.log(response)
-            if (response.hasOwnProperty("valid")) {
-                this.setState({ provideridcheck: true });
-            }
-            else {
-                this.setState({ provideridcheck: false });
-            }
-
-        }
-
-
-    }
 
     async registernewuser() {
-        const validateuser = this.validatenewuser();
-        console.log(validateuser)
-        if (validateuser.validate) {
-            const values = { providerid: this.state.providerid, client: this.state.client, clientid: this.state.clientid, firstname: this.state.firstname, lastname: this.state.lastname, emailaddress: this.state.emailaddress, profileurl: this.state.profileurl, phonenumber: this.state.phonenumber }
+        const validateuser = this.validateprovider();
+        if (!validateuser) {
+            const values = { providerid: this.state.providerid, client: this.state.client, clientid: this.state.clientid, firstname: this.state.firstname, lastname: this.state.lastname, emailaddress: this.state.emailaddress, profileurl: this.state.profileurl, phonenumber: this.state.phonenumber, pass: this.state.pass }
             let response = await RegisterUser(values);
             console.log(response)
             if (response.hasOwnProperty("allusers")) {
@@ -436,16 +353,154 @@ class Register extends Component {
         let validateprovider = this.validateprovider();
         if (validateprovider) {
             return (<button style={{ ...styles.generalButton, ...signupnow, ...styles.addLeftMargin15 }}
-                onClick={() => { this.registernewuser() }}>{signUpNowIcon()}</button>)
+                onClick={() => { this.registernewuser() }}>{RegisterNowIcon()}</button>)
         } else {
             return;
+        }
+    }
+    handlepassword(pass) {
+        this.setState({ pass })
+        let errmsg = validatePassword(pass);
+
+        if (!errmsg) {
+            this.setState({ passwordcheck: true, message: '' })
+        } else {
+            this.setState({ passwordcheck: false, message: errmsg })
+        }
+    }
+
+    handleemailaddress(emailaddress) {
+
+        this.setState({ emailaddress })
+        let errmsg = validateEmail(emailaddress)
+        if (errmsg) {
+            this.setState({ emailcheck: false, message: errmsg })
+        } else {
+            this.setState({ emailcheck: true, message: "" })
+        }
+
+    }
+    showpassword() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const goIcon = dynamicstyles.getgocheckheight.call(this)
+
+        const showButton = () => {
+            if (this.state.pass && this.state.passwordcheck) {
+                return (<button style={{ ...styles.generalButton, ...goIcon }}>{goCheckIcon()}</button>)
+            } else {
+                return;
+            }
+        }
+        if (this.state.emailaddress || (this.state.clientid && this.state.client)) {
+            if (this.state.width > 800) {
+                return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.flex2, ...styles.generalFont, ...regularFont }}>
+                        Password
+                </div>
+                    <div style={{ ...styles.flex3 }}>
+                        <input type="password" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                            value={this.state.pass}
+                            onChange={event => { this.handlepassword(event.target.value) }}
+
+                        />
+                    </div>
+                    <div style={{ ...styles.flex1 }}>
+                        {showButton()}
+                    </div>
+                </div>)
+            } else {
+                return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.flex1 }}>
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                Password
+                        </div>
+                        </div>
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex2 }}>
+                                <input type="Password" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                    value={this.state.pass}
+                                    onChange={event => { this.handlepassword(event.target.value) }}
+
+                                />
+                            </div>
+                            <div style={{ ...styles.flex1 }}>
+                                {showButton()}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>)
+            }
+        } else {
+            return;
+        }
+    }
+    showemailaddress() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const goIcon = dynamicstyles.getgocheckheight.call(this)
+
+        const showButton = () => {
+            if (this.state.emailaddress && this.state.emailcheck) {
+                return (<button style={{ ...styles.generalButton, ...goIcon }}>{goCheckIcon()}</button>)
+            } else {
+                return;
+            }
+        }
+
+        if (this.state.width > 800) {
+            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.flex2, ...styles.generalFont, ...regularFont }}>
+                    Email Address
+                </div>
+                <div style={{ ...styles.flex3 }}>
+                    <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                        value={this.state.emailaddress}
+                        onChange={event => { this.handleemailaddress(event.target.value) }}
+                        onBlur={event => { dynamicstyles.checkemailaddress.call(this, event.target.value) }}
+                    />
+                </div>
+                <div style={{ ...styles.flex1 }}>
+                    {showButton()}
+                </div>
+            </div>)
+        } else {
+            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.flex1 }}>
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                            Email Address
+                        </div>
+                    </div>
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex2 }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                value={this.state.emailaddress}
+                                onChange={event => { this.handleemailaddress(event.target.value) }}
+                                onBlur={event => { dynamicstyles.checkemailaddress.call(this, event.target.value) }}
+                            />
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            {showButton()}
+                        </div>
+                    </div>
+
+                </div>
+            </div>)
         }
     }
     render() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const headerFont = dynamicstyles.getHeaderFont.call(this);
-        const regularFont = dynamicstyles.getRegularFont.call(this);
 
         const Register = () => {
             return (
@@ -461,54 +516,10 @@ class Register extends Component {
                         {this.handleshowloginbuttons()}
                         {this.showproviderid()}
                         {this.handleprofilemessage()}
+                        {this.showemailaddress()}
+                        {this.showpassword()}
                         {this.handlemessage()}
-
-                        <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                Verify Your Info {this.handlesignupnow()}
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                Email Address <br />
-                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
-                                    value={this.state.emailaddress}
-                                    onChange={event => { this.setState({ emailaddress: event.target.value }) }}
-                                />
-                            </div>
-
-                        </div>
-
-                        <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                First Name <br />
-                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
-                                    value={this.state.firstname}
-                                    onChange={event => { this.setState({ firstname: event.target.value }) }}
-                                />
-                            </div>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                Last Name <br />
-                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
-                                    value={this.state.lastname}
-                                    onChange={event => { this.setState({ lastname: event.target.value }) }}
-                                />
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                Phone Number <br />
-                                <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
-                                    value={this.state.phonenumber}
-                                    onChange={event => { this.setState({ phonenumber: event.target.value }) }}
-                                />
-                            </div>
-
-                        </div>
-
-
+                        {this.showregisternow()}
 
                     </div>
                 </div>

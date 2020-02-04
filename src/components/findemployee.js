@@ -46,9 +46,7 @@ class FindEmployee {
         let results = [];
         const findemployee = new FindEmployee();
         if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
-                let companyid = myuser.company.companyid;
-            }
+
             const allusers = dynamicstyles.getallusers.call(this)
             // eslint-disable-next-line
             allusers.map(user => {

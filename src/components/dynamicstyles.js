@@ -3,9 +3,9 @@ import { MyStylesheet } from './styles';
 import { sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime } from './functions'
+import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID } from './functions'
 import { saveCompanyIcon, saveProjectIcon } from './svg';
-import { SaveCompany, ClientLogin, SaveProject } from './actions/api';
+import { SaveCompany, ClientLogin, SaveProject, CheckEmailAddress, CheckProviderID } from './actions/api';
 
 
 class DynamicStyles {
@@ -295,6 +295,35 @@ class DynamicStyles {
                 height: '47x'
             })
         }
+
+    }
+
+    async verifyProviderID() {
+        let providerid = this.state.providerid;
+        let errmsg = validateProviderID(providerid);
+        if (errmsg) {
+            this.setState({ provideridcheck: false, message: errmsg })
+        } else {
+            this.setState({ provideridcheck: true, message: "" })
+        }
+        if (!errmsg) {
+            try {
+                let response = await CheckProviderID(providerid)
+                console.log(response)
+                if (response.hasOwnProperty("valid")) {
+                    this.setState({ provideridcheck: true });
+                }
+                else {
+                    this.setState({ provideridcheck: false, message: response.message });
+                }
+
+            } catch (err) {
+
+                alert(err)
+            }
+
+        }
+
 
     }
     getgocheckheight() {
@@ -971,6 +1000,24 @@ class DynamicStyles {
             return ({ width: '115px', height: '97px' })
         }
     }
+    async checkemailaddress(emailaddress) {
+        if (emailaddress) {
+            try {
+                let response = await CheckEmailAddress(emailaddress);
+                console.log(response)
+                if (response.hasOwnProperty("invalid")) {
+                    this.setState({ emailcheck: false, message: response.message })
+                } else if (response.hasOwnProperty("valid")) {
+                    this.setState({ emailcheck: true, message: "" })
+                }
+            } catch (err) {
+                alert(err)
+            }
+
+        }
+
+    }
+
     getAddCompany() {
         if (this.state.width > 1200) {
             return ({ width: '138px', height: '85px' })
@@ -979,6 +1026,25 @@ class DynamicStyles {
         } else {
             return ({ width: '63px', height: '37px' })
         }
+    }
+    getloginbuttonheight() {
+        if (this.state.width > 1200) {
+            return ({
+                width: '279px',
+                height: '63px'
+            })
+        } else if (this.state.width > 800) {
+            return ({
+                width: '181px',
+                height: '48px'
+            })
+        } else {
+            return ({
+                width: '148px',
+                height: '40px'
+            })
+        }
+
     }
     getcsipropertybyid(csiid) {
         let csi = false;

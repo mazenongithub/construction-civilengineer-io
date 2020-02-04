@@ -35,6 +35,9 @@ export function StripeConnectIcon() {
 export function BluePlus() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.64 26.64"><defs><style></style></defs><title>blueplus</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><polygon className="blueplus-1" points="26.14 9.34 26.14 17.3 17.3 17.3 17.3 26.14 9.34 26.14 9.34 17.3 0.5 17.3 0.5 9.34 9.34 9.34 9.34 0.5 17.3 0.5 17.3 9.34 26.14 9.34" /></g></g></svg>)
 }
+export function RegisterNowIcon() {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 378 81.5"> <defs><style></style></defs> <title>registernow</title> <g id="Layer_2" data-name="Layer 2"><g id="guides"><rect className="registernow-1" x="2.5" y="0.5" width="375" height="80.5" rx="10.64" /><text className="registernow-2" transform="translate(53.22 49.57)">Regi<tspan className="registernow-3" x="89.24" y="0">s</tspan><tspan x="110.24" y="0">ter N</tspan><tspan className="registernow-4" x="208.92" y="0">o</tspan><tspan className="registernow-5" x="232.88" y="0">w</tspan></text></g></g></svg >)
+}
 export function GoogleSignIcon() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182.14 49.86"><defs><style></style></defs><title>googlesign</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="googlesign-1" x="0.53" y="0.5" width="181.11" height="48.86" rx="5.84" /><text className="googlesign-2" transform="translate(7.82 35.75) scale(0.86 1)">Google Sign</text></g></g></svg>)
 }

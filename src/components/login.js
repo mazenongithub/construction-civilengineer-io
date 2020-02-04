@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { GoogleSignIcon, AppleSignIcon, loginNowIcon } from './svg'
-import { LoginLocal } from './actions/api'
+import { LoginLocal, ClientLogin, } from './actions/api'
 import DynamicStyles from './dynamicstyles';
 import { returnCompanyList } from './functions';
 import Profile from './profile';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 class Login extends Component {
     constructor(props) {
@@ -156,6 +158,131 @@ class Login extends Component {
             this.props.reduxUser(response)
         }
     }
+    async googleSignIn() {
+
+
+        try {
+
+
+            let provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('email');
+            provider.addScope('profile');
+            let result = await firebase.auth().signInWithPopup(provider)
+            var user = result.user;
+            let client = 'google';
+            let clientid = user.providerData[0].uid;
+            let firstname = '';
+            if (user.providerData[0].displayName) {
+                firstname = user.providerData[0].displayName.split(' ')[0]
+            }
+
+            let lastname = '';
+            if (user.providerData[0].displayName) {
+                lastname = user.providerData[0].displayName.split(' ')[1]
+            }
+            let emailaddress = user.providerData[0].email;
+            let profileurl = user.providerData[0].photoURL;
+            let phonenumber = user.phoneNumber;
+
+            if (emailaddress && clientid && client) {
+                try {
+                    let pass = this.state.pass;
+
+                    let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, pass }
+                    const response = await ClientLogin(values);
+                    console.log(response)
+                    if (response.hasOwnProperty("allusers")) {
+                        let companys = returnCompanyList(response.allusers);
+                        this.props.reduxAllCompanys(companys)
+                        this.props.reduxAllUsers(response.allusers);
+                        delete response.allusers;
+
+                    }
+                    if (response.hasOwnProperty("providerid")) {
+                        this.props.reduxUser(response)
+                    }
+                    if (response.hasOwnProperty("message")) {
+                        this.setState({ message: response.message })
+                    }
+                } catch (err) {
+                    alert(err)
+                }
+
+            } else {
+                this.setState({ client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber })
+            }
+
+
+
+
+
+        } catch (error) {
+            alert(error)
+        }
+
+
+
+
+    }
+
+
+    async appleSignIn() {
+        let provider = new firebase.auth.OAuthProvider('apple.com');
+        provider.addScope('email');
+        provider.addScope('name');
+        try {
+            let result = await firebase.auth().signInWithPopup(provider)
+            // The signed-in user info.
+            var user = result.user;
+            console.log(user)
+            let firstname = "";
+            let lastname = "";
+            if (user.providerData[0].displayName) {
+                firstname = user.providerData[0].displayName.split(' ')[0]
+                lastname = user.providerData[0].displayName.split(' ')[1]
+            }
+            let phonenumber = user.providerData[0].phoneNumber
+            let profileurl = user.providerData[0].photoURL;
+            let client = 'apple';
+            let clientid = user.providerData[0].uid;
+            let emailaddress = user.providerData[0].email;
+
+            if (emailaddress && clientid && client) {
+                try {
+
+                    let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber }
+                    const response = await ClientLogin(values);
+                    console.log(response)
+                    if (response.hasOwnProperty("allusers")) {
+                        let companys = returnCompanyList(response.allusers);
+                        this.props.reduxAllCompanys(companys)
+                        this.props.reduxAllUsers(response.allusers);
+                        delete response.allusers;
+
+                    }
+                    if (response.hasOwnProperty("providerid")) {
+                        this.props.reduxUser(response)
+                    }
+                    if (response.hasOwnProperty("message")) {
+                        this.setState({ message: response.message })
+                    }
+                } catch (err) {
+                    alert(err)
+                }
+
+            } else {
+                this.setState({ client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber })
+            }
+
+
+            // ...
+        } catch (err) {
+            alert(err)
+            // ...
+        };
+
+
+    }
     render() {
         const dynamicstyles = new DynamicStyles();
         const Login = () => {
@@ -176,10 +303,10 @@ class Login extends Component {
 
                         <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <button style={{ ...styles.generalButton, ...loginButtonHeight }} onClick={() => { dynamicstyles.googleSignIn.call(this) }}>{GoogleSignIcon()}</button>
+                                <button style={{ ...styles.generalButton, ...loginButtonHeight }} onClick={() => { this.googleSignIn() }}>{GoogleSignIcon()}</button>
                             </div>
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <button style={{ ...styles.generalButton, ...loginButtonHeight }} onClick={() => { dynamicstyles.appleSignIn.call(this) }}>{AppleSignIcon()}</button>
+                                <button style={{ ...styles.generalButton, ...loginButtonHeight }} onClick={() => { this.appleSignIn() }}>{AppleSignIcon()}</button>
                             </div>
                         </div>
                         {this.showemailaddress()}
