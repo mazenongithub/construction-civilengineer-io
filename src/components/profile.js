@@ -4,10 +4,13 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { folderIcon, scrollImageDown } from './svg';
 import DynamicStyles from './dynamicstyles';
+import { UploadProfileImage } from './actions/api';
+import { returnCompanyList, inputUTCStringForLaborID } from './functions';
+
 class Profile extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0 }
+        this.state = { render: '', width: 0, height: 0, message: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -20,94 +23,10 @@ class Profile extends Component {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
-    getHeaderFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font40)
-        }
-        return (styles.font30)
-    }
 
-    getRegularFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font30)
-        }
-        return (styles.font24)
-    }
-    getuser() {
-        let user = false;
-        if (this.props.myusermodel) {
-            if (this.props.myusermodel.hasOwnProperty("providerid")) {
-                user = this.props.myusermodel;
-            }
-        }
-        return user;
-    }
-    getprofiledimensions() {
-        if (this.state.width > 1200) {
-            return (
-                {
-                    width: '392px',
-                    height: '327px'
-                })
 
-        } else if (this.state.width > 800) {
-            return (
-                {
-                    width: '285px',
-                    height: '249px'
-                })
 
-        } else {
-            return (
-                {
-                    width: '167px',
-                    height: '145px'
-                })
-        }
-    }
-    getFolderSize() {
-        if (this.state.width > 1200) {
-            return (
-                {
-                    width: '142px',
-                    height: '88px'
-                })
 
-        } else if (this.state.width > 800) {
-            return (
-                {
-                    width: '93px',
-                    height: '76px'
-                })
-
-        } else {
-            return (
-                {
-                    width: '88px',
-                    height: '61px'
-                })
-        }
-
-    }
-    getArrowHeight() {
-        if (this.state.width > 800) {
-            return (
-                {
-                    width: '55px',
-                    height: '48px'
-                })
-
-        } else {
-            return (
-                {
-                    width: '45px',
-                    height: '34px'
-                })
-        }
-
-    }
     getprofileurl() {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
@@ -117,7 +36,8 @@ class Profile extends Component {
     }
     showprofileurl() {
         const styles = MyStylesheet();
-        const regularFontHeight = this.getRegularFont();
+        const dynamicstyles = new DynamicStyles();
+        const regularFontHeight = dynamicstyles.getRegularFont.call(this);
         if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
@@ -143,7 +63,9 @@ class Profile extends Component {
         }
     }
     getclientmessage() {
-        let user = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+
+        let user = dynamicstyles.getuser.call(this);
         if (user) {
             return `Your Profile is connected with ${user.client}`
         } else {
@@ -272,7 +194,8 @@ class Profile extends Component {
     }
     showlogininfo() {
         const styles = MyStylesheet();
-        const regularFontHeight = this.getRegularFont();
+        const dynamicstyles = new DynamicStyles();
+        const regularFontHeight = dynamicstyles.getRegularFont.call(this);
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
@@ -298,7 +221,8 @@ class Profile extends Component {
     }
     showadditional() {
         const styles = MyStylesheet();
-        const regularFontHeight = this.getRegularFont();
+        const dynamicstyles = new DynamicStyles();
+        const regularFontHeight = dynamicstyles.getRegularFont.call(this);
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
@@ -354,14 +278,63 @@ class Profile extends Component {
             })
         }
     }
+    showprofileimage() {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        const profileImage = dynamicstyles.getprofiledimensions.call(this)
+        if (myuser.profileurl) {
+            return (<img src={myuser.profileurl} style={{ ...profileImage }} alt={`${myuser.firstname} ${myuser.lastname}`} />)
+        } else {
+            return;
+        }
+
+    }
+    async uploadprofileimage() {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+
+        if (myuser) {
+            const providerid = myuser.providerid;
+            let formData = new FormData();
+            let params = dynamicstyles.getCompanyParams.call(this)
+            let myfile = document.getElementById("profile-image");
+            formData.append("profilephoto", myfile.files[0]);
+            formData.append("myuser", JSON.stringify(params.myuser))
+            try {
+                let response = await UploadProfileImage(formData, providerid);
+                console.log(response)
+                if (response.hasOwnProperty("allusers")) {
+                    let companys = returnCompanyList(response.allusers);
+                    this.props.reduxAllCompanys(companys)
+                    this.props.reduxAllUsers(response.allusers);
+                    delete response.allusers;
+
+                }
+                if (response.hasOwnProperty("providerid")) {
+                    console.log(response)
+                    this.props.reduxUser(response)
+                }
+                let message = "";
+                if (response.hasOwnProperty("message")) {
+                    let lastupdated = inputUTCStringForLaborID(response.lastupdated)
+                    message = `${response.message} Last updated ${lastupdated}`
+
+                }
+                this.setState({ message })
+            } catch (err) {
+                alert(err)
+            }
+        }
+    }
     render() {
         const styles = MyStylesheet();
-        const headerFont = this.getHeaderFont();
-        const regularFontHeight = this.getRegularFont();
-        let myuser = this.getuser();
-        const profileDimensions = this.getprofiledimensions();
-        const folderSize = this.getFolderSize();
-        const arrowHeight = this.getArrowHeight();
+        const dynamicstyles = new DynamicStyles();
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const regularFontHeight = dynamicstyles.getRegularFont.call(this)
+        let myuser = dynamicstyles.getuser.call(this)
+        const profileDimensions = dynamicstyles.getprofiledimensions.call(this);
+        const folderSize = dynamicstyles.getFolderSize.call(this);
+        const arrowHeight = dynamicstyles.getArrowHeight.call(this);
 
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
@@ -375,11 +348,12 @@ class Profile extends Component {
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex2 }}>
                         <div style={{ ...styles.generalContainer, ...profileDimensions, ...styles.showBorder, ...styles.margin10, ...styles.alignRight }}>
-                            &nbsp;
+                            {this.showprofileimage()}
                         </div>
                     </div>
                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignBottom, ...styles.margin10 }}>
-                        <button style={{ ...styles.generalButton, ...folderSize }}>
+                        <input type="file" id="profile-image" />
+                        <button style={{ ...styles.generalButton, ...folderSize }} onClick={() => { this.uploadprofileimage() }}>
                             {folderIcon()}
                         </button>
                     </div>
@@ -406,6 +380,8 @@ class Profile extends Component {
                 </div>
 
                 {this.showadditional()}
+
+                {dynamicstyles.showsaveprofile.call(this)}
 
 
             </div>

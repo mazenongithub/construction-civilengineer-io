@@ -4,8 +4,8 @@ import { sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID } from './functions'
-import { saveCompanyIcon, saveProjectIcon } from './svg';
-import { SaveCompany, ClientLogin, SaveProject, CheckEmailAddress, CheckProviderID } from './actions/api';
+import { saveCompanyIcon, saveProjectIcon, saveProfileIcon } from './svg';
+import { SaveCompany, ClientLogin, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile } from './actions/api';
 
 
 class DynamicStyles {
@@ -21,6 +21,70 @@ class DynamicStyles {
     }
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
+    }
+    getFolderSize() {
+        if (this.state.width > 1200) {
+            return (
+                {
+                    width: '142px',
+                    height: '88px'
+                })
+
+        } else if (this.state.width > 800) {
+            return (
+                {
+                    width: '93px',
+                    height: '76px'
+                })
+
+        } else {
+            return (
+                {
+                    width: '88px',
+                    height: '61px'
+                })
+        }
+
+    }
+    getArrowHeight() {
+        if (this.state.width > 800) {
+            return (
+                {
+                    width: '55px',
+                    height: '48px'
+                })
+
+        } else {
+            return (
+                {
+                    width: '45px',
+                    height: '34px'
+                })
+        }
+
+    }
+    getprofiledimensions() {
+        if (this.state.width > 1200) {
+            return (
+                {
+                    width: '392px',
+                    height: '327px'
+                })
+
+        } else if (this.state.width > 800) {
+            return (
+                {
+                    width: '285px',
+                    height: '249px'
+                })
+
+        } else {
+            return (
+                {
+                    width: '167px',
+                    height: '145px'
+                })
+        }
     }
 
     gettitlefont() {
@@ -225,6 +289,33 @@ class DynamicStyles {
             this.setState({ message: `${response.message} Last Updated ${dateupdated}` })
         }
     }
+    async savemyprofile() {
+        let dynamicstyles = new DynamicStyles();
+        let values = dynamicstyles.getCompanyParams.call(this);
+        let myproject = dynamicstyles.getproject.call(this);
+        values.project = myproject;
+        let response = await SaveProfile(values)
+        console.log(response)
+        if (response.hasOwnProperty("allusers")) {
+            let companys = returnCompanyList(response.allusers);
+            this.props.reduxAllCompanys(companys)
+            this.props.reduxAllUsers(response.allusers);
+            delete response.allusers;
+
+        }
+        if (response.hasOwnProperty("providerid")) {
+            this.props.reduxUser(response)
+        }
+
+        let message = "";
+        if (response.hasOwnProperty("message")) {
+            let lastupdated = inputUTCStringForLaborID(response.lastupdated)
+            message = `${response.message} Last updated ${lastupdated}`
+
+        }
+        this.setState({ message })
+
+    }
     async savemyproject() {
         let dynamicstyles = new DynamicStyles();
         let values = dynamicstyles.getCompanyParams.call(this);
@@ -243,6 +334,22 @@ class DynamicStyles {
             this.props.reduxUser(response)
         }
 
+    }
+    showsaveprofile() {
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const saveprojecticon = dynamicstyles.getsaveprojecticon.call(this);
+        const styles = MyStylesheet();
+        return (
+            <div style={{ ...styles.generalContainer }}>
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.topMargin15, ...styles.bottomMargin15 }}>
+                    {this.state.message}
+                </div>
+
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...saveprojecticon }} onClick={() => { dynamicstyles.savemyprofile.call(this) }}>{saveProfileIcon()}</button>
+                </div>
+            </div>)
     }
     showsaveproject() {
         const dynamicstyles = new DynamicStyles();

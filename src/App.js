@@ -40,7 +40,7 @@ import DynamicStyles from './components/dynamicstyles';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { firebaseConfig } from './firebaseconfig';
-//import { TestUser } from './components/functions'
+import { TestUser } from './components/functions'
 
 
 class App extends Component {
@@ -65,9 +65,9 @@ class App extends Component {
 
   async checkuser() {
     try {
-      //let response = TestUser();
+      let response = TestUser();
 
-      let response = await CheckUserLogin();
+      //let response = await CheckUserLogin();
 
 
       if (response.hasOwnProperty("allusers")) {

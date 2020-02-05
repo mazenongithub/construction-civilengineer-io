@@ -1568,8 +1568,8 @@ export function TestUser() {
         firstname: "Mazen",
         lastname: "Khenaisser",
         client: "apple",
-        clientid: "000353.66d2a1610de24944b898df602ab5e7a7.0305",
-        profileurl: "",
+        clientid: "$2y$10$h4MUlI/1KcbJJbC2/vEYgeP837m5dHB7X1BwMXxIHFxeKGYwEfWau",
+        profileurl: "https://civilengineer-io.s3.amazonaws.com/WLCLZstevenatwater.jpg",
         phonenumber: "916-823-1652",
         company: {
             companyid: "civilengineer-io",
@@ -1674,9 +1674,9 @@ export function TestUser() {
                         accountid: "myequipmentaccount",
                         workinghours: "1700.0000",
                         ownershipstatus: "owned",
-                        purchasedate: "2018-05-24",
+                        purchasedate: "2011-01-15",
                         loaninterest: "5.4000",
-                        saledate: "2021-09-14",
+                        saledate: "0000-00-00",
                         resalevalue: "8000.0000",
                         ownership: {
                             cost: [
@@ -1901,23 +1901,34 @@ export function TestUser() {
             myuser: [
                 {
                     providerid: "stevenatwater",
+                    companyid: {},
                     emailaddress: "immaisoncrosby@gmail.com",
-                    firstname: "Steven",
-                    lastname: "Atwater",
+                    firstname: "Maison",
+                    lastname: "Crosby",
                     client: "google",
-                    clientid: "109676734658243948537",
+                    clientid: "$2y$10$O8qWk0zAigTvmPrxhkaOaukI2KcBgvMwl6WJLAB.YZGLakLoxAGnK",
                     profileurl: "https://lh5.googleusercontent.com/-pwq6Zt4WHeY/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rfnjRVPJQYMRzgOWQD6aeRxVY7Nig/photo.jpg",
-                    stripe: ""
+                    stripe: "",
+                    company: {
+                        companyid: "civilengineer-io",
+                        company: "civilengineer.io",
+                        address: "5611 Loyalty Way",
+                        manager: "mazen",
+                        city: "Elk Grove",
+                        contactstate: "CA",
+                        zipcode: "95757"
+                    }
                 },
                 {
                     providerid: "mazen",
+                    companyid: {},
                     emailaddress: "mazen@civilengineer.io",
-                    firstname: "Mazen",
-                    lastname: "Khenaisser",
+                    firstname: "",
+                    lastname: "",
                     client: "apple",
-                    clientid: "000353.66d2a1610de24944b898df602ab5e7a7.0305",
+                    clientid: "$2y$10$h4MUlI/1KcbJJbC2/vEYgeP837m5dHB7X1BwMXxIHFxeKGYwEfWau",
                     profileurl: "",
-                    stripe: "acct_1CCcFoKDR2Pptlfl",
+                    stripe: "",
                     company: {
                         companyid: "civilengineer-io",
                         company: "civilengineer.io",
@@ -1930,6 +1941,7 @@ export function TestUser() {
                 },
                 {
                     providerid: "gusgfk",
+                    companyid: {},
                     emailaddress: "gus.gfk@gmail.com",
                     firstname: "Gus",
                     lastname: "Khenaisser",
@@ -1940,16 +1952,27 @@ export function TestUser() {
                 },
                 {
                     providerid: "gordonlum",
+                    companyid: {},
                     emailaddress: "gocatlum@att.net",
                     firstname: "Gordon",
                     lastname: "Lum",
                     client: "",
                     clientid: "",
                     profileurl: "",
-                    stripe: ""
+                    stripe: "",
+                    company: {
+                        companyid: "civilengineer-io",
+                        company: "civilengineer.io",
+                        address: "5611 Loyalty Way",
+                        manager: "mazen",
+                        city: "Elk Grove",
+                        contactstate: "CA",
+                        zipcode: "95757"
+                    }
                 },
                 {
                     providerid: "selene",
+                    companyid: {},
                     emailaddress: "ibarrolaselene5@gmail.com",
                     firstname: "Selene",
                     lastname: "ibarrola",
@@ -1969,6 +1992,7 @@ export function TestUser() {
                 },
                 {
                     providerid: "allinone",
+                    companyid: {},
                     emailaddress: "michaelicay@gmail.com",
                     firstname: "Michael",
                     lastname: "Icay",
