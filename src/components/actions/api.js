@@ -385,7 +385,6 @@ export async function SaveProject(values) {
 
 export async function SaveProfile(values) {
     let providerid = values.myuser.providerid;
-    let projectid = values.project.projectid;
     console.log(values);
 
     let APIURL = `${process.env.REACT_APP_SERVER_API}/${providerid}/saveprofile`;
