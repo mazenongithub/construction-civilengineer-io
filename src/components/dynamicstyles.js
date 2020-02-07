@@ -335,6 +335,7 @@ class DynamicStyles {
         }
 
     }
+
     showsaveprofile() {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
@@ -862,6 +863,20 @@ class DynamicStyles {
         } else {
             return ({ maxWidth: '90px' })
         }
+    }
+    getemployeekeybyid(providerid) {
+        const dynamicstyles = new DynamicStyles()
+        let myemployees = dynamicstyles.getmyemployees.call(this)
+        let key = false;
+        if (myemployees) {
+            // eslint-disable-next-line
+            myemployees.map((employee, i) => {
+                if (employee.providerid === providerid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
     }
     getemployeebyid(providerid) {
         const dynamicstyles = new DynamicStyles()

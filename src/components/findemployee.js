@@ -4,6 +4,16 @@ import DynamicStyles from './dynamicstyles';
 import { addIcon } from './svg';
 class FindEmployee {
 
+    showprofileimage() {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        const searchProfileImage = dynamicstyles.getsearchimage.call(this)
+        if (myuser.profileurl) {
+            return (<img src={myuser.profileurl} style={{ ...searchProfileImage }} alt={`${myuser.firstname} ${myuser.lastname}}`} />)
+        } else {
+            return;
+        }
+    }
     showemployee(employee) {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();

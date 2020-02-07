@@ -631,6 +631,7 @@ class Employees extends Component {
         }
         return employee;
     }
+
     showmyemployees() {
         let employees = this.getemployees();
         let myemployees = [];
@@ -684,6 +685,41 @@ class Employees extends Component {
             this.setState({ activeemployeeid: employeeid })
         }
     }
+    getprofileimage() {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        const profilephoto = this.getprofilephoto();
+        if (myuser.profileurl) {
+            return (<img src={myuser.profileurl} style={{ ...profilephoto }} alt={`${myuser.firstname} ${myuser.lastname}}`} />)
+        } else {
+            return;
+        }
+    }
+    removeemployee(employee) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        let myemployee = dynamicstyles.getemployeebyid.call(this, employee.providerid);
+        if (window.confirm(`Are you sure you want to delete ${employee.firstname} ${employee.lastname} from the company?`)) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.office.hasOwnProperty("employees")) {
+
+                    if (myemployee.hasOwnProperty("benefits")) {
+                        this.setState({ message: `${employee.firstname} ${employee.lastname} has benefits to remove prior to removing from the company` })
+                    } else {
+                        let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid);
+                        myuser.company.office.employees.employee.splice(i, 1)
+                        if (myuser.company.office.employees.employee.length === 0) {
+                            delete myuser.company.office.employees.employee
+                            delete myuser.company.office.employees
+                        }
+                        this.setState({ activeemployeeid: false })
+                    }
+
+                }
+
+            }
+        }
+    }
     showmyemployee(providerid) {
         const styles = MyStylesheet();
         const profilephoto = this.getprofilephoto();
@@ -701,14 +737,14 @@ class Employees extends Component {
                                 <div style={{ ...styles.generalContainer, ...profilephoto, ...styles.showBorder, ...styles.marginAuto }}
                                     onClick={() => { this.makeemployeeactive(employee.providerid) }}
                                 >
-
+                                    {this.getprofileimage()}
                                 </div>
                             </div>
                             <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont }}>
                                 {employee.firstname}  {employee.lastname}
                             </div>
                             <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
+                                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeemployee(employee) }}>{removeIconSmall()} </button>
                             </div>
 
                         </div>
@@ -726,7 +762,7 @@ class Employees extends Component {
                         <div style={{ ...styles.generalContainer }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
                                 <div style={{ ...styles.generalContainer, ...profilephoto, ...styles.showBorder, ...styles.marginAuto }} onClick={() => { this.makeemployeeactive(employee.providerid) }}>
-
+                                    {this.getprofileimage()}
                                 </div>
                             </div>
                         </div>
@@ -737,7 +773,7 @@ class Employees extends Component {
                                 {employee.firstname} {employee.lastname}
                             </div>
                             <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
+                                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeemployee(employee) }}>{removeIconSmall()} </button>
                             </div>
 
                         </div>
@@ -784,6 +820,38 @@ class Employees extends Component {
             this.setState({ activebenefitid: benefitid })
         }
     }
+    getbenefitkeybyid(benefitid) {
+        let employee = this.getactiveemployee();
+        let key = false;
+        if (employee) {
+            if (employee.hasOwnProperty("benefits")) {
+                // eslint-disable-next-line
+                employee.benefits.benefit.map((benefit, i) => {
+                    if (benefit.benefitid === benefitid) {
+                        key = i;
+                    }
+                })
+            }
+        }
+        return key;
+    }
+    removebenefitbyid(benefit) {
+
+        if (window.confirm(`Are you sure you want to delete benefit ${benefit.benefit}?`)) {
+            const dynamicstyles = new DynamicStyles();
+            const myuser = dynamicstyles.getuser.call(this);
+            if (myuser) {
+                const i = this.getactiveemployeekey();
+                const j = this.getbenefitkeybyid(benefit.benefitid);
+                myuser.company.office.employees.employee[i].benefits.benefit.splice(j, 1)
+                if (myuser.company.office.employees.employee[i].benefits.benefit.length === 0) {
+                    delete myuser.company.office.employees.employee[i].benefits.benefit
+                    delete myuser.company.office.employees.employee[i].benefits;
+                }
+                this.setState({ activebenefitid: false })
+            }
+        }
+    }
     showemployebenefit(benefit) {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
@@ -791,7 +859,7 @@ class Employees extends Component {
         const account = this.getaccountbyid(benefit.accountid)
 
         return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...this.getactiveebenefitbackground(benefit.benefitid) }} onClick={() => { this.makebenefitidactive(benefit.benefitid) }}>
-            {benefit.benefit}  Account:  {account.account} {account.accountname} Amount: {benefit.amount}<button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
+            {benefit.benefit}  Account:  {account.account} {account.accountname} Amount: {benefit.amount}<button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removebenefitbyid(benefit) }}>{removeIconSmall()} </button>
         </div>)
 
     }
@@ -911,7 +979,7 @@ function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
         navigation: state.navigation,
-        projectid: state.projectid,
+        project: state.project,
         allusers: state.allusers,
         allcompanys: state.allcompanys
     }
