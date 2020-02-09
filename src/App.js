@@ -65,9 +65,9 @@ class App extends Component {
 
   async checkuser() {
     try {
-      let response = TestUser();
+      //let response = TestUser();
 
-      //let response = await CheckUserLogin();
+      let response = await CheckUserLogin();
 
 
       if (response.hasOwnProperty("allusers")) {
