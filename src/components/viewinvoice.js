@@ -310,8 +310,8 @@ class ViewInvoice extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const bidField = dynamicstyles.getbidfield.call(this)
         const csi = dynamicstyles.getcsibyid.call(this, item.csiid);
-        let profit = Number(this.getprofit(item.csiid)).toFixed(4)
-        let quantity = item.quantity;
+
+
         let bidprice = Number(this.getbidprice(item.csiid)).toFixed(2);
         let unitprice = +Number(this.getunitprice(item.csiid)).toFixed(4);
         let directcost = Number(this.getdirectcost(item.csiid)).toFixed(2);
@@ -320,18 +320,34 @@ class ViewInvoice extends Component {
         let companyid = this.props.match.params.companyid;
         let projectid = this.props.match.params.projectid;
         let invoiceid = this.props.match.params.invoiceid;
-
+        let profit = () => {
+            return (
+                <input type="text"
+                    value={Number(this.getprofit(item.csiid)).toFixed(4)}
+                    onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
+                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
+                />)
+        }
+        const quantity = () => {
+            return (<div style={{ ...styles.generalContainer }}>
+                Quantity <br />
+                <input type="text"
+                    value={item.quantity}
+                    onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
+                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
+            </div>)
+        }
         if (this.state.width > 1200) {
             return (
                 <tr>
                     <td> <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/invoices/${invoiceid}/csi/${csi.csiid}`}> Line Item <br />
                         {csi.csi}-{csi.title} </Link></td>
                     <td style={{ ...styles.alignCenter }}>
-                        {quantity}
+                        {quantity()}
                     </td>
                     <td style={{ ...styles.alignCenter }}>{unit}</td>
                     <td style={{ ...styles.alignCenter }}>{directcost}</td>
-                    <td style={{ ...styles.alignCenter }}>{profit}</td>
+                    <td style={{ ...styles.alignCenter }}>{profit()}</td>
                     <td style={{ ...styles.alignCenter }}>{bidprice}</td>
                     <td style={{ ...styles.alignCenter }}> {`$${unitprice}/${unit}`}</td>
                 </tr>)

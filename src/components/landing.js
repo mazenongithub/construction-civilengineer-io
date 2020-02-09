@@ -51,41 +51,18 @@ class Landing extends Component {
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
 
-                        <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex1, ...styles.generalFont, ...generalFontHeight }}>
-                                Free Construction Management Accounting Program for Joining. The Benefits of using this program are:
+                                Create your Company, Adds employees, benefits, determines labor rates, adds equipment, determines rates for equipment use, sets up accounts to distribute payment upon invoice to support different accounts, construction specification institute produces unit prices for different items for contruction, contractor bid schedule adds quantities producing unit pricing, equipment, labor and material components add Direct Costs, Compare proposed versus actual, project scheduling, cost estimating design for construction project
                             </div>
                         </div>
 
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...generalFontHeight, ...styles.addPadding15 }}>
-                                Office Management: Add Your Employees. Create Company Account Codes to Automate Employee Benefits, Custom Payroll Accounting:
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1, ...styles.generalFont, ...generalFontHeight }}>
+                                See for yourself, most comprehensive construction management application, go ahead and join
                             </div>
                         </div>
 
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...generalFontHeight, ...styles.addLeftMargin15, ...styles.addPadding15 }}>
-                                Add your Equipment. Determines equipment rates based on the costs of owning the equipment. This will help those financing and owning their own equipment. In addition, add your own rental rentals and set your own rental rates.
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...generalFontHeight, ...styles.addLeftMargin15, ...styles.addPadding15 }}>
-                                Easy Construction Project Scheduling and Management. Just schedule your labor and equipment, add your materials. Construction Specification Institute codes for construction distribute costs to the correct pay items. Simply enter your quanitity amounts in your pay table to create unit prices for construction.
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...generalFontHeight, ...styles.addLeftMargin15, ...styles.addPadding15 }}>
-                                Work on a team with a predefined roled. Receive payments for labor, equipment, materials, and profit.  Enter your Direct Costs as they occur for live payment tracking.
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...generalFontHeight, ...styles.addLeftMargin15, ...styles.addPadding15 }}>
-                                Live up to the mintue cost tracking for your project. Free work labor, material, equipment time working sheets. Easy proposals, easy invoicing, collecting payments, routing payments to the service provider. Full construction administration from A to Z.
-                            </div>
-                        </div>
 
                     </div>
                 </div>

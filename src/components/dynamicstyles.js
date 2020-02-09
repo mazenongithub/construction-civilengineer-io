@@ -604,7 +604,16 @@ class DynamicStyles {
         return MySchedule
 
     }
+    getmymaterials() {
+        const dynamicstyles = new DynamicStyles();
+        const company = dynamicstyles.getcompany.call(this);
+        let materials = false;
+        if (company.hasOwnProperty("materials")) {
+            materials = company.materials.mymaterial;
 
+        }
+        return materials;
+    }
     showlinedetail() {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
@@ -1803,7 +1812,31 @@ class DynamicStyles {
         }
         return milestone;
     }
-
+    getmyaccounts() {
+        const dynamicstyles = new DynamicStyles();
+        let myaccounts = false;
+        const mycompany = dynamicstyles.getcompany.call(this);
+        if (mycompany) {
+            if (mycompany.office.hasOwnProperty("accounts")) {
+                myaccounts = mycompany.office.accounts.account;
+            }
+        }
+        return myaccounts;
+    }
+    getaccountkeybyid(accountid) {
+        const dynamicstyles = new DynamicStyles();
+        const myaccounts = dynamicstyles.getmyaccounts.call(this);
+        let key = false;
+        if (myaccounts.hasOwnProperty("length")) {
+            // eslint-disable-next-line
+            myaccounts.map((account, i) => {
+                if (account.accountid === accountid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    }
     getmyequipment() {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);

@@ -428,6 +428,82 @@ class Accounts extends Component {
         }
 
     }
+    validateDeleteAccount(account) {
+        const dynamicstyles = new DynamicStyles();
+        let deleteaccount = true;
+        let deletemessage = "";
+        const accountid = account.accountid;
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            const myemployees = dynamicstyles.getmyemployees.call(this);
+            if (myemployees.hasOwnProperty("length")) {
+                // eslint-disable-next-line
+                myemployees.map(employee => {
+                    if (employee.hasOwnProperty("benefits")) {
+                        // eslint-disable-next-line
+                        employee.benefits.benefit.map(benefit => {
+                            if (benefit.accountid === accountid) {
+                                deleteaccount = false;
+                                deletemessage += `Account ID is associated to employee ${employee.providerid}`
+                            }
+                        })
+                    }
+                })
+            }
+
+        }
+        let mymaterials = dynamicstyles.getmymaterials.call(this);
+        if (mymaterials.hasOwnProperty("length")) {
+            // eslint-disable-next-line
+            mymaterials.map(mymaterial => {
+                if (mymaterial.accountid === accountid) {
+                    deleteaccount = false;
+                    deletemessage += `Account ID is associated to materials ${mymaterial.material}`
+
+                }
+            })
+
+        }
+        let myequipment = dynamicstyles.getmyequipment.call(this);
+        if (myequipment.hasOwnProperty("length")) {
+            // eslint-disable-next-line
+            myequipment.map(equipment => {
+                if (equipment.accountid === accountid) {
+                    deleteaccount = false;
+                    deletemessage += `Account ID is associated to equipment ${equipment.equipment}`
+                }
+            })
+        }
+
+        return { deleteaccount, deletemessage }
+    }
+    removeaccount(account) {
+        let dynamicstyles = new DynamicStyles();
+        if (window.confirm(`Are you sure you want to delete Account ${account.account}?`)) {
+            let validate = this.validateDeleteAccount(account);
+            if (validate.deleteaccount) {
+                const myuser = dynamicstyles.getuser.call(this);
+                if (myuser) {
+                    const i = dynamicstyles.getaccountkeybyid.call(this, account.accountid)
+                    myuser.company.office.accounts.account.splice(i, 1);
+                    if (myuser.company.office.accounts.account.length === 0) {
+                        delete myuser.company.office.accounts.account;
+                        delete myuser.company.office.accounts;
+                    }
+
+
+
+                }
+
+            } else {
+                const message = validate.deletemessage;
+                this.setState({ message })
+            }
+
+
+        }
+
+    }
     showmyaccounts() {
         let myaccounts = this.getmyaccounts();
         let accounts = [];
@@ -442,7 +518,7 @@ class Accounts extends Component {
                 accounts.push(
                     <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...this.getactivebackground(account.accountid) }}>
                         <span onClick={() => { this.makeaccountactive(account.accountid) }}>{account.account}  - {account.accountname}</span>
-                        <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
+                        <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeaccount(account) }}>{removeIconSmall()} </button>
                     </div>
                 )
 
