@@ -1823,6 +1823,35 @@ class DynamicStyles {
         }
         return myaccounts;
     }
+    getmaterialkeybyid(materialid) {
+        const dynamicstyles = new DynamicStyles();
+        const company = dynamicstyles.getcompany.call(this);
+        let key = false;
+        if (company) {
+            if (company.hasOwnProperty("materials")) {
+                // eslint-disable-next-line
+                company.materials.mymaterial.map((mymaterial, i) => {
+                    if (mymaterial.materialid === materialid) {
+                        key = i;
+
+                    }
+                })
+            }
+        }
+        return key;
+
+    }
+    getmyprojects() {
+        const dynamicstyles = new DynamicStyles();
+        const company = dynamicstyles.getcompany.call(this);
+        let projects = false;
+        if (company) {
+            if (company.hasOwnProperty("projects")) {
+                projects = company.projects.myproject;
+            }
+        }
+        return projects;
+    }
     getaccountkeybyid(accountid) {
         const dynamicstyles = new DynamicStyles();
         const myaccounts = dynamicstyles.getmyaccounts.call(this);

@@ -276,6 +276,57 @@ class Materials extends Component {
         }
 
     }
+    validatematerial(material) {
+        const dynamicstyles = new DynamicStyles();
+        const myprojects = dynamicstyles.getmyprojects.call(this);
+        let validate = true;
+        let validatemessage = "";
+        const materialid = material.materialid;
+        if (myprojects.hasOwnProperty("length")) {
+            myprojects.map(myproject => {
+                if (myproject.hasOwnProperty("schedulematerials")) {
+                    // eslint-disable-next-line
+                    myproject.schedulematerials.mymaterial.map(mymaterial => {
+                        if (mymaterial.mymaterialid === materialid) {
+                            validate = false;
+                            validatemessage += `Could not delete material ${material.material}, exists inside schedule materials Project ID ${myproject.projectid}`
+
+                        }
+                    })
+
+                }
+
+                if (myproject.hasOwnProperty("actualmaterials")) {
+                    // eslint-disable-next-line
+                    myproject.actualmaterials.mymaterial.map(mymaterial => {
+                        if (mymaterial.mymaterialid === materialid) {
+                            validate = false;
+                            validatemessage += `Could not delete material ${material.material}, exists inside actual materials Project ID ${myproject.projectid}`
+
+                        }
+                    })
+
+                }
+            })
+        }
+        return { validate, validatemessage }
+    }
+    removematerial(material) {
+        const dynamicstyles = new DynamicStyles();
+        if (window.confirm(`Are you sure you want to delete ${material.material}?`)) {
+            const validate = this.validatematerial(material);
+            if (validate.validate) {
+                let myuser = dynamicstyles.getuser.call(this);
+                const i = dynamicstyles.getmaterialkeybyid.call(this, material.materialid);
+                myuser.company.materials.mymaterial.splice(i, 1);
+                this.props.reduxUser(myuser);
+                this.setState({ activematerialid: false, message: '' })
+            } else {
+                this.setState({ message: validate.validatemessage })
+            }
+
+        }
+    }
     showmymaterial(mymaterial) {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
@@ -293,9 +344,9 @@ class Materials extends Component {
             csi = `${mycsi.csi} - ${mycsi.title}`
         }
         return (<div style={{ ...styles.generalFlex, ...this.getactivematerialbackground(mymaterial.materialid) }}>
-            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }} onClick={() => { this.makematerialactive(mymaterial.materialid) }}>
-                {mymaterial.material}  {mymaterial.unitcost}/{mymaterial.unit} Account:{account} Construction:{csi}
-                <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
+            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                <span onClick={() => { this.makematerialactive(mymaterial.materialid) }}>{mymaterial.material}  {mymaterial.unitcost}/{mymaterial.unit} Account:{account} Construction:{csi}</span>
+                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removematerial(mymaterial) }}>{removeIconSmall()} </button>
             </div>
         </div>)
     }
