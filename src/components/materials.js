@@ -283,6 +283,7 @@ class Materials extends Component {
         let validatemessage = "";
         const materialid = material.materialid;
         if (myprojects.hasOwnProperty("length")) {
+            // eslint-disable-next-line
             myprojects.map(myproject => {
                 if (myproject.hasOwnProperty("schedulematerials")) {
                     // eslint-disable-next-line

@@ -163,207 +163,7 @@ class Construction extends Component {
             return (this.state.title)
         }
     }
-    handlecsi_1(csi_1) {
-        this.setState({ csi_1 })
 
-        if (csi_1.length >= 2) {
-
-            csi_1 = csi_1.substr(0, 2);
-
-            let csi = "";
-            if (this.props.myusermodel) {
-                let myuser = this.props.myusermodel;
-                if (csi_1.length > 2) {
-                    csi_1 = csi_1.substr(0, 2);
-                }
-
-                if (this.state.activecsiid) {
-                    if (csi_1.length >= 2) {
-                        csi = this.getactivecsi().csi;
-                        let csi_2 = csi.substr(2, 2)
-                        let csi_3 = csi.substr(4, 2)
-                        csi = `${csi_1}${csi_2}${csi_3}`
-                        let i = this.getactivecsikey();
-                        myuser.company.construction.csicodes.code[i].csi = csi;
-                        this.props.reduxUser(myuser)
-                        this.setState({ render: 'render' })
-                    }
-
-
-
-                } else {
-
-                    console.log(csi_1)
-
-
-                }
-
-            }
-
-        }
-
-    }
-
-    handlecsi_2(csi_2) {
-        this.setState({ csi_2 })
-
-        if (csi_2.length >= 2) {
-
-            csi_2 = csi_2.substr(0, 2);
-
-            let csi = "";
-            if (this.props.myusermodel) {
-                let myuser = this.props.myusermodel;
-
-                if (this.state.activecsiid) {
-                    if (csi_2.length >= 2) {
-                        csi = this.getactivecsi().csi;
-                        let csi_1 = csi.substr(0, 2)
-                        let csi_3 = csi.substr(4, 2)
-                        csi = `${csi_1}${csi_2}${csi_3}`
-                        let i = this.getactivecsikey();
-                        myuser.company.construction.csicodes.code[i].csi = csi;
-                        this.props.reduxUser(myuser)
-                        this.setState({ render: 'render' })
-                    }
-
-
-
-                } else {
-
-                    console.log(csi_2)
-
-
-                }
-
-            }
-
-        }
-
-    }
-
-    handlecsi_3(csi_3) {
-        this.setState({ csi_3 })
-
-        if (csi_3.length >= 2) {
-
-            csi_3 = csi_3.substr(0, 2);
-
-            let csi = "";
-            if (this.props.myusermodel) {
-                let myuser = this.props.myusermodel;
-
-                if (this.state.activecsiid) {
-                    if (csi_3.length >= 2) {
-                        csi = this.getactivecsi().csi;
-                        let csi_2 = csi.substr(2, 2)
-                        let csi_1 = csi.substr(0, 2)
-                        csi = `${csi_1}${csi_2}${csi_3}`
-                        let i = this.getactivecsikey();
-                        myuser.company.construction.csicodes.code[i].csi = csi;
-                        this.props.reduxUser(myuser)
-                        this.setState({ render: 'render' })
-                    }
-
-
-
-                } else {
-
-                    console.log(csi_3)
-
-
-                }
-
-            }
-
-        }
-
-    }
-
-    showcsi() {
-        const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
-        if (this.state.width > 800) {
-            return (
-
-                <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1 }}>
-
-                        <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                                Construction Index
-                            </div>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.margin10 }}>
-                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.state.csi_1}
-                                    onChange={event => { this.handlecsi_1(event.target.value) }} />
-                            </div>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.margin10 }}>
-                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.state.csi_2}
-                                    onChange={event => { this.handlecsi_2(event.target.value) }}
-                                />
-                            </div>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.margin10 }}>
-                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.state.csi_3}
-                                    onChange={event => { this.handlecsi_3(event.target.value) }} />
-                            </div>
-                            <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont }}>
-                                &nbsp;
-                             </div>
-                        </div>
-
-
-
-
-                    </div>
-                </div>
-            )
-        } else {
-            return (
-                <div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1 }}>
-
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                            Construction Index
-                        </div>
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.margin10 }}>
-                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.state.csi_1}
-                                    onChange={event => { this.handlecsi_1(event.target.value) }}
-                                />
-                            </div>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.margin10 }}>
-                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.state.csi_2}
-                                    onChange={event => { this.handlecsi_2(event.target.value) }}
-                                />
-                            </div>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.margin10 }}>
-                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.state.csi_3}
-                                    onChange={event => { this.handlecsi_3(event.target.value) }}
-                                />
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                            Title <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                value={this.getcsititle()}
-                                onChange={event => { this.handlecsititle(event.target.value) }}
-
-                            />
-                        </div>
-
-                    </div>
-                </div>
-            )
-
-        }
-    }
     getmycsicodes() {
         let mycodes = false;
         if (this.props.myusermodel) {
@@ -421,6 +221,7 @@ class Construction extends Component {
         return csi;
     }
     makecsiactive(csiid) {
+
         const dynamicstyles = new DynamicStyles()
         if (this.state.activecsiid !== csiid) {
             let code = dynamicstyles.getcsibyid.call(this, csiid);
@@ -447,18 +248,305 @@ class Construction extends Component {
     }
     getcsiid() {
         const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
         if (this.state.activecsiid) {
             let csiid = this.state.activecsiid;
             let csi = dynamicstyles.getcsibyid.call(this, csiid)
-            return (`${csi.csi}-${csi.title}`)
+            return (<div style={{ ...styles.generalContainer, ...styles.activecsi, ...styles.showBorder }}>{csi.csi} {csi.title}</div>)
         } else {
-            return ""
+            return;
         }
 
 
     }
     handlecsiid(csiid) {
         this.makecsiactive(csiid)
+
+    }
+    validatenewcsi() {
+        const csi_1 = this.state.csi_1;
+        const csi_2 = this.state.csi_2;
+        const csi_3 = this.state.csi_3;
+        const title = this.state.title;
+        let validate = false;
+        if (csi_1 && csi_2 && csi_3 && title) {
+            validate = true;
+        }
+        return validate;
+
+    }
+    handlecsi_1(csi_1) {
+        if (csi_1.length === 0) {
+            csi_1 = '00';
+        }
+        this.setState({ csi_1 })
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+
+        if (myuser) {
+
+            if (this.state.activecsiid) {
+                let mycsi = this.getactivecsi();
+                let csi = mycsi.csi;
+                csi = `${csi_1.substr(0, 2)}${csi.substr(2, 2)}${csi.substr(4, 2)}`
+                let i = this.getactivecsikey();
+                myuser.company.construction.csicodes.code[i].csi = csi;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+
+
+            } else {
+                const validate = this.validatenewcsi();
+                if (validate) {
+                    const csi_2 = this.state.csi_2.substring(0, 2)
+                    const csi_3 = this.state.csi_3.substring(0, 2)
+                    csi_1 = csi_1.substring(0, 2);
+                    const csiid = makeID(16);
+                    const csi = `${csi_1}${csi_2}${csi_3}`;
+                    const title = this.state.title;
+                    const newcsi = CreateCSI(csiid, csi, title);
+                    const mycsis = dynamicstyles.getmycsicodes.call(this)
+                    if (mycsis) {
+                        myuser.company.construction.csicodes.code.push(newcsi);
+
+                    } else {
+                        const csicodes = { code: [newcsi] }
+                        myuser.company.construction.csicodes = csicodes;
+
+
+                    }
+                    this.props.reduxUser(myuser);
+                    this.setState({ activecsiid: csiid })
+
+                }
+            }
+
+        }
+    }
+    handlecsi_2(csi_2) {
+        this.setState({ csi_2 })
+        if (csi_2.length === 0) {
+            csi_2 = '00';
+        }
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+
+        if (myuser) {
+
+            if (this.state.activecsiid) {
+                let mycsi = this.getactivecsi();
+                let csi = mycsi.csi;
+                csi = `${csi.substr(0, 2)}${csi_2.substr(0, 2)}${csi.substr(4, 2)}`
+                let i = this.getactivecsikey();
+                myuser.company.construction.csicodes.code[i].csi = csi;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+
+
+            } else {
+
+                const validate = this.validatenewcsi();
+                if (validate) {
+                    const csi_1 = this.state.csi_1.substring(0, 2)
+                    const csi_3 = this.state.csi_3.substring(0, 2)
+                    csi_2 = csi_2.substring(0, 2);
+                    const csiid = makeID(16);
+                    const csi = `${csi_1}${csi_2}${csi_3}`;
+                    const title = this.state.title;
+                    const newcsi = CreateCSI(csiid, csi, title);
+                    const mycsis = dynamicstyles.getmycsicodes.call(this)
+                    if (mycsis) {
+                        myuser.company.construction.csicodes.code.push(newcsi);
+
+                    } else {
+                        const csicodes = { code: [newcsi] }
+                        myuser.company.construction.csicodes = csicodes;
+
+
+                    }
+                    this.props.reduxUser(myuser);
+                    this.setState({ activecsiid: csiid })
+
+                }
+            }
+
+        }
+    }
+    handlecsi_3(csi_3) {
+        if (csi_3.length === 0) {
+            csi_3 = '00';
+        }
+        this.setState({ csi_3 })
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+
+        if (myuser) {
+
+            if (this.state.activecsiid) {
+                let mycsi = this.getactivecsi();
+                let csi = mycsi.csi;
+                csi = `${csi.substr(0, 2)}${csi.substr(2, 2)}${csi_3.substr(0, 2)}`
+                let i = this.getactivecsikey();
+                myuser.company.construction.csicodes.code[i].csi = csi;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+
+
+            } else {
+
+                const validate = this.validatenewcsi();
+                if (validate) {
+                    const csi_1 = this.state.csi_1.substring(0, 2)
+                    const csi_2 = this.state.csi_2.substring(0, 2)
+                    csi_3 = csi_3.substring(0, 2);
+                    const csiid = makeID(16);
+                    const csi = `${csi_1}${csi_2}${csi_3}`;
+                    const title = this.state.title;
+                    const newcsi = CreateCSI(csiid, csi, title);
+                    const mycsis = dynamicstyles.getmycsicodes.call(this)
+                    if (mycsis) {
+                        myuser.company.construction.csicodes.code.push(newcsi);
+
+                    } else {
+                        const csicodes = { code: [newcsi] }
+                        myuser.company.construction.csicodes = csicodes;
+
+
+                    }
+                    this.props.reduxUser(myuser);
+                    this.setState({ activecsiid: csiid })
+
+                }
+            }
+
+        }
+    }
+    getcsi_1() {
+        if (this.state.activecsiid) {
+            const mycsi = this.getactivecsi();
+            return (mycsi.csi.substr(0, 2))
+
+
+        } else {
+            return (this.state.csi_1.substr(0, 2))
+        }
+    }
+    getcsi_2() {
+        if (this.state.activecsiid) {
+            const mycsi = this.getactivecsi();
+            return (mycsi.csi.substr(2, 2))
+
+
+        } else {
+            return (this.state.csi_2.substr(0, 2))
+        }
+    }
+    getcsi_3() {
+        if (this.state.activecsiid) {
+            const mycsi = this.getactivecsi();
+            return (mycsi.csi.substr(4, 2))
+        } else {
+            return (this.state.csi_3.substr(0, 2))
+        }
+    }
+    validateremovecsi(csiid) {
+        const dynamicstyles = new DynamicStyles();
+        const myprojects = dynamicstyles.getmyprojects.call(this);
+        let validate = {};
+        validate.validate = true;
+        validate.message = '';
+        if (myprojects.hasOwnProperty("length")) {
+            // eslint-disable-next-line
+            myprojects.map(myproject => {
+                if (myproject.hasOwnProperty("schedulelabor")) {
+                    // eslint-disable-next-line
+                    myproject.schedulelabor.mylabor.map(mylabor => {
+                        if (mylabor.csiid === csiid) {
+                            validate.validate = false;
+                            validate.message += `CSI ID found schedule labor `
+                        }
+                    })
+                }
+                if (myproject.hasOwnProperty("schedulematerials")) {
+                    // eslint-disable-next-line
+                    myproject.schedulematerials.mymaterial.map(mymaterial => {
+                        if (mymaterial.csiid === csiid) {
+                            validate.validate = false;
+                            validate.message += `CSI ID found schedule material `
+                        }
+                    })
+                }
+
+                if (myproject.hasOwnProperty("scheduleequipment")) {
+                    // eslint-disable-next-line
+                    myproject.scheduleequipment.myequipment.map(myequipment => {
+                        if (myequipment.csiid === csiid) {
+                            validate.validate = false;
+                            validate.message += `CSI ID found schedule equipment `
+                        }
+                    })
+                }
+
+                if (myproject.hasOwnProperty("actuallabor")) {
+                    // eslint-disable-next-line
+                    myproject.actuallabor.mylabor.map(mylabor => {
+                        if (mylabor.csiid === csiid) {
+                            validate.validate = false;
+                            validate.message += `CSI ID found actual labor `
+                        }
+                    })
+                }
+                if (myproject.hasOwnProperty("actualmaterials")) {
+                    // eslint-disable-next-line
+                    myproject.actualmaterials.mymaterial.map(mymaterial => {
+                        if (mymaterial.csiid === csiid) {
+                            validate.validate = false;
+                            validate.message += `CSI ID found actual material `
+                        }
+                    })
+                }
+
+                if (myproject.hasOwnProperty("actualequipment")) {
+                    // eslint-disable-next-line
+                    myproject.actualequipment.myequipment.map(myequipment => {
+                        if (myequipment.csiid === csiid) {
+                            validate.validate = false;
+                            validate.message += `CSI ID found actual equipment `
+                        }
+                    })
+                }
+
+            })
+        }
+        return validate;
+    }
+    removecsi(csi) {
+        if (window.confirm(`Are you sure you want to delete CSI ${csi.csi} ${csi.title}?`)) {
+            const dynamicstyles = new DynamicStyles();
+            const myuser = dynamicstyles.getuser.call(this);
+            if (myuser) {
+
+                const validatecsi = this.validateremovecsi(csi.csiid)
+                if (validatecsi.validate) {
+                    const i = this.getactivecsikey();
+                    myuser.company.construction.csicodes.code.splice(i, 1);
+                    if (myuser.company.construction.csicodes.code.length === 0) {
+                        delete myuser.company.construction.csicodes.code;
+                        delete myuser.company.construction.csicodes
+                    }
+                    this.props.reduxUser(myuser);
+                    this.setState({ activecsiid: false })
+
+
+
+
+
+                } else {
+                    this.setState({ message: validatecsi.message })
+                }
+
+            }
+        }
 
     }
     render() {
@@ -479,7 +567,30 @@ class Construction extends Component {
                         </div>
                     </div>
 
-                    {csi.showCSI.call(this)}
+                    <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont }}>
+                        Create A Construction Specification (xx xx xx)
+                    </div>
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
+                                value={this.getcsi_1()}
+                                onChange={event => { this.handlecsi_1(event.target.value) }}
+                            />
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
+                                value={this.getcsi_2()}
+                                onChange={event => { this.handlecsi_2(event.target.value) }}
+                            />
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
+                                value={this.getcsi_3()}
+                                onChange={event => { this.handlecsi_3(event.target.value) }} />
+                        </div>
+                    </div>
+
 
                     <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
                         Title  <input type="text"
@@ -487,6 +598,9 @@ class Construction extends Component {
                             onChange={event => { this.handlecsititle(event.target.value) }}
                             style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin15 }} />
                     </div>
+                    {csi.showCSI.call(this)}
+
+
 
 
 

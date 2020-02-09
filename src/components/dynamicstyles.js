@@ -1823,6 +1823,17 @@ class DynamicStyles {
         }
         return myaccounts;
     }
+    getmycsicodes() {
+        const dynamicstyles = new DynamicStyles();
+        const mycompany = dynamicstyles.getcompany.call(this);
+        let csis = false;
+        if (mycompany.hasOwnProperty("construction")) {
+            if (mycompany.construction.hasOwnProperty("csicodes")) {
+                csis = mycompany.construction.csicodes.code;
+            }
+        }
+        return csis;
+    }
     getmaterialkeybyid(materialid) {
         const dynamicstyles = new DynamicStyles();
         const company = dynamicstyles.getcompany.call(this);

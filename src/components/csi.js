@@ -1,6 +1,7 @@
 import React from 'react';
 import DynamicStyles from './dynamicstyles';
 import { MyStylesheet } from './styles';
+import { removeIconSmall } from './svg';
 class CSI {
 
     getsearchresults() {
@@ -54,13 +55,52 @@ class CSI {
         return results;
     }
     showcsiid(csi) {
+
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
-        return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont }} key={csi.csiid} onClick={() => { this.handlecsiid(csi.csiid) }}>
-            <div style={{ ...styles.flex1 }}>
+        const removeIconWidth = dynamicstyles.getremoveicon.call(this);
+        const csibackground = () => {
+            if (this.state.activecsiid === csi.csiid) {
+                return ({ backgroundColor: '#F2C4D2' })
+            } else {
+                return;
+            }
+        }
+        const checkcsi = () => {
+            let csicheck = false;
+            const mycsis = dynamicstyles.getmycsicodes.call(this);
+
+            if (mycsis.hasOwnProperty("length")) {
+                // eslint-disable-next-line
+                mycsis.map(mycsi => {
+                    console.log(mycsi, csi)
+                    if (mycsi.csiid === csi.csiid) {
+                        csicheck = true;
+                    }
+                })
+            }
+            return csicheck;
+        }
+
+        const removeIcon = () => {
+
+            if (this.state.activecsiid === csi.csiid && checkcsi()) {
+                return (
+                    <div style={{ ...styles.flex1 }}>
+                        <button style={{ ...styles.generalButton, ...removeIconWidth }} onClick={() => { this.removecsi(csi) }}>{removeIconSmall()} </button>
+                    </div>
+                )
+            } else {
+                return;
+            }
+
+        }
+        return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont, ...csibackground() }} key={csi.csiid}>
+            <div style={{ ...styles.flex5 }} onClick={() => { this.handlecsiid(csi.csiid) }}>
                 {csi.csi} - {csi.title}
             </div>
+            {removeIcon()}
         </div>)
     }
     showsearchresults() {
@@ -113,9 +153,7 @@ class CSI {
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont }}
-                                value={this.getcsiid()}
-                            />
+                            {this.getcsiid()}
                         </div>
                     </div>
 

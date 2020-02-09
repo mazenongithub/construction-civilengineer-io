@@ -35,6 +35,9 @@ export function MyStylesheet() {
             width: '96%',
             margin: 'auto'
         },
+        activecsi: {
+            backgroundColor: ''
+        },
         addBottomMargin: {
             marginBottom: '5px'
         },
@@ -125,6 +128,9 @@ export function MyStylesheet() {
         },
         flex4: {
             flex: 4
+        },
+        flex5: {
+            flex: 5
         },
         alignCenter: {
             textAlign: 'center'
