@@ -185,7 +185,23 @@ class ActualLabor extends Component {
         }
 
     }
-
+    removelaborid(mylabor) {
+        if (window.confirm(`Do you want to erase ${mylabor.description}?`)) {
+            const dynamicstyles = new DynamicStyles();
+            const i = dynamicstyles.getprojectkey.call(this)
+            const j = dynamicstyles.getactuallaborkeybyid.call(this, mylabor.laborid);
+            const myuser = dynamicstyles.getuser.call(this);
+            if (myuser) {
+                myuser.company.projects.myproject[i].actuallabor.mylabor.splice(j, 1);
+                if (myuser.company.projects.myproject[i].actuallabor.mylabor.length === 0) {
+                    delete myuser.company.projects.myproject[i].actuallabor.mylabor
+                    delete myuser.company.projects.myproject[i].actuallabor;
+                }
+                this.props.reduxUser(myuser)
+                this.setState({ activelaborid: false })
+            }
+        }
+    }
     showlaborid(mylabor) {
         const styles = MyStylesheet();
         const removeIcon = this.getremoveicon();
@@ -195,13 +211,15 @@ class ActualLabor extends Component {
         console.log(mylabor, mylabor.laborrate)
         let hourlyrate = Number(mylabor.laborrate)
         console.log(hourlyrate)
-        return (<div key={mylabor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...this.getactivelaborbackground(mylabor.laborid) }} onClick={() => { this.makelaboractive(mylabor.laborid) }}>
-
-            {employee.firstname} {employee.lastname}: {mylabor.description} CSI:{csi.csi}-{csi.title}<br />
-            From {inputUTCStringForLaborID(mylabor.timein)} to {inputUTCStringForLaborID(mylabor.timeout)}
-            ${Number(hourlyrate).toFixed(2)}/Hr x {calculatetotalhours(mylabor.timeout, mylabor.timein)} Hrs = ${(Number(calculatetotalhours(mylabor.timeout, mylabor.timein)) * hourlyrate).toFixed(2)}
-            <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
-        </div>)
+        return (
+            <div key={mylabor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+                <span style={{ ...this.getactivelaborbackground(mylabor.laborid) }} onClick={() => { this.makelaboractive(mylabor.laborid) }}>
+                    {employee.firstname} {employee.lastname}: {mylabor.description} CSI:{csi.csi}-{csi.title}<br />
+                    From {inputUTCStringForLaborID(mylabor.timein)} to {inputUTCStringForLaborID(mylabor.timeout)}
+                    ${Number(hourlyrate).toFixed(2)}/Hr x {calculatetotalhours(mylabor.timeout, mylabor.timein)} Hrs = ${(Number(calculatetotalhours(mylabor.timeout, mylabor.timein)) * hourlyrate).toFixed(2)}
+                </span>
+                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removelaborid(mylabor) }}>{removeIconSmall()} </button>
+            </div>)
     }
     getcsibyid(csiid) {
         let csi = false;
