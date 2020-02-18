@@ -280,14 +280,52 @@ class Equipment extends Component {
         }
 
     }
+    getequipmentcostskeybyid(costid) {
+
+        let key = false;
+        const myequipment = this.getactiveequipment();
+
+        if (myequipment.hasOwnProperty("ownership")) {
+            // eslint-disable-next-line
+            myequipment.ownership.cost.map((cost, i) => {
+                if (cost.costid === costid) {
+                    key = i
+                }
+
+            })
+
+        }
+
+        return key;
+    }
+    removeequipmentcost(cost) {
+        if (window.confirm(`Are you sure you want to delete ${cost.detail}?`)) {
+            const dynamicstyles = new DynamicStyles();
+            const i = this.getactiveequipmentkey();
+            const j = this.getequipmentcostskeybyid(cost.costid)
+            const myuser = dynamicstyles.getuser.call(this);
+            if (myuser) {
+                myuser.company.equipment.myequipment[i].ownership.cost.splice(j, 1);
+                this.props.reduxUser(myuser)
+                this.setState({ render: 'render' })
+            }
+        }
+    }
     showequipmentcost(cost) {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
         const removeIcon = this.getremoveicon()
-        return (<div key={cost.costid}
-            style={{ ...styles.generalContainer, ...regularFont, ...styles.bottomMargin15, ...styles.generalFont, ...this.getactiveecostbackground(cost.costid) }} onClick={() => { this.makeequipmentcostactive(cost.costid) }}>
-            {formatDateStringDisplay(cost.timein)} Cost:${Number(cost.cost).toFixed(2)}  Detail: {cost.detail} <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
-        </div>)
+        return (
+            <div style={{ ...styles.generalFlex }}>
+                <div key={cost.costid}
+                    style={{ ...styles.flex5, ...regularFont, ...styles.bottomMargin15, ...styles.generalFont, ...this.getactiveecostbackground(cost.costid) }} onClick={() => { this.makeequipmentcostactive(cost.costid) }}>
+                    {formatDateStringDisplay(cost.timein)} Cost:${Number(cost.cost).toFixed(2)}  Detail: {cost.detail}
+                </div>
+                <div style={{ ...styles.flex1 }}>
+                    <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeequipmentcost(cost) }}>{removeIconSmall()} </button>
+                </div>
+            </div>
+        )
 
 
     }
@@ -843,13 +881,71 @@ class Equipment extends Component {
             this.setState({ activeequipmentid: false })
         }
     }
+    checkremoveequipment(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        const company = dynamicstyles.getcompany.call(this)
+        let validate = {};
+        validate.validate = true;
+        validate.message = "";
+        if (company.hasOwnProperty("projects")) {
+            // eslint-disable-next-line
+            company.projects.myproject.map(myproject => {
+                if (myproject.hasOwnProperty("scheduleequipment")) {
+                    // eslint-disable-next-line
+                    myproject.scheduleequipment.myequipment.map(myequipment => {
+                        if (myequipment.myequipmentid === equipmentid) {
+                            validate.validate = false;
+                            validate.message += `Could not delete equipment. Check Schedule Equipment for Project ID ${myproject.projectid}  `;
+                        }
+                    })
+
+                }
+                if (myproject.hasOwnProperty("actualequipment")) {
+                    // eslint-disable-next-line
+                    myproject.actualequipment.myequipment.map(myequipment => {
+                        if (myequipment.myequipmentid === equipmentid) {
+                            validate.validate = false;
+                            validate.message += `Could not delete equipment. Check Actual Equipment for Project ID ${myproject.projectid}  `;
+                        }
+                    })
+
+                }
+            })
+        }
+        return validate;
+    }
+    removeequipment(equipment) {
+        const dynamicstyles = new DynamicStyles();
+        if (window.confirm(`Are you sure you want to remove ${equipment.equipment}?`)) {
+            const myuser = dynamicstyles.getuser.call(this)
+            const validate = this.checkremoveequipment(equipment.equipmentid);
+
+            if (validate.validate) {
+                const i = dynamicstyles.getequipmentkeybyid.call(this, equipment.equipmentid)
+                myuser.company.equipment.myequipment.splice(i, 1);
+                if (myuser.company.equipment.myequipment.length === 0) {
+                    delete myuser.company.equipment.myequipment
+                    delete myuser.company.equipment
+                }
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+
+
+            } else {
+                this.setState({ message: validate.message })
+            }
+        }
+    }
     showequipmentid(equipment) {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
         const removeIcon = this.getremoveicon();
         return (
-            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...this.getactiveequipmentbackground(equipment.equipmentid) }} key={equipment.equipmentid} onClick={() => { this.makequipmentactive(equipment.equipmentid) }}>
-                {equipment.equipment} <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
+            <div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex5, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...this.getactiveequipmentbackground(equipment.equipmentid) }} key={equipment.equipmentid} onClick={() => { this.makequipmentactive(equipment.equipmentid) }}>
+                    {equipment.equipment}
+                </div>
+                <div style={{ ...styles.flex1 }} onClick={() => { this.removeequipment(equipment) }}> <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button></div>
             </div>)
     }
     getaccountid() {

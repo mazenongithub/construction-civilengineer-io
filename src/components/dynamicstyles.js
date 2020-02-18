@@ -1077,6 +1077,22 @@ class DynamicStyles {
 
     }
 
+    getequipmentkeybyid(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        let key = false;
+
+        let myequipment = dynamicstyles.getmyequipment.call(this)
+        // eslint-disable-next-line
+        myequipment.map((equipment, i) => {
+            if (equipment.equipmentid === equipmentid) {
+                key = i;
+            }
+        })
+
+
+        return key;
+    }
+
     getcreateproposal() {
         if (this.state.width > 1200) {
             return ({
@@ -1674,6 +1690,7 @@ class DynamicStyles {
         }
         return costs;
     }
+
     getactualequipmentbyid(equipmentid) {
         const dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getproject.call(this);
