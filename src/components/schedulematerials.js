@@ -228,6 +228,24 @@ class ScheduleMaterials extends Component {
         }
 
     }
+    removeschedulematerial(material) {
+        const dynamicstyles = new DynamicStyles();
+        const mymaterial = dynamicstyles.getmymaterialfromid.call(this, material.mymaterialid)
+        if (window.confirm(`Are you sure you want to delete ${mymaterial.material}?`)) {
+            const myuser = dynamicstyles.getuser.call(this);
+            if (myuser) {
+                const i = dynamicstyles.getprojectkey.call(this)
+                const j = dynamicstyles.getschedulematerialkeybyid.call(this, material.materialid)
+                myuser.company.projects.myproject[i].schedulematerials.mymaterial.splice(j, 1)
+                if (myuser.company.projects.myproject[i].schedulematerials.mymaterial.length === 0) {
+                    delete myuser.company.projects.myproject[i].schedulematerials.mymaterial;
+                    delete myuser.company.projects.myproject[i].schedulematerials;
+                }
+                this.props.reduxUser(myuser)
+                this.setState({ activematerialid: false })
+            }
+        }
+    }
     showmaterialid(mymaterial) {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
@@ -235,11 +253,12 @@ class ScheduleMaterials extends Component {
         const csi = this.getcsibyid(mymaterial.csiid);
         const milestone = this.getmilestonebyid(mymaterial.milestoneid)
         const material = this.getmymaterialfromid(mymaterial.mymaterialid)
-        return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...this.getactivematerialbackground(mymaterial.materialid) }} onClick={() => { this.makematerialactive(mymaterial.materialid) }} key={mymaterial.materialid}>
-            {formatDateStringDisplay(mymaterial.timein)} <br />
-            {material.material} CSI: {csi.csi}-{csi.title} Milestone: {milestone.milestone} <br />
-            {mymaterial.quantity}  x ${mymaterial.unitcost}/{mymaterial.unit} = ${(mymaterial.quantity * mymaterial.unitcost).toFixed(2)}
-            <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
+        return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...this.getactivematerialbackground(mymaterial.materialid) }}>
+            <span onClick={() => { this.makematerialactive(mymaterial.materialid) }} key={mymaterial.materialid}>{formatDateStringDisplay(mymaterial.timein)} <br />
+                {material.material} CSI: {csi.csi}-{csi.title} Milestone: {milestone.milestone} <br />
+                {mymaterial.quantity}  x ${mymaterial.unitcost}/{mymaterial.unit} = ${(mymaterial.quantity * mymaterial.unitcost).toFixed(2)}
+            </span>
+            <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeschedulematerial(mymaterial) }}>{removeIconSmall()} </button>
         </div>)
 
     }
