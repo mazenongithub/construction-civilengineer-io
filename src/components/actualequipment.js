@@ -638,6 +638,20 @@ class ActualEquipment extends Component {
         }
         return amount;
     }
+    removeequipment(equipment) {
+        const dynamicstyles = new DynamicStyles();
+        const myequipment = dynamicstyles.getmyequipmentbyid.call(this, equipment.myequipmentid)
+        if (window.confirm(`Are you sure you want to remove ${myequipment.equipment}?`)) {
+            const myuser = dynamicstyles.getuser.call(this);
+            if (myuser) {
+                const i = dynamicstyles.getprojectkey.call(this);
+                const j = dynamicstyles.getactualequipmentbyid.call(this, equipment.equipmentid);
+                myuser.company.projects.myproject[i].actualequipment.myequipment.splice(j, 1);
+                this.props.reduxUser(myuser);
+                this.setState({ activeequipmentid: false })
+            }
+        }
+    }
     render() {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();

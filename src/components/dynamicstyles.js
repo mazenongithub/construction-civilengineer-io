@@ -4,7 +4,7 @@ import { sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID } from './functions'
-import { saveCompanyIcon, saveProjectIcon, saveProfileIcon } from './svg';
+import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, ClientLogin, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile } from './actions/api';
 
 
@@ -1092,6 +1092,22 @@ class DynamicStyles {
 
         return key;
     }
+    getmyequipmentbyid(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        let equipments = false;
+
+        let myequipment = dynamicstyles.getmyequipment.call(this)
+        // eslint-disable-next-line
+        myequipment.map((equipment) => {
+            if (equipment.equipmentid === equipmentid) {
+                equipments = equipment
+            }
+        })
+
+
+        return equipments;
+    }
+
 
     getcreateproposal() {
         if (this.state.width > 1200) {
@@ -1583,14 +1599,17 @@ class DynamicStyles {
         const csi = dynamicstyles.getcsibyid.call(this, equipment.csiid)
         const totalhours = +Number(calculatetotalhours(equipment.timeout, equipment.timein)).toFixed(2)
         const equipmentrate = `$${+Number(equipment.equipmentrate).toFixed(2)}/hr`
-
+        const removeIcon = dynamicstyles.getremoveicon.call(this)
         const amount = (calculatetotalhours(equipment.timeout, equipment.timein) * Number(equipment.equipmentrate))
-        return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...this.getactivematerialbackground(equipment.equipmentid) }} key={equipment.equipmentid}
-            onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>
-            {myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
-            CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone} <br />
-            Total Hours: {totalhours} x  {equipmentrate} = ${amount.toFixed(2)}
-        </div>)
+        return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }} key={equipment.equipmentid}>
+            <span style={{ ...this.getactivematerialbackground(equipment.equipmentid) }} onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>{myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
+                CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone} <br />
+                Total Hours: {totalhours} x  {equipmentrate} = ${amount.toFixed(2)}
+            </span>
+            <button style={{ ...styles.generalButton, ...removeIcon }}
+                onClick={() => { this.removeequipment(equipment) }}>{removeIconSmall()} </button>
+        </div>
+        )
     }
     getequipmentrentalratebyid(equipmentid, timein, timeout) {
         const dynamicstyles = new DynamicStyles();
