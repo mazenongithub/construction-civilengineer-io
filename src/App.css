@@ -37,7 +37,13 @@
 .registernow-1{fill:#61dafb;}.registernow-1,.registernow-2{stroke:#202122;stroke-miterlimit:10;}.registernow-2{font-size:40px;fill:#61666b;stroke-width:2px;font-family:NunitoSans-Regular, Nunito Sans;letter-spacing:0.05em;}.registernow-3{letter-spacing:0.05em;}.registernow-4{letter-spacing:0.04em;}.registernow-5{letter-spacing:0.05em;}
 .removeicon-1{fill:#E55151;}.removeicon-1,.removeicon-2{stroke:#000;stroke-miterlimit:10;}.removeicon-2{fill:#830026;stroke-width:0.5px;}
 .saveprofileicon-1{fill:#db9f19;}.saveprofileicon-1,.saveprofileicon-2{stroke:#000;stroke-miterlimit:10;}.saveprofileicon-2{font-size:72px;fill:#f9f7f7;stroke-width:0.25px;font-family:NunitoSans-SemiBold, Nunito Sans;font-weight:600;}.saveprofileicon-3{letter-spacing:-0.01em;}.saveprofileicon-4{letter-spacing:0em;}.saveprofileicon-5{letter-spacing:-0.01em;}.saveprofileicon-6{letter-spacing:0em;}
-
+.hidescroll {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.hidescroll::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
 
 .App {
   text-align: center;

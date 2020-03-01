@@ -360,8 +360,8 @@ class DynamicStyles {
         return (
             <div style={{ ...styles.generalContainer }}>
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-                    &nbsp;
-            </div>
+
+                </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                     <button style={{ ...styles.generalButton, ...saveprojecticon }} onClick={() => { dynamicstyles.savemyproject.call(this) }}>{saveProjectIcon()}</button>

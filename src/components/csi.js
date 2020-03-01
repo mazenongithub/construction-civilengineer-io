@@ -2,10 +2,24 @@ import React from 'react';
 import DynamicStyles from './dynamicstyles';
 import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
-class CSI {
 
+
+class CSI {
+    validatecsi(results, code) {
+        let validate = true;
+        if (results.length > 0) {
+            // eslint-disable-next-line
+            results.map(result => {
+                if (result.csiid === code.csiid) {
+                    validate = false;
+                }
+            })
+        }
+        return validate;
+    }
     getsearchresults() {
         const dynamicstyles = new DynamicStyles();
+        const csi = new CSI();
         let csi_1 = this.state.csi_1;
         let csi_2 = this.state.csi_2;
         let csi_3 = this.state.csi_3;
@@ -20,6 +34,7 @@ class CSI {
         if (csi_3) {
             searchcsi += csi_3.substr(0, 2)
         }
+
         if (searchcsi) {
             const myuser = dynamicstyles.getuser.call(this);
             if (myuser) {
@@ -38,7 +53,10 @@ class CSI {
                             // eslint-disable-next-line
                             myuser.company.construction.csicodes.code.map(code => {
                                 if (code.csi.startsWith(searchcsi)) {
-                                    results.push(code)
+                                    let validate = csi.validatecsi.call(this, results, code)
+                                    if (validate) {
+                                        results.push(code)
+                                    }
                                 }
 
                             })
@@ -120,6 +138,15 @@ class CSI {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const csi = new CSI();
+        const heightLimit = () => {
+            if (this.state.width > 1200) {
+                return ({ maxHeight: '250px', overflow: 'scroll' })
+            } else if (this.state.width > 800) {
+                return ({ maxHeight: '200px', overflow: 'scroll' })
+            } else {
+                return ({ maxHeight: '150px', overflow: 'scroll' })
+            }
+        }
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -157,7 +184,10 @@ class CSI {
                         </div>
                     </div>
 
-                    {csi.showsearchresults.call(this)}
+                    <div style={{ ...styles.generalContainer, ...heightLimit() }} className="hidescroll">
+                        {csi.showsearchresults.call(this)}
+                    </div>
+
 
                 </div>
             </div>
