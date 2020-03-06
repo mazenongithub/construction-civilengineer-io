@@ -44,6 +44,9 @@
 .hidescroll::-webkit-scrollbar { 
   display: none;  /* Safari and Chrome */
 }
+.createlink:hover{
+  cursor:pointer;
+}
 
 .App {
   text-align: center;

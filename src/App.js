@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { CheckUserLogin } from './components/actions/api';
+import { CheckUserLogin, LogoutUser } from './components/actions/api';
 import * as actions from './components/actions';
 import './App.css';
 import { MyStylesheet } from './components/styles'
@@ -40,7 +40,7 @@ import DynamicStyles from './components/dynamicstyles';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { firebaseConfig } from './firebaseconfig';
-//import { TestUser } from './components/functions'
+//import { TestUser } from './components/functions/testuser'
 
 
 class App extends Component {
@@ -69,17 +69,16 @@ class App extends Component {
 
       let response = await CheckUserLogin();
 
-
+      console.log(response)
       if (response.hasOwnProperty("allusers")) {
         let companys = returnCompanyList(response.allusers);
         this.props.reduxAllCompanys(companys)
         this.props.reduxAllUsers(response.allusers);
-        delete response.allusers;
 
       }
-      if (response.hasOwnProperty("providerid")) {
-        console.log(response)
-        this.props.reduxUser(response)
+      if (response.hasOwnProperty("myuser")) {
+
+        this.props.reduxUser(response.myuser)
       }
 
 
@@ -627,14 +626,28 @@ class App extends Component {
       return (<Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> / </Link>)
     }
   }
+  async logoutuser() {
+    try {
+
+
+      let response = await LogoutUser();
+      console.log(response)
+      if (response.hasOwnProperty("message")) {
+        this.props.reduxUser(response)
+      }
+    } catch (err) {
+      alert(err)
+    }
+
+  }
   handleloginlink() {
-    const serverAPI = process.env.REACT_APP_SERVER_API;
+
     const dynamicstyles = new DynamicStyles();
     const styles = MyStylesheet();
     const user = dynamicstyles.getuser.call(this);
     const headerFont = dynamicstyles.getHeaderFont.call(this);
     if (user) {
-      return ((<a href={`${serverAPI}/logout`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> logout </a>))
+      return (<div className="createlink" style={{ ...styles.generalFont, ...headerFont, ...styles.fontBold }} onClick={() => { this.logoutuser() }}>  logout </div>)
     } else {
       return (<Link to={`/providers/login`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /login </Link>)
     }

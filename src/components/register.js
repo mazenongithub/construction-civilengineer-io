@@ -117,7 +117,7 @@ class Register extends Component {
 
             // The signed-in user info.
             var user = result.user;
-            console.log(user.providerData[0])
+            //console.log(user.providerData[0])
             let client = 'apple';
             let clientid = user.providerData[0].uid;
             let firstname = '';
@@ -156,7 +156,7 @@ class Register extends Component {
             provider.addScope('profile');
             let result = await firebase.auth().signInWithPopup(provider)
             var user = result.user;
-            console.log(user.providerData[0]);
+            // console.log(user.providerData[0]);
             let client = 'google';
             let clientid = user.providerData[0].uid;
             let firstname = '';
@@ -334,11 +334,11 @@ class Register extends Component {
                 let companys = returnCompanyList(response.allusers);
                 this.props.reduxAllCompanys(companys)
                 this.props.reduxAllUsers(response.allusers);
-                delete response.allusers;
 
             }
-            if (response.hasOwnProperty("providerid")) {
-                this.props.reduxUser(response)
+            if (response.hasOwnProperty("myuser")) {
+
+                this.props.reduxUser(response.myuser)
             }
 
         } else {

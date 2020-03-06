@@ -19,7 +19,6 @@ class CSI {
     }
     getsearchresults() {
         const dynamicstyles = new DynamicStyles();
-        const csi = new CSI();
         let csi_1 = this.state.csi_1;
         let csi_2 = this.state.csi_2;
         let csi_3 = this.state.csi_3;
@@ -40,23 +39,15 @@ class CSI {
             if (myuser) {
                 if (myuser.hasOwnProperty("company")) {
                     if (myuser.company.hasOwnProperty("construction")) {
-                        if (myuser.company.construction.hasOwnProperty("civilengineer")) {
-                            // eslint-disable-next-line
-                            myuser.company.construction.civilengineer.csicodes.code.map(code => {
-                                if (code.csi.startsWith(searchcsi)) {
-                                    results.push(code)
-                                }
-                            })
-                        }
+
 
                         if (myuser.company.construction.hasOwnProperty("csicodes")) {
                             // eslint-disable-next-line
                             myuser.company.construction.csicodes.code.map(code => {
                                 if (code.csi.startsWith(searchcsi)) {
-                                    let validate = csi.validatecsi.call(this, results, code)
-                                    if (validate) {
-                                        results.push(code)
-                                    }
+
+                                    results.push(code)
+
                                 }
 
                             })

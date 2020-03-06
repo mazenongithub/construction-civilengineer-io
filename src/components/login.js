@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { GoogleSignIcon, AppleSignIcon, loginNowIcon } from './svg'
-import { LoginLocal, ClientLogin, } from './actions/api'
+import { ClientLogin } from './actions/api'
 import DynamicStyles from './dynamicstyles';
 import { returnCompanyList } from './functions';
 import Profile from './profile';
@@ -101,32 +101,36 @@ class Login extends Component {
     showpassword() {
         const styles = MyStylesheet();
         const regularFontHeight = this.getRegularFont();
-        if (this.state.width > 800) {
-            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
-                    Password
+        if (!this.state.clientid && !this.state.client) {
+            if (this.state.width > 800) {
+                return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
+                        Password
                 </div>
-                <div style={{ ...styles.flex2, ...styles.regularFont, ...regularFontHeight }}>
-                    <input type="password" style={{ ...styles.addLeftMargin, ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
-                        value={this.state.pass}
-                        onChange={event => { this.setState({ pass: event.target.value }) }}
-                    />
+                    <div style={{ ...styles.flex2, ...styles.regularFont, ...regularFontHeight }}>
+                        <input type="password" style={{ ...styles.addLeftMargin, ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
+                            value={this.state.pass}
+                            onChange={event => { this.setState({ pass: event.target.value }) }}
+                        />
 
-                </div>
+                    </div>
 
-            </div>)
+                </div>)
 
+            } else {
+                return (<div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
+                        Password <br /> <input type="password" style={{ ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
+                            value={this.state.pass}
+                            onChange={event => { this.setState({ pass: event.target.value }) }}
+                        />
+                    </div>
+
+                </div>)
+
+            }
         } else {
-            return (<div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
-                    Password <br /> <input type="password" style={{ ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
-                        value={this.state.pass}
-                        onChange={event => { this.setState({ pass: event.target.value }) }}
-                    />
-                </div>
-
-            </div>)
-
+            return;
         }
 
 
@@ -143,20 +147,23 @@ class Login extends Component {
     async loginlocal() {
         let emailaddress = this.state.emailaddress;
         let pass = this.state.pass;
-        let values = { emailaddress, pass }
+        let client = this.state.client;
+        let clientid = this.state.clientid;
+        let values = { emailaddress, pass, client, clientid }
         console.log(values)
-        let response = await LoginLocal(values)
+        let response = await ClientLogin(values)
         console.log(response)
         if (response.hasOwnProperty("allusers")) {
             let companys = returnCompanyList(response.allusers);
             this.props.reduxAllCompanys(companys)
             this.props.reduxAllUsers(response.allusers);
-            delete response.allusers;
 
         }
-        if (response.hasOwnProperty("providerid")) {
-            this.props.reduxUser(response)
+        if (response.hasOwnProperty("myuser")) {
+
+            this.props.reduxUser(response.myuser)
         }
+
     }
     async googleSignIn() {
 
@@ -184,33 +191,9 @@ class Login extends Component {
             let profileurl = user.providerData[0].photoURL;
             let phonenumber = user.phoneNumber;
 
-            if (emailaddress && clientid && client) {
-                try {
-                    let pass = this.state.pass;
 
-                    let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, pass }
-                    const response = await ClientLogin(values);
-                    console.log(response)
-                    if (response.hasOwnProperty("allusers")) {
-                        let companys = returnCompanyList(response.allusers);
-                        this.props.reduxAllCompanys(companys)
-                        this.props.reduxAllUsers(response.allusers);
-                        delete response.allusers;
+            this.setState({ client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber })
 
-                    }
-                    if (response.hasOwnProperty("providerid")) {
-                        this.props.reduxUser(response)
-                    }
-                    if (response.hasOwnProperty("message")) {
-                        this.setState({ message: response.message })
-                    }
-                } catch (err) {
-                    alert(err)
-                }
-
-            } else {
-                this.setState({ client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber })
-            }
 
 
 
@@ -247,32 +230,8 @@ class Login extends Component {
             let clientid = user.providerData[0].uid;
             let emailaddress = user.providerData[0].email;
 
-            if (emailaddress && clientid && client) {
-                try {
+            this.setState({ client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber })
 
-                    let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber }
-                    const response = await ClientLogin(values);
-                    console.log(response)
-                    if (response.hasOwnProperty("allusers")) {
-                        let companys = returnCompanyList(response.allusers);
-                        this.props.reduxAllCompanys(companys)
-                        this.props.reduxAllUsers(response.allusers);
-                        delete response.allusers;
-
-                    }
-                    if (response.hasOwnProperty("providerid")) {
-                        this.props.reduxUser(response)
-                    }
-                    if (response.hasOwnProperty("message")) {
-                        this.setState({ message: response.message })
-                    }
-                } catch (err) {
-                    alert(err)
-                }
-
-            } else {
-                this.setState({ client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber })
-            }
 
 
             // ...
@@ -283,13 +242,26 @@ class Login extends Component {
 
 
     }
+    handleloginicon() {
+        const styles = MyStylesheet();
+        const loginnow = this.getloginnow()
+        if (this.state.emailaddress) {
+            if ((this.state.client && this.state.clientid) || this.state.pass) {
+                return (<button style={{ ...styles.generalButton, ...loginnow }} onClick={() => { this.loginlocal() }}>
+                    {loginNowIcon()}
+                </button>)
+            }
+
+        }
+
+    }
     render() {
         const dynamicstyles = new DynamicStyles();
         const Login = () => {
             const styles = MyStylesheet();
             const titleFont = this.getTitleFont();
             const loginButtonHeight = this.getloginbuttonheight();
-            const loginnow = this.getloginnow()
+
 
             return (
                 <div style={{ ...styles.generalFlex }}>
@@ -313,9 +285,7 @@ class Login extends Component {
                         {this.showpassword()}
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <button style={{ ...styles.generalButton, ...loginnow }} onClick={() => { this.loginlocal() }}>
-                                    {loginNowIcon()}
-                                </button>
+                                {this.handleloginicon()}
                             </div>
                         </div>
                     </div>

@@ -1,33 +1,4 @@
-export async function AddCSIS(csis) {
-    console.log(csis)
-    var APIURL = `${process.env.REACT_APP_SERVER_API}/csi/addcsis`
 
-    return fetch(APIURL, {
-        method: 'post',
-        credentials: 'include',
-        headers: new Headers({
-            'Content-Type': 'application/json',
-        }),
-        body: JSON.stringify(csis)
-    })
-        .then(resp => {
-
-            if (!resp.ok) {
-                if (resp.status >= 400 && resp.status < 500) {
-                    return resp.json().then(data => {
-                        let err = { errorMessage: data.message };
-                        throw err;
-                    })
-                }
-                else {
-                    let err = { errorMessage: 'Please try again later, server is not responding' };
-                    throw err;
-                }
-            }
-
-            return resp.json();
-        })
-}
 export async function UploadProfileImage(formdata, providerid) {
     var APIURL = `${process.env.REACT_APP_SERVER_API}/${providerid}/uploadprofileimage`
 
@@ -56,7 +27,7 @@ export async function UploadProfileImage(formdata, providerid) {
 }
 export async function CheckUserLogin() {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/checkuser`
+    let APIURL = `https://civilengineer.io/construction/api/loadmyprofile.php`
     console.log(APIURL)
 
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
@@ -66,6 +37,30 @@ export async function CheckUserLogin() {
                 return resp.json().then(data => {
 
                     throw data.message;
+                })
+            }
+            else {
+                let err = { errorMessage: 'Please try again later, server is not responding' };
+                throw err;
+            }
+        }
+
+        return resp.json();
+    })
+}
+
+export async function LogoutUser() {
+
+    let APIURL = `https://civilengineer.io/construction/api/logout.php`
+    console.log(APIURL)
+
+    return fetch(APIURL, { credentials: 'include' }).then(resp => {
+
+        if (!resp.ok) {
+            if (resp.status >= 400 && resp.status < 500) {
+                return resp.json().then(data => {
+                    let err = { errorMessage: data.message };
+                    throw err;
                 })
             }
             else {
@@ -171,7 +166,7 @@ export async function AddExistingCompany(values) {
 
 export async function ClientLogin(values) {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/loginclient`;
+    let APIURL = `https://civilengineer.io/construction/api/loginclient.php`;
     return fetch(APIURL, {
         method: 'post',
         credentials: 'include',
@@ -203,7 +198,7 @@ export async function ClientLogin(values) {
 export async function CheckEmailAddress(emailaddress) {
 
 
-    var APIURL = `${process.env.REACT_APP_ROOT_API}/projectmanagement/${emailaddress}/checkemailaddress`
+    var APIURL = `https://civilengineer.io/projectmanagement/api/checkemailaddress.php?emailaddress=${emailaddress}`
 
     return fetch(APIURL, {
         credentials: 'same-origin'
@@ -255,7 +250,7 @@ export async function ValidateCompanyID(companyid) {
 }
 export async function CheckProviderID(providerid) {
 
-    var APIURL = `${process.env.REACT_APP_ROOT_API}/projectmanagement/${providerid}/checkproviderid`
+    var APIURL = `https://civilengineer.io/projectmanagement/api/checkproviderid.php?providerid=${providerid}`
 
     return fetch(APIURL)
         .then(resp => {
@@ -278,40 +273,7 @@ export async function CheckProviderID(providerid) {
 }
 export async function RegisterUser(values) {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/register`;
-    return fetch(APIURL, {
-        method: 'post',
-        credentials: 'include',
-        headers: new Headers({
-            'Content-Type': 'application/json',
-        }),
-
-        body: JSON.stringify(values)
-    })
-        .then(resp => {
-
-            if (!resp.ok) {
-                if (resp.status >= 400 && resp.status < 500) {
-                    return resp.json().then(data => {
-
-                        throw data.message;
-                    })
-                }
-                else {
-                    let err = { errorMessage: 'Please try again later, server is not responding' };
-                    throw err;
-                }
-            }
-
-            return resp.json();
-        })
-
-}
-
-
-export async function LoginLocal(values) {
-
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/loginlocal`;
+    let APIURL = `https://civilengineer.io/construction/api/register.php`;
     return fetch(APIURL, {
         method: 'post',
         credentials: 'include',
