@@ -150,7 +150,7 @@ class Login extends Component {
         let client = this.state.client;
         let clientid = this.state.clientid;
         let values = { emailaddress, pass, client, clientid }
-        console.log(values)
+
         let response = await ClientLogin(values)
         console.log(response)
         if (response.hasOwnProperty("allusers")) {

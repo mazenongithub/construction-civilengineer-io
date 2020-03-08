@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID } from './functions'
+import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, ClientLogin, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile } from './actions/api';
 
@@ -196,7 +196,7 @@ class DynamicStyles {
 
             // The signed-in user info.
             var user = result.user;
-            console.log(user.providerData[0])
+
             let client = 'apple';
             let clientid = user.providerData[0].uid;
             let firstname = '';
@@ -235,6 +235,23 @@ class DynamicStyles {
 
 
     }
+    getallcsicodes() {
+        let codes = false;
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+        codes = myuser.company.construction.civilengineer.csicodes.code;
+
+        if (myuser.company.construction.hasOwnProperty("csicodes")) {
+            codes.push(myuser.company.construction.csicodes.code)
+
+        }
+
+        codes.sort((codea, codeb) => {
+            return (sortcode(codea, codeb))
+        })
+        return codes;
+    }
+
     getCompanyParams() {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
@@ -258,7 +275,12 @@ class DynamicStyles {
                     company.city = myuser.company.city;
                     company.contactstate = myuser.company.contactstate;
                     company.zipcode = myuser.company.zipcode;
-                    company.construction = myuser.company.construction
+                    const codes = dynamicstyles.getmycsicodes.call(this);
+                    if (codes) {
+                        company.construction = {};
+                        company.construction.csicodes = {};
+                        company.construction.csicodes.code = codes;
+                    }
                     company.office = myuser.company.office;
                     company.materials = myuser.company.materials;
                     company.equipment = myuser.company.equipment;
@@ -272,18 +294,18 @@ class DynamicStyles {
     async saveCompany() {
         const dynamicstyles = new DynamicStyles()
         let params = dynamicstyles.getCompanyParams.call(this)
+        console.log(params)
         let response = await SaveCompany(params);
         console.log(response)
         if (response.hasOwnProperty("allusers")) {
             let companys = returnCompanyList(response.allusers);
             this.props.reduxAllCompanys(companys)
             this.props.reduxAllUsers(response.allusers);
-            delete response.allusers;
+        }
+        if (response.hasOwnProperty("myuser")) {
+            this.props.reduxUser(response.myuser)
+        }
 
-        }
-        if (response.hasOwnProperty("providerid")) {
-            this.props.reduxUser(response)
-        }
         if (response.hasOwnProperty("message")) {
             let dateupdated = inputUTCStringForLaborID(response.lastupdated)
             this.setState({ message: `${response.message} Last Updated ${dateupdated}` })
@@ -291,20 +313,19 @@ class DynamicStyles {
     }
     async savemyprofile() {
         let dynamicstyles = new DynamicStyles();
-        let values = dynamicstyles.getCompanyParams.call(this);
-        let myproject = dynamicstyles.getproject.call(this);
-        values.project = myproject;
+        let myuser = dynamicstyles.getuser.call(this)
+        let values = { providerid: myuser.providerid, firstname: myuser.firstname, lastname: myuser.lastname, emailaddress: myuser.emailaddress, phonenumber: myuser.phonenumber, profileurl: myuser.profileurl }
         let response = await SaveProfile(values)
         console.log(response)
         if (response.hasOwnProperty("allusers")) {
             let companys = returnCompanyList(response.allusers);
             this.props.reduxAllCompanys(companys)
             this.props.reduxAllUsers(response.allusers);
-            delete response.allusers;
 
         }
-        if (response.hasOwnProperty("providerid")) {
-            this.props.reduxUser(response)
+        if (response.hasOwnProperty("myuser")) {
+
+            this.props.reduxUser(response.myuser)
         }
 
         let message = "";
@@ -327,12 +348,20 @@ class DynamicStyles {
             let companys = returnCompanyList(response.allusers);
             this.props.reduxAllCompanys(companys)
             this.props.reduxAllUsers(response.allusers);
-            delete response.allusers;
 
         }
-        if (response.hasOwnProperty("providerid")) {
-            this.props.reduxUser(response)
+        if (response.hasOwnProperty("myuser")) {
+
+            this.props.reduxUser(response.myuser)
         }
+
+        let message = "";
+        if (response.hasOwnProperty("message")) {
+            let lastupdated = inputUTCStringForLaborID(response.lastupdated)
+            message = `${response.message} Last updated ${lastupdated}`
+
+        }
+        this.setState({ message })
 
     }
 
@@ -360,7 +389,7 @@ class DynamicStyles {
         return (
             <div style={{ ...styles.generalContainer }}>
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.topMargin15, ...styles.bottomMargin15 }}>
-
+                    {this.state.message}
                 </div>
 
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>

@@ -1561,3 +1561,18 @@ export function validateEmail(value) {
     return errmsg;
 }
 
+export function sortcode(testb, testa) {
+
+
+    if (Number(testa.displacement) < Number(testb.displacement)) {
+
+        return 1;
+    }
+    else if (Number(testb.displacement) < Number(testa.displacement)) {
+
+        return -1;
+    }
+    else {
+        return 0;
+    }
+}

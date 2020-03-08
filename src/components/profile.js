@@ -34,6 +34,17 @@ class Profile extends Component {
 
 
     }
+    handleprofileurl(profileurl) {
+
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+
+        if (myuser) {
+            myuser.profileurl = profileurl;
+            this.props.reduxUser(myuser)
+            this.setState({ render: 'render' })
+        }
+    }
     showprofileurl() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
@@ -43,6 +54,7 @@ class Profile extends Component {
                 <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
                     Profile URL <input type="text" style={{ ...styles.addLeftMargin, ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
                         value={this.getprofileurl()}
+                        onChange={event => { this.handleprofileurl(event.target.value) }}
 
                     />
 
@@ -55,6 +67,7 @@ class Profile extends Component {
                 <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
                     Profile URL <br /> <input type="text" style={{ ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
                         value={this.getprofileurl()}
+                        onChange={event => { this.handleprofileurl(event.target.value) }}
                     />
                 </div>
 

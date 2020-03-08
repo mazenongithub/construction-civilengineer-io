@@ -17,12 +17,6 @@ class Company extends Component {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
 
-        if (!this.props.allusers.hasOwnProperty("myuser")) {
-            this.loadallusers();
-        }
-
-
-
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -134,6 +128,7 @@ class Company extends Component {
                     Company ID <br /> <input type="text"
                         value={this.state.companyid}
                         onChange={event => { this.setState({ companyid: event.target.value }) }}
+                        onBlur={event => { this.validatecompanyid(event.target.value) }}
                         style={{ ...styles.addLeftMargin, ...regularFont, ...styles.generalFont, ...styles.generalField }} />
 
                 </div>
@@ -206,7 +201,7 @@ class Company extends Component {
         if (this.state.width > 1200) {
 
             return (
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }}>
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }} key={company.companyid}>
                     <div style={{ ...styles.flex5, ...regularFont, ...styles.generalFont }}>
                         CompanyID: {company.companyid} Company: {company.company} Manager: {company.manager}
                     </div>
@@ -218,7 +213,7 @@ class Company extends Component {
             )
 
         } else if (this.state.width > 800) {
-            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }}>
+            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }} key={company.companyid}>
                 <div style={{ ...styles.flex3, ...regularFont, ...styles.generalFont }}>
                     CompanyID: {company.companyid} Company: {company.company} Manager: {company.manager}
                 </div>
@@ -228,7 +223,7 @@ class Company extends Component {
                 </div>
             </div>)
         } else {
-            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }}>
+            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }} key={company.companyid}>
                 <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont }}>
                     CompanyID: {company.companyid} Company: {company.company} Manager: {company.manager}
                 </div>
@@ -439,12 +434,13 @@ class Company extends Component {
                         let companys = returnCompanyList(response.allusers);
                         this.props.reduxAllCompanys(companys)
                         this.props.reduxAllUsers(response.allusers);
-                        delete response.allusers;
+
+                    }
+                    if (response.hasOwnProperty("myuser")) {
+                        console.log(response.myuser)
+                        this.props.reduxUser(response.myuser)
                     }
 
-                    if (response.hasOwnProperty("providerid")) {
-                        this.props.reduxUser(response)
-                    }
 
                 } catch (err) {
                     alert(err)
@@ -505,12 +501,13 @@ class Company extends Component {
                             let companys = returnCompanyList(response.allusers);
                             this.props.reduxAllCompanys(companys)
                             this.props.reduxAllUsers(response.allusers);
-                            delete response.allusers;
 
                         }
-                        if (response.hasOwnProperty("providerid")) {
-                            this.props.reduxUser(response)
+                        if (response.hasOwnProperty("myuser")) {
+
+                            this.props.reduxUser(response.myuser)
                         }
+
                     } catch (err) {
                         alert(err)
                     }
@@ -630,9 +627,11 @@ class Company extends Component {
     }
     getcontactstate() {
         let company = this.getmycompany();
+        let contactstate = "";
         if (company) {
-            return company.contactstate;
+            contactstate = company.contactstate;
         }
+        return contactstate;
 
     }
     handlecontactstate(contactstate) {

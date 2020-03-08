@@ -75,7 +75,7 @@ export async function LogoutUser() {
 
 export async function LoadAllUsers() {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/users/allusers`
+    let APIURL = `https://civilengineer.io/construction/api/loadallusers.php`
     console.log(APIURL)
 
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
@@ -100,7 +100,7 @@ export async function LoadAllUsers() {
 
 export async function RegisterNewCompany(values) {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/users/registernewcompany`;
+    let APIURL = `https://civilengineer.io/construction/api/createcompany.php`;
     console.log(APIURL)
     return fetch(APIURL, {
         method: 'post',
@@ -133,7 +133,7 @@ export async function RegisterNewCompany(values) {
 
 export async function AddExistingCompany(values) {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/users/addexistingcompany`;
+    let APIURL = `https://civilengineer.io/construction/api/addexistingcompany.php`;
     console.log(APIURL)
     return fetch(APIURL, {
         method: 'post',
@@ -224,7 +224,7 @@ export async function CheckEmailAddress(emailaddress) {
 }
 export async function ValidateCompanyID(companyid) {
 
-    var APIURL = `${process.env.REACT_APP_SERVER_API}/${companyid}/validatecompanyid`
+    var APIURL = `https://civilengineer.io/construction/api/checkcompanyid.php?companyid=${companyid}`
 
     return fetch(APIURL, {
         method: 'get',
@@ -305,10 +305,7 @@ export async function RegisterUser(values) {
 
 
 export async function SaveCompany(values) {
-    let providerid = values.myuser.providerid;
-    let companyid = values.company.companyid;
-
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/${providerid}/company/${companyid}`;
+    let APIURL = `https://civilengineer.io/construction/api/savecompany.php`;
     console.log(APIURL);
     return fetch(APIURL, {
         method: 'post',
@@ -340,11 +337,8 @@ export async function SaveCompany(values) {
 }
 
 export async function SaveProject(values) {
-    let providerid = values.myuser.providerid;
-    let projectid = values.project.projectid;
-    console.log(values);
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/${providerid}/project/${projectid}`;
+    let APIURL = `http://civilengineer.io/construction/api/saveproject.php`;
     console.log(APIURL);
     return fetch(APIURL, {
         method: 'post',
@@ -376,10 +370,9 @@ export async function SaveProject(values) {
 }
 
 export async function SaveProfile(values) {
-    let providerid = values.myuser.providerid;
     console.log(values);
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/${providerid}/saveprofile`;
+    let APIURL = `https://civilengineer.io/construction/api/userendpoint.php`;
     console.log(APIURL);
     return fetch(APIURL, {
         method: 'post',
@@ -388,7 +381,7 @@ export async function SaveProfile(values) {
             'Content-Type': 'application/json',
         }),
 
-        body: JSON.stringify(values)
+        body: JSON.stringify({ myuser: values })
     })
         .then(resp => {
 

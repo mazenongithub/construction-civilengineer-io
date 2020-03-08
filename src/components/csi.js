@@ -35,29 +35,21 @@ class CSI {
         }
 
         if (searchcsi) {
-            const myuser = dynamicstyles.getuser.call(this);
-            if (myuser) {
-                if (myuser.hasOwnProperty("company")) {
-                    if (myuser.company.hasOwnProperty("construction")) {
+            const codes = dynamicstyles.getallcsicodes.call(this)
+            if (codes) {
+                if (codes.hasOwnProperty("length")) {
+                    // eslint-disable-next-line
+                    codes.map(code => {
+                        if (code.csi.startsWith(searchcsi)) {
 
-
-                        if (myuser.company.construction.hasOwnProperty("csicodes")) {
-                            // eslint-disable-next-line
-                            myuser.company.construction.csicodes.code.map(code => {
-                                if (code.csi.startsWith(searchcsi)) {
-
-                                    results.push(code)
-
-                                }
-
-                            })
+                            results.push(code)
 
                         }
 
+                    })
 
-
-                    }
                 }
+
             }
 
         }
