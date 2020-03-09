@@ -1,6 +1,6 @@
 
-export async function UploadProfileImage(formdata, providerid) {
-    var APIURL = `${process.env.REACT_APP_SERVER_API}/${providerid}/uploadprofileimage`
+export async function UploadProfileImage(formdata) {
+    var APIURL = `https://civilengineer.io/construction/api/uploadprofilephoto.php`
 
     return fetch(APIURL, {
         method: 'post',

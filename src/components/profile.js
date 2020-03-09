@@ -307,26 +307,26 @@ class Profile extends Component {
         const myuser = dynamicstyles.getuser.call(this);
 
         if (myuser) {
-            const providerid = myuser.providerid;
             let formData = new FormData();
             let params = dynamicstyles.getCompanyParams.call(this)
             let myfile = document.getElementById("profile-image");
+            console.log(params.myuser)
             formData.append("profilephoto", myfile.files[0]);
             formData.append("myuser", JSON.stringify(params.myuser))
             try {
-                let response = await UploadProfileImage(formData, providerid);
+                let response = await UploadProfileImage(formData);
                 console.log(response)
                 if (response.hasOwnProperty("allusers")) {
                     let companys = returnCompanyList(response.allusers);
                     this.props.reduxAllCompanys(companys)
                     this.props.reduxAllUsers(response.allusers);
-                    delete response.allusers;
 
                 }
-                if (response.hasOwnProperty("providerid")) {
-                    console.log(response)
-                    this.props.reduxUser(response)
+                if (response.hasOwnProperty("myuser")) {
+
+                    this.props.reduxUser(response.myuser)
                 }
+
                 let message = "";
                 if (response.hasOwnProperty("message")) {
                     let lastupdated = inputUTCStringForLaborID(response.lastupdated)
