@@ -38,7 +38,7 @@ class SaleDate {
             let myuser = dynamicstyles.getuser.call(this)
             let i = this.getactiveequipmentkey();
             let newtimein = inputSecOutDateString(dateencoded)
-            myuser.company.equipment.myequipment[i].saledate = newtimein;
+            myuser.company.equipment.myequipment[i].ownership.saledate = newtimein;
             this.props.reduxUser(myuser)
             this.setState({ render: 'render' })
 
@@ -57,7 +57,7 @@ class SaleDate {
 
 
             let myequipment = this.getactiveequipment()
-            let timein = myequipment.saledate;
+            let timein = myequipment.ownership.saledate;
             if (inputDateStringOutputSeconds(timein) === dateencoded) {
                 activeclass = "active-schedule-calendar"
             }
@@ -584,7 +584,7 @@ class SaleDate {
         // begin show grid
         if (this.state.activeequipmentid) {
             let myequipment = this.getactiveequipment()
-            let timein = myequipment.saledate;
+            let timein = myequipment.ownership.saledate;
             let datein = new Date(`${timein.replace(/-/g, '/')} UTC`);
             showgrid.push(Datein.showgridcalender.call(this, datein))
 
@@ -627,9 +627,9 @@ class SaleDate {
                 let i = this.getactiveequipmentkey();
 
                 let myequipment = this.getactiveequipment();
-                let timein = myequipment.saledate;
+                let timein = myequipment.ownership.saledate;
                 let newtimein = adjustdatefromcalendar(timein, value)
-                myuser.company.equipment.myequipment[i].saledate = newtimein;
+                myuser.company.equipment.myequipment[i].ownership.saledate = newtimein;
                 this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
 
@@ -660,10 +660,10 @@ class SaleDate {
 
             if (this.state.activeequipmentid) {
                 let myequipment = this.getactiveequipment();
-                let timein = myequipment.saledate;
+                let timein = myequipment.ownership.saledate;
                 let newtime = decreaseCalendarDaybyOneYear(timein);
                 let i = this.getactiveequipmentkey();
-                myuser.company.equipment.myequipment[i].saledate = newtime;
+                myuser.company.equipment.myequipment[i].ownership.saledate = newtime;
                 this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
             }
@@ -682,11 +682,11 @@ class SaleDate {
             const dynamicstyles = new DynamicStyles();
             const myuser = dynamicstyles.getuser.call(this)
             let myequipment = this.getactiveequipment();
-            let timein = myequipment.saledate;
+            let timein = myequipment.ownership.saledate;
             let newtimein = increaseCalendarDaybyOneYear(timein);
             let i = this.getactiveequipmentkey();
 
-            myuser.company.equipment.myequipment[i].saledate = newtimein;
+            myuser.company.equipment.myequipment[i].ownership.saledate = newtimein;
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' })
 
@@ -702,10 +702,10 @@ class SaleDate {
             const dynamicstyles = new DynamicStyles();
             const myuser = dynamicstyles.getuser.call(this)
             let myequipment = this.getactiveequipment();
-            let timein = myequipment.saledate;
+            let timein = myequipment.ownership.saledate;
             let newtimein = increaseCalendarDayOneMonth(timein);
             let i = this.getactiveequipmentkey();
-            myuser.company.equipment.myequipment[i].saledate = newtimein;
+            myuser.company.equipment.myequipment[i].ownership.saledate = newtimein;
 
             this.props.reduxUser(myuser)
             this.setState({ render: 'render' })
@@ -722,10 +722,10 @@ class SaleDate {
             const dynamicstyles = new DynamicStyles();
             const myuser = dynamicstyles.getuser.call(this)
             let myequipment = this.getactiveequipment();
-            let timein = myequipment.saledate;
+            let timein = myequipment.ownership.saledate;
             let i = this.getactiveequipmentkey();
             let newtimein = decreaseCalendarDaybyOneMonth(timein);
-            myuser.company.equipment.myequipment[i].saledate = newtimein;
+            myuser.company.equipment.myequipment[i].ownership.saledate = newtimein;
             this.props.reduxUser(myuser)
             this.setState({ render: 'render' })
 
@@ -743,7 +743,7 @@ class SaleDate {
         if (this.state.activeequipmentid) {
 
             let myequipment = this.getactiveequipment();
-            let timein = myequipment.saledate;
+            let timein = myequipment.ownership.saledate;
             value = makeDatefromTimein(timein)
         }
         else {
@@ -757,7 +757,7 @@ class SaleDate {
         if (this.state.activeequipmentid) {
 
             let myequipment = this.getactiveequipment()
-            let timein = myequipment.saledate;
+            let timein = myequipment.ownership.saledate;
             let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`);
             return (formatDateforCalendarDisplay(datein))
         }
@@ -816,11 +816,10 @@ class SaleDate {
 
     showdatein() {
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
         const Datein = new SaleDate();
         const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         const smallFont = dynamicstyles.getSmallFont.call(this)
-
 
         return (
             <div style={{ ...styles.generalFlex }}>

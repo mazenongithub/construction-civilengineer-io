@@ -20,8 +20,8 @@ export function CreateActualMaterial(materialid, mymaterialid, providerid, miles
 export function CreateBenefit(benefitid, benefit, accountid, amount) {
     return ({ benefitid, benefit, accountid, amount })
 }
-export function CreateCompany(companyid, company, manager, address, city, contactstate, zipcode) {
-    return ({ companyid, company, manager, address, city, contactstate, zipcode })
+export function CreateCompany(companyid, company, address, city, contactstate, zipcode) {
+    return ({ companyid, company, address, city, contactstate, zipcode })
 }
 export function CreateRentalRate(month, week, day, hour) {
     return ({ month, week, day, hour })
@@ -32,8 +32,11 @@ export function CreateProposal(proposalid, providerid, updated, approved) {
 export function CreateInvoice(invoiceid, providerid, updated, approved) {
     return ({ invoiceid, providerid, updated, approved })
 }
-export function CreateEquipment(equipmentid, equipment, workinghours, ownershipstatus, purchasedate, saledate, loaninterest, resalevalue) {
-    return ({ equipmentid, equipment, workinghours, ownershipstatus, purchasedate, saledate, loaninterest, resalevalue })
+export function EquipmentOwnership(workinghours, purchasedate, saledate, loaninterest, resalevalue) {
+    return ({ workinghours, purchasedate, saledate, loaninterest, resalevalue })
+}
+export function CreateEquipment(equipmentid, equipment, ownershipstatus, accountid) {
+    return ({ equipmentid, equipment, ownershipstatus, accountid })
 }
 export function CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit) {
     return ({ equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit })
@@ -1561,14 +1564,14 @@ export function validateEmail(value) {
     return errmsg;
 }
 
-export function sortcode(testb, testa) {
+export function sortcode(codeb, codea) {
 
-
-    if (Number(testa.displacement) < Number(testb.displacement)) {
+    //console.log(codea, codeb)
+    if (Number(codea.csi) < Number(codeb.csi)) {
 
         return 1;
     }
-    else if (Number(testb.displacement) < Number(testa.displacement)) {
+    else if (Number(codeb.csi) < Number(codea.csi)) {
 
         return -1;
     }

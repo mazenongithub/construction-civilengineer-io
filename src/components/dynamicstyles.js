@@ -236,19 +236,25 @@ class DynamicStyles {
 
     }
     getallcsicodes() {
-        let codes = false;
+        let codes = [];
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         codes = myuser.company.construction.civilengineer.csicodes.code;
 
         if (myuser.company.construction.hasOwnProperty("csicodes")) {
-            codes.push(myuser.company.construction.csicodes.code)
+            // eslint-disable-next-line
+            myuser.company.construction.csicodes.code.map(code => {
+                codes.push(code)
+            })
+
+
 
         }
 
         codes.sort((codea, codeb) => {
             return (sortcode(codea, codeb))
         })
+
         return codes;
     }
 
@@ -315,6 +321,7 @@ class DynamicStyles {
         let dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this)
         let values = { providerid: myuser.providerid, firstname: myuser.firstname, lastname: myuser.lastname, emailaddress: myuser.emailaddress, phonenumber: myuser.phonenumber, profileurl: myuser.profileurl }
+        console.log(values)
         let response = await SaveProfile(values)
         console.log(response)
         if (response.hasOwnProperty("allusers")) {
@@ -493,7 +500,6 @@ class DynamicStyles {
             provider.addScope('profile');
             let result = await firebase.auth().signInWithPopup(provider)
             var user = result.user;
-            console.log(user.providerData[0]);
             let client = 'google';
             let clientid = user.providerData[0].uid;
             let firstname = '';
@@ -1358,13 +1364,13 @@ class DynamicStyles {
                 myproject.actualequipment.myequipment.map(myequipment => {
 
                     if (myequipment.equipmentid === equipmentid) {
-                        console.log(myequipment)
+
                         profit = myequipment.profit;
                     }
                 })
             }
         }
-        console.log(profit)
+
         return profit;
     }
 
@@ -1648,7 +1654,7 @@ class DynamicStyles {
         const weeklyrate = Number(myequipment.rentalrates.week);
         const monthlyrate = Number(myequipment.rentalrates.month);
         const rentalObj = getEquipmentRentalObj(timein, timeout);
-        console.log(rentalObj)
+
         const hours = rentalObj.hours;
         const days = rentalObj.days;
         const weeks = rentalObj.weeks;
@@ -1689,7 +1695,7 @@ class DynamicStyles {
                 let F = Number(cost.cost)
 
                 P += FutureCostPresent(i, n, F);
-                console.log(n, F, P)
+
 
             })
             return (P)
@@ -1706,7 +1712,7 @@ class DynamicStyles {
         }
 
         equipmentrate = (P() * AFactor()) / (workinghours);
-        console.log(P(), AFactor(), workinghours, equipmentrate)
+
         return equipmentrate;
     }
     getequipmentcostsbyid(equipmentid) {

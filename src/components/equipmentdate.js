@@ -823,11 +823,10 @@ class EquipmentDate {
 
     showdatein() {
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
         const Datein = new EquipmentDate();
         const dynamicstyles = new DynamicStyles();
         const smallFont = dynamicstyles.getSmallFont.call(this)
-
+        const regularFont = dynamicstyles.getRegularFont.call(this);
 
         return (
             <div style={{ ...styles.generalFlex }}>

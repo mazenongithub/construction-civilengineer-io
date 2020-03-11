@@ -123,15 +123,15 @@ class Construction extends Component {
         let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             if (this.state.activecsiid) {
-                let property = dynamicstyles.getcsipropertybyid.call(this, this.state.activecsiid)
 
-                if (property !== 'civilengineer' || myuser.providerid === 'mazen') {
-                    let i = this.getactivecsikey();
 
-                    myuser.company.construction.csicodes.code[i].title = title;
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
-                }
+
+                let i = this.getactivecsikey();
+
+                myuser.company.construction.csicodes.code[i].title = title;
+                this.props.reduxUser(myuser)
+                this.setState({ render: 'render' })
+
             } else {
                 this.setState({ title });
                 let csiid = makeID(16);
@@ -140,6 +140,7 @@ class Construction extends Component {
                 let csi_3 = (this.state.csi_3).substr(0, 2)
                 let csi = `${csi_1}${csi_2}${csi_3}`
                 let newcode = CreateCSI(csiid, csi, title);
+
                 if (myuser.company.construction.hasOwnProperty("csicodes")) {
                     myuser.company.construction.csicodes.code.push(newcode)
                 } else {
@@ -549,6 +550,44 @@ class Construction extends Component {
         }
 
     }
+    createcsi() {
+        const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        return (<div style={{ ...styles.generalContainer }}>
+            <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont }}>
+                Create A Construction Specification (xx xx xx)
+                    </div>
+
+            <div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                    <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
+                        value={this.getcsi_1()}
+                        onChange={event => { this.handlecsi_1(event.target.value) }}
+                    />
+                </div>
+                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                    <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
+                        value={this.getcsi_2()}
+                        onChange={event => { this.handlecsi_2(event.target.value) }}
+                    />
+                </div>
+                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                    <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
+                        value={this.getcsi_3()}
+                        onChange={event => { this.handlecsi_3(event.target.value) }} />
+                </div>
+            </div>
+
+
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+                Title  <input type="text"
+                    value={this.getcsititle()}
+                    onChange={event => { this.handlecsititle(event.target.value) }}
+                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin15 }} />
+            </div>
+        </div>)
+    }
     render() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
@@ -567,37 +606,7 @@ class Construction extends Component {
                         </div>
                     </div>
 
-                    <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont }}>
-                        Create A Construction Specification (xx xx xx)
-                    </div>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
-                                value={this.getcsi_1()}
-                                onChange={event => { this.handlecsi_1(event.target.value) }}
-                            />
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
-                                value={this.getcsi_2()}
-                                onChange={event => { this.handlecsi_2(event.target.value) }}
-                            />
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
-                                value={this.getcsi_3()}
-                                onChange={event => { this.handlecsi_3(event.target.value) }} />
-                        </div>
-                    </div>
-
-
-                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                        Title  <input type="text"
-                            value={this.getcsititle()}
-                            onChange={event => { this.handlecsititle(event.target.value) }}
-                            style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin15 }} />
-                    </div>
                     {csi.showCSI.call(this)}
 
 

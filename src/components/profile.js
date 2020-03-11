@@ -405,7 +405,10 @@ class Profile extends Component {
 function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
-        navigation: state.navigation
+        navigation: state.navigation,
+        project: state.project,
+        allusers: state.allusers,
+        allcompanys: state.allcompanys
     }
 }
 

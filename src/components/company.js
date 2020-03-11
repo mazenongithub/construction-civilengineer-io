@@ -203,7 +203,7 @@ class Company extends Component {
             return (
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }} key={company.companyid}>
                     <div style={{ ...styles.flex5, ...regularFont, ...styles.generalFont }}>
-                        CompanyID: {company.companyid} Company: {company.company} Manager: {company.manager}
+                        CompanyID: {company.companyid} Company: {company.company}
                     </div>
                     <div style={{ ...styles.flex1 }}>
                         <button style={{ ...styles.generalButton, ...addCompany }}
@@ -215,7 +215,7 @@ class Company extends Component {
         } else if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }} key={company.companyid}>
                 <div style={{ ...styles.flex3, ...regularFont, ...styles.generalFont }}>
-                    CompanyID: {company.companyid} Company: {company.company} Manager: {company.manager}
+                    CompanyID: {company.companyid} Company: {company.company}
                 </div>
                 <div style={{ ...styles.flex1 }}>
                     <button style={{ ...styles.generalButton, ...addCompany }}
@@ -225,7 +225,7 @@ class Company extends Component {
         } else {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }} key={company.companyid}>
                 <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont }}>
-                    CompanyID: {company.companyid} Company: {company.company} Manager: {company.manager}
+                    CompanyID: {company.companyid} Company: {company.company}
                 </div>
                 <div style={{ ...styles.flex1 }}>
                     <button style={{ ...styles.generalButton, ...addCompany }}
@@ -486,12 +486,11 @@ class Company extends Component {
 
                     let companyid = this.state.companyid;
                     let company = this.state.company;
-                    let manager = myuser.providerid;
                     let address = "";
                     let city = "";
                     let contactstate = "";
                     let zipcode = "";
-                    let newCompany = CreateCompany(companyid, company, manager, address, city, contactstate, zipcode)
+                    let newCompany = CreateCompany(companyid, company, address, city, contactstate, zipcode)
 
                     try {
 

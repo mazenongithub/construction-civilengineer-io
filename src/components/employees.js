@@ -150,7 +150,7 @@ class Employees extends Component {
         if (accounts) {
             // eslint-disable-next-line
             accounts.map(account => {
-                options.push(<option value={account.accountid} key={account.accountid}>{account.account} -{account.accountname}</option>)
+                options.push(<option value={account.accountid} key={account.accountid}>{account.accountname}</option>)
             })
         }
         return options;
@@ -667,7 +667,7 @@ class Employees extends Component {
     getemployeebyproviderid(providerid) {
         let allusers = this.getallusers();
         let user = false;
-        if (allusers) {
+        if (allusers.hasOwnProperty("length")) {
             // eslint-disable-next-line
             allusers.map(myuser => {
                 if (myuser.providerid === providerid) {
@@ -787,7 +787,6 @@ class Employees extends Component {
         let employee = this.getactiveemployee();
         let benefits = [];
         if (employee) {
-            console.log(employee)
             if (employee.hasOwnProperty("benefits")) {
                 // eslint-disable-next-line
                 employee.benefits.benefit.map(benefit => {
