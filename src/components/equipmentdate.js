@@ -584,9 +584,7 @@ class EquipmentDate {
         if (this.state.activecostid) {
             let cost = this.getactiveequipmentcost()
             let timein = cost.timein;
-            console.log(timein)
             let datein = new Date(`${timein.replace(/-/g, '/')} UTC`);
-            console.log(datein)
             showgrid.push(Datein.showgridcalender.call(this, datein))
 
         }

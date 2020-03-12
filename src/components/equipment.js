@@ -264,7 +264,7 @@ class Equipment extends Component {
             if (myuser) {
                 myuser.company.equipment.myequipment[i].ownership.cost.splice(j, 1);
                 this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+                this.setState({ render: 'render', activecostid: false })
             }
         }
     }
@@ -384,12 +384,13 @@ class Equipment extends Component {
                 let newcost = CreateCostID(costid, cost, detail, datein)
                 let equipment = this.getactiveequipment();
 
-                if (equipment.hasOwnProperty("ownership")) {
+                if (equipment.ownership.hasOwnProperty("cost")) {
                     myuser.company.equipment.myequipment[i].ownership.cost.push(newcost)
                 } else {
-                    let ownership = { cost: [newcost] }
-                    myuser.company.equipment.myequipment[i].ownership = ownership;
+
+                    myuser.company.equipment.myequipment[i].ownership.cost = [newcost]
                 }
+
                 this.props.reduxUser(myuser)
                 this.setState({ activecostid: costid, render: 'render' })
 

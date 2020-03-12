@@ -28,7 +28,6 @@ export async function UploadProfileImage(formdata) {
 export async function CheckUserLogin() {
 
     let APIURL = `https://civilengineer.io/construction/api/loadmyprofile.php`
-    console.log(APIURL)
 
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
 

@@ -80,6 +80,7 @@ class CSI {
 
         }
         let myresults = [];
+        // eslint-disable-next-line
         results.map(result => {
             if (validatecode(myresults, result)) {
                 myresults.push(result)

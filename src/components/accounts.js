@@ -506,7 +506,7 @@ class Accounts extends Component {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
         const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>

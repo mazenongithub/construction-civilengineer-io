@@ -593,8 +593,6 @@ class Construction extends Component {
         const dynamicstyles = new DynamicStyles();
         const titleFont = dynamicstyles.gettitlefont.call(this);
         const csi = new CSI();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-
 
         return (
             <div style={{ ...styles.generalFlex }}>
