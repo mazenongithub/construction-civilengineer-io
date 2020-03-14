@@ -20,17 +20,17 @@ class AccountID {
         const accountid = new AccountID();
         const styles = MyStylesheet();
         const regularFont = dynamicstyles.getRegularFont.call(this);
-        if (this.state.activeequipmentid) {
-            return (
-                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                    Account  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                        value={this.getaccountid()}
-                        onChange={event => { this.handleaccountid(event.target.value) }}>
-                        {accountid.loadaccounts.call(this)}
-                    </select>
-                </div>)
 
-        }
+        return (
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
+                Account  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                    value={this.getaccountid()}
+                    onChange={event => { this.handleaccountid(event.target.value) }}>
+                    {accountid.loadaccounts.call(this)}
+                </select>
+            </div>)
+
+
     }
 }
 export default AccountID;

@@ -1,8 +1,8 @@
 export function CreateUser(providerid, client, clientid, firstname, lastname, emailaddress, phonenumber, profileurl) {
     return ({ providerid, client, clientid, firstname, lastname, emailaddress, phonenumber, profileurl })
 }
-export function CreateAccount(accountid, account, accountname, providerid) {
-    return ({ accountid, account, accountname, providerid })
+export function CreateAccount(accountid, accountname, providerid) {
+    return ({ accountid, accountname, providerid })
 }
 export function CreateCSI(csiid, csi, title) {
     return ({ csiid, csi, title })

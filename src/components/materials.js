@@ -5,7 +5,8 @@ import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
 import { CreateMaterial, makeID } from './functions';
 import DynamicStyles from './dynamicstyles';
-import CSI from './csi'
+import CSI from './csi';
+import AccountID from './accountid';
 
 class Materials extends Component {
     constructor(props) {
@@ -92,6 +93,7 @@ class Materials extends Component {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const csi = new CSI();
+        const accountid = new AccountID();
         if (this.state.width > 800) {
             return (
                 <div style={{ ...styles.generalFlex }}>
@@ -99,13 +101,7 @@ class Materials extends Component {
 
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
-                                Account <br />
-                                <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                                    onChange={event => { this.handleaccountid(event.target.value) }}
-                                    value={this.getaccountid()}>
-                                    <option value={false}>Select An Account</option>
-                                    {this.loadaccounts()}
-                                </select>
+                                {accountid.showaccountmenu.call(this)}
                             </div>
 
                             <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
@@ -125,13 +121,7 @@ class Materials extends Component {
 
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                                Account <br />
-                                <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                                    onChange={event => { this.handleaccountid(event.target.value) }}
-                                    value={this.getaccountid()}>
-                                    <option value={false}>Select An Account</option>
-                                    {this.loadaccounts()}
-                                </select>
+                                {accountid.showaccountmenu.call(this)}
                             </div>
                         </div>
 
@@ -336,7 +326,7 @@ class Materials extends Component {
         let csi = "";
         if (mymaterial.accountid) {
             let myaccount = this.getaccountbyid(mymaterial.accountid)
-            account = `${myaccount.account} ${myaccount.accountname}`
+            account = ` ${myaccount.accountname}`
 
         }
         if (mymaterial.csiid) {
@@ -430,7 +420,9 @@ class Materials extends Component {
     getaccountid() {
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
+
             if (mymaterial) {
+                console.log(mymaterial, mymaterial.accountid)
                 return mymaterial.accountid;
             }
         } else {
@@ -509,6 +501,7 @@ class Materials extends Component {
     }
 
     handleaccountid(accountid) {
+        console.log(accountid)
         let myuser = this.getuser();
         if (myuser) {
             if (this.state.activematerialid) {

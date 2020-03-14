@@ -243,8 +243,11 @@ class Accounts extends Component {
         return accounts;
     }
     handleaccountname(accountname) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+
         if (myuser) {
+
             if (this.state.activeaccountid) {
 
                 let i = this.getactiveaccountkey();
@@ -259,8 +262,8 @@ class Accounts extends Component {
                 }
             } else {
                 let accountid = makeID(16);
-                let account = this.state.account
-                let newaccount = CreateAccount(accountid, account, accountname, myuser.providerid)
+
+                let newaccount = CreateAccount(accountid, accountname, myuser.providerid)
 
                 if (myuser.company.office.hasOwnProperty("accounts")) {
                     myuser.company.office.accounts.account.push(newaccount)
@@ -301,7 +304,7 @@ class Accounts extends Component {
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                         Account Name <br /> <input type="text"
-                            onChange={event => { this.handleaccount(event.target.value) }}
+                            onChange={event => { this.handleaccountname(event.target.value) }}
                             value={this.getaccountname()}
                             style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }} />
                     </div>

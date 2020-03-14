@@ -297,12 +297,99 @@ class DynamicStyles {
         values = { company, myuser: newuser }
         return values;
     }
+    getequipmentcostskeybyid(costid) {
+
+        let key = false;
+        const myequipment = this.getactiveequipment();
+
+        if (myequipment.hasOwnProperty("ownership")) {
+            // eslint-disable-next-line
+            myequipment.ownership.cost.map((cost, i) => {
+                if (cost.costid === costid) {
+                    key = i
+                }
+
+            })
+
+        }
+
+        return key;
+    }
+    handlecompanyids(response) {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (response.hasOwnProperty("replaceids")) {
+                if (response.replaceids.hasOwnProperty("accounts")) {
+                    // eslint-disable-next-line
+                    response.replaceids.accounts.map(replaceids => {
+
+                        let oldaccountid = replaceids.oldaccountid;
+
+                        let i = dynamicstyles.getaccountkeybyid.call(this, oldaccountid);
+                        myuser.company.office.accounts.account[i].accountid = replaceids.accountid;
+                        if (this.state.activeaccountid === oldaccountid) {
+                            this.setState({ activeaccountid: replaceids.accountid })
+                        }
+                    })
+
+                }
+                if (response.replaceids.hasOwnProperty("mymaterial")) {
+                    // eslint-disable-next-line
+                    response.replaceids.mymaterial.map(material => {
+                        let oldmaterialid = material.oldmaterialid;
+                        let materialid = material.materialid;
+                        let j = dynamicstyles.getmaterialkeybyid.call(this, oldmaterialid)
+                        myuser.company.materials.mymaterial[j].materialid = material.materialid;
+                        if (this.state.activematerialid === oldmaterialid) {
+                            this.setState({ activematerialid: materialid })
+                        }
+                    })
+
+                }
+                if (response.replaceids.hasOwnProperty("equipment")) {
+                    // eslint-disable-next-line
+                    response.replaceids.equipment.map(equipment => {
+
+                        let oldequipmentid = equipment.oldequipmentid;
+                        let equipmentid = equipment.equipmentid;
+                        let k = dynamicstyles.getequipmentkeybyid.call(this, oldequipmentid)
+                        myuser.company.equipment.myequipment[k].equipmentid = equipmentid;
+                        if (this.state.activeequipmentid === oldequipmentid) {
+                            this.setState({ activeequipmentid: equipmentid })
+                        }
+                    })
+
+                }
+
+                if (response.replaceids.hasOwnProperty("costid")) {
+                    // eslint-disable-next-line
+                    response.replaceids.costid.map(cost => {
+                        let oldcostid = cost.oldcostid;
+                        let costid = cost.costid;
+                        let equipmentid = cost.equipmentid;
+                        let l = dynamicstyles.getequipmentkeybyid.call(this, equipmentid)
+                        let m = dynamicstyles.getequipmentcostskeybyid.call(this, oldcostid)
+
+                        myuser.company.equipment.myequipment[l].ownership.cost[m].costid = costid;
+                        if (this.state.activecostid === oldcostid) {
+                            this.setState({ activecostid: costid })
+                        }
+
+                    })
+                }
+                this.props.reduxUser(myuser)
+            }
+
+        }
+    }
     async saveCompany() {
         const dynamicstyles = new DynamicStyles()
         let params = dynamicstyles.getCompanyParams.call(this)
         console.log(params)
         let response = await SaveCompany(params);
         console.log(response)
+        dynamicstyles.handlecompanyids.call(this, response)
         if (response.hasOwnProperty("allusers")) {
             let companys = returnCompanyList(response.allusers);
             this.props.reduxAllCompanys(companys)
@@ -351,6 +438,7 @@ class DynamicStyles {
         values.project = myproject;
         let response = await SaveProject(values)
         console.log(response)
+
         if (response.hasOwnProperty("allusers")) {
             let companys = returnCompanyList(response.allusers);
             this.props.reduxAllCompanys(companys)

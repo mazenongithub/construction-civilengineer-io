@@ -104,7 +104,8 @@ class Equipment extends Component {
 
             } else {
                 this.setState({ equipment })
-                let equipmentid = makeID(16);
+                //let equipmentid = makeID(16);
+                let equipmentid = 'AAAABBBBCCCCDDDD';
                 let ownership = "";
                 let accountid = this.state.accountid;
 
@@ -378,7 +379,8 @@ class Equipment extends Component {
 
             } else {
                 this.setState({ cost });
-                let costid = makeID(16)
+                //let costid = makeID(16);
+                let costid = 'AAAABBBBCCCCDDDD'
                 let datein = DateStringFromDateObj(this.state.equipmentdate)
                 let detail = "";
                 let newcost = CreateCostID(costid, cost, detail, datein)
@@ -698,7 +700,7 @@ class Equipment extends Component {
         }
     }
     showrentalrates() {
-        const accountid = new AccountID();
+
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const regularFont = dynamicstyles.getRegularFont.call(this)
@@ -715,7 +717,7 @@ class Equipment extends Component {
                                         Rental Rates
                                      </div>
                                 </div>
-                                {accountid.showaccountmenu.call(this)}
+
 
                                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
@@ -900,7 +902,7 @@ class Equipment extends Component {
                     delete myuser.company.equipment
                 }
                 this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+                this.setState({ render: 'render', activeequipmentid: false })
 
 
             } else {
@@ -1177,7 +1179,7 @@ class Equipment extends Component {
         const dynamicstyles = new DynamicStyles();
         const hideDetail = dynamicstyles.gethidedetails.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this);
-        const accountid = new AccountID();
+
         const iconmenu = () => {
             if (this.state.costmenu) {
                 return (<span>Hide Cost Menu <button style={{ ...styles.generalButton, ...hideDetail }} onClick={() => { this.setState({ costmenu: false }) }}>{closeDetail()} </button></span>)
@@ -1189,7 +1191,7 @@ class Equipment extends Component {
             if (this.state.costmenu) {
                 return (<div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
-                        {accountid.showaccountmenu.call(this)}
+
                         {this.showequipmentowned()}
                     </div>
                 </div>)
@@ -1220,6 +1222,14 @@ class Equipment extends Component {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const titleFont = dynamicstyles.gettitlefont.call(this);
+        const accountid = new AccountID();
+        const showaccountid = () => {
+            if (this.state.activeequipmentid) {
+                return (accountid.showaccountmenu.call(this))
+            } else {
+                return;
+            }
+        }
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -1231,6 +1241,7 @@ class Equipment extends Component {
                     </div>
 
                     {this.showequipment()}
+                    {showaccountid()}
                     {this.showequipmentids()}
                     {this.showequipmentdetail()}
                     {this.equipmentdetail()}
