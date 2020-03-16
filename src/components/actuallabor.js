@@ -172,9 +172,11 @@ class ActualLabor extends Component {
             let mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
             if (mylabor) {
                 let csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid)
-                csi_1 = csi.csi.substr(0, 2)
-                csi_2 = csi.csi.substr(2, 2)
-                csi_3 = csi.csi.substr(4, 2)
+                if (csi) {
+                    csi_1 = csi.csi.substr(0, 2)
+                    csi_2 = csi.csi.substr(2, 2)
+                    csi_3 = csi.csi.substr(4, 2)
+                }
             }
             this.setState({ activelaborid: laborid, csi_1, csi_2, csi_3 })
         }

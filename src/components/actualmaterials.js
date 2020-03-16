@@ -216,9 +216,11 @@ class ActualMaterials extends Component {
         } else {
             let mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid);
             let csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid);
-            csi_1 = csi.csi.substr(0, 2)
-            csi_2 = csi.csi.substr(2, 2)
-            csi_3 = csi.csi.substr(4, 2)
+            if (csi) {
+                csi_1 = csi.csi.substr(0, 2)
+                csi_2 = csi.csi.substr(2, 2)
+                csi_3 = csi.csi.substr(4, 2)
+            }
             this.setState({ activematerialid: materialid, csi_1, csi_2, csi_3 })
 
         }
@@ -443,10 +445,15 @@ class ActualMaterials extends Component {
         const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         const makeID = new MakeID();
+        let csi_1 = "";
+        let csi_2 = "";
+        let csi_3 = "";
         const csi = dynamicstyles.getcsibyid.call(this, csiid);
-        let csi_1 = csi.csi.substr(0, 2)
-        let csi_2 = csi.csi.substr(2, 2)
-        let csi_3 = csi.csi.substr(4, 2)
+        if (csi) {
+            csi_1 = csi.csi.substr(0, 2)
+            csi_2 = csi.csi.substr(2, 2)
+            csi_3 = csi.csi.substr(4, 2)
+        }
         this.setState({ csi_1, csi_2, csi_3 })
         if (myuser) {
             let myproject = this.getproject();

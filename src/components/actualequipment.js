@@ -366,9 +366,11 @@ class ActualEquipment extends Component {
         } else {
             let myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid);
             let csi = dynamicstyles.getcsibyid.call(this, myequipment.csiid);
-            csi_1 = csi.csi.substr(0, 2)
-            csi_2 = csi.csi.substr(2, 2)
-            csi_3 = csi.csi.substr(4, 2)
+            if (csi) {
+                csi_1 = csi.csi.substr(0, 2)
+                csi_2 = csi.csi.substr(2, 2)
+                csi_3 = csi.csi.substr(4, 2)
+            }
             this.setState({ activeequipmentid: equipmentid, csi_1, csi_2, csi_3 })
         }
     }
@@ -473,11 +475,17 @@ class ActualEquipment extends Component {
     }
     handlecsiid(csiid) {
         const dynamicstyles = new DynamicStyles();
-        const csi = dynamicstyles.getcsibyid.call(this, csiid);
+
         const makeID = new MakeID();
-        let csi_1 = csi.csi.substr(0, 2)
-        let csi_2 = csi.csi.substr(2, 2)
-        let csi_3 = csi.csi.substr(4, 2)
+        let csi_1 = "";
+        let csi_2 = "";
+        let csi_3 = "";
+        const csi = dynamicstyles.getcsibyid.call(this, csiid);
+        if (csi) {
+            csi_1 = csi.csi.substr(0, 2)
+            csi_2 = csi.csi.substr(2, 2)
+            csi_3 = csi.csi.substr(4, 2)
+        }
         this.setState({ csi_1, csi_2, csi_3 })
 
         let myuser = this.getuser();
