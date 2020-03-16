@@ -4,14 +4,14 @@ class MakeID {
     benefitid() {
         const dynamicstyles = new DynamicStyles();
         const employees = dynamicstyles.getmyemployees.call(this);
-        const benefitid = false;
+        let benefitid = false;
         if (employees) {
             // eslint-disable-next-line
             employees.map(employee => {
                 if (employee.hasOwnProperty("benefits")) {
                     while (benefitid === false) {
                         benefitid = makeID(16);
-                        employee.benefits.mybenefit.map(benefit => {
+                        employee.benefits.benefit.map(benefit => {
                             if (benefit.benefitid === benefitid) {
                                 benefitid = false;
                             }

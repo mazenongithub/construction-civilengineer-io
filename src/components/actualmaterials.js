@@ -8,6 +8,7 @@ import ActualMaterialDate from './actualmaterialdate';
 import DynamicStyles from './dynamicstyles';
 import CSI from './csi';
 import MakeID from './makeids';
+import MilestoneID from './milestoneid';
 class ActualMaterials extends Component {
     constructor(props) {
         super(props);
@@ -266,20 +267,6 @@ class ActualMaterials extends Component {
 
     }
 
-    loadmilestoneids() {
-        let myproject = this.getproject();
-        let options = [];
-        if (myproject.hasOwnProperty("projectmilestones")) {
-            // eslint-disable-next-line
-            myproject.projectmilestones.mymilestone.map(mymilestone => {
-                options.push(<option
-                    key={mymilestone.milestoneid}
-                    value={mymilestone.milestoneid}>{mymilestone.milestone}</option>)
-            })
-
-        }
-        return options;
-    }
     loadcsiids() {
         let company = this.getcompany();
         let options = [];
@@ -302,6 +289,7 @@ class ActualMaterials extends Component {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
         const csi = new CSI();
+        const milestoneid = new MilestoneID();
         if (this.state.width > 800) {
             return (
                 <div style={{ ...styles.generalFlex }}>
@@ -309,12 +297,7 @@ class ActualMaterials extends Component {
                         {csi.showCSI.call(this)}
                     </div>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        MilestoneID  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                            value={this.getmilestoneid()}
-                            onChange={event => { this.handlemilestoneid(event.target.value) }}>
-                            <option value={false}>Select A MilestoneID</option>
-                            {this.loadmilestoneids()}
-                        </select>
+                        {milestoneid.showmilestoneid.call(this)}
                     </div>
                 </div>)
         } else {
@@ -324,12 +307,7 @@ class ActualMaterials extends Component {
                         {csi.showCSI.call(this)}
                     </div>
                     <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        MilestoneID  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                            value={this.getmilestoneid()}
-                            onChange={event => { this.handlemilestoneid(event.target.value) }}>
-                            <option value={false}>Select A MilestoneID</option>
-                            {this.loadmilestoneids()}
-                        </select>
+                        {milestoneid.showmilestoneid.call(this)}
                     </div>
                 </div>)
 

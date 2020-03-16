@@ -8,6 +8,7 @@ import DynamicStyles from './dynamicstyles';
 import { CreateScheduleEquipment, inputDateObjOutputAdjString, calculatetotalhours } from './functions'
 import CSI from './csi'
 import MakeID from './makeids';
+import MilestoneID from './milestoneid';
 
 class ScheduleEquipment extends Component {
     constructor(props) {
@@ -54,7 +55,8 @@ class ScheduleEquipment extends Component {
 
     }
     getproject() {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         let projectid = this.props.match.params.projectid;
         let projects = false;
         if (myuser.hasOwnProperty("company")) {
@@ -71,7 +73,8 @@ class ScheduleEquipment extends Component {
         return projects;
     }
     getprojectkey() {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         let projectid = this.props.match.params.projectid;
         let key = false;
         if (myuser.hasOwnProperty("company")) {
@@ -88,7 +91,8 @@ class ScheduleEquipment extends Component {
         return key;
     }
     getmyequipment() {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         let equipment = false;
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
@@ -139,7 +143,8 @@ class ScheduleEquipment extends Component {
         return key;
     }
     getcompany() {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         let company = false;
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
@@ -230,20 +235,7 @@ class ScheduleEquipment extends Component {
             )
         }
     }
-    loadmilestoneids() {
-        let myproject = this.getproject();
-        let options = [];
-        if (myproject.hasOwnProperty("projectmilestones")) {
-            // eslint-disable-next-line
-            myproject.projectmilestones.mymilestone.map(mymilestone => {
-                options.push(<option
-                    key={mymilestone.milestoneid}
-                    value={mymilestone.milestoneid}>{mymilestone.milestone}</option>)
-            })
 
-        }
-        return options;
-    }
     loadcsiids() {
         let company = this.getcompany();
         let options = [];
@@ -265,19 +257,14 @@ class ScheduleEquipment extends Component {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
         const csi = new CSI();
+        const milestoneid = new MilestoneID();
         if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                     {csi.showCSI.call(this)}
                 </div>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    MilestoneID
-                    <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                        value={this.getmilestoneid()}
-                        onChange={event => { this.handlemilestoneid(event.target.value) }}>
-                        <option value={false}>Select A Project Milestone</option>
-                        {this.loadmilestoneids()}
-                    </select>
+                    {milestoneid.showmilestoneid.call(this)}
                 </div>
             </div>
             )
@@ -288,15 +275,9 @@ class ScheduleEquipment extends Component {
                         <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
                             {csi.showCSI.call(this)}
                         </div>
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                            MilestoneID
-                            <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                                value={this.getmilestoneid()}
-                                onChange={event => { this.handlemilestoneid(event.target.value) }}>
-                                <option value={false}>Select A MilestoneID</option>
-                                {this.loadmilestoneids()}
-                            </select>
-                        </div>
+
+                        {milestoneid.showmilestoneid.call(this)}
+
                     </div>
                 </div>
             )
@@ -510,7 +491,7 @@ class ScheduleEquipment extends Component {
         let csi_2 = csi.csi.substr(2, 2)
         let csi_3 = csi.csi.substr(4, 2)
         this.setState({ csi_1, csi_2, csi_3 })
-        let myuser = this.getuser();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
@@ -530,7 +511,7 @@ class ScheduleEquipment extends Component {
                     let timeout = inputDateObjOutputAdjString(this.state.timeout);
 
                     let proposalid = this.state.proposalid;
-                    let equipmentrate = dynamicstyles.calculateequipmentratebyid(myequipmentid);
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid);
                     let profit = 0;
                     let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit)
                     if (myproject.hasOwnProperty("scheduleequipment")) {
@@ -551,7 +532,7 @@ class ScheduleEquipment extends Component {
     handlemilestoneid(milestoneid) {
         const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
-        let myuser = this.getuser();
+        let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
@@ -570,7 +551,7 @@ class ScheduleEquipment extends Component {
                     let timein = inputDateObjOutputAdjString(this.state.timein);
                     let timeout = inputDateObjOutputAdjString(this.state.timeout)
                     let proposalid = this.state.proposalid;
-                    let equipmentrate = dynamicstyles.calculateequipmentratebyid(myequipmentid);
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid);
                     let profit = 0;
                     let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit)
                     if (myproject.hasOwnProperty("scheduleequipment")) {

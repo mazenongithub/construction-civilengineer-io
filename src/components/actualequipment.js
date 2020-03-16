@@ -8,6 +8,7 @@ import ActualEquipmentTimeOut from './actualequipmenttimeout';
 import DynamicStyles from './dynamicstyles';
 import CSI from './csi'
 import MakeID from './makeids';
+import MilestoneID from './milestoneid';
 class ActualEquipment extends Component {
     constructor(props) {
         super(props);
@@ -260,19 +261,14 @@ class ActualEquipment extends Component {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
         const csi = new CSI();
+        const milestoneid = new MilestoneID();
         if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                     {csi.showCSI.call(this)}
                 </div>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    MilestoneID
-                    <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                        value={this.getmilestoneid()}
-                        onChange={event => { this.handlemilestoneid(event.target.value) }}>
-                        <option value={false}>Select Project Milestone</option>
-                        {this.loadmilestoneids()}
-                    </select>
+                    {milestoneid.showmilestoneid.call(this)}
                 </div>
             </div>
             )
@@ -283,15 +279,9 @@ class ActualEquipment extends Component {
                         <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
                             {csi.showCSI.call(this)}
                         </div>
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                            MilestoneID
-                            <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                                value={this.getmilestoneid()}
-                                onChange={event => { this.handlemilestoneid(event.target.value) }}>
-                                <option value={false}>Select A MilestoneID</option>
-                                {this.loadmilestoneids()}
-                            </select>
-                        </div>
+
+                        {milestoneid.showmilestoneid.call(this)}
+
                     </div>
                 </div>
             )
@@ -550,7 +540,7 @@ class ActualEquipment extends Component {
                     let timein = inputDateObjOutputAdjString(this.state.timein);
                     let timeout = inputDateObjOutputAdjString(this.state.timeout);
                     let invoiceid = this.state.invoiceid;
-                    let equipmentrate = dynamicstyles.calculateequipmentratebyid(myequipmentid);
+                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid);
                     let profit = 0;
                     let newEquipment = CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit)
                     if (myproject.hasOwnProperty("actualequipment")) {

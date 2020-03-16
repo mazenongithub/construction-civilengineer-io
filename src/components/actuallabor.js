@@ -9,6 +9,7 @@ import DynamicStyles from './dynamicstyles';
 import ActualLaborTimeIn from './actuallabortimein';
 import CSI from './csi';
 import MakeID from './makeids';
+import MilestoneID from './milestoneid';
 class ActualLabor extends Component {
 
     constructor(props) {
@@ -278,18 +279,7 @@ class ActualLabor extends Component {
         }
         return options;
     }
-    loadmilestoneids() {
-        let myproject = this.getproject();
-        let options = [];
-        if (myproject.hasOwnProperty("projectmilestones")) {
-            // eslint-disable-next-line
-            myproject.projectmilestones.mymilestone.map(mymilestone => {
-                options.push(<option value={mymilestone.milestoneid}>{mymilestone.milestone}</option>)
-            })
 
-        }
-        return options;
-    }
     getemployeebyproviderid(providerid) {
 
         let allusers = this.getallusers();
@@ -638,6 +628,7 @@ class ActualLabor extends Component {
         const regularFont = this.getRegularFont();
         const dynamicstyles = new DynamicStyles();
         const csi = new CSI();
+        const milestoneid = new MilestoneID();
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
@@ -667,13 +658,7 @@ class ActualLabor extends Component {
                         {csi.showCSI.call(this)}
                     </div>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        MilestoneID
-                        <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                            value={this.getmilestoneid()}
-                            onChange={event => { this.handlemilestoneid(event.target.value) }}>
-                            <option value={false}>Select A MilestoneID</option>
-                            {this.loadmilestoneids()}
-                        </select>
+                        {milestoneid.showmilestoneid.call(this)}
                     </div>
                 </div>
 

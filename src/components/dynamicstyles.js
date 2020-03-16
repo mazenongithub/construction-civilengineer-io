@@ -287,9 +287,15 @@ class DynamicStyles {
                         company.construction.csicodes = {};
                         company.construction.csicodes.code = codes;
                     }
+
                     company.office = myuser.company.office;
-                    company.materials = myuser.company.materials;
-                    company.equipment = myuser.company.equipment;
+                    if (myuser.company.hasOwnProperty("materials")) {
+                        company.materials = myuser.company.materials;
+                    }
+                    if (myuser.company.hasOwnProperty("equipment")) {
+                        company.equipment = myuser.company.equipment;
+                    }
+
                 }
 
             }
@@ -418,25 +424,72 @@ class DynamicStyles {
 
         }
     }
+    validateCompany(params) {
+        let validate = {};
+        console.log(params)
+        validate.validate = true;
+        validate.message = '';
+        const company = params.company;
+        if (company.hasOwnProperty("equipment")) {
+            // eslint-disable-next-line
+            company.equipment.myequipment.map(myequipment => {
+                if (!myequipment.accountid) {
+                    validate.validate = false;
+                    validate.message += `${myequipment.equipment} is missing AccountID `
+                }
+
+            })
+        }
+        if (company.hasOwnProperty("materials")) {
+            // eslint-disable-next-line
+            company.materials.mymaterial.map(mymaterial => {
+                if (!mymaterial.accountid) {
+                    validate.validate = false;
+                    validate.message += `${mymaterial.material} is missing AccountID `
+                }
+            })
+        }
+        if (company.office.hasOwnProperty("employees")) {
+            // eslint-disable-next-line
+            company.office.employees.employee.map(employee => {
+                if (employee.hasOwnProperty("benefits")) {
+                    employee.benefits.benefit.map(benefit => {
+                        if (!benefit.accountid) {
+                            validate.validate = false;
+                            validate.message += `${benefit.benefit} is missing AccountID `
+                        }
+                    })
+                }
+            })
+        }
+        return validate;
+
+    }
     async saveCompany() {
         const dynamicstyles = new DynamicStyles()
+
         let params = dynamicstyles.getCompanyParams.call(this)
         console.log(params)
-        let response = await SaveCompany(params);
-        console.log(response)
-        dynamicstyles.handlecompanyids.call(this, response)
-        if (response.hasOwnProperty("allusers")) {
-            let companys = returnCompanyList(response.allusers);
-            this.props.reduxAllCompanys(companys)
-            this.props.reduxAllUsers(response.allusers);
-        }
-        if (response.hasOwnProperty("myuser")) {
-            this.props.reduxUser(response.myuser)
-        }
+        const validate = dynamicstyles.validateCompany(params);
+        if (validate.validate) {
+            let response = await SaveCompany(params);
+            console.log(response)
+            dynamicstyles.handlecompanyids.call(this, response)
+            if (response.hasOwnProperty("allusers")) {
+                let companys = returnCompanyList(response.allusers);
+                this.props.reduxAllCompanys(companys)
+                this.props.reduxAllUsers(response.allusers);
+            }
+            if (response.hasOwnProperty("myuser")) {
+                this.props.reduxUser(response.myuser)
+            }
 
-        if (response.hasOwnProperty("message")) {
-            let dateupdated = inputUTCStringForLaborID(response.lastupdated)
-            this.setState({ message: `${response.message} Last Updated ${dateupdated}` })
+            if (response.hasOwnProperty("message")) {
+                let dateupdated = inputUTCStringForLaborID(response.lastupdated)
+                this.setState({ message: `${response.message} Last Updated ${dateupdated}` })
+            }
+        } else {
+            this.setState({ message: validate.message })
         }
     }
     async savemyprofile() {
@@ -667,37 +720,195 @@ class DynamicStyles {
             }
         }
     }
+    validateProject(project) {
+        let validate = {};
+        validate.validate = true;
+        validate.message = "";
+        const dynamicstyles = new DynamicStyles();
+        if (project.hasOwnProperty("schedulelabor")) {
+            // eslint-disable-next-line
+            project.schedulelabor.mylabor.map(mylabor => {
+                if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
+                    validate.validate = false;
+                    if (!mylabor.csiid) {
+                        validate.message += `Schedule labor ${mylabor.description} is missing CSIID `
+                    }
+                    if (!mylabor.milestoneid) {
+                        validate.message += `Schedule labor ${mylabor.description} is missing MilestoneID `
+                    }
+                    if (!mylabor.providerid) {
+                        validate.message += `Schedule labor ${mylabor.description} is missing ProviderID `
+                    }
+
+                }
+            })
+        }
+
+        if (project.hasOwnProperty("actuallabor")) {
+            // eslint-disable-next-line
+            project.actuallabor.mylabor.map(mylabor => {
+                if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
+                    validate.validate = false;
+                    if (!mylabor.csiid) {
+                        validate.message += `Actual labor ${mylabor.description} is missing CSIID `
+                    }
+                    if (!mylabor.milestoneid) {
+                        validate.message += `Actual labor ${mylabor.description} is missing MilestoneID `
+                    }
+                    if (!mylabor.providerid) {
+                        validate.message += `Actual labor ${mylabor.description} is missing ProviderID `
+                    }
+
+                }
+            })
+        }
+
+        if (project.hasOwnProperty("schedulematerials")) {
+            // eslint-disable-next-line
+            project.schedulematerials.mymaterial.map(mymaterial => {
+                let schedulematerial = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid)
+                let material = "";
+                if (schedulematerial) {
+                    material = schedulematerial.mymaterialid;
+                }
+
+                if (!schedulematerial || !mymaterial.mymaterialid || !mymaterial.csiid || !mymaterial.milestoneid) {
+                    validate.validate = false;
+                    if (!mymaterial.mymaterialid) {
+                        validate.message += `Schedule Material is missing materialid `
+                    }
+                    if (!mymaterial.csiid) {
+                        validate.message += `Schedule Material ${material} is missing csiid `
+                    }
+                    if (!mymaterial.milestoneid) {
+                        validate.message += `Schedule Material ${material} is missing milestoneid `
+                    }
+
+                }
+            })
+        }
+
+        if (project.hasOwnProperty("actualmaterials")) {
+            // eslint-disable-next-line
+            project.actualmaterials.mymaterial.map(mymaterial => {
+                let myactualmaterial = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid);
+                let actualmaterial = "";
+                if (myactualmaterial) {
+                    actualmaterial = myactualmaterial.mymaterialid;
+                }
+                if (!mymaterial.mymaterialid || !mymaterial.csiid || !mymaterial.milestoneid) {
+                    validate.validate = false;
+                    if (!mymaterial.mymaterialid) {
+
+                        validate.message += `Actual Material is missing materialid `
+                    }
+                    if (!mymaterial.csiid) {
+
+                        validate.message += `Actual Material ${actualmaterial} is missing csiid `
+                    }
+                    if (!mymaterial.milestoneid) {
+                        validate.message += `Actual Material ${actualmaterial} is missing milestoneid `
+                    }
+                }
+            })
+        }
+        if (project.hasOwnProperty("scheduleequipment")) {
+            // eslint-disable-next-line
+            project.scheduleequipment.myequipment.map(myequipment => {
+                let myscheduleequipment = "";
+                let scheduleequipment = dynamicstyles.getequipmentfromid.call(this, myequipment.myequipmentid);
+                if (scheduleequipment) {
+                    myscheduleequipment = scheduleequipment.equipment;
+                }
+                if (!myequipment.myequipmentid || !myequipment.csiid || !myequipment.milestoneid) {
+                    validate.validate = false;
+                    if (!myequipment.myequipmentid) {
+                        validate.message += `Schedule Equipment is missing Equipment ID `;
+                    }
+                    if (!myequipment.csiid) {
+                        validate.message += `Schedule Equipment ${myscheduleequipment} is missing CSIID `;
+                    }
+
+                    if (!myequipment.milestoneid) {
+                        validate.message += `Schedule Equipment ${myscheduleequipment} is missing MilestoneID `;
+                    }
+
+                }
+
+            })
+
+
+        }
+        if (project.hasOwnProperty("actualequipment")) {
+            // eslint-disable-next-line
+            project.actualequipment.myequipment.map(myequipment => {
+                let myactualequipment = "";
+                let actualequipment = dynamicstyles.getequipmentfromid.call(this, myequipment.myequipmentid);
+                if (actualequipment) {
+                    myactualequipment = actualequipment.equipment;
+                }
+                if (!myequipment.myequipmentid || !myequipment.csiid || !myequipment.milestoneid) {
+                    validate.validate = false;
+                    if (!myequipment.myequipmentid) {
+                        validate.message += `Actual Equipment is missing Equipment ID `;
+                    }
+                    if (!myequipment.csiid) {
+                        validate.message += `Actual Equipment ${myactualequipment} is missing CSIID `;
+                    }
+
+                    if (!myequipment.milestoneid) {
+                        validate.message += `Actual Equipment ${myactualequipment} is missing MilestoneID `;
+                    }
+
+                }
+
+            })
+
+
+        }
+        return validate;
+    }
     async savemyproject() {
         let dynamicstyles = new DynamicStyles();
         let values = dynamicstyles.getCompanyParams.call(this);
         let myproject = dynamicstyles.getproject.call(this);
         values.project = myproject;
-        console.log(values)
-        try {
-            let response = await SaveProject(values)
-            console.log(response)
-            dynamicstyles.handlecompanyids.call(this, response)
-            dynamicstyles.handleprojectids.call(this, response)
-            if (response.hasOwnProperty("allusers")) {
-                let companys = returnCompanyList(response.allusers);
-                this.props.reduxAllCompanys(companys)
-                this.props.reduxAllUsers(response.allusers);
+        let validatecompany = dynamicstyles.validateCompany.call(this, values);
+        let validateproject = dynamicstyles.validateProject.call(this, values.project)
 
+        if (validatecompany.validate && validateproject.validate) {
+            try {
+                let response = await SaveProject(values)
+                console.log(response)
+                dynamicstyles.handlecompanyids.call(this, response)
+                dynamicstyles.handleprojectids.call(this, response)
+                if (response.hasOwnProperty("allusers")) {
+                    let companys = returnCompanyList(response.allusers);
+                    this.props.reduxAllCompanys(companys)
+                    this.props.reduxAllUsers(response.allusers);
+
+                }
+                if (response.hasOwnProperty("myuser")) {
+
+                    this.props.reduxUser(response.myuser)
+                }
+
+                let message = "";
+                if (response.hasOwnProperty("message")) {
+                    let lastupdated = inputUTCStringForLaborID(response.lastupdated)
+                    message = `${response.message} Last updated ${lastupdated}`
+
+                }
+                this.setState({ message })
+            } catch (err) {
+                alert(err)
             }
-            if (response.hasOwnProperty("myuser")) {
 
-                this.props.reduxUser(response.myuser)
-            }
-
+        } else {
             let message = "";
-            if (response.hasOwnProperty("message")) {
-                let lastupdated = inputUTCStringForLaborID(response.lastupdated)
-                message = `${response.message} Last updated ${lastupdated}`
-
-            }
+            message += validatecompany.message;
+            message += validateproject.message;
             this.setState({ message })
-        } catch (err) {
-            alert(err)
         }
 
     }
@@ -2300,6 +2511,7 @@ class DynamicStyles {
 
     }
     getmymaterialfromid(materialid) {
+        console.log(materialid)
         const dynamicstyles = new DynamicStyles();
         let company = dynamicstyles.getcompany.call(this);
         let material = false;
