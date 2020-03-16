@@ -4,13 +4,13 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import { activeCheckIcon, CreateInvoiceIcon } from './svg'
-import { UTCStringFormatDateforProposal } from './functions'
+import { UTCStringFormatDateforProposal, makeID, CreateInvoice, inputDateObjOutputAdjString } from './functions'
 import { Link } from 'react-router-dom';
 
 class Invoices extends Component {
     constructor(props) {
         super(props)
-        this.state = { width: 0, height: 0, activeinvoiceid: false }
+        this.state = { width: 0, height: 0, activeinvoiceid: false, updated: new Date(), approved: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -173,11 +173,11 @@ class Invoices extends Component {
     showinvoiceids() {
         let dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-        console.log(myuser)
+
         let invoices = [];
         if (myuser) {
             let myproject = dynamicstyles.getproject.call(this);
-            console.log(myproject)
+
             if (myproject) {
                 if (myproject.hasOwnProperty("invoices")) {
                     // eslint-disable-next-line
@@ -396,6 +396,27 @@ class Invoices extends Component {
             this.setState({ render: 'render' })
         }
     }
+    createnewinvoice() {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            let invoiceid = makeID(4);
+            let providerid = myuser.providerid;
+            let updated = inputDateObjOutputAdjString(this.state.updated);
+            let approved = this.state.approved;
+            let newinvoice = CreateInvoice(invoiceid, providerid, updated, approved);
+            let myproject = dynamicstyles.getproject.call(this);
+            let i = dynamicstyles.getprojectkey.call(this);
+            if (myproject.hasOwnProperty("invoices")) {
+                myuser.company.projects.myproject[i].invoices.myinvoice.push(newinvoice)
+            } else {
+                myuser.company.projects.myproject[i].invoices = { myinvoice: [newinvoice] }
+            }
+            this.props.reduxUser(myuser)
+            this.setState({ activeinvoiceid: invoiceid })
+
+        }
+    }
     render() {
         let dynamicstyles = new DynamicStyles();
         let styles = MyStylesheet();
@@ -413,7 +434,7 @@ class Invoices extends Component {
                     </div>
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...proposalButton }}>{CreateInvoiceIcon()}</button>
+                            <button style={{ ...styles.generalButton, ...proposalButton }} onClick={() => { this.createnewinvoice() }}>{CreateInvoiceIcon()}</button>
                         </div>
 
                     </div>
@@ -435,6 +456,7 @@ class Invoices extends Component {
 
                     {this.showallpayitems()}
                     {this.showinvoicelink()}
+                    {dynamicstyles.showsaveproject.call(this)}
                 </div>
             </div>
         )

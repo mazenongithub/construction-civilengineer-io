@@ -142,7 +142,7 @@ class ActualLabor extends Component {
         if (myproject.hasOwnProperty("actuallabor")) {
             // eslint-disable-next-line
             myproject.actuallabor.mylabor.map(mylabor => {
-                console.log(mylabor)
+
                 laborids.push(this.showlaborid(mylabor))
             })
 
@@ -208,9 +208,9 @@ class ActualLabor extends Component {
         const regularFont = this.getRegularFont();
         const csi = this.getcsibyid(mylabor.csiid);
         let employee = this.getemployeebyproviderid(mylabor.providerid)
-        console.log(mylabor, mylabor.laborrate)
+
         let hourlyrate = Number(mylabor.laborrate)
-        console.log(hourlyrate)
+
         return (
             <div key={mylabor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
                 <span style={{ ...this.getactivelaborbackground(mylabor.laborid) }} onClick={() => { this.makelaboractive(mylabor.laborid) }}>
@@ -290,7 +290,7 @@ class ActualLabor extends Component {
         return options;
     }
     getemployeebyproviderid(providerid) {
-        console.log(providerid)
+
         let allusers = this.getallusers();
         let user = false;
         if (allusers) {
@@ -371,7 +371,7 @@ class ActualLabor extends Component {
     getemployee() {
         if (this.state.activelaborid) {
             let mylabor = this.getactivelabor();
-            console.log(mylabor)
+
             if (mylabor) {
                 return (mylabor.providerid)
 
@@ -402,7 +402,7 @@ class ActualLabor extends Component {
     getmilestoneid() {
         if (this.state.activelaborid) {
             let mylabor = this.getactivelabor();
-            console.log(mylabor)
+
             if (mylabor) {
                 return (mylabor.milestoneid)
             }
@@ -414,7 +414,7 @@ class ActualLabor extends Component {
     getdescription() {
         if (this.state.activelaborid) {
             let mylabor = this.getactivelabor();
-            console.log(mylabor)
+
             if (mylabor) {
                 return (mylabor.description)
             }

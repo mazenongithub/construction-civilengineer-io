@@ -682,7 +682,7 @@ class ScheduleMaterials extends Component {
             // eslint-disable-next-line
             material.map(mymaterial => {
                 let materials = this.getmymaterialfromid(mymaterial.materialid)
-                console.log(materials)
+
                 options.push(
                     <option
                         key={materials.materialid}
@@ -728,13 +728,13 @@ class ScheduleMaterials extends Component {
                 }
             }
         }
-        console.log("ACTIVEMATERIALKEY", key)
+
         return key;
     }
     getmaterial() {
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
+
             return mymaterial.mymaterialid;
         } else {
             return this.state.mymaterialid;
@@ -763,7 +763,7 @@ class ScheduleMaterials extends Component {
     getmilestoneid() {
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
+
             return mymaterial.milestoneid;
         } else {
             return this.state.milestoneid;
@@ -772,7 +772,7 @@ class ScheduleMaterials extends Component {
     getquantity() {
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
+
             return mymaterial.quantity;
         } else {
             return this.state.quantity;
@@ -781,7 +781,6 @@ class ScheduleMaterials extends Component {
     getunit() {
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
             return mymaterial.unit;
         } else {
             return this.state.unit;
@@ -790,7 +789,7 @@ class ScheduleMaterials extends Component {
     getunitcost() {
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
+
             return mymaterial.unitcost;
         } else {
             return this.state.unitcost;

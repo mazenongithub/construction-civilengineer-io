@@ -807,7 +807,7 @@ class ActualLaborTimeOut {
 
             let mylabor = this.getactivelabor();
             datein = new Date(inputUTCStringAddOffsetString(mylabor.timeout).replace(/-/g, '/'));
-            console.log("MONTHTIMEIN", datein)
+
         }
         else {
             datein = this.state.timeout;

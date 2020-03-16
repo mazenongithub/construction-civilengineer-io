@@ -10,7 +10,7 @@ import FindEmployee from './findemployee';
 class Employees extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activeemployeeid: '', search: '', activebenefitid: '', amount: "", accountid: '', benefit: '' }
+        this.state = { render: '', width: 0, height: 0, activeemployeeid: '', search: '', activebenefitid: '', amount: "", accountid: '', benefit: '', month: '', week: '', day: '', hour: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -266,7 +266,8 @@ class Employees extends Component {
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 } else {
-                    let benefitid = makeID(16);
+                    //let benefitid = makeID(16);
+                    let benefitid = 'AAAABBBBCCCCDDDD'
                     let amount = this.state.amount;
                     let accountid = this.state.accountid;
                     let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount);
@@ -359,7 +360,7 @@ class Employees extends Component {
         if (benefit) {
             return (Math.round(Number(benefit.amount) / 12).toFixed(2))
         } else {
-            return;
+            return this.state.month;
         }
 
     }
@@ -368,7 +369,7 @@ class Employees extends Component {
         if (benefit) {
             return (Number(benefit.amount) / 52).toFixed(2)
         } else {
-            return;
+            return this.state.week;
         }
 
     }
@@ -377,7 +378,7 @@ class Employees extends Component {
         if (benefit) {
             return (Number(benefit.amount) / 365).toFixed(2)
         } else {
-            return;
+            return this.state.day;
         }
     }
     getbenefithour() {
@@ -387,7 +388,7 @@ class Employees extends Component {
         if (benefit && employee) {
             return (Number(Number(benefit.amount) / (Number(employee.workinghours))).toFixed(2))
         } else {
-            return;
+            return this.state.hour;
         }
 
     }
@@ -440,7 +441,7 @@ class Employees extends Component {
                         <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
                                 Per Month <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={this.getbenefitday()}
+                                    value={this.getbenefitmonth()}
                                 />
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>

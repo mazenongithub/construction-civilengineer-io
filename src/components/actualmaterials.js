@@ -433,7 +433,8 @@ class ActualMaterials extends Component {
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 } else {
-                    let materialid = makeID(16);
+                    //let materialid = makeID(16);
+                    let materialid = 'AAAABBBBCCCCDDDD'
                     let providerid = this.state.employeeid;
                     let milestoneid = this.state.milestoneid;
                     let csiid = this.state.csiid;
@@ -684,7 +685,7 @@ class ActualMaterials extends Component {
             // eslint-disable-next-line
             material.map(mymaterial => {
                 let materials = this.getmymaterialfromid(mymaterial.materialid)
-                console.log(materials)
+
                 options.push(
                     <option
                         key={materials.materialid}
@@ -735,7 +736,7 @@ class ActualMaterials extends Component {
     getmaterial() {
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
+
             return mymaterial.mymaterialid;
         } else {
             return this.state.mymaterialid;
@@ -764,7 +765,7 @@ class ActualMaterials extends Component {
     getmilestoneid() {
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
+
             return mymaterial.milestoneid;
         } else {
             return this.state.milestoneid;
@@ -773,7 +774,7 @@ class ActualMaterials extends Component {
     getquantity() {
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
+
             return mymaterial.quantity;
         } else {
             return this.state.quantity;
@@ -782,7 +783,7 @@ class ActualMaterials extends Component {
     getunit() {
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
+
             return mymaterial.unit;
         } else {
             return this.state.unit;
@@ -791,7 +792,7 @@ class ActualMaterials extends Component {
     getunitcost() {
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
+
             return mymaterial.unitcost;
         } else {
             return this.state.unitcost;

@@ -190,7 +190,7 @@ class ScheduleLabor extends Component {
         if (window.confirm(`Do you want to erase ${mylabor.description}?`)) {
             const dynamicstyles = new DynamicStyles();
             const i = dynamicstyles.getprojectkey.call(this)
-            const j = dynamicstyles.getactivelaborkeybyid.call(this, mylabor.laborid);
+            const j = dynamicstyles.getschedulelaborbyid.call(this, mylabor.laborid);
             const myuser = dynamicstyles.getuser.call(this);
             if (myuser) {
                 myuser.company.projects.myproject[i].schedulelabor.mylabor.splice(j, 1);

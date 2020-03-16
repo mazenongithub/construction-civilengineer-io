@@ -4,13 +4,13 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import { CreateProposal, activeCheckIcon } from './svg'
-import { UTCStringFormatDateforProposal } from './functions'
+import { UTCStringFormatDateforProposal, CreateMyProposal, makeID, inputDateObjOutputAdjString } from './functions'
 import { Link } from 'react-router-dom';
 
 class Proposals extends Component {
     constructor(props) {
         super(props)
-        this.state = { width: 0, height: 0, activeproposalid: false }
+        this.state = { width: 0, height: 0, activeproposalid: false, updated: new Date(), approved: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -138,7 +138,7 @@ class Proposals extends Component {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
-                let j = dynamicstyles.getactivelaborkeybyid.call(this, laborid);
+                let j = dynamicstyles.getschedulelaborbyid.call(this, laborid);
                 myuser.company.projects.myproject[i].schedulelabor.mylabor[j].profit = profit;
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
@@ -173,7 +173,7 @@ class Proposals extends Component {
                 if (result === 'add') {
 
                     if (item.hasOwnProperty("laborid")) {
-                        j = dynamicstyles.getactivelaborkeybyid.call(this, item.laborid)
+                        j = dynamicstyles.getschedulelaborkeybyid.call(this, item.laborid)
                         myuser.company.projects.myproject[i].schedulelabor.mylabor[j].proposalid = proposalid;
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
@@ -193,7 +193,7 @@ class Proposals extends Component {
                 } else if (result === 'remove') {
 
                     if (item.hasOwnProperty("laborid")) {
-                        j = dynamicstyles.getactivelaborkeybyid.call(this, item.laborid)
+                        j = dynamicstyles.getschedulelaborbyid.call(this, item.laborid)
                         myuser.company.projects.myproject[i].schedulelabor.mylabor[j].proposalid = ""
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
@@ -222,11 +222,11 @@ class Proposals extends Component {
     showproposalids() {
         let dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-        console.log(myuser)
+
         let proposals = [];
         if (myuser) {
             let myproject = dynamicstyles.getproject.call(this);
-            console.log(myproject)
+
             if (myproject) {
                 if (myproject.hasOwnProperty("proposals")) {
                     // eslint-disable-next-line
@@ -302,7 +302,7 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            let j = dynamicstyles.getactivelaborkeybyid.call(this, laborid)
+            let j = dynamicstyles.getschedulelaborbyid.call(this, laborid)
             myuser.company.projects.myproject[i].schedulelabor.mylabor[j].laborrate = laborrate;
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' })
@@ -397,6 +397,29 @@ class Proposals extends Component {
         }
 
     }
+    createnewproposal() {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            let proposalid = makeID(4);
+            let providerid = myuser.providerid;
+            let updated = inputDateObjOutputAdjString(this.state.updated);
+            let approved = this.state.approved;
+            let newproposal = CreateMyProposal(proposalid, providerid, updated, approved);
+            let myproject = dynamicstyles.getproject.call(this);
+            let i = dynamicstyles.getprojectkey.call(this);
+            if (myproject.hasOwnProperty("proposals")) {
+                myuser.company.projects.myproject[i].proposals.myproposal.push(newproposal)
+
+            } else {
+                myuser.company.projects.myproject[i].proposals = { myproposal: [newproposal] }
+
+            }
+            this.props.reduxUser(myuser);
+            this.setState({ activeproposalid: proposalid })
+        }
+
+    }
     render() {
         let dynamicstyles = new DynamicStyles();
         let styles = MyStylesheet();
@@ -409,12 +432,12 @@ class Proposals extends Component {
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...titleFont, ...styles.alignCenter }}>
                             /proposals
-                </div>
+                        </div>
 
                     </div>
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...proposalButton }}>{CreateProposal()}</button>
+                            <button style={{ ...styles.generalButton, ...proposalButton }} onClick={() => { this.createnewproposal() }}>{CreateProposal()}</button>
                         </div>
 
                     </div>
@@ -436,6 +459,7 @@ class Proposals extends Component {
 
                     {this.showallpayitems()}
                     {this.showproposallink()}
+                    {dynamicstyles.showsaveproject.call(this)}
                 </div>
             </div>
         )

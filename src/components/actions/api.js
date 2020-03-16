@@ -337,7 +337,7 @@ export async function SaveCompany(values) {
 
 export async function SaveProject(values) {
 
-    let APIURL = `http://civilengineer.io/construction/api/saveproject.php`;
+    let APIURL = `https://civilengineer.io/construction/api/saveproject.php`;
     console.log(APIURL);
     return fetch(APIURL, {
         method: 'post',

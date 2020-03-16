@@ -30,7 +30,7 @@ import DynamicStyles from './dynamicstyles';
 class ActualMaterialDate {
 
     setDay(dateencoded) {
-        console.log(dateencoded)
+
         const dynamicstyles = new DynamicStyles();
         if (this.state.activematerialid) {
             let myuser = dynamicstyles.getuser.call(this)
@@ -38,7 +38,7 @@ class ActualMaterialDate {
             let j = this.getactivematerialkey();
 
             let newtimein = inputSecOutDateString(dateencoded)
-            console.log(newtimein)
+
             myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].timein = newtimein;
             this.props.reduxUser(myuser)
             this.setState({ render: 'render' })
@@ -588,7 +588,7 @@ class ActualMaterialDate {
             let timein = mymaterial.timein;
 
             let datein = new Date(`${timein.replace(/-/g, '/')} UTC`);
-            console.log(datein)
+
             showgrid.push(Datein.showgridcalender.call(this, datein))
 
         }

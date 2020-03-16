@@ -315,6 +315,27 @@ class DynamicStyles {
 
         return key;
     }
+    getbenefitkeybyid(benefitid) {
+        const dynamicstyles = new DynamicStyles();
+        let key = false;
+        let employees = dynamicstyles.getmyemployees.call(this);
+        // eslint-disable-next-line
+        employees.map(employee => {
+
+
+            if (employee.hasOwnProperty("benefits")) {
+                // eslint-disable-next-line
+                employee.benefits.benefit.map((benefit, i) => {
+                    if (benefit.benefitid === benefitid) {
+                        key = i;
+                    }
+                })
+            }
+
+        })
+
+        return key
+    }
     handlecompanyids(response) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
@@ -378,6 +399,20 @@ class DynamicStyles {
 
                     })
                 }
+                if (response.replaceids.hasOwnProperty("benefits")) {
+                    // eslint-disable-next-line
+                    response.replaceids.benefits.map(benefit => {
+                        let providerid = benefit.providerid;
+                        let oldbenefitid = benefit.oldbenefitid;
+                        let benefitid = benefit.benefitid;
+                        let n = dynamicstyles.getemployeekeybyid.call(this, providerid);
+                        let o = dynamicstyles.getbenefitkeybyid.call(this, oldbenefitid)
+                        myuser.company.office.employees.employee[n].benefits.benefit[o].benefitid = benefitid;
+                        if (this.state.activebenefitid === oldbenefitid) {
+                            this.setState({ activebenefitid: benefitid })
+                        }
+                    })
+                }
                 this.props.reduxUser(myuser)
             }
 
@@ -431,32 +466,238 @@ class DynamicStyles {
         this.setState({ message })
 
     }
+    getproposalkeybyid(proposalid) {
+        let dynamicstyles = new DynamicStyles();
+        let key = false;
+        if (this.state.activeproposalid) {
+            let myproject = dynamicstyles.getproject.call(this);
+            if (myproject.hasOwnProperty("proposals")) {
+                // eslint-disable-next-line
+                myproject.proposals.myproposal.map((myproposal, i) => {
+                    if (myproposal.proposalid === proposalid) {
+                        key = i;
+                    }
+                })
+
+            }
+
+
+        }
+
+
+        return key;
+    }
+    getproposalbyid(proposalid) {
+        let dynamicstyles = new DynamicStyles();
+        let proposal = false;
+        if (this.state.activeproposalid) {
+            let myproject = dynamicstyles.getproject.call(this);
+            if (myproject.hasOwnProperty("proposals")) {
+                // eslint-disable-next-line
+                myproject.proposals.myproposal.map((myproposal, i) => {
+                    if (myproposal.proposalid === proposalid) {
+                        proposal = myproposal;
+                    }
+                })
+
+            }
+
+
+        }
+
+
+        return proposal;
+    }
+    getinvoicekeybyid(invoiceid) {
+        let dynamicstyles = new DynamicStyles();
+        let key = false;
+        if (this.state.activeinvoiceid) {
+            let myproject = dynamicstyles.getproject.call(this);
+            if (myproject.hasOwnProperty("invoices")) {
+                // eslint-disable-next-line
+                myproject.invoices.myinvoice.map((myinvoice, i) => {
+                    if (myinvoice.invoiceid === invoiceid) {
+                        key = i;
+                    }
+                })
+
+            }
+
+        }
+
+        return key;
+    }
+    getinvoicebyid(invoiceid) {
+        let dynamicstyles = new DynamicStyles();
+        let key = false;
+        if (this.state.activeinvoiceid) {
+            let myproject = dynamicstyles.getproject.call(this);
+            if (myproject.hasOwnProperty("invoices")) {
+                // eslint-disable-next-line
+                myproject.invoices.myinvoice.map((myinvoice, i) => {
+                    if (myinvoice.invoiceid === invoiceid) {
+                        key = i;
+                    }
+                })
+
+            }
+
+        }
+
+        return key;
+    }
+    handleprojectids(response) {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (response.hasOwnProperty("projectids")) {
+                const i = dynamicstyles.getprojectkey.call(this)
+                if (response.projectids.hasOwnProperty("scheduleequipment")) {
+                    // eslint-disable-next-line
+                    response.projectids.scheduleequipment.map(myequipment => {
+                        const j = dynamicstyles.getscheduleequipmentkeybyid.call(this, myequipment.oldequipmentid);
+                        myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentid = myequipment.equipmentid;
+                        this.props.reduxUser(myuser);
+                        if (this.state.activeequipmentid === myequipment.oldequipmentid) {
+                            this.setState({ activeequipmentid: myequipment.equipmentid })
+                        }
+
+                    })
+
+                }
+                if (response.projectids.hasOwnProperty("schedulematerials")) {
+                    // eslint-disable-next-line
+                    response.projectids.schedulematerials.map(mymaterial => {
+                        const j = dynamicstyles.getschedulematerialkeybyid.call(this, mymaterial.oldmaterialid);
+                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].materialid = mymaterial.materialid;
+                        this.props.reduxUser(myuser);
+                        if (this.state.activematerialid === mymaterial.oldmaterialid) {
+                            this.setState({ activematerialid: mymaterial.materialid })
+                        }
+
+                    })
+                }
+
+                if (response.projectids.hasOwnProperty("schedulelabor")) {
+                    // eslint-disable-next-line
+                    response.projectids.schedulelabor.map(mylabor => {
+                        const k = dynamicstyles.getschedulelaborkeybyid.call(this, mylabor.oldlaborid);
+                        myuser.company.projects.myproject[i].schedulelabor.mylabor[k].laborid = mylabor.laborid;
+                        this.props.reduxUser(myuser);
+                        if (this.state.activelaborid === mylabor.oldlaborid) {
+                            this.setState({ activelaborid: mylabor.laborid })
+                        }
+
+                    })
+                }
+                if (response.projectids.hasOwnProperty("actualequipment")) {
+                    // eslint-disable-next-line
+                    response.projectids.actualequipment.map(myequipment => {
+
+                        const l = dynamicstyles.getactualequipmentkeybyid.call(this, myequipment.oldequipmentid);
+                        myuser.company.projects.myproject[i].actualequipment.myequipment[l].equipmentid = myequipment.equipmentid;
+                        this.props.reduxUser(myuser);
+                        if (this.state.activeequipmentid === myequipment.oldequipmentid) {
+                            this.setState({ activeequipmentid: myequipment.equipmentid })
+                        }
+
+
+
+                    })
+                }
+                if (response.projectids.hasOwnProperty("actualmaterials")) {
+                    // eslint-disable-next-line
+                    response.projectids.actualmaterials.map(mymaterial => {
+                        const m = dynamicstyles.getactualmaterialkeybyid.call(this, mymaterial.oldmaterialid);
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[m].materialid = mymaterial.materialid;
+                        this.props.reduxUser(myuser);
+                        if (this.state.activematerialid === mymaterial.oldmaterialid) {
+                            this.setState({ activematerialid: mymaterial.materialid })
+                        }
+
+                    })
+                }
+
+
+                if (response.projectids.hasOwnProperty("actuallabor")) {
+                    // eslint-disable-next-line
+                    response.projectids.actuallabor.map(mylabor => {
+                        const n = dynamicstyles.getactuallaborkeybyid.call(this, mylabor.oldlaborid);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[n].laborid = mylabor.laborid;
+                        this.props.reduxUser(myuser);
+                        if (this.state.activelaborid === mylabor.oldlaborid) {
+                            this.setState({ activelaborid: mylabor.laborid })
+                        }
+
+
+
+                    })
+                }
+
+                if (response.projectids.hasOwnProperty("proposals")) {
+                    // eslint-disable-next-line
+                    response.projectids.proposals.map(myproposal => {
+                        const o = dynamicstyles.getproposalkeybyid.call(this, myproposal.oldproposalid);
+                        myuser.company.projects.myproject[i].proposals.myproposal[o].proposalid = myproposal.proposalid;
+                        this.props.reduxUser(myuser);
+                        if (this.state.activeproposalid === myproposal.oldproposalid) {
+                            this.setState({ activeproposalid: myproposal.proposalid })
+                        }
+
+                    })
+                }
+
+
+
+                if (response.projectids.hasOwnProperty("invoices")) {
+                    // eslint-disable-next-line
+                    response.projectids.invoices.map(myinvoice => {
+                        const p = dynamicstyles.getinvoicekeybyid.call(this, myinvoice.oldinvoiceid);
+                        myuser.company.projects.myproject[i].invoices.myinvoice[p].invoiceid = myinvoice.invoiceid;
+                        this.props.reduxUser(myuser);
+                        if (this.state.activeinvoiceid === myinvoice.oldinvoiceid) {
+                            this.setState({ activeinvoiceid: myinvoice.invoiceid })
+                        }
+
+                    })
+
+                }
+
+            }
+        }
+    }
     async savemyproject() {
         let dynamicstyles = new DynamicStyles();
         let values = dynamicstyles.getCompanyParams.call(this);
         let myproject = dynamicstyles.getproject.call(this);
         values.project = myproject;
-        let response = await SaveProject(values)
-        console.log(response)
+        console.log(values)
+        try {
+            let response = await SaveProject(values)
+            console.log(response)
+            dynamicstyles.handlecompanyids.call(this, response)
+            dynamicstyles.handleprojectids.call(this, response)
+            if (response.hasOwnProperty("allusers")) {
+                let companys = returnCompanyList(response.allusers);
+                this.props.reduxAllCompanys(companys)
+                this.props.reduxAllUsers(response.allusers);
 
-        if (response.hasOwnProperty("allusers")) {
-            let companys = returnCompanyList(response.allusers);
-            this.props.reduxAllCompanys(companys)
-            this.props.reduxAllUsers(response.allusers);
+            }
+            if (response.hasOwnProperty("myuser")) {
 
+                this.props.reduxUser(response.myuser)
+            }
+
+            let message = "";
+            if (response.hasOwnProperty("message")) {
+                let lastupdated = inputUTCStringForLaborID(response.lastupdated)
+                message = `${response.message} Last updated ${lastupdated}`
+
+            }
+            this.setState({ message })
+        } catch (err) {
+            alert(err)
         }
-        if (response.hasOwnProperty("myuser")) {
-
-            this.props.reduxUser(response.myuser)
-        }
-
-        let message = "";
-        if (response.hasOwnProperty("message")) {
-            let lastupdated = inputUTCStringForLaborID(response.lastupdated)
-            message = `${response.message} Last updated ${lastupdated}`
-
-        }
-        this.setState({ message })
 
     }
 
@@ -1558,6 +1799,25 @@ class DynamicStyles {
         }
         return material;
     }
+    getscheduleequipmentkeybyid(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this);
+        let key = false;
+        if (myproject) {
+
+
+            if (myproject.hasOwnProperty("scheduleequipment")) {
+                // eslint-disable-next-line
+                myproject.scheduleequipment.myequipment.map((myequipment, i) => {
+                    if (myequipment.equipmentid === equipmentid) {
+                        key = i
+                    }
+                })
+            }
+
+        }
+        return key;
+    }
     getscheduleequipmentbyid(equipmentid) {
         const dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getproject.call(this);
@@ -1776,27 +2036,39 @@ class DynamicStyles {
         const P = () => {
             let P = 0;
             const costs = dynamicstyles.getequipmentcostsbyid.call(this, myequipment.equipmentid)
-            // eslint-disable-next-line
-            costs.map(cost => {
-                let n = calculateTotalMonths(myequipment.purchasedate, cost.timein);
+            if (costs) {
+                // eslint-disable-next-line
+                costs.map(cost => {
+                    let n = calculateTotalMonths(myequipment.purchasedate, cost.timein);
 
-                let F = Number(cost.cost)
+                    let F = Number(cost.cost)
 
-                P += FutureCostPresent(i, n, F);
+                    P += FutureCostPresent(i, n, F);
 
 
-            })
+                })
+            }
             return (P)
         }
         const Period = () => {
             let purchasedate = myequipment.purchasedate;
             let saledate = myequipment.saledate;
-            let totalmonths = calculateTotalMonths(purchasedate, saledate)
-            return (totalmonths)
+            if (purchasedate && saledate) {
+                let totalmonths = calculateTotalMonths(purchasedate, saledate)
+                return (totalmonths)
+            } else {
+                return 0;
+            }
+
         }
         const AFactor = () => {
             const T = Period();
-            return (AmmortizeFactor(i, T))
+            if (i && T) {
+                return (AmmortizeFactor(i, T))
+            } else {
+                return 0;
+            }
+
         }
 
         equipmentrate = (P() * AFactor()) / (workinghours);
@@ -1852,24 +2124,7 @@ class DynamicStyles {
         }
         return equipment;
     }
-    getactivelaborkeybyid(laborid) {
-        const dynamicstyles = new DynamicStyles();
-        let myproject = dynamicstyles.getproject.call(this)
-        let key = false;
 
-        if (myproject) {
-            if (myproject.hasOwnProperty("schedulelabor")) {
-                // eslint-disable-next-line
-                myproject.schedulelabor.mylabor.map((mylabor, i) => {
-                    if (mylabor.laborid === laborid) {
-                        key = i;
-                    }
-                })
-            }
-        }
-
-        return key;
-    }
     getactuallaborbyid(laborid) {
         const dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getproject.call(this)
@@ -1905,6 +2160,25 @@ class DynamicStyles {
         }
 
         return labor;
+    }
+    getschedulelaborkeybyid(laborid) {
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getproject.call(this)
+        let key = false;
+
+        if (myproject) {
+            if (myproject.hasOwnProperty("schedulelabor")) {
+                // eslint-disable-next-line
+                myproject.schedulelabor.mylabor.map((mylabor, i) => {
+
+                    if (mylabor.laborid === laborid) {
+                        key = i;
+                    }
+                })
+            }
+        }
+
+        return key;
     }
 
     getactuallaborkeybyid(laborid) {

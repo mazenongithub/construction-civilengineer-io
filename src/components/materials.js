@@ -422,7 +422,7 @@ class Materials extends Component {
             let mymaterial = this.getactivematerial();
 
             if (mymaterial) {
-                console.log(mymaterial, mymaterial.accountid)
+
                 return mymaterial.accountid;
             }
         } else {
@@ -434,7 +434,7 @@ class Materials extends Component {
         const dynamicstyles = new DynamicStyles();
         if (this.state.activematerialid) {
             let mymaterial = this.getactivematerial();
-            console.log(mymaterial)
+
             if (mymaterial) {
                 let csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid)
                 if (csi) {
@@ -466,7 +466,8 @@ class Materials extends Component {
 
 
             } else {
-                let materialid = makeID(16);
+                //let materialid = makeID(16);
+                let materialid = 'AAAABBBBCCCCDDDD'
                 let accountid = this.state.accountid;
                 let csiid = this.state.csiid;
                 let unit = this.state.unit;
@@ -501,7 +502,7 @@ class Materials extends Component {
     }
 
     handleaccountid(accountid) {
-        console.log(accountid)
+
         let myuser = this.getuser();
         if (myuser) {
             if (this.state.activematerialid) {

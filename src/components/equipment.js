@@ -105,7 +105,7 @@ class Equipment extends Component {
             } else {
                 this.setState({ equipment })
                 //let equipmentid = makeID(16);
-                let equipmentid = 'AAAABBBBCCCCDDDD';
+                let equipmentid = 'AAAABBBBCCCCDDDD'
                 let ownership = "";
                 let accountid = this.state.accountid;
 
@@ -379,8 +379,7 @@ class Equipment extends Component {
 
             } else {
                 this.setState({ cost });
-                //let costid = makeID(16);
-                let costid = 'AAAABBBBCCCCDDDD'
+                let costid = makeID(16);
                 let datein = DateStringFromDateObj(this.state.equipmentdate)
                 let detail = "";
                 let newcost = CreateCostID(costid, cost, detail, datein)

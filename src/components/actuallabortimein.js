@@ -807,7 +807,7 @@ class ActualLaborTimeIn {
 
             let mylabor = this.getactivelabor();
             datein = new Date(inputUTCStringAddOffsetString(mylabor.timein).replace(/-/g, '/'));
-            console.log("MONTHTIMEIN", datein)
+
         }
         else {
             datein = this.state.timein;

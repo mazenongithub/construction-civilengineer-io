@@ -26,7 +26,7 @@ export function CreateCompany(companyid, company, address, city, contactstate, z
 export function CreateRentalRate(month, week, day, hour) {
     return ({ month, week, day, hour })
 }
-export function CreateProposal(proposalid, providerid, updated, approved) {
+export function CreateMyProposal(proposalid, providerid, updated, approved) {
     return ({ proposalid, providerid, updated, approved })
 }
 export function CreateInvoice(invoiceid, providerid, updated, approved) {
