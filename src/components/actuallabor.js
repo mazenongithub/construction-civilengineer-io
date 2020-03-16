@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
-import { inputUTCStringForLaborID, calculatetotalhours, makeID, CreateActualLabor, inputDateObjOutputAdjString } from './functions'
+import { inputUTCStringForLaborID, calculatetotalhours, CreateActualLabor, inputDateObjOutputAdjString } from './functions'
 import ActualLaborTimeOut from './actuallabortimeout'
 import DynamicStyles from './dynamicstyles';
 import ActualLaborTimeIn from './actuallabortimein';
 import CSI from './csi';
+import MakeID from './makeids';
 class ActualLabor extends Component {
 
     constructor(props) {
@@ -426,6 +427,7 @@ class ActualLabor extends Component {
 
     handledescription(description) {
         const dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
         let myuser = this.getuser();
         if (myuser) {
             let i = this.getprojectkey();
@@ -437,7 +439,7 @@ class ActualLabor extends Component {
 
 
             } else {
-                let laborid = makeID(16);
+                let laborid = makeID.actuallaborid.call(this)
                 let providerid = this.state.employeeid;
                 let milestoneid = this.state.milestoneid;
                 let csiid = this.state.csiid;
@@ -454,6 +456,7 @@ class ActualLabor extends Component {
     }
     handlecsiid(csiid) {
         const dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
         let csi = dynamicstyles.getcsibyid.call(this, csiid)
         let csi_1 = csi.csi.substr(0, 2)
         let csi_2 = csi.csi.substr(2, 2)
@@ -470,7 +473,7 @@ class ActualLabor extends Component {
 
 
             } else {
-                let laborid = makeID(16);
+                let laborid = makeID.actuallaborid.call(this)
                 let providerid = this.state.employeeid;
                 let milestoneid = this.state.milestoneid;
                 let description = this.state.description;
@@ -487,6 +490,7 @@ class ActualLabor extends Component {
     }
     handlemilestoneid(milestoneid) {
         const dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
         let myuser = this.getuser();
         if (myuser) {
             let i = this.getprojectkey();
@@ -498,7 +502,7 @@ class ActualLabor extends Component {
 
 
             } else {
-                let laborid = makeID(16);
+                let laborid = makeID.actuallaborid.call(this)
                 let providerid = this.state.employeeid;
                 let csiid = this.state.csiid;
                 let description = this.state.description;
@@ -516,6 +520,7 @@ class ActualLabor extends Component {
 
     handleproviderid(providerid) {
         const dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
         let myuser = this.getuser();
         if (myuser) {
             let i = this.getprojectkey();
@@ -527,7 +532,7 @@ class ActualLabor extends Component {
 
 
             } else {
-                let laborid = makeID(16);
+                let laborid = makeID.actuallaborid.call(this)
                 let csiid = this.state.csiid;
                 let description = this.state.description;
                 let timein = inputDateObjOutputAdjString(this.state.timein);
@@ -544,6 +549,7 @@ class ActualLabor extends Component {
     }
     handlelaborrate(laborrate) {
         let myuser = this.getuser();
+        const makeID = new MakeID();
         const dynamicstyles = new DynamicStyles();
         if (myuser) {
             let i = this.getprojectkey();
@@ -555,7 +561,7 @@ class ActualLabor extends Component {
 
 
             } else {
-                let laborid = makeID(16);
+                let laborid = makeID.actuallaborid.call(this)
                 let csiid = this.state.csiid;
                 let description = this.state.description;
                 let timein = inputDateObjOutputAdjString(this.state.timein);

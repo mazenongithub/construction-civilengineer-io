@@ -546,6 +546,7 @@ class DynamicStyles {
 
         return key;
     }
+
     handleprojectids(response) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
@@ -971,6 +972,7 @@ class DynamicStyles {
     getmymaterials() {
         const dynamicstyles = new DynamicStyles();
         const company = dynamicstyles.getcompany.call(this);
+        console.log(company)
         let materials = false;
         if (company.hasOwnProperty("materials")) {
             materials = company.materials.mymaterial;
@@ -1342,6 +1344,88 @@ class DynamicStyles {
 
 
         return key;
+    }
+    getschedulematerials() {
+        const dynamicstyles = new DynamicStyles();
+        let schedulematerials = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("schedulematerials")) {
+            schedulematerials = myproject.schedulematerials.mymaterial;
+
+        }
+        return schedulematerials;
+    }
+    getactualmaterials() {
+        const dynamicstyles = new DynamicStyles();
+        let actualmaterials = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("actualmaterials")) {
+            actualmaterials = myproject.actualmaterials.mymaterial;
+
+        }
+        return actualmaterials;
+    }
+
+    getactuallabor() {
+        const dynamicstyles = new DynamicStyles();
+        let actuallabor = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("actuallabor")) {
+            actuallabor = myproject.actuallabor.mylabor;
+
+        }
+        return actuallabor;
+    }
+    getschedulelabor() {
+        const dynamicstyles = new DynamicStyles();
+        let schedulelabor = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("schedulelabor")) {
+            schedulelabor = myproject.schedulelabor.mylabor;
+
+        }
+        return schedulelabor;
+    }
+    getinvoices() {
+        const dynamicstyles = new DynamicStyles();
+        let invoices = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("invoices")) {
+            invoices = myproject.invoices.myinvoice;
+
+        }
+        return invoices;
+    }
+    getproposals() {
+        const dynamicstyles = new DynamicStyles();
+        let proposals = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("proposals")) {
+            proposals = myproject.proposals.myproposal;
+
+        }
+        return proposals;
+    }
+
+    getscheduleequipment() {
+        const dynamicstyles = new DynamicStyles();
+        let scheduleequipment = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("scheduleequipment")) {
+            scheduleequipment = myproject.scheduleequipment.myequipment;
+
+        }
+        return scheduleequipment;
+    }
+    getactualequipment() {
+        const dynamicstyles = new DynamicStyles();
+        let actualequipment = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("actualequipment")) {
+            actualequipment = myproject.actualequipment.myequipment;
+
+        }
+        return actualequipment;
     }
 
     getactualequipmentkeybyid(equipmentid) {

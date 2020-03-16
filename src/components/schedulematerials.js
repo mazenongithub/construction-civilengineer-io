@@ -7,6 +7,7 @@ import { formatDateStringDisplay, makeID, CreateMyMaterial, makeDatefromObj } fr
 import ScheduleMaterialDate from './schedulematerialdate';
 import DynamicStyles from './dynamicstyles';
 import CSI from './csi'
+import MakeID from './makeids';
 
 class ScheduleMaterials extends Component {
     constructor(props) {
@@ -421,6 +422,7 @@ class ScheduleMaterials extends Component {
     }
     handlemymaterial(mymaterialid) {
         let myuser = this.getuser();
+        const makeID = new MakeID();
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
@@ -431,7 +433,7 @@ class ScheduleMaterials extends Component {
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 } else {
-                    let materialid = makeID(16);
+                    let materialid = makeID.schedulelaborid.call(this);
                     let providerid = this.state.employeeid;
                     let milestoneid = this.state.milestoneid;
                     let csiid = this.state.csiid;
@@ -459,6 +461,7 @@ class ScheduleMaterials extends Component {
     handlecsiid(csiid) {
         const dynamicstyles = new DynamicStyles();
         const csi = dynamicstyles.getcsibyid.call(this, csiid);
+        const makeID = new MakeID();
         let csi_1 = csi.csi.substr(0, 2)
         let csi_2 = csi.csi.substr(2, 2)
         let csi_3 = csi.csi.substr(4, 2)
@@ -474,7 +477,7 @@ class ScheduleMaterials extends Component {
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 } else {
-                    let materialid = makeID(16);
+                    let materialid = makeID.schedulelaborid.call(this)
                     let providerid = this.state.employeeid;
                     let milestoneid = this.state.milestoneid;
                     let mymaterialid = this.state.mymaterialid;
@@ -501,6 +504,7 @@ class ScheduleMaterials extends Component {
 
     handlemilestoneid(milestoneid) {
         let myuser = this.getuser();
+        const makeID = new MakeID();
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
@@ -511,7 +515,7 @@ class ScheduleMaterials extends Component {
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 } else {
-                    let materialid = makeID(16);
+                    let materialid = makeID.schedulelaborid.call(this)
                     let providerid = this.state.employeeid;
                     let csiid = this.state.csiid
                     let mymaterialid = this.state.mymaterialid;
@@ -538,6 +542,7 @@ class ScheduleMaterials extends Component {
 
     handlequantity(quantity) {
         let myuser = this.getuser();
+        const makeID = new MakeID();
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
@@ -548,7 +553,7 @@ class ScheduleMaterials extends Component {
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 } else {
-                    let materialid = makeID(16);
+                    let materialid = makeID.schedulelaborid.call(this)
                     let providerid = this.state.employeeid;
                     let csiid = this.state.csiid
                     let mymaterialid = this.state.mymaterialid;
@@ -575,6 +580,7 @@ class ScheduleMaterials extends Component {
 
     handleunit(unit) {
         let myuser = this.getuser();
+        const makeID = new MakeID();
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
@@ -585,7 +591,7 @@ class ScheduleMaterials extends Component {
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 } else {
-                    let materialid = makeID(16);
+                    let materialid = makeID.schedulelaborid.call(this)
                     let providerid = this.state.employeeid;
                     let csiid = this.state.csiid
                     let mymaterialid = this.state.mymaterialid;
@@ -611,6 +617,7 @@ class ScheduleMaterials extends Component {
     }
     handleunitcost(unitcost) {
         let myuser = this.getuser();
+        const makeID = new MakeID();
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
@@ -621,7 +628,7 @@ class ScheduleMaterials extends Component {
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 } else {
-                    let materialid = makeID(16);
+                    let materialid = makeID.schedulelaborid.call(this)
                     let providerid = this.state.employeeid;
                     let csiid = this.state.csiid
                     let mymaterialid = this.state.mymaterialid;

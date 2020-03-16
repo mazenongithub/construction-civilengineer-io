@@ -5,6 +5,7 @@ import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
 import { CreateAccount, makeID } from './functions';
 import DynamicStyles from './dynamicstyles';
+import MakeID from './makeids';
 
 class Accounts extends Component {
     constructor(props) {
@@ -245,7 +246,7 @@ class Accounts extends Component {
     handleaccountname(accountname) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-
+        const makeID = new MakeID();
         if (myuser) {
 
             if (this.state.activeaccountid) {
@@ -261,7 +262,7 @@ class Accounts extends Component {
                     }
                 }
             } else {
-                let accountid = makeID(16);
+                let accountid = makeID.accountid.call(this)
 
                 let newaccount = CreateAccount(accountid, accountname, myuser.providerid)
 
@@ -468,42 +469,6 @@ class Accounts extends Component {
 
         }
         return accounts;
-    }
-    getaccount() {
-        if (this.state.activeaccountid) {
-            let account = this.getactiveaccount();
-            return (account.account)
-        } else {
-            return (this.state.account)
-        }
-    }
-    handleaccount(account) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
-        if (myuser) {
-
-            if (this.state.activeaccountid) {
-                let i = this.getactiveaccountkey();
-                myuser.company.office.accounts.account[i].account = account;
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
-
-            } else {
-                let accountid = makeID(16);
-                let accountname = this.state.accountname
-                let newaccount = CreateAccount(accountid, account, accountname, myuser.providerid)
-
-                if (myuser.company.office.hasOwnProperty("accounts")) {
-                    myuser.company.office.accounts.account.push(newaccount)
-                } else {
-                    let accounts = { account: [newaccount] }
-                    myuser.company.office.accounts = accounts;
-                }
-                this.props.reduxUser(myuser)
-                this.setState({ activeaccountid: accountid })
-            }
-
-        }
     }
     render() {
         const styles = MyStylesheet();

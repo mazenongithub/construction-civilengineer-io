@@ -4,8 +4,9 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import { activeCheckIcon, CreateInvoiceIcon } from './svg'
-import { UTCStringFormatDateforProposal, makeID, CreateInvoice, inputDateObjOutputAdjString } from './functions'
+import { UTCStringFormatDateforProposal, CreateInvoice, inputDateObjOutputAdjString } from './functions'
 import { Link } from 'react-router-dom';
+import MakeID from './makeids';
 
 class Invoices extends Component {
     constructor(props) {
@@ -399,8 +400,9 @@ class Invoices extends Component {
     createnewinvoice() {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
+        const makeID = new MakeID()
         if (myuser) {
-            let invoiceid = makeID(4);
+            let invoiceid = makeID.invoiceid.call(this)
             let providerid = myuser.providerid;
             let updated = inputDateObjOutputAdjString(this.state.updated);
             let approved = this.state.approved;

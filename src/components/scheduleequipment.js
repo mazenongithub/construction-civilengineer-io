@@ -5,8 +5,9 @@ import { MyStylesheet } from './styles';
 import ScheduleEquipmentTimeIn from './scheduleequipmenttimein';
 import ScheduleEquipmentTimeOut from './scheduleequipmenttimeout';
 import DynamicStyles from './dynamicstyles';
-import { CreateScheduleEquipment, makeID, inputDateObjOutputAdjString, calculatetotalhours } from './functions'
+import { CreateScheduleEquipment, inputDateObjOutputAdjString, calculatetotalhours } from './functions'
 import CSI from './csi'
+import MakeID from './makeids';
 
 class ScheduleEquipment extends Component {
     constructor(props) {
@@ -460,7 +461,7 @@ class ScheduleEquipment extends Component {
 
         const dynamicstyles = new DynamicStyles()
         let myuser = dynamicstyles.getuser.call(this);
-
+        const makeID = new MakeID();
         if (myuser) {
             let myproject = this.getproject();
             if (myproject) {
@@ -475,7 +476,7 @@ class ScheduleEquipment extends Component {
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 } else {
-                    let equipmentid = makeID(16)
+                    let equipmentid = makeID.scheduleequipmentid.call(this)
                     let providerid = myuser.providerid;
                     let csiid = this.state.csiid;
                     let milestoneid = this.state.milestoneid;
@@ -504,6 +505,7 @@ class ScheduleEquipment extends Component {
     handlecsiid(csiid) {
         const dynamicstyles = new DynamicStyles();
         const csi = dynamicstyles.getcsibyid.call(this, csiid);
+        const makeID = new MakeID();
         let csi_1 = csi.csi.substr(0, 2)
         let csi_2 = csi.csi.substr(2, 2)
         let csi_3 = csi.csi.substr(4, 2)
@@ -520,7 +522,7 @@ class ScheduleEquipment extends Component {
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 } else {
-                    let equipmentid = makeID(16)
+                    let equipmentid = makeID.scheduleequipmentid.call(this)
                     let providerid = myuser.providerid;
                     let myequipmentid = this.state.myequipmentid;
                     let milestoneid = this.state.milestoneid;
@@ -548,6 +550,7 @@ class ScheduleEquipment extends Component {
     }
     handlemilestoneid(milestoneid) {
         const dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
         let myuser = this.getuser();
         if (myuser) {
             let myproject = this.getproject();
@@ -560,7 +563,7 @@ class ScheduleEquipment extends Component {
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 } else {
-                    let equipmentid = makeID(16)
+                    let equipmentid = makeID.scheduleequipmentid.call(this)
                     let providerid = myuser.providerid;
                     let myequipmentid = this.state.myequipmentid;
                     let csiid = this.state.csiid;

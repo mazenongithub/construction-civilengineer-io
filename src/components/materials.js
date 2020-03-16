@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
-import { CreateMaterial, makeID } from './functions';
+import { CreateMaterial } from './functions';
 import DynamicStyles from './dynamicstyles';
 import CSI from './csi';
 import AccountID from './accountid';
+import MakeID from './makeids';
 
 class Materials extends Component {
     constructor(props) {
@@ -456,18 +457,18 @@ class Materials extends Component {
     }
 
     handlematerial(material) {
+        const makeID = new MakeID();
         let myuser = this.getuser();
         if (myuser) {
             if (this.state.activematerialid) {
                 let i = this.getactivematerialkey();
                 myuser.company.materials.mymaterial[i].material = material;
                 this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+                this.setState({ render: 'render', material: '' })
 
 
             } else {
-                //let materialid = makeID(16);
-                let materialid = 'AAAABBBBCCCCDDDD'
+                let materialid = makeID.materialid.call(this)
                 let accountid = this.state.accountid;
                 let csiid = this.state.csiid;
                 let unit = this.state.unit;
@@ -480,6 +481,7 @@ class Materials extends Component {
     }
     handleunitcost(unitcost) {
         let myuser = this.getuser();
+        const makeID = new MakeID();
         if (myuser) {
             if (this.state.activematerialid) {
                 let i = this.getactivematerialkey();
@@ -489,7 +491,7 @@ class Materials extends Component {
 
 
             } else {
-                let materialid = makeID(16);
+                let materialid = makeID.materialid.call(this)
                 let accountid = this.state.accountid;
                 let csiid = this.state.csiid;
                 let unit = this.state.unit;
@@ -504,6 +506,7 @@ class Materials extends Component {
     handleaccountid(accountid) {
 
         let myuser = this.getuser();
+        const makeID = new MakeID();
         if (myuser) {
             if (this.state.activematerialid) {
                 let i = this.getactivematerialkey();
@@ -513,7 +516,7 @@ class Materials extends Component {
 
 
             } else {
-                let materialid = makeID(16);
+                let materialid = makeID.materialid.call(this);
                 let unitcost = this.state.unitcost;
                 let csiid = this.state.csiid;
                 let unit = this.state.unit;
@@ -526,6 +529,7 @@ class Materials extends Component {
     }
     handleunit(unit) {
         let myuser = this.getuser();
+        const makeID = new MakeID();
         if (myuser) {
             if (this.state.activematerialid) {
                 let i = this.getactivematerialkey();
@@ -535,7 +539,7 @@ class Materials extends Component {
 
 
             } else {
-                let materialid = makeID(16);
+                let materialid = makeID.materialid.call(this);
                 let unitcost = this.state.unitcost;
                 let csiid = this.state.csiid;
                 let accountid = this.state.accountid;
@@ -549,6 +553,7 @@ class Materials extends Component {
     handlecsiid(csiid) {
         let dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
+        const makeID = new MakeID();
         const csi = dynamicstyles.getcsibyid.call(this, csiid);
         let csi_1 = csi.csi.substr(0, 2)
         let csi_2 = csi.csi.substr(2, 2)
@@ -564,7 +569,7 @@ class Materials extends Component {
 
             } else {
 
-                let materialid = makeID(16);
+                let materialid = makeID.materialid.call(this);
                 let accountid = this.state.accountid;
                 let material = this.state.material;
                 let unit = this.state.unit;
@@ -577,6 +582,7 @@ class Materials extends Component {
         }
     }
     createnewmaterial(newMaterial) {
+
         let myuser = this.getuser();
         let company = this.getcompany();
 

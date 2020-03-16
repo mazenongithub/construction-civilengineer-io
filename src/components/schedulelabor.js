@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
-import { inputUTCStringForLaborID, calculatetotalhours, makeID, CreateScheduleLabor, inputDateObjOutputAdjString } from './functions'
+import { inputUTCStringForLaborID, calculatetotalhours, CreateScheduleLabor, inputDateObjOutputAdjString } from './functions'
 import ScheduleLaborTimeIn from './schedulelabortimein';
 import ScheduleLaborTimeOut from './schedulelabortimeout';
 import DynamicStyles from './dynamicstyles';
 import CSI from './csi';
+import MakeID from './makeids';
 
 class ScheduleLabor extends Component {
 
@@ -424,6 +425,7 @@ class ScheduleLabor extends Component {
 
     handledescription(description) {
         let dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
         let myuser = this.getuser();
         if (myuser) {
             let i = this.getprojectkey();
@@ -435,7 +437,7 @@ class ScheduleLabor extends Component {
 
 
             } else {
-                let laborid = makeID(16);
+                let laborid = makeID.schedulelaborid.call(this)
                 let providerid = this.state.employeeid;
                 let milestoneid = this.state.milestoneid;
                 let csiid = this.state.csiid;
@@ -452,6 +454,7 @@ class ScheduleLabor extends Component {
     }
     handlecsiid(csiid) {
         const dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
         let csi = dynamicstyles.getcsibyid.call(this, csiid)
         let csi_1 = csi.csi.substr(0, 2)
         let csi_2 = csi.csi.substr(2, 2)
@@ -468,7 +471,7 @@ class ScheduleLabor extends Component {
 
 
             } else {
-                let laborid = makeID(16);
+                let laborid = makeID.schedulelaborid.call(this)
                 let providerid = this.state.employeeid;
                 let milestoneid = this.state.milestoneid;
                 let description = this.state.description;
@@ -486,6 +489,7 @@ class ScheduleLabor extends Component {
     handlemilestoneid(milestoneid) {
         let myuser = this.getuser();
         let dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
         if (myuser) {
             let i = this.getprojectkey();
             if (this.state.activelaborid) {
@@ -496,7 +500,7 @@ class ScheduleLabor extends Component {
 
 
             } else {
-                let laborid = makeID(16);
+                let laborid = makeID.schedulelaborid.call(this)
                 let providerid = this.state.employeeid;
                 let csiid = this.state.csiid;
                 let description = this.state.description;
@@ -514,6 +518,7 @@ class ScheduleLabor extends Component {
 
     handleproviderid(providerid) {
         const dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
         let myuser = this.getuser();
         if (myuser) {
             let i = this.getprojectkey();
@@ -525,7 +530,7 @@ class ScheduleLabor extends Component {
 
 
             } else {
-                let laborid = makeID(16);
+                let laborid = makeID.schedulelaborid.call(this)
                 let csiid = this.state.csiid;
                 let description = this.state.description;
                 let timein = inputDateObjOutputAdjString(this.state.timein);
@@ -543,6 +548,7 @@ class ScheduleLabor extends Component {
     handlelaborrate(laborrate) {
         let myuser = this.getuser();
         const dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
         if (myuser) {
             let i = this.getprojectkey();
             if (this.state.activelaborid) {
@@ -553,7 +559,7 @@ class ScheduleLabor extends Component {
 
 
             } else {
-                let laborid = makeID(16);
+                let laborid = makeID.schedulelaborid.call(this)
                 let csiid = this.state.csiid;
                 let description = this.state.description;
                 let timein = inputDateObjOutputAdjString(this.state.timein);

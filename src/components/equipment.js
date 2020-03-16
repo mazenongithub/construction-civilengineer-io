@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { radioOpen, radioClosed, removeIconSmall, openDetail, closeDetail } from './svg'
-import { CreateCostID, makeID, CreateRentalRate, CreateEquipment, EquipmentOwnership, formatDateStringDisplay, DateStringFromDateObj } from './functions';
+import { CreateCostID, CreateRentalRate, CreateEquipment, EquipmentOwnership, formatDateStringDisplay, DateStringFromDateObj } from './functions';
 import DynamicStyles from './dynamicstyles';
 import PurchaseDate from './purchasedate';
 import SaleDate from './saledate';
 import EquipmentDate from './equipmentdate';
 import AccountID from './accountid'
+import MakeID from './makeids';
 class Equipment extends Component {
     constructor(props) {
         super(props);
@@ -95,6 +96,7 @@ class Equipment extends Component {
     handleequipment(equipment) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
+        const makeID = new MakeID();
         if (myuser) {
             if (this.state.activeequipmentid) {
                 let i = this.getactiveequipmentkey();
@@ -104,8 +106,8 @@ class Equipment extends Component {
 
             } else {
                 this.setState({ equipment })
-                //let equipmentid = makeID(16);
-                let equipmentid = 'AAAABBBBCCCCDDDD'
+                let equipmentid = makeID.equipmentid.call(this);
+
                 let ownership = "";
                 let accountid = this.state.accountid;
 
@@ -365,6 +367,7 @@ class Equipment extends Component {
     handlecost(cost) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
+        const makeID = new MakeID();
         if (myuser) {
 
             let i = this.getactiveequipmentkey();
@@ -378,8 +381,8 @@ class Equipment extends Component {
                 this.setState({ render: 'render' })
 
             } else {
-                this.setState({ cost });
-                let costid = makeID(16);
+
+                let costid = makeID.costid.call(this);
                 let datein = DateStringFromDateObj(this.state.equipmentdate)
                 let detail = "";
                 let newcost = CreateCostID(costid, cost, detail, datein)
@@ -415,6 +418,7 @@ class Equipment extends Component {
     handledetail(detail) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
+        const makeID = new MakeID();
         if (myuser) {
 
             let i = this.getactiveequipmentkey();
@@ -428,8 +432,8 @@ class Equipment extends Component {
 
 
             } else {
-                this.setState({ detail });
-                let costid = makeID(16);
+
+                let costid = makeID.costid.call(this);
                 let datein = DateStringFromDateObj(this.state.equipmentdate)
                 let cost = 0;
                 let newcost = CreateCostID(costid, cost, detail, datein)

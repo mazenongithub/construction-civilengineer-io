@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { addIcon, removeIconSmall } from './svg';
-import { makeID, CreateBenefit, CreateEmployee } from './functions';
+import { CreateBenefit, CreateEmployee } from './functions';
 import DynamicStyles from './dynamicstyles';
 import FindEmployee from './findemployee';
+import MakeID from './makeids';
 
 class Employees extends Component {
     constructor(props) {
@@ -212,6 +213,7 @@ class Employees extends Component {
     }
     handleAmount(amount) {
         let myuser = this.getuser();
+        const makeID = new MakeID();
         if (myuser) {
             if (this.state.activeemployeeid) {
                 let i = this.getactiveemployeekey()
@@ -223,7 +225,7 @@ class Employees extends Component {
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 } else {
-                    let benefitid = makeID(16);
+                    let benefitid = makeID.benefitid.call(this)
                     let benefit = this.state.benefit;
                     let accountid = this.state.accountid;
                     let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount);
@@ -255,6 +257,7 @@ class Employees extends Component {
 
     handlebenefit(benefit) {
         let myuser = this.getuser();
+        const makeID = new MakeID();
         if (myuser) {
             if (this.state.activeemployeeid) {
                 let i = this.getactiveemployeekey()
@@ -266,8 +269,7 @@ class Employees extends Component {
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 } else {
-                    //let benefitid = makeID(16);
-                    let benefitid = 'AAAABBBBCCCCDDDD'
+                    let benefitid = makeID.benefitid.call(this)
                     let amount = this.state.amount;
                     let accountid = this.state.accountid;
                     let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount);
@@ -298,6 +300,7 @@ class Employees extends Component {
 
     handleaccountid(accountid) {
         let myuser = this.getuser();
+        const makeID = new MakeID();
         if (myuser) {
             if (this.state.activeemployeeid) {
                 let i = this.getactiveemployeekey()
@@ -309,7 +312,7 @@ class Employees extends Component {
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 } else {
-                    let benefitid = makeID(16);
+                    let benefitid = makeID.benefitid.call(this)
                     let amount = this.state.amount;
                     let benefit = this.state.benefit;
                     let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount);

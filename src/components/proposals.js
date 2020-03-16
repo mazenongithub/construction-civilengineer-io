@@ -4,8 +4,9 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import { CreateProposal, activeCheckIcon } from './svg'
-import { UTCStringFormatDateforProposal, CreateMyProposal, makeID, inputDateObjOutputAdjString } from './functions'
+import { UTCStringFormatDateforProposal, CreateMyProposal, inputDateObjOutputAdjString } from './functions'
 import { Link } from 'react-router-dom';
+import MakeID from './makeids';
 
 class Proposals extends Component {
     constructor(props) {
@@ -399,9 +400,10 @@ class Proposals extends Component {
     }
     createnewproposal() {
         const dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
         let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let proposalid = makeID(4);
+            let proposalid = makeID.proposalid.call(this);
             let providerid = myuser.providerid;
             let updated = inputDateObjOutputAdjString(this.state.updated);
             let approved = this.state.approved;
