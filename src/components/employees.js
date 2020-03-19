@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { addIcon, removeIconSmall } from './svg';
+import { addIcon, removeIconSmall, CheckedBox, EmptyBox } from './svg';
 import { CreateBenefit, CreateEmployee } from './functions';
 import DynamicStyles from './dynamicstyles';
 import FindEmployee from './findemployee';
@@ -25,62 +25,8 @@ class Employees extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
-    gettitlefont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font60)
-        } else {
-            return (styles.font40)
-        }
 
-    }
-    getHeaderFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font40)
-        } else {
-            return (styles.font30)
-        }
 
-    }
-    getRegularFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font30)
-        } else {
-            return (styles.font24)
-        }
-
-    }
-    getuser() {
-        let user = false;
-        if (this.props.myusermodel) {
-            if (this.props.myusermodel.hasOwnProperty("providerid")) {
-                user = this.props.myusermodel;
-            }
-        }
-        return user;
-    }
-    getsavecompanyicon() {
-        if (this.state.width > 1200) {
-            return ({
-                width: '413px',
-                height: '79px'
-            })
-
-        } else if (this.state.width > 800) {
-            return ({
-                width: '309px',
-                height: '67px'
-            })
-        } else {
-            return ({
-                width: '222px',
-                height: '46px'
-            })
-        }
-
-    }
     getworkinghours() {
         if (this.state.activeemployeeid) {
             let employee = this.getactiveemployee();
@@ -91,7 +37,8 @@ class Employees extends Component {
 
     }
     handleworkinghours(workinghours) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let employee = this.getactiveemployee();
             if (employee) {
@@ -104,9 +51,10 @@ class Employees extends Component {
 
     }
     getactiveemployeekey() {
+        const dynamicstyles = new DynamicStyles();
         let key = false;
         if (this.state.activeemployeeid) {
-            let user = this.getuser();
+            let user = dynamicstyles.getuser.call(this);
             let employeeid = this.state.activeemployeeid;
 
             if (user) {
@@ -125,9 +73,10 @@ class Employees extends Component {
         return key;
     }
     getactiveemployee() {
+        const dynamicstyles = new DynamicStyles();
         let activeemployee = false;
         if (this.state.activeemployeeid) {
-            let user = this.getuser();
+            let user = dynamicstyles.getuser.call(this);
             let employeeid = this.state.activeemployeeid;
 
             if (user) {
@@ -157,7 +106,8 @@ class Employees extends Component {
         return options;
     }
     getcompany() {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         let company = false;
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
@@ -212,7 +162,8 @@ class Employees extends Component {
         return benefits;
     }
     handleAmount(amount) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
             if (this.state.activeemployeeid) {
@@ -256,7 +207,8 @@ class Employees extends Component {
     }
 
     handlebenefit(benefit) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
             if (this.state.activeemployeeid) {
@@ -299,7 +251,8 @@ class Employees extends Component {
     }
 
     handleaccountid(accountid) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
             if (this.state.activeemployeeid) {
@@ -395,18 +348,74 @@ class Employees extends Component {
         }
 
     }
+    handlemanager(type) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (this.state.activeemployeeid) {
+                const i = dynamicstyles.getemployeekeybyid.call(this, this.state.activeemployeeid);
+                switch (type) {
+                    case "check":
+                        myuser.company.office.employees.employee[i].manager = '';
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                        break;
+                    case "empty":
+                        myuser.company.office.employees.employee[i].manager = 'manager';
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        }
+    }
     showworkinghours() {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const generalCheck = () => {
+            if (this.state.width > 1200) {
+                return ({ width: '178px', height: '88px' })
+            } else if (this.state.width > 800) {
+                return ({ width: '107px', height: '70px' })
+            } else {
+                return ({ width: '77px', height: '55px' })
+            }
+
+        }
+        const getCheckbox = () => {
+            if (this.state.activeemployeeid) {
+                let employeeid = this.state.activeemployeeid;
+                const employee = dynamicstyles.getemployeebyid.call(this, employeeid);
+                if (employee) {
+                    if (employee.manager === 'manager') {
+                        return (
+                            <div style={{ ...styles.generalContainer }}> Manager <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handlemanager("check") }}>{CheckedBox()}</button></div>)
+                    } else {
+                        return (<div style={{ ...styles.generalContainer }}> Manager <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handlemanager("empty") }}>{EmptyBox()}</button></div>)
+                    }
+
+                }
+            }
+        }
         if (this.state.width > 800) {
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
-                        <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                            Annual Working Hours <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                value={this.getworkinghours()}
-                                onChange={event => { this.handleworkinghours(event.target.value) }}
-                            />
+
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
+                                Annual Working Hours <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                    value={this.getworkinghours()}
+                                    onChange={event => { this.handleworkinghours(event.target.value) }}
+                                />
+                            </div>
+                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                {getCheckbox()}
+                            </div>
                         </div>
 
                         <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
@@ -420,6 +429,8 @@ class Employees extends Component {
                                     value={this.getperweek()}
                                 />
                             </div>
+
+
                         </div>
 
                         <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
@@ -480,12 +491,13 @@ class Employees extends Component {
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
                                 Annual Working Hours
-                            </div>
-                            <div style={{ ...styles.flex1, ...styles.bottomMargin15 }}>
                                 <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
                                     value={this.getworkinghours()}
                                     onChange={event => { this.handleworkinghours(event.target.value) }}
                                 />
+                            </div>
+                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                {getCheckbox()}
                             </div>
                         </div>
 
@@ -555,8 +567,9 @@ class Employees extends Component {
 
     }
     showbenefits() {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -605,8 +618,9 @@ class Employees extends Component {
         }
     }
     showemployee(employee) {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         const addCompany = this.getAddCompany();
         return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }} key={employee.providerid}>
             Employee ID : {employee.providerid}  {employee.firstname} {employee.lastname}  <button style={{ ...styles.generalButton, ...addCompany }}
@@ -624,7 +638,8 @@ class Employees extends Component {
         }
     }
     getemployees() {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         let employee = false;
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
@@ -725,11 +740,12 @@ class Employees extends Component {
         }
     }
     showmyemployee(providerid) {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const profilephoto = this.getprofilephoto();
         const removeIcon = this.getremoveicon();
         const employee = this.getemployeebyproviderid(providerid);
-        const regularFont = this.getRegularFont();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         if (this.state.width > 800) {
             return (
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }} key={`myemployee${employee.providerid}`} >
@@ -857,7 +873,8 @@ class Employees extends Component {
     }
     showemployebenefit(benefit) {
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         const removeIcon = this.getremoveicon();
         const account = this.getaccountbyid(benefit.accountid)
 
@@ -884,7 +901,8 @@ class Employees extends Component {
     }
     showactivehourlyrate() {
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         if (this.state.activeemployeeid) {
             const employee = this.getactiveemployee();
             const myemployee = this.getemployeebyproviderid(employee.providerid)
@@ -919,7 +937,8 @@ class Employees extends Component {
     }
     handleemployeebenefits() {
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         if (this.state.activeemployeeid) {
             return (
                 <div style={{ ...styles.generalFlex }}>
@@ -946,7 +965,7 @@ class Employees extends Component {
     render() {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const titleFont = this.gettitlefont();
+        const titleFont = dynamicstyles.gettitlefont.call(this);
         const headerFont = dynamicstyles.getHeaderFont.call(this)
         const findemployee = new FindEmployee();
         return (

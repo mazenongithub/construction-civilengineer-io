@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment } from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem } from './functions';
 import { Link } from 'react-router-dom'
 class ViewInvoice extends Component {
     constructor(props) {
@@ -27,7 +27,7 @@ class ViewInvoice extends Component {
 
     showbiditems() {
 
-        let biditems = this.getbiditems();
+        let biditems = this.getitems();
         let lineids = [];
         if (biditems.length > 0) {
             // eslint-disable-next-line
@@ -50,6 +50,59 @@ class ViewInvoice extends Component {
 
         return (items)
 
+    }
+    getitems() {
+        const dynamicstyles = new DynamicStyles();
+        let invoiceid = this.props.match.params.invoiceid;
+        let payitems = dynamicstyles.getAllActual.call(this)
+
+        let items = [];
+        const validateNewItem = (items, item) => {
+            let validate = true;
+            // eslint-disable-next-line
+            items.map(myitem => {
+                if (myitem.csiid === item.csiid) {
+                    validate = false;
+                }
+            })
+            return validate;
+        }
+        // eslint-disable-next-line
+        payitems.map(item => {
+
+            if (item.hasOwnProperty("laborid")) {
+                if (item.invoiceid === invoiceid) {
+                    items.push(item)
+                }
+
+            }
+            if (item.hasOwnProperty("materialid")) {
+                if (item.invoiceid === invoiceid) {
+                    items.push(item)
+                }
+
+            }
+            if (item.hasOwnProperty("equipmentid")) {
+                if (item.invoiceid === invoiceid) {
+                    items.push(item)
+                }
+
+            }
+
+        })
+        let csis = [];
+        if (items.length > 0) {
+            // eslint-disable-next-line
+            items.map(lineitem => {
+                if (validateNewItem(csis, lineitem)) {
+
+                    let newItem = CreateBidItem(lineitem.csiid, "", 0)
+                    csis.push(newItem)
+                }
+            })
+        }
+
+        return csis;
     }
     invoiceitemsbycsiid(csiid) {
         const invoiceid = this.props.match.params.invoiceid;
@@ -92,6 +145,7 @@ class ViewInvoice extends Component {
         let profit = 0;
         let directcost = 0;
         let items = this.invoiceitemsbycsiid(csiid);
+        console.log(items)
         // eslint-disable-next-line
         items.map(item => {
             if (item.hasOwnProperty("laborid")) {
@@ -108,18 +162,23 @@ class ViewInvoice extends Component {
             }
 
         })
-
+        console.log(profit, directcost)
         return ((profit / directcost) * 100)
 
     }
     getquantity(csiid) {
 
-        let actualitem = this.getactualitem(csiid);
+        let scheduleitem = this.getactualitem(csiid);
 
-        if (actualitem) {
-            return Number(actualitem.quantity);
+        if (scheduleitem) {
+            if (Number(scheduleitem.quantity) > 0) {
+                return Number(scheduleitem.quantity);
+            } else {
+                return 1;
+            }
+
         } else {
-            return;
+            return ""
         }
 
     }
@@ -179,14 +238,18 @@ class ViewInvoice extends Component {
         }
         return actualitem;
     }
+
     getunit(csiid) {
 
-        let actualitem = this.getactualitem()
+        let scheduleitem = this.getactualitem(csiid);
 
-        if (actualitem) {
-            return actualitem.unit;
+        if (scheduleitem) {
+
+            return scheduleitem.unit;
+
+
         } else {
-            return;
+            return ""
         }
 
     }
@@ -214,7 +277,7 @@ class ViewInvoice extends Component {
             return (bidprice / quantity)
 
         } else {
-            return;
+            return bidprice;
         }
 
 
@@ -280,26 +343,48 @@ class ViewInvoice extends Component {
     handlechangequantity(quantity, csiid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
+        const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
+
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            let k = this.getinvoiceitemkey(csiid);
-            let j = this.getinvoicekey();
-            myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].quantity = quantity;
-            this.props.reduxUser(myuser);
-            this.setState({ render: 'render' })
+            let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
+            if (lineitem) {
+                let k = dynamicstyles.getinvoiceitemkey.call(this, csiid)
+                myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].quantity = quantity;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            } else {
+                let unit = "";
+                let newItem = CreateBidItem(csiid, unit, quantity)
+                myuser.company.projects.myproject[i].invoices.myinvoice[j].bid = { biditem: [newItem] }
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            }
         }
 
     }
+
+
     handlechangeunit(unit, csiid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
+        const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
+
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            let k = this.getinvoiceitemkey(csiid);
-            let j = this.getinvoicekey();
-            myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].unit = unit;
-            this.props.reduxUser(myuser);
-            this.setState({ render: 'render' })
+            let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
+            if (lineitem) {
+                let k = dynamicstyles.getinvoiceitemkey.call(this, csiid)
+                myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].unit = unit;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            } else {
+                let quantity = "";
+                let newItem = CreateBidItem(csiid, unit, quantity)
+                myuser.company.projects.myproject[i].invoices.myinvoice[j].bid = { biditem: [newItem] }
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            }
         }
 
     }
@@ -315,7 +400,6 @@ class ViewInvoice extends Component {
         let bidprice = Number(this.getbidprice(item.csiid)).toFixed(2);
         let unitprice = +Number(this.getunitprice(item.csiid)).toFixed(4);
         let directcost = Number(this.getdirectcost(item.csiid)).toFixed(2);
-        let unit = item.unit;
         let providerid = this.props.match.params.providerid;
         let companyid = this.props.match.params.companyid;
         let projectid = this.props.match.params.projectid;
@@ -332,10 +416,21 @@ class ViewInvoice extends Component {
             return (<div style={{ ...styles.generalContainer }}>
                 Quantity <br />
                 <input type="text"
-                    value={item.quantity}
+                    value={this.getquantity(csi.csiid)}
                     onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
             </div>)
+        }
+        const unit = () => {
+            return (
+                <div style={{ ...styles.generalContainer }}>
+                    Unit <br />
+                    <input type="text"
+                        value={this.getunit(csi.csiid)}
+                        onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
+                        style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
+                    />
+                </div>)
         }
         if (this.state.width > 1200) {
             return (
@@ -345,11 +440,11 @@ class ViewInvoice extends Component {
                     <td style={{ ...styles.alignCenter }}>
                         {quantity()}
                     </td>
-                    <td style={{ ...styles.alignCenter }}>{unit}</td>
+                    <td style={{ ...styles.alignCenter }}>{unit()}</td>
                     <td style={{ ...styles.alignCenter }}>{directcost}</td>
                     <td style={{ ...styles.alignCenter }}>{profit()}</td>
                     <td style={{ ...styles.alignCenter }}>{bidprice}</td>
-                    <td style={{ ...styles.alignCenter }}> {`$${unitprice}/${unit}`}</td>
+                    <td style={{ ...styles.alignCenter }}> {`$${unitprice}/${this.getunit(csi.csiid)}`}</td>
                 </tr>)
 
 
@@ -365,14 +460,14 @@ class ViewInvoice extends Component {
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Quantity <br />
                                 <input type="text"
-                                    value={quantity}
+                                    value={this.getquantity(csi.csiid)}
                                     onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
                                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit <br />
                                 <input type="text"
-                                    value={unit}
+                                    value={this.getunit(csi.csiid)}
                                     onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
                                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                                 />
@@ -387,7 +482,7 @@ class ViewInvoice extends Component {
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Overhead And Profit % <br />
                                 <input type="text"
-                                    value={profit}
+                                    value={+Number(this.getprofit(csi.csiid).toFixed(4))}
                                     onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
                                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                                 />
@@ -399,7 +494,7 @@ class ViewInvoice extends Component {
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit Price
-                                {`$${unitprice}/${unit}`}
+                                {`$${unitprice}/${this.getunit(csi.csiid)}`}
                             </div>
                         </div>
                     </div>

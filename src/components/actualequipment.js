@@ -412,7 +412,7 @@ class ActualEquipment extends Component {
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();
                     const myequipment = this.getactiveequipment();
-                    equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, myequipment.timein, myequipment.timeout);
+                    equipmentrate = +Number(dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, myequipment.timein, myequipment.timeout)).toFixed(4);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].myequipmentid = myequipmentid;
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].equipmentrate = equipmentrate;
                     this.props.reduxUser(myuser)
@@ -426,7 +426,7 @@ class ActualEquipment extends Component {
                     let timeout = inputDateObjOutputAdjString(this.state.timeout)
                     let invoiceid = this.state.invoiceid;
                     let profit = 0;
-                    equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout);
+                    equipmentrate = +Number(dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout)).toFixed(4);
                     let newEquipment = CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit)
                     if (myproject.hasOwnProperty("actualequipment")) {
                         myuser.company.projects.myproject[i].actualequipment.myequipment.push(newEquipment)
@@ -518,7 +518,7 @@ class ActualEquipment extends Component {
                     let timein = inputDateObjOutputAdjString(this.state.timein);
                     let timeout = inputDateObjOutputAdjString(this.state.timeout);
                     let invoiceid = this.state.invoiceid;
-                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid);
+                    let equipmentrate = +Number(dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid)).toFixed(4);
                     let profit = 0;
                     let newEquipment = CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit)
                     if (myproject.hasOwnProperty("actualequipment")) {
@@ -666,10 +666,8 @@ class ActualEquipment extends Component {
                         </div>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.addPadding }}>
                             Rate <br />
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.getequipmentrate()}
-                                onChange={event => { this.handleequipmentrate(event.target.value) }}
-                            />
+                            {this.getequipmentrate()}
+
                         </div>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.addPadding }}>
                             Amount <br />

@@ -819,12 +819,11 @@ class ActualMaterialDate {
     }
 
     showdatein() {
-        const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
-        const Datein = new ActualMaterialDate();
         const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const Datein = new ActualMaterialDate();
         const smallFont = dynamicstyles.getSmallFont.call(this)
-
 
         return (
             <div style={{ ...styles.generalFlex }}>

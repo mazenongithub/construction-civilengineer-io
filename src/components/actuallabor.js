@@ -37,73 +37,6 @@ class ActualLabor extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
-    gettitlefont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font48)
-        } else {
-            return (styles.font30)
-        }
-
-    }
-    getHeaderFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font36)
-        } else {
-            return (styles.font24)
-        }
-
-    }
-    getRegularFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font30)
-        } else {
-            return (styles.font24)
-        }
-
-    }
-    getSmallFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font20)
-        } else {
-            return (styles.font18)
-        }
-
-    }
-    getuser() {
-        let user = false;
-        if (this.props.myusermodel) {
-            if (this.props.myusermodel.hasOwnProperty("providerid")) {
-                user = this.props.myusermodel;
-            }
-        }
-        return user;
-    }
-    getsaveprojecticon() {
-        if (this.state.width > 1200) {
-            return ({
-                width: '452px',
-                height: '87px'
-            })
-
-        } else if (this.state.width > 800) {
-            return ({
-                width: '342px',
-                height: '72px'
-            })
-        } else {
-            return ({
-                width: '234px',
-                height: '51px'
-            })
-        }
-
-    }
-
-
     showlaborids() {
         const dynamicstyles = new DynamicStyles();
         let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
@@ -175,13 +108,14 @@ class ActualLabor extends Component {
         }
     }
     showlaborid(mylabor) {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const removeIcon = this.getremoveicon();
-        const regularFont = this.getRegularFont();
-        const csi = this.getcsibyid(mylabor.csiid);
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid);
         let employee = this.getemployeebyproviderid(mylabor.providerid)
+        let hourlyrate = dynamicstyles.gethourlyrate.call(this, employee.providerid)
 
-        let hourlyrate = Number(mylabor.laborrate)
 
         return (
             <div key={mylabor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
@@ -226,7 +160,8 @@ class ActualLabor extends Component {
         return csi;
     }
     getcompany() {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         let company = false;
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
@@ -390,9 +325,9 @@ class ActualLabor extends Component {
     handledescription(description) {
         const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
-        let myuser = this.getuser();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
                 myuser.company.projects.myproject[i].actuallabor.mylabor[j].description = description;
@@ -424,9 +359,9 @@ class ActualLabor extends Component {
         let csi_2 = csi.csi.substr(2, 2)
         let csi_3 = csi.csi.substr(4, 2)
         this.setState({ csi_1, csi_2, csi_3 })
-        let myuser = this.getuser();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
                 myuser.company.projects.myproject[i].actuallabor.mylabor[j].csiid = csiid;
@@ -453,9 +388,9 @@ class ActualLabor extends Component {
     handlemilestoneid(milestoneid) {
         const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
-        let myuser = this.getuser();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
                 myuser.company.projects.myproject[i].actuallabor.mylabor[j].milestoneid = milestoneid;
@@ -483,9 +418,9 @@ class ActualLabor extends Component {
     handleproviderid(providerid) {
         const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
-        let myuser = this.getuser();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
                 myuser.company.projects.myproject[i].actuallabor.mylabor[j].providerid = providerid;
@@ -510,11 +445,11 @@ class ActualLabor extends Component {
         }
     }
     handlelaborrate(laborrate) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         const makeID = new MakeID();
-        const dynamicstyles = new DynamicStyles();
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
                 myuser.company.projects.myproject[i].actuallabor.mylabor[j].laborrate = laborrate;
@@ -596,10 +531,10 @@ class ActualLabor extends Component {
         }
     }
     render() {
-        const styles = MyStylesheet();
-        const titleFont = this.gettitlefont();
-        const regularFont = this.getRegularFont();
         const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
+        const titleFont = dynamicstyles.gettitlefont.call(this);
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         const csi = new CSI();
         const milestoneid = new MilestoneID();
         return (<div style={{ ...styles.generalFlex }}>

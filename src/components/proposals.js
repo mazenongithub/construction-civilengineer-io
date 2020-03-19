@@ -139,7 +139,7 @@ class Proposals extends Component {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
-                let j = dynamicstyles.getschedulelaborbyid.call(this, laborid);
+                let j = dynamicstyles.getschedulelaborkeybyid.call(this, laborid);
                 myuser.company.projects.myproject[i].schedulelabor.mylabor[j].profit = profit;
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })

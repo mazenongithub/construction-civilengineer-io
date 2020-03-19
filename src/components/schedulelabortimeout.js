@@ -679,10 +679,11 @@ class ScheduleLaborTimeOut {
         }
     }
     showtimeout() {
+        const dynamicstyles = new DynamicStyles();
         let Timeout = new ScheduleLaborTimeOut();
         let timeoutheader = Timeout.gettimeoutheader.call(this);
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         const maxWidth = styles.calendarContainer;
         return (<div style={{ ...styles.generalFlex, ...maxWidth }}>
             <div style={{ ...styles.flex1, ...styles.generalFont }}>

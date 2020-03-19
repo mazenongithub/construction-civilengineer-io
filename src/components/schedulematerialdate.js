@@ -819,10 +819,11 @@ class ScheduleMaterialDate {
     }
 
     showdatein() {
-        const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
-        const Datein = new ScheduleMaterialDate();
         const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const Datein = new ScheduleMaterialDate();
+
         const smallFont = dynamicstyles.getSmallFont.call(this)
 
 

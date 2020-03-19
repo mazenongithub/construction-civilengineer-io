@@ -112,8 +112,11 @@ export function sorttimes(timeina, timeinb) {
 export function CreateActualLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit) {
     return ({ laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit })
 }
-export function CreateBidScheduleItem(lineid, csiid, unit, quantity) {
-    return ({ lineid, csiid, unit, quantity })
+export function CreateBidScheduleItem(csiid, unit, quantity) {
+    return ({ csiid, unit, quantity })
+}
+export function CreateBidItem(csiid, unit, quantity) {
+    return ({ csiid, unit, quantity })
 }
 export function inputDateSecActiveIDTimein(dateencoded, timein) {
     let newDate = new Date(dateencoded)
@@ -1550,11 +1553,15 @@ export function validatePhoneNumber(val) {
     return errmsg;
 }
 export function AmmortizeFactor(i, n) {
-    // let i = (.16 / 12);
+    i = ((i / 1200));
     // let n = 80;
+
     const num = i * Math.pow((1 + i), n)
+
     const deno = Math.pow((1 + i), n) - 1;
+
     const factor = num / deno;
+
     return factor;
 }
 export function FutureCostPresent(i, n, F) {

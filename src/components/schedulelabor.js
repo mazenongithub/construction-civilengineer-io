@@ -177,8 +177,8 @@ class ScheduleLabor extends Component {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const removeIcon = this.getremoveicon();
-        const regularFont = this.getRegularFont();
-        const csi = this.getcsibyid(mylabor.csiid);
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid);
         let employee = dynamicstyles.getemployeebyproviderid.call(this, mylabor.providerid)
 
         let hourlyrate = dynamicstyles.gethourlyrate.call(this, employee.providerid)
@@ -386,9 +386,9 @@ class ScheduleLabor extends Component {
     handledescription(description) {
         let dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
-        let myuser = this.getuser();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
                 myuser.company.projects.myproject[i].schedulelabor.mylabor[j].description = description;
@@ -420,9 +420,9 @@ class ScheduleLabor extends Component {
         let csi_2 = csi.csi.substr(2, 2)
         let csi_3 = csi.csi.substr(4, 2)
         this.setState({ csi_1, csi_2, csi_3 })
-        let myuser = this.getuser();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
                 myuser.company.projects.myproject[i].schedulelabor.mylabor[j].csiid = csiid;
@@ -447,11 +447,12 @@ class ScheduleLabor extends Component {
         }
     }
     handlemilestoneid(milestoneid) {
-        let myuser = this.getuser();
         let dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+
         const makeID = new MakeID();
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
                 myuser.company.projects.myproject[i].schedulelabor.mylabor[j].milestoneid = milestoneid;
@@ -479,9 +480,9 @@ class ScheduleLabor extends Component {
     handleproviderid(providerid) {
         const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
-        let myuser = this.getuser();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
                 myuser.company.projects.myproject[i].schedulelabor.mylabor[j].providerid = providerid;
@@ -506,11 +507,12 @@ class ScheduleLabor extends Component {
         }
     }
     handlelaborrate(laborrate) {
-        let myuser = this.getuser();
         const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+
         const makeID = new MakeID();
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             if (this.state.activelaborid) {
                 let j = this.getactivelaborkey();
                 myuser.company.projects.myproject[i].schedulelabor.mylabor[j].laborrate = laborrate;
@@ -595,10 +597,11 @@ class ScheduleLabor extends Component {
         }
     }
     render() {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
-        const regularFont = this.getRegularFont();
-        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+
         const csi = new CSI();
         const milestoneid = new MilestoneID();
         return (<div style={{ ...styles.generalFlex }}>

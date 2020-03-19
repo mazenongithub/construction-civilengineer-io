@@ -679,10 +679,11 @@ class ActualLaborTimeIn {
         }
     }
     showtimein() {
+        const dynamicstyles = new DynamicStyles();
         let Timein = new ActualLaborTimeIn();
         let timeinheader = Timein.gettimeinheader.call(this);
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         const maxWidth = styles.calendarContainer;
         return (<div style={{ ...styles.generalFlex, ...maxWidth }}>
             <div style={{ ...styles.flex1, ...styles.generalFont }}>

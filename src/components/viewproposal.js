@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment } from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidScheduleItem, CreateBidItem } from './functions';
 import { Link } from 'react-router-dom';
 class ViewProposal extends Component {
     constructor(props) {
@@ -26,9 +26,19 @@ class ViewProposal extends Component {
     getitems() {
         const dynamicstyles = new DynamicStyles();
         let proposalid = this.props.match.params.proposalid;
-        let payitems = dynamicstyles.getbiditems.call(this)
+        let payitems = dynamicstyles.getAllSchedule.call(this)
 
         let items = [];
+        const validateNewItem = (items, item) => {
+            let validate = true;
+            // eslint-disable-next-line
+            items.map(myitem => {
+                if (myitem.csiid === item.csiid) {
+                    validate = false;
+                }
+            })
+            return validate;
+        }
         // eslint-disable-next-line
         payitems.map(item => {
 
@@ -52,13 +62,25 @@ class ViewProposal extends Component {
             }
 
         })
+        let csis = [];
+        if (items.length > 0) {
+            // eslint-disable-next-line
+            items.map(lineitem => {
+                if (validateNewItem(csis, lineitem)) {
 
-        return items;
+                    let newItem = CreateBidScheduleItem(lineitem.csiid, "", 0)
+                    csis.push(newItem)
+                }
+            })
+        }
+
+        return csis;
     }
 
     showbiditems() {
 
-        let biditems = this.getbiditems();
+        let biditems = this.getitems();
+
         let lineids = [];
         if (biditems.length > 0) {
             // eslint-disable-next-line
@@ -68,6 +90,7 @@ class ViewProposal extends Component {
         }
         return lineids;
     }
+
     getbiditems() {
         let items = [];
         let myproposal = this.getproposal();
@@ -75,9 +98,6 @@ class ViewProposal extends Component {
             // eslint-disable-next-line
             items = myproposal.bidschedule.biditem;
         }
-
-
-
 
         return (items)
 
@@ -148,9 +168,16 @@ class ViewProposal extends Component {
         let scheduleitem = this.getscheduleitem(csiid);
 
         if (scheduleitem) {
-            return Number(scheduleitem.quantity);
+            if (Number(scheduleitem.quantity) > 0) {
+                return Number(scheduleitem.quantity);
+
+            } else {
+
+                return 1
+            }
+
         } else {
-            return;
+            return ""
         }
 
     }
@@ -210,14 +237,18 @@ class ViewProposal extends Component {
         }
         return scheduleitem;
     }
+
     getunit(csiid) {
 
-        let scheduleitem = this.getscheduleitem()
+        let scheduleitem = this.getscheduleitem(csiid);
 
         if (scheduleitem) {
+
             return scheduleitem.unit;
+
+
         } else {
-            return;
+            return ""
         }
 
     }
@@ -245,7 +276,7 @@ class ViewProposal extends Component {
             return (bidprice / quantity)
 
         } else {
-            return;
+            return bidprice;;
         }
 
 
@@ -311,26 +342,47 @@ class ViewProposal extends Component {
     handlechangequantity(quantity, csiid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
+        const lineitem = dynamicstyles.getproposalitem.call(this, csiid)
+
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            let k = this.getproposalitemkey(csiid);
-            let j = this.getproposalkey();
-            myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].quantity = quantity;
-            this.props.reduxUser(myuser);
-            this.setState({ render: 'render' })
+            let j = dynamicstyles.getproposalkeybyid.call(this, this.props.match.params.proposalid)
+            if (lineitem) {
+                let k = dynamicstyles.getproposalitemkey.call(this, csiid)
+                myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].quantity = quantity;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            } else {
+                let unit = "";
+                let newItem = CreateBidItem(csiid, unit, quantity)
+                myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            }
         }
 
     }
+
     handlechangeunit(unit, csiid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
+        const lineitem = dynamicstyles.getproposalitem.call(this, csiid)
+
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            let k = this.getproposalitemkey(csiid);
-            let j = this.getproposalkey();
-            myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].unit = unit;
-            this.props.reduxUser(myuser);
-            this.setState({ render: 'render' })
+            let j = dynamicstyles.getproposalkeybyid.call(this, this.props.match.params.proposalid)
+            if (lineitem) {
+                let k = dynamicstyles.getproposalitemkey.call(this, csiid)
+                myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].unit = unit;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            } else {
+                let quantity = "";
+                let newItem = CreateBidItem(csiid, unit, quantity)
+                myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            }
         }
 
     }
@@ -358,12 +410,23 @@ class ViewProposal extends Component {
         let bidprice = Number(this.getbidprice(item.csiid)).toFixed(2);
         let unitprice = +Number(this.getunitprice(item.csiid)).toFixed(4);
         let directcost = Number(this.getdirectcost(item.csiid)).toFixed(2);
-        let unit = item.unit;
+
+        const unit = () => {
+            return (
+                <div style={{ ...styles.generalContainer }}>
+                    Unit <br />
+                    <input type="text"
+                        value={this.getunit(csi.csiid)}
+                        onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
+                        style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
+                    />
+                </div>)
+        }
         const quantity = () => {
             return (<div style={{ ...styles.generalContainer }}>
                 Quantity <br />
                 <input type="text"
-                    value={item.quantity}
+                    value={this.getquantity()}
                     onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
             </div>)
@@ -376,11 +439,11 @@ class ViewProposal extends Component {
                     <td style={{ ...styles.alignCenter }}>
                         {quantity()}
                     </td>
-                    <td style={{ ...styles.alignCenter }}>{unit}</td>
+                    <td style={{ ...styles.alignCenter }}>{unit()}</td>
                     <td style={{ ...styles.alignCenter }}>{directcost}</td>
                     <td style={{ ...styles.alignCenter }}>{profit()}</td>
                     <td style={{ ...styles.alignCenter }}>{bidprice}</td>
-                    <td style={{ ...styles.alignCenter }}> {`$${unitprice}/${unit}`}</td>
+                    <td style={{ ...styles.alignCenter }}>  {`$${unitprice}/${this.getunit(csi.csiid)}`}</td>
                 </tr>)
 
 
@@ -396,14 +459,14 @@ class ViewProposal extends Component {
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Quantity <br />
                                 <input type="text"
-                                    value={quantity}
+                                    value={this.getquantity(csi.csiid)}
                                     onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
                                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit <br />
                                 <input type="text"
-                                    value={unit}
+                                    value={this.getunit(csi.csiid)}
                                     onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
                                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                                 />
@@ -418,7 +481,7 @@ class ViewProposal extends Component {
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Overhead And Profit % <br />
                                 <input type="text"
-                                    value={profit}
+                                    value={+Number(this.getprofit(csi.csiid).toFixed(4))}
                                     onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
                                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                                 />
@@ -430,7 +493,7 @@ class ViewProposal extends Component {
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit Price
-                                {`$${unitprice}/${unit}`}
+                                {`$${unitprice}/${this.getunit(csi.csiid)}`}
                             </div>
                         </div>
                     </div>

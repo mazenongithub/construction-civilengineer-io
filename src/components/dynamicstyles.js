@@ -419,12 +419,12 @@ class DynamicStyles {
     }
     validateCompany(params) {
         let validate = {};
-        console.log(params)
+
         validate.validate = true;
         validate.message = '';
         const company = params.company;
         const myuser = params.myuser;
-        console.log(myuser)
+
         if (myuser.hasOwnProperty("invalid")) {
             validate.validate = false;
             validate.message += myuser.invalid;
@@ -470,7 +470,7 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles()
 
         let params = dynamicstyles.getCompanyParams.call(this)
-        console.log(params)
+
         const validate = dynamicstyles.validateCompany(params);
         if (validate.validate) {
             let response = await SaveCompany(params);
@@ -497,7 +497,7 @@ class DynamicStyles {
         let dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this)
         let values = { providerid: myuser.providerid, firstname: myuser.firstname, lastname: myuser.lastname, emailaddress: myuser.emailaddress, phonenumber: myuser.phonenumber, profileurl: myuser.profileurl, profile: myuser.profile }
-        console.log(values)
+
         let response = await SaveProfile(values)
         console.log(response)
         if (response.hasOwnProperty("allusers")) {
@@ -520,23 +520,89 @@ class DynamicStyles {
         this.setState({ message })
 
     }
+
+    getinvoiceitem(csiid) {
+
+        let myinvoice = this.getinvoice();
+        let invoiceitem = false;
+        if (myinvoice.hasOwnProperty("bid")) {
+            // eslint-disable-next-line
+            myinvoice.bid.biditem.map((item) => {
+                if (item.csiid === csiid) {
+                    invoiceitem = item
+                }
+
+            })
+        }
+        return invoiceitem;
+
+    }
+
+    getproposalitem(csiid) {
+
+        let myproposal = this.getproposal();
+        let proposalitem = false;
+        if (myproposal.hasOwnProperty("bidschedule")) {
+            // eslint-disable-next-line
+            myproposal.bidschedule.biditem.map((item) => {
+                if (item.csiid === csiid) {
+                    proposalitem = item
+                }
+
+            })
+        }
+        return proposalitem;
+
+    }
+
+    getinvoiceitemkey(csiid) {
+        let key = false;
+        let myinvoice = this.getinvoice();
+        if (myinvoice.hasOwnProperty("bid")) {
+            // eslint-disable-next-line
+            myinvoice.bid.biditem.map((item, i) => {
+                if (item.csiid === csiid) {
+                    key = i
+                }
+
+            })
+        }
+        return key;
+
+    }
+
+    getproposalitemkey(csiid) {
+        let key = false;
+        let myproposal = this.getproposal();
+        if (myproposal.hasOwnProperty("bidschedule")) {
+            // eslint-disable-next-line
+            myproposal.bidschedule.biditem.map((item, i) => {
+                if (item.csiid === csiid) {
+                    key = i
+                }
+
+            })
+        }
+        return key;
+
+    }
     getproposalkeybyid(proposalid) {
         let dynamicstyles = new DynamicStyles();
         let key = false;
-        if (this.state.activeproposalid) {
-            let myproject = dynamicstyles.getproject.call(this);
-            if (myproject.hasOwnProperty("proposals")) {
-                // eslint-disable-next-line
-                myproject.proposals.myproposal.map((myproposal, i) => {
-                    if (myproposal.proposalid === proposalid) {
-                        key = i;
-                    }
-                })
 
-            }
-
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("proposals")) {
+            // eslint-disable-next-line
+            myproject.proposals.myproposal.map((myproposal, i) => {
+                if (myproposal.proposalid === proposalid) {
+                    key = i;
+                }
+            })
 
         }
+
+
+
 
 
         return key;
@@ -565,19 +631,19 @@ class DynamicStyles {
     getinvoicekeybyid(invoiceid) {
         let dynamicstyles = new DynamicStyles();
         let key = false;
-        if (this.state.activeinvoiceid) {
-            let myproject = dynamicstyles.getproject.call(this);
-            if (myproject.hasOwnProperty("invoices")) {
-                // eslint-disable-next-line
-                myproject.invoices.myinvoice.map((myinvoice, i) => {
-                    if (myinvoice.invoiceid === invoiceid) {
-                        key = i;
-                    }
-                })
 
-            }
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("invoices")) {
+            // eslint-disable-next-line
+            myproject.invoices.myinvoice.map((myinvoice, i) => {
+                if (myinvoice.invoiceid === invoiceid) {
+                    key = i;
+                }
+            })
 
         }
+
+
 
         return key;
     }
@@ -1112,40 +1178,11 @@ class DynamicStyles {
     }
 
     getAllSchedule() {
-        const user = () => {
-            let myuser = false;
-            if (this.props.myusermodel) {
-                if (this.props.myusermodel.hasOwnProperty("providerid")) {
-                    myuser = this.props.myusermodel;
-                }
+        const dynamicstyles = new DynamicStyles();
 
-            }
-            return myuser;
-        }
-        const MyProject = () => {
-            let project = false;
-            const myuser = user();
-
-            if (myuser) {
-
-                if (myuser.hasOwnProperty("company")) {
-                    if (myuser.company.hasOwnProperty("projects")) {
-                        const projectid = this.props.match.params.projectid;
-                        // eslint-disable-next-line
-                        myuser.company.projects.myproject.map(projects => {
-                            if (projects.projectid === projectid) {
-                                project = projects;
-                            }
-
-                        })
-                    }
-                }
-            }
-            return project;
-        }
         const schedule = () => {
             let schedules = [];
-            let myproject = MyProject();
+            let myproject = dynamicstyles.getproject.call(this)
 
 
             if (myproject.hasOwnProperty("schedulelabor")) {
@@ -1184,7 +1221,6 @@ class DynamicStyles {
     getmymaterials() {
         const dynamicstyles = new DynamicStyles();
         const company = dynamicstyles.getcompany.call(this);
-        console.log(company)
         let materials = false;
         if (company.hasOwnProperty("materials")) {
             materials = company.materials.mymaterial;
@@ -1363,20 +1399,14 @@ class DynamicStyles {
         if (this.props.myusermodel) {
             if (this.props.myusermodel.hasOwnProperty("providerid")) {
                 user = this.props.myusermodel;
-            } else {
-                console.log("There is no user logged in", this.props.myusermodel)
             }
-        } else {
-            console.log("There is no user logged in")
-        }
 
+        }
         return user;
     }
     getprojectbytitle(title) {
-        console.log(title)
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
-        console.log(myuser)
         let projects = false;
         if (myuser) {
 
@@ -2375,8 +2405,8 @@ class DynamicStyles {
     calculateequipmentratebyownership(equipmentid) {
         const dynamicstyles = new DynamicStyles();
         const myequipment = dynamicstyles.getequipmentfromid.call(this, equipmentid);
-        const i = Number(Number(myequipment.loaninterest) / 100) / 12;
-        const workinghours = Math.round(Number(myequipment.workinghours) / 12);
+        const i = (Number(myequipment.ownership.loaninterest) / 100) / 12;
+        const workinghours = Math.round(Number(myequipment.ownership.workinghours) / 12);
         let equipmentrate = 0;
 
         const P = () => {
@@ -2385,20 +2415,17 @@ class DynamicStyles {
             if (costs) {
                 // eslint-disable-next-line
                 costs.map(cost => {
-                    let n = calculateTotalMonths(myequipment.purchasedate, cost.timein);
-
+                    let n = calculateTotalMonths(myequipment.ownership.purchasedate, cost.timein);
                     let F = Number(cost.cost)
-
                     P += FutureCostPresent(i, n, F);
-
 
                 })
             }
             return (P)
         }
         const Period = () => {
-            let purchasedate = myequipment.purchasedate;
-            let saledate = myequipment.saledate;
+            let purchasedate = myequipment.ownership.purchasedate;
+            let saledate = myequipment.ownership.saledate;
             if (purchasedate && saledate) {
                 let totalmonths = calculateTotalMonths(purchasedate, saledate)
                 return (totalmonths)
@@ -2409,15 +2436,31 @@ class DynamicStyles {
         }
         const AFactor = () => {
             const T = Period();
-            if (i && T) {
+            const i = Number(myequipment.ownership.loaninterest);
+            console.log(T, i)
+            if (T) {
+                console.log(AmmortizeFactor(i, T))
                 return (AmmortizeFactor(i, T))
             } else {
+
                 return 0;
             }
 
         }
 
-        equipmentrate = (P() * AFactor()) / (workinghours);
+        const totalworkinghours = () => {
+            let annual = Number(myequipment.ownership.workinghours);
+            let years = Period() / 12;
+
+            return (Math.round(annual * years))
+        }
+        console.log(i)
+        if (i > 0) {
+            equipmentrate = (P() * AFactor()) / (workinghours);
+        } else {
+            console.log(P(), totalworkinghours(), Period())
+            equipmentrate = P() / (totalworkinghours())
+        }
 
         return equipmentrate;
     }
@@ -2562,7 +2605,7 @@ class DynamicStyles {
 
     }
     getmymaterialfromid(materialid) {
-        console.log(materialid)
+
         const dynamicstyles = new DynamicStyles();
         let company = dynamicstyles.getcompany.call(this);
         let material = false;

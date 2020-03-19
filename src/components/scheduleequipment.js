@@ -469,7 +469,7 @@ class ScheduleEquipment extends Component {
                     let timeout = inputDateObjOutputAdjString(this.state.timeout)
                     let proposalid = this.state.proposalid;
                     let profit = 0;
-                    equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout);
+                    equipmentrate = +Number(dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout)).toFixed(4);
 
                     let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit)
                     if (myproject.hasOwnProperty("scheduleequipment")) {
@@ -521,7 +521,7 @@ class ScheduleEquipment extends Component {
                     let timeout = inputDateObjOutputAdjString(this.state.timeout);
 
                     let proposalid = this.state.proposalid;
-                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid);
+                    let equipmentrate = +Number(dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid)).toFixed(4);
                     let profit = 0;
                     let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit)
                     if (myproject.hasOwnProperty("scheduleequipment")) {
@@ -561,7 +561,7 @@ class ScheduleEquipment extends Component {
                     let timein = inputDateObjOutputAdjString(this.state.timein);
                     let timeout = inputDateObjOutputAdjString(this.state.timeout)
                     let proposalid = this.state.proposalid;
-                    let equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid);
+                    let equipmentrate = Number(dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid)).toFixed(4);
                     let profit = 0;
                     let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit)
                     if (myproject.hasOwnProperty("scheduleequipment")) {
@@ -696,10 +696,7 @@ class ScheduleEquipment extends Component {
                         </div>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.addPadding }}>
                             Rate <br />
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.getequipmentrate()}
-                                onChange={event => { this.handleequipmentrate(event.target.value) }}
-                            />
+                            {this.getequipmentrate()}
 
                         </div>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.addPadding }}>
