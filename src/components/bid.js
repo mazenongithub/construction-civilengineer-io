@@ -25,16 +25,6 @@ class Bid extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
-    gettitlefont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font60)
-        } else {
-            return (styles.font40)
-        }
-
-    }
-
 
 
     getuser() {
@@ -407,7 +397,11 @@ class Bid extends Component {
             })
         }
 
-        return +Number((profit / directcost) * 100).toFixed(4)
+        if (profit && directcost > 0) {
+            return +Number((profit / directcost) * 100).toFixed(4)
+        } else {
+            return 0;
+        }
 
     }
     getbidprice(csiid) {
@@ -430,7 +424,7 @@ class Bid extends Component {
             return (bidprice / quantity)
 
         } else {
-            return;
+            return 0
         }
 
 
@@ -479,7 +473,7 @@ class Bid extends Component {
     showbiditem(item) {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         const csi = dynamicstyles.getcsibyid.call(this, item.csiid);
         let profit = this.getprofit(item.csiid)
         let quantity = this.getquantity(item.csiid)
@@ -579,10 +573,11 @@ class Bid extends Component {
         }
     }
     render() {
-        const styles = MyStylesheet();
-        const titleFont = this.gettitlefont();
-        const headerFont = this.getHeaderFont();
         const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
+        const titleFont = dynamicstyles.gettitlefont.call(this);
+        const headerFont = dynamicstyles.getHeaderFont.call(this);
+
 
         return (
             <div style={{ ...styles.generalFlex }}>

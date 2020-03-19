@@ -399,8 +399,11 @@ class BidSchedule extends Component {
 
             })
         }
-
-        return +Number((profit / directcost) * 100).toFixed(4)
+        if (profit && directcost > 0) {
+            return +Number((profit / directcost) * 100).toFixed(4)
+        } else {
+            return 0;
+        }
 
     }
     getbidprice(csiid) {
@@ -423,7 +426,7 @@ class BidSchedule extends Component {
             return (bidprice / quantity)
 
         } else {
-            return;
+            return 0
         }
 
 
@@ -472,7 +475,7 @@ class BidSchedule extends Component {
     showbiditem(item) {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         const csi = dynamicstyles.getcsibyid.call(this, item.csiid);
         let profit = this.getprofit(item.csiid)
         let quantity = this.getquantity(item.csiid)
