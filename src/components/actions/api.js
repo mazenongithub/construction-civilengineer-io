@@ -221,9 +221,9 @@ export async function CheckEmailAddress(emailaddress) {
             return resp.json();
         })
 }
-export async function ValidateCompanyID(companyid) {
+export async function ValidateCompanyID(url) {
 
-    var APIURL = `https://civilengineer.io/construction/api/checkcompanyid.php?companyid=${companyid}`
+    var APIURL = `https://civilengineer.io/construction/api/checkcompanyid.php?url=${url}`
 
     return fetch(APIURL, {
         method: 'get',
@@ -247,11 +247,11 @@ export async function ValidateCompanyID(companyid) {
             return resp.json();
         })
 }
-export async function CheckProviderID(providerid) {
+export async function CheckProviderID(profile) {
 
-    var APIURL = `https://civilengineer.io/projectmanagement/api/checkproviderid.php?providerid=${providerid}`
+    var APIURL = `https://civilengineer.io/construction/api/checkproviderid.php?profile=${profile}`
 
-    return fetch(APIURL)
+    return fetch(APIURL, { credentials: 'include' })
         .then(resp => {
 
             if (!resp.ok) {

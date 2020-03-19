@@ -267,36 +267,29 @@ class DynamicStyles {
         let company = {};
         if (myuser) {
             if (myuser.hasOwnProperty("providerid")) {
-                newuser = CreateUser(myuser.providerid, myuser.client, myuser.clientid, myuser.firstname, myuser.lastname, myuser.emailaddress, myuser.phonenumber, myuser.profileurl)
+                newuser = CreateUser(myuser.providerid, myuser.client, myuser.clientid, myuser.firstname, myuser.lastname, myuser.emailaddress, myuser.phonenumber, myuser.profileurl, myuser.profile)
+            }
+            if (myuser.hasOwnProperty("invalid")) {
+                newuser.invalid = myuser.invalid;
             }
             if (myuser.hasOwnProperty("company")) {
 
+                company.companyid = myuser.company.companyid;
+                company.url = myuser.company.url;
+                company.address = myuser.company.address;
+                company.city = myuser.company.city;
+                company.contactstate = myuser.company.contactstate;
+                company.zipcode = myuser.company.zipcode;
+                company.company = myuser.company.company;
 
-                if (myuser.company.hasOwnProperty("projects")) {
-
-
-                    company.companyid = myuser.company.companyid;
-                    company.manager = myuser.company.manager;
-                    company.address = myuser.company.address;
-                    company.city = myuser.company.city;
-                    company.contactstate = myuser.company.contactstate;
-                    company.zipcode = myuser.company.zipcode;
-                    const codes = dynamicstyles.getmycsicodes.call(this);
-                    if (codes) {
-                        company.construction = {};
-                        company.construction.csicodes = {};
-                        company.construction.csicodes.code = codes;
-                    }
-
-                    company.office = myuser.company.office;
-                    if (myuser.company.hasOwnProperty("materials")) {
-                        company.materials = myuser.company.materials;
-                    }
-                    if (myuser.company.hasOwnProperty("equipment")) {
-                        company.equipment = myuser.company.equipment;
-                    }
-
+                company.office = myuser.company.office;
+                if (myuser.company.hasOwnProperty("materials")) {
+                    company.materials = myuser.company.materials;
                 }
+                if (myuser.company.hasOwnProperty("equipment")) {
+                    company.equipment = myuser.company.equipment;
+                }
+
 
             }
         }
@@ -430,6 +423,12 @@ class DynamicStyles {
         validate.validate = true;
         validate.message = '';
         const company = params.company;
+        const myuser = params.myuser;
+        console.log(myuser)
+        if (myuser.hasOwnProperty("invalid")) {
+            validate.validate = false;
+            validate.message += myuser.invalid;
+        }
         if (company.hasOwnProperty("equipment")) {
             // eslint-disable-next-line
             company.equipment.myequipment.map(myequipment => {
@@ -452,7 +451,9 @@ class DynamicStyles {
         if (company.office.hasOwnProperty("employees")) {
             // eslint-disable-next-line
             company.office.employees.employee.map(employee => {
+
                 if (employee.hasOwnProperty("benefits")) {
+                    // eslint-disable-next-line
                     employee.benefits.benefit.map(benefit => {
                         if (!benefit.accountid) {
                             validate.validate = false;
@@ -495,7 +496,7 @@ class DynamicStyles {
     async savemyprofile() {
         let dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this)
-        let values = { providerid: myuser.providerid, firstname: myuser.firstname, lastname: myuser.lastname, emailaddress: myuser.emailaddress, phonenumber: myuser.phonenumber, profileurl: myuser.profileurl }
+        let values = { providerid: myuser.providerid, firstname: myuser.firstname, lastname: myuser.lastname, emailaddress: myuser.emailaddress, phonenumber: myuser.phonenumber, profileurl: myuser.profileurl, profile: myuser.profile }
         console.log(values)
         let response = await SaveProfile(values)
         console.log(response)
@@ -984,22 +985,22 @@ class DynamicStyles {
     }
 
     async verifyProviderID() {
-        let providerid = this.state.providerid;
-        let errmsg = validateProviderID(providerid);
+        let profile = this.state.profile;
+        let errmsg = validateProviderID(profile);
         if (errmsg) {
-            this.setState({ provideridcheck: false, message: errmsg })
+            this.setState({ profilecheck: false, message: errmsg })
         } else {
-            this.setState({ provideridcheck: true, message: "" })
+            this.setState({ profilecheck: true, message: "" })
         }
         if (!errmsg) {
             try {
-                let response = await CheckProviderID(providerid)
+                let response = await CheckProviderID(profile)
                 console.log(response)
                 if (response.hasOwnProperty("valid")) {
-                    this.setState({ provideridcheck: true });
+                    this.setState({ profilecheck: true });
                 }
                 else {
-                    this.setState({ provideridcheck: false, message: response.message });
+                    this.setState({ profilecheck: false, message: response.message });
                 }
 
             } catch (err) {
@@ -1362,16 +1363,61 @@ class DynamicStyles {
         if (this.props.myusermodel) {
             if (this.props.myusermodel.hasOwnProperty("providerid")) {
                 user = this.props.myusermodel;
+            } else {
+                console.log("There is no user logged in", this.props.myusermodel)
             }
+        } else {
+            console.log("There is no user logged in")
         }
 
         return user;
     }
-    getproject() {
+    getprojectbytitle(title) {
+        console.log(title)
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+        console.log(myuser)
+        let projects = false;
+        if (myuser) {
+
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("projects")) {
+                    // eslint-disable-next-line
+                    myuser.company.projects.myproject.map(myproject => {
+
+                        if (myproject.title === title) {
+                            projects = myproject;
+                        }
+                    })
+                }
+            }
+        }
+        return projects;
+    }
+    getprojectkeybyid(projectid) {
 
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
-        let projectid = this.props.match.params.projectid;
+        let key = false;
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("projects")) {
+                    // eslint-disable-next-line
+                    myuser.company.projects.myproject.map((myproject, i) => {
+
+                        if (myproject.projectid === projectid) {
+                            key = i;
+                        }
+                    })
+                }
+            }
+        }
+        return key;
+    }
+    getprojectbyid(projectid) {
+
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         let projects = false;
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
@@ -1388,21 +1434,24 @@ class DynamicStyles {
         }
         return projects;
     }
+    getproject() {
+
+        const dynamicstyles = new DynamicStyles();
+        let projectid = this.props.match.params.projectid;
+        let projects = false;
+        let myproject = dynamicstyles.getprojectbytitle.call(this, projectid);
+        if (myproject) {
+            projects = myproject;
+        }
+        return projects;
+    }
     getprojectkey() {
         const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this)
-        let projectid = this.props.match.params.projectid;
+        let title = this.props.match.params.projectid;
+        const myproject = dynamicstyles.getprojectbytitle.call(this, title);
         let key = false;
-        if (myuser.hasOwnProperty("company")) {
-            if (myuser.company.hasOwnProperty("projects")) {
-                // eslint-disable-next-line
-                myuser.company.projects.myproject.map((myproject, i) => {
-
-                    if (myproject.projectid === projectid) {
-                        key = i;
-                    }
-                })
-            }
+        if (myproject) {
+            key = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid)
         }
         return key;
     }

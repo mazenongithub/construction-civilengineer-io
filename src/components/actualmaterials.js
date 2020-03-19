@@ -94,42 +94,10 @@ class ActualMaterials extends Component {
         }
 
     }
-    getproject() {
-        let myuser = this.getuser();
-        let projectid = this.props.match.params.projectid;
-        let projects = false;
-        if (myuser.hasOwnProperty("company")) {
-            if (myuser.company.hasOwnProperty("projects")) {
-                // eslint-disable-next-line
-                myuser.company.projects.myproject.map(myproject => {
 
-                    if (myproject.projectid === projectid) {
-                        projects = myproject;
-                    }
-                })
-            }
-        }
-        return projects;
-    }
-    getprojectkey() {
-        let myuser = this.getuser();
-        let projectid = this.props.match.params.projectid;
-        let key = false;
-        if (myuser.hasOwnProperty("company")) {
-            if (myuser.company.hasOwnProperty("projects")) {
-                // eslint-disable-next-line
-                myuser.company.projects.myproject.map((myproject, i) => {
-
-                    if (myproject.projectid === projectid) {
-                        key = i;
-                    }
-                })
-            }
-        }
-        return key;
-    }
     showmaterialids() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let materials = [];
         if (myproject) {
             if (myproject.hasOwnProperty("actualmaterials")) {
@@ -182,7 +150,8 @@ class ActualMaterials extends Component {
         return csi;
     }
     getmilestones() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let milestones = false;
         if (myproject) {
             if (myproject.hasOwnProperty("projectmilestones")) {
@@ -403,12 +372,13 @@ class ActualMaterials extends Component {
         return mymaterial;
     }
     handlemymaterial(mymaterialid) {
+        const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
         let myuser = this.getuser();
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
                     let j = this.getactivematerialkey();
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].mymaterialid = mymaterialid
@@ -456,9 +426,9 @@ class ActualMaterials extends Component {
         }
         this.setState({ csi_1, csi_2, csi_3 })
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
                     let j = this.getactivematerialkey();
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].csiid = csiid
@@ -491,12 +461,13 @@ class ActualMaterials extends Component {
     }
 
     handlemilestoneid(milestoneid) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         const makeID = new MakeID();
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
                     let j = this.getactivematerialkey();
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].milestoneid = milestoneid
@@ -531,10 +502,11 @@ class ActualMaterials extends Component {
     handlequantity(quantity) {
         let myuser = this.getuser();
         const makeID = new MakeID();
+        const dynamicstyles = new DynamicStyles();
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
                     let j = this.getactivematerialkey();
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].quantity = quantity
@@ -567,12 +539,13 @@ class ActualMaterials extends Component {
     }
 
     handleunit(unit) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         const makeID = new MakeID();
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
                     let j = this.getactivematerialkey();
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unit = unit
@@ -604,12 +577,13 @@ class ActualMaterials extends Component {
         }
     }
     handleunitcost(unitcost) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         const makeID = new MakeID();
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
                     let j = this.getactivematerialkey();
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unitcost = unitcost
@@ -670,6 +644,7 @@ class ActualMaterials extends Component {
         return material;
     }
     showmymaterials() {
+
         let material = this.getmymaterial();
 
         let options = [];
@@ -690,7 +665,8 @@ class ActualMaterials extends Component {
 
     }
     getactivematerial() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let material = false;
         if (myproject) {
             if (this.state.activematerialid) {
@@ -708,7 +684,8 @@ class ActualMaterials extends Component {
         return material;
     }
     getactivematerialkey() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let key = false;
         if (myproject) {
             if (this.state.activematerialid) {

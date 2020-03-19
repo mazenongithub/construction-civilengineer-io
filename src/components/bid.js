@@ -35,63 +35,8 @@ class Bid extends Component {
 
     }
 
-    getproject() {
-        let myuser = this.getuser();
 
-        let projectid = this.props.match.params.projectid;
 
-        let projects = false;
-        if (myuser) {
-
-            if (myuser.hasOwnProperty("company")) {
-                if (myuser.company.hasOwnProperty("projects")) {
-                    // eslint-disable-next-line
-                    myuser.company.projects.myproject.map(myproject => {
-
-                        if (myproject.projectid === projectid) {
-                            projects = myproject;
-                        }
-                    })
-                }
-            }
-        }
-        return projects;
-    }
-    getprojectkey() {
-        let myuser = this.getuser();
-        let projectid = this.props.match.params.projectid;
-        let key = false;
-        if (myuser.hasOwnProperty("company")) {
-            if (myuser.company.hasOwnProperty("projects")) {
-                // eslint-disable-next-line
-                myuser.company.projects.myproject.map((myproject, i) => {
-
-                    if (myproject.projectid === projectid) {
-                        key = i;
-                    }
-                })
-            }
-        }
-        return key;
-    }
-    getHeaderFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font40)
-        } else {
-            return (styles.font30)
-        }
-
-    }
-    getRegularFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font30)
-        } else {
-            return (styles.font24)
-        }
-
-    }
     getuser() {
         let user = false;
         if (this.props.myusermodel) {
@@ -491,9 +436,10 @@ class Bid extends Component {
 
     }
     handlequantity(csiid, quantity) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             let j = this.getactualitemkey(csiid);
 
             myuser.company.projects.myproject[i].bid.biditem[j].quantity = quantity;
@@ -504,9 +450,10 @@ class Bid extends Component {
 
     }
     handleprofit(csiid, profit) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             let j = this.getactualitemkey(csiid);
             myuser.company.projects.myproject[i].bid.biditem[j].profit = profit;
             this.props.reduxUser(myuser);
@@ -517,9 +464,10 @@ class Bid extends Component {
     }
 
     handleunit(csiid, unit) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             let j = this.getactualitemkey(csiid);
             myuser.company.projects.myproject[i].bid.biditem[j].unit = unit;
             this.props.reduxUser(myuser);

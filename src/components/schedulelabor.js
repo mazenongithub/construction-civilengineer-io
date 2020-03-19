@@ -29,7 +29,6 @@ class ScheduleLabor extends Component {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
         this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
-
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -103,43 +102,10 @@ class ScheduleLabor extends Component {
         }
 
     }
-    getprojectkey() {
-        let myuser = this.getuser();
-        let projectid = this.props.match.params.projectid;
-        let key = false;
-        if (myuser.hasOwnProperty("company")) {
-            if (myuser.company.hasOwnProperty("projects")) {
-                // eslint-disable-next-line
-                myuser.company.projects.myproject.map((myproject, i) => {
-
-                    if (myproject.projectid === projectid) {
-                        key = i;
-                    }
-                })
-            }
-        }
-        return key;
-    }
-    getproject() {
-        let myuser = this.getuser();
-        let projectid = this.props.match.params.projectid;
-        let projects = false;
-        if (myuser.hasOwnProperty("company")) {
-            if (myuser.company.hasOwnProperty("projects")) {
-                // eslint-disable-next-line
-                myuser.company.projects.myproject.map(myproject => {
-
-                    if (myproject.projectid === projectid) {
-                        projects = myproject;
-                    }
-                })
-            }
-        }
-        return projects;
-    }
 
     showlaborids() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let laborids = [];
 
         if (myproject.hasOwnProperty("schedulelabor")) {
@@ -320,7 +286,8 @@ class ScheduleLabor extends Component {
         return allusers;
     }
     getactivelaborkey() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let key = false;
         if (this.state.activelaborid) {
             let laborid = this.state.activelaborid;
@@ -338,7 +305,8 @@ class ScheduleLabor extends Component {
         return key;
     }
     getactivelabor() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let labor = false;
         if (this.state.activelaborid) {
             let laborid = this.state.activelaborid;
@@ -568,7 +536,8 @@ class ScheduleLabor extends Component {
         }
     }
     createnewlabor(newlabor, myuser, i) {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         if (myproject) {
             if (myproject.hasOwnProperty("schedulelabor")) {
                 myuser.company.projects.myproject[i].schedulelabor.mylabor.push(newlabor)

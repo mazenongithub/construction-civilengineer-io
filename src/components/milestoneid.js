@@ -4,7 +4,8 @@ import DynamicStyles from './dynamicstyles';
 class MilestoneID {
 
     loadmilestoneids() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let options = [];
         if (myproject.hasOwnProperty("projectmilestones")) {
             // eslint-disable-next-line

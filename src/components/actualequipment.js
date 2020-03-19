@@ -54,40 +54,7 @@ class ActualEquipment extends Component {
         }
 
     }
-    getproject() {
-        let myuser = this.getuser();
-        let projectid = this.props.match.params.projectid;
-        let projects = false;
-        if (myuser.hasOwnProperty("company")) {
-            if (myuser.company.hasOwnProperty("projects")) {
-                // eslint-disable-next-line
-                myuser.company.projects.myproject.map(myproject => {
 
-                    if (myproject.projectid === projectid) {
-                        projects = myproject;
-                    }
-                })
-            }
-        }
-        return projects;
-    }
-    getprojectkey() {
-        let myuser = this.getuser();
-        let projectid = this.props.match.params.projectid;
-        let key = false;
-        if (myuser.hasOwnProperty("company")) {
-            if (myuser.company.hasOwnProperty("projects")) {
-                // eslint-disable-next-line
-                myuser.company.projects.myproject.map((myproject, i) => {
-
-                    if (myproject.projectid === projectid) {
-                        key = i;
-                    }
-                })
-            }
-        }
-        return key;
-    }
     getmyequipment() {
         let myuser = this.getuser();
         let equipment = false;
@@ -102,11 +69,11 @@ class ActualEquipment extends Component {
     }
 
     getactiveequipment() {
-
+        const dynamicstyles = new DynamicStyles();
         let equipment = false;
         if (this.state.activeequipmentid) {
             let equipmentid = this.state.activeequipmentid;
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject.hasOwnProperty("actualequipment")) {
                 // eslint-disable-next-line
                 myproject.actualequipment.myequipment.map(myequipment => {
@@ -121,11 +88,11 @@ class ActualEquipment extends Component {
         return equipment;
     }
     getactiveequipmentkey() {
-
+        const dynamicstyles = new DynamicStyles();
         let key = false;
         if (this.state.activeequipmentid) {
             let equipmentid = this.state.activeequipmentid;
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject.hasOwnProperty("actualequipment")) {
                 // eslint-disable-next-line
                 myproject.actualequipment.myequipment.map((myequipment, i) => {
@@ -227,7 +194,8 @@ class ActualEquipment extends Component {
         }
     }
     loadmilestoneids() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let options = [];
         if (myproject.hasOwnProperty("projectmilestones")) {
             // eslint-disable-next-line
@@ -332,7 +300,8 @@ class ActualEquipment extends Component {
         return options;
     }
     getequipmentids() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let equipmentids = false;
         if (myproject.hasOwnProperty("actualequipment")) {
             equipmentids = myproject.actualequipment.myequipment;
@@ -375,7 +344,8 @@ class ActualEquipment extends Component {
         }
     }
     getmilestones() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let milestones = false;
         if (myproject) {
             if (myproject.hasOwnProperty("projectmilestones")) {
@@ -435,9 +405,9 @@ class ActualEquipment extends Component {
         let myuser = this.getuser();
         const makeID = new MakeID();
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 let equipmentrate = 0;
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();
@@ -490,9 +460,9 @@ class ActualEquipment extends Component {
 
         let myuser = this.getuser();
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
 
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();
@@ -531,9 +501,9 @@ class ActualEquipment extends Component {
         const makeID = new MakeID();
         let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
 
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();

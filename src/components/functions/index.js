@@ -1,5 +1,5 @@
-export function CreateUser(providerid, client, clientid, firstname, lastname, emailaddress, phonenumber, profileurl) {
-    return ({ providerid, client, clientid, firstname, lastname, emailaddress, phonenumber, profileurl })
+export function CreateUser(providerid, client, clientid, firstname, lastname, emailaddress, phonenumber, profileurl, profile) {
+    return ({ providerid, client, clientid, firstname, lastname, emailaddress, phonenumber, profileurl, profile })
 }
 export function CreateAccount(accountid, accountname, providerid) {
     return ({ accountid, accountname, providerid })
@@ -20,8 +20,8 @@ export function CreateActualMaterial(materialid, mymaterialid, providerid, miles
 export function CreateBenefit(benefitid, benefit, accountid, amount) {
     return ({ benefitid, benefit, accountid, amount })
 }
-export function CreateCompany(companyid, company, address, city, contactstate, zipcode) {
-    return ({ companyid, company, address, city, contactstate, zipcode })
+export function CreateCompany(url, company, address, city, contactstate, zipcode) {
+    return ({ url, company, address, city, contactstate, zipcode })
 }
 export function CreateRentalRate(month, week, day, hour) {
     return ({ month, week, day, hour })
@@ -1493,6 +1493,24 @@ export function validatePassword(val) {
         errmsg = `Password min length is 6 `;
     } else if (!test) {
         errmsg = `Invalid Password format`;
+    }
+
+    return errmsg;
+}
+export function validateCompanyID(value) {
+    const reg_ex = /^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,34}(?:[A-Za-z0-9_]))?)$/
+    const test = reg_ex.test(value);
+    value = value.trim();
+    let errmsg = false;
+    if (!value) {
+        errmsg = " Company URL is required ";
+
+    }
+    else if (value.length > 36) {
+        errmsg = " Company URL should be less than 36 characters";
+    }
+    else if (!test) {
+        errmsg = ` Invalid Company URL format ${value} `;
     }
 
     return errmsg;

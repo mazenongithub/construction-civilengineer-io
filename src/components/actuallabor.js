@@ -102,43 +102,11 @@ class ActualLabor extends Component {
         }
 
     }
-    getprojectkey() {
-        let myuser = this.getuser();
-        let projectid = this.props.match.params.projectid;
-        let key = false;
-        if (myuser.hasOwnProperty("company")) {
-            if (myuser.company.hasOwnProperty("projects")) {
-                // eslint-disable-next-line
-                myuser.company.projects.myproject.map((myproject, i) => {
 
-                    if (myproject.projectid === projectid) {
-                        key = i;
-                    }
-                })
-            }
-        }
-        return key;
-    }
-    getproject() {
-        let myuser = this.getuser();
-        let projectid = this.props.match.params.projectid;
-        let projects = false;
-        if (myuser.hasOwnProperty("company")) {
-            if (myuser.company.hasOwnProperty("projects")) {
-                // eslint-disable-next-line
-                myuser.company.projects.myproject.map(myproject => {
-
-                    if (myproject.projectid === projectid) {
-                        projects = myproject;
-                    }
-                })
-            }
-        }
-        return projects;
-    }
 
     showlaborids() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let laborids = [];
 
         if (myproject.hasOwnProperty("actuallabor")) {
@@ -326,7 +294,8 @@ class ActualLabor extends Component {
         return allusers;
     }
     getactivelaborkey() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let key = false;
         if (this.state.activelaborid) {
             let laborid = this.state.activelaborid;
@@ -344,7 +313,8 @@ class ActualLabor extends Component {
         return key;
     }
     getactivelabor() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let labor = false;
         if (this.state.activelaborid) {
             let laborid = this.state.activelaborid;
@@ -569,7 +539,8 @@ class ActualLabor extends Component {
         }
     }
     createnewlabor(newlabor, myuser, i) {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         if (myproject) {
             if (myproject.hasOwnProperty("actuallabor")) {
                 myuser.company.projects.myproject[i].actuallabor.mylabor.push(newlabor)

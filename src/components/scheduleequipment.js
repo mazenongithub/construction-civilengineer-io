@@ -105,11 +105,11 @@ class ScheduleEquipment extends Component {
     }
 
     getactiveequipment() {
-
+        const dynamicstyles = new DynamicStyles();
         let equipment = false;
         if (this.state.activeequipmentid) {
             let equipmentid = this.state.activeequipmentid;
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject.hasOwnProperty("scheduleequipment")) {
                 // eslint-disable-next-line
                 myproject.scheduleequipment.myequipment.map(myequipment => {
@@ -124,11 +124,11 @@ class ScheduleEquipment extends Component {
         return equipment;
     }
     getactiveequipmentkey() {
-
+        const dynamicstyles = new DynamicStyles();
         let key = false;
         if (this.state.activeequipmentid) {
             let equipmentid = this.state.activeequipmentid;
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject.hasOwnProperty("scheduleequipment")) {
                 // eslint-disable-next-line
                 myproject.scheduleequipment.myequipment.map((myequipment, i) => {
@@ -328,7 +328,8 @@ class ScheduleEquipment extends Component {
         return options;
     }
     getequipmentids() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let equipmentids = false;
         if (myproject.hasOwnProperty("scheduleequipment")) {
             equipmentids = myproject.scheduleequipment.myequipment;
@@ -371,7 +372,8 @@ class ScheduleEquipment extends Component {
         }
     }
     getmilestones() {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let milestones = false;
         if (myproject) {
             if (myproject.hasOwnProperty("projectmilestones")) {
@@ -446,9 +448,9 @@ class ScheduleEquipment extends Component {
         let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 let equipmentrate = 0;
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();
@@ -501,9 +503,9 @@ class ScheduleEquipment extends Component {
         this.setState({ csi_1, csi_2, csi_3 })
         let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
 
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();
@@ -542,9 +544,9 @@ class ScheduleEquipment extends Component {
         const makeID = new MakeID();
         let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = this.getproject();
+            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = this.getprojectkey();
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
 
                 if (this.state.activeequipmentid) {
                     let j = this.getactiveequipmentkey();

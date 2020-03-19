@@ -5,12 +5,12 @@ import { MyStylesheet } from './styles';
 import { registerCompanyIcon, scrollImageDown, addIcon } from './svg';
 import { Link } from 'react-router-dom';
 import { LoadAllUsers, RegisterNewCompany, AddExistingCompany, ValidateCompanyID } from './actions/api';
-import { returnCompanyList, CreateCompany, validateProviderID } from './functions';
+import { returnCompanyList, CreateCompany, validateCompanyID } from './functions';
 import DynamicStyles from './dynamicstyles';
 class Company extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, companyid: '', company: '', companyidcheck: true }
+        this.state = { render: '', width: 0, height: 0, url: '', company: '', urlcheck: true, message: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -84,17 +84,17 @@ class Company extends Component {
             return (`/${user.providerid}`)
         }
     }
-    async validatecompanyid(companyid) {
+    async validatecompanyid(url) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let response = await ValidateCompanyID(companyid);
+            let response = await ValidateCompanyID(url);
             console.log(response)
             if (response.hasOwnProperty("invalid")) {
-                this.setState({ companyidcheck: false, message: response.invalid })
+                this.setState({ urlcheck: false, message: response.message })
             } else if (response.hasOwnProperty("valid")) {
-                let message = `Your Company Will be Hosted at ${process.env.REACT_APP_CLIENT_API}/company/${companyid}`
-                this.setState({ companyidcheck: true, message })
+                let message = `Your Company Will be Hosted at ${process.env.REACT_APP_CLIENT_API}/company/${url}`
+                this.setState({ urlcheck: true, message })
             }
 
         }
@@ -108,12 +108,12 @@ class Company extends Component {
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                                Company ID
+                                Company URL
                     </div>
                             <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont }}>
                                 <input type="text" style={{ ...styles.addLeftMargin, ...regularFont, ...styles.generalFont }}
-                                    value={this.state.companyid}
-                                    onChange={event => { this.setState({ companyid: event.target.value }) }}
+                                    value={this.state.url}
+                                    onChange={event => { this.handleurl(event.target.value) }}
                                     onBlur={event => { this.validatecompanyid(event.target.value) }}
                                 />
                             </div>
@@ -125,9 +125,9 @@ class Company extends Component {
             return (<div style={{ ...styles.generalFlex }}>
 
                 <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                    Company ID <br /> <input type="text"
-                        value={this.state.companyid}
-                        onChange={event => { this.setState({ companyid: event.target.value }) }}
+                    Company URL <br /> <input type="text"
+                        value={this.state.url}
+                        onChange={event => { this.setState({ url: event.target.value }) }}
                         onBlur={event => { this.validatecompanyid(event.target.value) }}
                         style={{ ...styles.addLeftMargin, ...regularFont, ...styles.generalFont, ...styles.generalField }} />
 
@@ -203,11 +203,11 @@ class Company extends Component {
             return (
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }} key={company.companyid}>
                     <div style={{ ...styles.flex5, ...regularFont, ...styles.generalFont }}>
-                        CompanyID: {company.companyid} Company: {company.company}
+                        Company URL: {company.url} Company: {company.company}
                     </div>
                     <div style={{ ...styles.flex1 }}>
                         <button style={{ ...styles.generalButton, ...addCompany }}
-                            onClick={() => { this.addexistingcompany(company.companyid) }}>{addIcon()}</button>
+                            onClick={() => { this.addexistingcompany(company) }}>{addIcon()}</button>
                     </div>
                 </div>
             )
@@ -215,21 +215,21 @@ class Company extends Component {
         } else if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }} key={company.companyid}>
                 <div style={{ ...styles.flex3, ...regularFont, ...styles.generalFont }}>
-                    CompanyID: {company.companyid} Company: {company.company}
+                    Company URL: {company.url} Company: {company.company}
                 </div>
                 <div style={{ ...styles.flex1 }}>
                     <button style={{ ...styles.generalButton, ...addCompany }}
-                        onClick={() => { this.addexistingcompany(company.companyid) }}>{addIcon()}</button>
+                        onClick={() => { this.addexistingcompany(company) }}>{addIcon()}</button>
                 </div>
             </div>)
         } else {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }} key={company.companyid}>
                 <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont }}>
-                    CompanyID: {company.companyid} Company: {company.company}
+                    Company: {company.url} Company: {company.company}
                 </div>
                 <div style={{ ...styles.flex1 }}>
                     <button style={{ ...styles.generalButton, ...addCompany }}
-                        onClick={() => { this.addexistingcompany(company.companyid) }}>{addIcon()}</button>
+                        onClick={() => { this.addexistingcompany(company) }}>{addIcon()}</button>
                 </div>
             </div>)
         }
@@ -300,132 +300,139 @@ class Company extends Component {
         return companyid;
     }
     showcompanymenus() {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const headerFont = this.getHeaderFont();
         const regularFont = this.getRegularFont();
-        const providerid = this.props.match.params.providerid;
-        const companyid = this.getcompanyid();
-        if (this.state.width > 800) {
-            return (
-                <div style={{ ...styles.generalFlex, ...styles.topMargin15 }}>
-                    <div style={{ ...styles.flex1 }}>
 
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...headerFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                <Link to={`/${providerid}/company/${companyid}`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                    {providerid}/company/{companyid}
-                                </Link>
+        const company = dynamicstyles.getcompany.call(this)
+        const myuser = dynamicstyles.getuser.call(this);
+        const providerid = myuser.profile;
+        if (myuser) {
+            if (this.state.width > 800) {
+                return (
+                    <div style={{ ...styles.generalFlex, ...styles.topMargin15 }}>
+                        <div style={{ ...styles.flex1 }}>
+
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.flex1, ...headerFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                    <Link to={`/${providerid}/company/${company.url}`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                        {providerid}/company/{company.url}
+                                    </Link>
+                                </div>
                             </div>
+
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1, }}>
+                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                        <Link to={`/${providerid}/company/${company.url}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                            /equipment
+                                </Link>
+                                    </div>
+                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                        <Link to={`/${providerid}/company/${company.url}/construction`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                            /construction
+                                </Link>
+                                    </div>
+                                </div>
+                                <div style={{ ...styles.flex1, }}>
+                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                        <Link to={`/${providerid}/company/${company.url}/office`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                            /office
+                                </Link>
+                                    </div>
+                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                        <Link to={`/${providerid}/company/${company.url}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                            /employees
+                                </Link>
+                                    </div>
+                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                        <Link to={`/${providerid}/company/${company.url}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                            /accounts
+                                </Link>
+                                    </div>
+                                </div>
+                                <div style={{ ...styles.flex1, }}>
+                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                        <Link to={`/${providerid}/company/${company.url}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                            /materials
+                                </Link>
+                                    </div>
+                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                        <Link to={`/${providerid}/company/${company.url}/projects`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                            /projects
+                                </Link>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+
                         </div>
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, }}>
-                                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                    <Link to={`/${providerid}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /equipment
-                                </Link>
-                                </div>
-                                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                    <Link to={`/${providerid}/company/${companyid}/construction`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /construction
-                                </Link>
-                                </div>
-                            </div>
-                            <div style={{ ...styles.flex1, }}>
-                                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                    <Link to={`/${providerid}/company/${companyid}/office`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /office
-                                </Link>
-                                </div>
-                                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                    <Link to={`/${providerid}/company/${companyid}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /employees
-                                </Link>
-                                </div>
-                                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                    <Link to={`/${providerid}/company/${companyid}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /accounts
-                                </Link>
-                                </div>
-                            </div>
-                            <div style={{ ...styles.flex1, }}>
-                                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                    <Link to={`/${providerid}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /materials
-                                </Link>
-                                </div>
-                                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /projects
-                                </Link>
-                                </div>
-
-
-                            </div>
-                        </div>
-
-
-
                     </div>
-                </div>
-            )
-        } else {
-            return (
-                <div style={styles.generalFlex}>
-                    <div style={styles.flex1}>
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...headerFont, ...styles.alignCenter }}>
-                            <Link to={`/${providerid}/company`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                {providerid}/company/{companyid}
-                            </Link>
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                            <Link to={`/${providerid}/company/${companyid}/office`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                /office
+                )
+            } else {
+                return (
+                    <div style={styles.generalFlex}>
+                        <div style={styles.flex1}>
+                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...headerFont, ...styles.alignCenter }}>
+                                <Link to={`/${providerid}/company`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                    {providerid}/company/{company.url}
                                 </Link>
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                            <Link to={`/${providerid}/company/${companyid}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                /employees
+                            </div>
+                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                <Link to={`/${providerid}/company/${company.url}/office`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                    /office
                                 </Link>
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                            <Link to={`/${providerid}/company/${companyid}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                /accounts
+                            </div>
+                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                <Link to={`/${providerid}/company/${company.url}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                    /employees
                                 </Link>
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                            <Link to={`/${providerid}/company/${companyid}/construction`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                /construction
+                            </div>
+                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                <Link to={`/${providerid}/company/${company.url}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                    /accounts
                                 </Link>
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                            <Link to={`/${providerid}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                /equipment
+                            </div>
+                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                <Link to={`/${providerid}/company/${company.url}/construction`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                    /construction
                                 </Link>
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                            <Link to={`/${providerid}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                /materials
+                            </div>
+                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                <Link to={`/${providerid}/company/${company.url}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                    /equipment
                                 </Link>
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                            <Link to={`/${providerid}/company/${companyid}/projects`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                /projects
+                            </div>
+                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                <Link to={`/${providerid}/company/${company.url}materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                    /materials
                                 </Link>
-                        </div>
+                            </div>
+                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                <Link to={`/${providerid}/company/${company.url}projects`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                    /projects
+                                </Link>
+                            </div>
 
-                    </div>
-                </div>)
+                        </div>
+                    </div>)
+            }
+
         }
 
     }
-    async addexistingcompany(companyid) {
-        if (window.confirm(`Are you sure you want to Add Yourself to Company ID ${companyid}?`)) {
+    async addexistingcompany(company) {
+
+        if (window.confirm(`Are you sure you want to Add Yourself to Company ID ${company.company}?`)) {
             let myuser = this.getuser();
 
             if (myuser) {
 
-                let values = { providerid: myuser.providerid, companyid }
+                let values = { providerid: myuser.providerid, companyid: company.companyid }
 
                 try {
                     let response = await AddExistingCompany(values)
@@ -454,67 +461,70 @@ class Company extends Component {
         let validate = {};
         validate.validate = true;
         validate.message = ""
-        if (!this.state.companyid) {
+        if (!this.state.urlcheck) {
             validate.validate = false;
-            validate.message += `Company ID is missing `
-        } else {
-            let validatecompanyid = validateProviderID(this.state.companyid);
-            if (validatecompanyid) {
-                validate.validate = false;
-                validate.message += validatecompanyid;
-            }
-
+            validate.message += this.state.message;
         }
-        if (!this.state.companyidcheck) {
-            validate.validate = false;
-            validate.message += `Company ID is taken `
-        }
-
         if (!this.state.company) {
             validate.validate = false;
-            validate.message += `Company Name is missing `
+            validate.message += `Company Name is required `
         }
         return validate;
 
     }
-    async registernewcompany() {
-        let myuser = this.getuser();
-        let validate = this.validatenewcompany();
-        if (validate.validate) {
-            if (window.confirm(`Are you sure you want to register CompanyID: ${this.state.companyid} Company: ${this.state.company}?`)) {
-                if (myuser) {
-
-                    let companyid = this.state.companyid;
-                    let company = this.state.company;
-                    let address = "";
-                    let city = "";
-                    let contactstate = "";
-                    let zipcode = "";
-                    let newCompany = CreateCompany(companyid, company, address, city, contactstate, zipcode)
-
-                    try {
-
-                        let response = await RegisterNewCompany(newCompany);
-                        console.log(response)
-                        if (response.hasOwnProperty("allusers")) {
-                            let companys = returnCompanyList(response.allusers);
-                            this.props.reduxAllCompanys(companys)
-                            this.props.reduxAllUsers(response.allusers);
-
-                        }
-                        if (response.hasOwnProperty("myuser")) {
-
-                            this.props.reduxUser(response.myuser)
-                        }
-
-                    } catch (err) {
-                        alert(err)
-                    }
-
-                }
-            }
+    handleurl(url) {
+        this.setState({ url });
+        let validate = validateCompanyID(url);
+        if (validate) {
+            this.setState({ urlcheck: false, message: validate })
         } else {
-            this.setState({ message: validate.message })
+            let message = `Your Company Will be Hosted at ${process.env.REACT_APP_CLIENT_API}/company/${url}`
+            this.setState({ message })
+        }
+    }
+    async registernewcompany() {
+
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this)
+        let validate = this.validatenewcompany();
+        if (myuser) {
+            if (validate.validate) {
+                if (window.confirm(`Are you sure you want to register CompanyID: ${this.state.url} Company: ${this.state.company}?`)) {
+                    if (myuser) {
+
+                        let url = this.state.url;
+                        let company = this.state.company;
+                        let address = "";
+                        let city = "";
+                        let contactstate = "";
+                        let zipcode = "";
+                        let newCompany = CreateCompany(url, company, address, city, contactstate, zipcode)
+                        newCompany.providerid = myuser.providerid;
+                        try {
+
+                            let response = await RegisterNewCompany(newCompany);
+                            console.log(response)
+                            if (response.hasOwnProperty("allusers")) {
+                                let companys = returnCompanyList(response.allusers);
+                                this.props.reduxAllCompanys(companys)
+                                this.props.reduxAllUsers(response.allusers);
+
+                            }
+                            if (response.hasOwnProperty("myuser")) {
+
+                                this.props.reduxUser(response.myuser)
+                            }
+
+                        } catch (err) {
+                            alert(err)
+                        }
+
+                    }
+                }
+            } else {
+                this.setState({ message: validate.message })
+            }
+
         }
     }
     handleregisternewcompany() {
@@ -522,7 +532,7 @@ class Company extends Component {
         const dynamicstyles = new DynamicStyles();
         const registerIcon = dynamicstyles.getRegisterIcon.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        if (this.state.companyidcheck) {
+        if (this.state.urlcheck) {
             return (
                 <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont }}>
                     <button style={{ ...styles.generalButton, ...registerIcon }} onClick={() => { this.registernewcompany() }}>
@@ -580,18 +590,10 @@ class Company extends Component {
             return;
         }
     }
-    getmycompany() {
-        let myuser = this.getuser();
-        let company = false;
-        if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
-                company = myuser.company;
-            }
-        }
-        return company;
-    }
+
     getaddress() {
-        let company = this.getmycompany();
+        const dynamicstyles = new DynamicStyles();
+        let company = dynamicstyles.getcompany.call(this)
         if (company) {
             return company.address;
         }
@@ -608,7 +610,8 @@ class Company extends Component {
         }
     }
     getcity() {
-        let company = this.getmycompany();
+        const dynamicstyles = new DynamicStyles();
+        let company = dynamicstyles.getcompany.call(this)
         if (company) {
             return company.city;
         }
@@ -625,7 +628,8 @@ class Company extends Component {
         }
     }
     getcontactstate() {
-        let company = this.getmycompany();
+        const dynamicstyles = new DynamicStyles();
+        let company = dynamicstyles.getcompany.call(this)
         let contactstate = "";
         if (company) {
             contactstate = company.contactstate;
@@ -644,7 +648,8 @@ class Company extends Component {
         }
     }
     getzipcode() {
-        let company = this.getmycompany();
+        const dynamicstyles = new DynamicStyles();
+        let company = dynamicstyles.getcompany.call(this)
         if (company) {
             return company.zipcode;
         }
@@ -655,6 +660,44 @@ class Company extends Component {
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 myuser.company.zipcode = zipcode;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            }
+        }
+    }
+
+    getmycompany() {
+        const dynamicstyles = new DynamicStyles();
+        let company = dynamicstyles.getcompany.call(this)
+        if (company) {
+            return company.company;
+        }
+
+    }
+    handlemycompany(company) {
+        let myuser = this.getuser()
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                myuser.company.company = company;
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            }
+        }
+    }
+
+    getmyurl() {
+        const dynamicstyles = new DynamicStyles();
+        let company = dynamicstyles.getcompany.call(this)
+        if (company) {
+            return company.url;
+        }
+
+    }
+    handlemyurl(url) {
+        let myuser = this.getuser()
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                myuser.company.url = url;
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
             }
@@ -678,6 +721,21 @@ class Company extends Component {
                                         {scrollImageDown()}
                                     </button>
 
+                                </div>
+                            </div>
+
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
+                                    Company <br />
+                                    <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
+                                        value={this.getmycompany()}
+                                        onChange={event => { this.handlemycompany(event.target.value) }} />
+                                </div>
+                                <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
+                                    URL <br />
+                                    <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
+                                        value={this.getmyurl()}
+                                        onChange={event => { this.handlemyurl(event.target.value) }} />
                                 </div>
                             </div>
 
@@ -718,6 +776,13 @@ class Company extends Component {
             }
         }
     }
+    handlesavecompany() {
+        const dynamicstyles = new DynamicStyles();
+        const mycompany = dynamicstyles.getcompany.call(this);
+        if (mycompany) {
+            return (dynamicstyles.showsavecompany.call(this))
+        }
+    }
     render() {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
@@ -734,9 +799,8 @@ class Company extends Component {
 
                     {this.showaddnewcompany()}
 
-
-
                     {this.showmycompany()}
+                    {this.handlesavecompany()}
                 </div>
             </div>
 

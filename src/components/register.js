@@ -12,7 +12,7 @@ import DynamicStyles from './dynamicstyles';
 class Register extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, providerid: '', client: '', clientid: '', firstname: '', lastname: '', emailaddress: '', profileurl: '', phonenumber: '', provideridcheck: true, message: '', emailcheck: true, passwordcheck: false, pass: '' }
+        this.state = { render: '', width: 0, height: 0, profile: '', client: '', clientid: '', firstname: '', lastname: '', emailaddress: '', profileurl: '', phonenumber: '', profilecheck: true, message: '', emailcheck: true, passwordcheck: false, pass: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -30,22 +30,22 @@ class Register extends Component {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const goCheckHeight = dynamicstyles.getgocheckheight.call(this);
-        if (this.state.provideridcheck && this.state.providerid) {
+        if (this.state.profilecheck && this.state.profile) {
             return (<button style={{ ...styles.generalButton, ...goCheckHeight }}>{goCheckIcon()}</button>)
         } else {
             return;
         }
     }
-    handleproviderid(providerid) {
-        this.setState({ providerid })
-        const errmsg = validateProviderID(providerid);
+    handleprofile(profile) {
+        this.setState({ profile })
+        const errmsg = validateProviderID(profile);
         if (errmsg) {
-            this.setState({ provideridcheck: false, message: errmsg })
+            this.setState({ profilecheck: false, message: errmsg })
         } else {
-            this.setState({ provideridcheck: true, message: "" })
+            this.setState({ profilecheck: true, message: "" })
         }
     }
-    showproviderid() {
+    showprofile() {
         const dynamicstyles = new DynamicStyles();
         let regularFont = dynamicstyles.getRegularFont.call(this);
         const styles = MyStylesheet();
@@ -57,12 +57,12 @@ class Register extends Component {
 
                         <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }}>
                             <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont }}>
-                                Create A Provider ID
+                                Create A Profile URL
                             </div>
                             <div style={{ ...styles.flex3 }}>
                                 <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
-                                    value={this.state.providerid}
-                                    onChange={event => { this.handleproviderid(event.target.value) }}
+                                    value={this.state.profile}
+                                    onChange={event => { this.handleprofile(event.target.value) }}
                                     onBlur={event => { dynamicstyles.verifyProviderID.call(this, event.target.value) }}
                                 />
                             </div>
@@ -91,8 +91,8 @@ class Register extends Component {
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex3 }}>
                                 <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
-                                    value={this.state.providerid}
-                                    onChange={event => { this.handleproviderid(event.target.value) }}
+                                    value={this.state.profile}
+                                    onChange={event => { this.handleprofile(event.target.value) }}
                                     onBlur={event => { dynamicstyles.verifyProviderID.call(this, event.target.value) }}
                                 />
                             </div>
@@ -253,10 +253,10 @@ class Register extends Component {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
 
-        if (this.state.provideridcheck) {
+        if (this.state.profilecheck) {
             return (<div style={{ ...styles.generalFlex, ...styles.topMargin15, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    Your Profile will be hosted at {process.env.REACT_APP_CLIENT_API}/{this.state.providerid}
+                    Your Profile will be hosted at {process.env.REACT_APP_CLIENT_API}/{this.state.profile}
                 </div>
             </div>)
         } else {
@@ -306,8 +306,8 @@ class Register extends Component {
             errmsg += this.state.message;
         }
 
-        if (!this.state.provideridcheck) {
-            errmsg += validateProviderID(this.state.providerid);
+        if (!this.state.profilecheck) {
+            errmsg += validateProviderID(this.state.profile);
             errmsg += this.state.message;
         }
 
@@ -327,11 +327,12 @@ class Register extends Component {
     async registernewuser() {
         const validateuser = this.validateprovider();
         if (!validateuser) {
-            const values = { providerid: this.state.providerid, client: this.state.client, clientid: this.state.clientid, firstname: this.state.firstname, lastname: this.state.lastname, emailaddress: this.state.emailaddress, profileurl: this.state.profileurl, phonenumber: this.state.phonenumber, pass: this.state.pass }
+            const values = { profile: this.state.profile, client: this.state.client, clientid: this.state.clientid, firstname: this.state.firstname, lastname: this.state.lastname, emailaddress: this.state.emailaddress, profileurl: this.state.profileurl, phonenumber: this.state.phonenumber, pass: this.state.pass }
             let response = await RegisterUser(values);
             console.log(response)
             if (response.hasOwnProperty("allusers")) {
                 let companys = returnCompanyList(response.allusers);
+                console.log(companys, response.allusers)
                 this.props.reduxAllCompanys(companys)
                 this.props.reduxAllUsers(response.allusers);
 
@@ -514,7 +515,7 @@ class Register extends Component {
                         </div>
 
                         {this.handleshowloginbuttons()}
-                        {this.showproviderid()}
+                        {this.showprofile()}
                         {this.handleprofilemessage()}
                         {this.showemailaddress()}
                         {this.showpassword()}

@@ -4,8 +4,8 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { folderIcon, scrollImageDown } from './svg';
 import DynamicStyles from './dynamicstyles';
-import { UploadProfileImage } from './actions/api';
-import { returnCompanyList, inputUTCStringForLaborID } from './functions';
+import { UploadProfileImage, CheckProviderID } from './actions/api';
+import { returnCompanyList, inputUTCStringForLaborID, validateProviderID } from './functions';
 
 class Profile extends Component {
     constructor(props) {
@@ -339,6 +339,61 @@ class Profile extends Component {
             }
         }
     }
+    handleprofile(profile) {
+        const dynamicstyles = new DynamicStyles();
+        const validate = validateProviderID(profile);
+        let myuser = dynamicstyles.getuser.call(this);
+        if (!validate) {
+
+            if (myuser.hasOwnProperty("invalid")) {
+                delete myuser.invalid;
+            }
+            if (myuser) {
+                myuser.profile = profile;
+                this.props.reduxUser(myuser);
+                this.setState({ message: '' })
+            }
+
+        } else {
+            myuser.profile = profile;
+            myuser.invalid = validate;
+            this.props.reduxUser(myuser);
+            this.setState({ message: validate })
+
+        }
+
+    }
+
+    async checkprofile(profile) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+
+        if (myuser) {
+            let validate = validateProviderID(profile)
+            if (profile && !validate) {
+                try {
+                    let response = await CheckProviderID(profile);
+                    console.log(response)
+                    if (response.hasOwnProperty("invalid")) {
+                        myuser.invalid = response.invalid;
+                        this.props.reduxUser(myuser);
+                        this.setState({ message: response.message })
+                    } else if (response.hasOwnProperty("valid")) {
+
+                        if (myuser.hasOwnProperty("invalid")) {
+                            delete myuser.invalid;
+                            this.setState({ message: '' })
+                        }
+                    }
+                } catch (err) {
+                    alert(err)
+                }
+            }
+
+        }
+    }
+
+
     render() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
@@ -354,7 +409,11 @@ class Profile extends Component {
 
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.regularFont, ...headerFont, ...styles.fontBold, ...styles.alignCenter }}>
-                        /{myuser.providerid}
+                        /<input type="text" value={myuser.profile}
+                            onChange={event => { this.handleprofile(event.target.value) }}
+                            style={{ ...styles.generalFont, ...headerFont, ...styles.fontBold }}
+                            onBlur={event => { this.checkprofile(event.target.value) }}
+                        />
                     </div>
                 </div>
 

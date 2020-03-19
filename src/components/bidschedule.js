@@ -124,7 +124,8 @@ class BidSchedule extends Component {
     }
     getbiditems() {
         let items = [];
-        let myproject = this.getproject()
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         if (myproject) {
 
             let lineid = makeID(16);
@@ -242,7 +243,8 @@ class BidSchedule extends Component {
     }
 
     getdirectcost(csiid) {
-        let myproject = this.getproject();
+        const dynamicstyles = new DynamicStyles();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
 
         let directcost = 0;
         if (myproject) {
@@ -281,8 +283,9 @@ class BidSchedule extends Component {
 
     }
     getscheduleitems() {
+        const dynamicstyles = new DynamicStyles();
         let scheduleitems = false;
-        let myproject = this.getproject();
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         if (myproject) {
             if (myproject.hasOwnProperty("bidschedule")) {
                 scheduleitems = myproject.bidschedule.biditem
@@ -426,9 +429,10 @@ class BidSchedule extends Component {
 
     }
     handlequantity(csiid, quantity) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             let j = this.getscheduleitemkey(csiid);
 
             myuser.company.projects.myproject[i].bidschedule.biditem[j].quantity = quantity;
@@ -439,9 +443,10 @@ class BidSchedule extends Component {
 
     }
     handleprofit(csiid, profit) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             let j = this.getscheduleitemkey(csiid);
             myuser.company.projects.myproject[i].bidschedule.biditem[j].profit = profit;
             this.props.reduxUser(myuser);
@@ -452,9 +457,10 @@ class BidSchedule extends Component {
     }
 
     handleunit(csiid, unit) {
+        const dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
         if (myuser) {
-            let i = this.getprojectkey();
+            let i = dynamicstyles.getprojectkey.call(this);
             let j = this.getscheduleitemkey(csiid);
             myuser.company.projects.myproject[i].bidschedule.biditem[j].unit = unit;
             this.props.reduxUser(myuser);

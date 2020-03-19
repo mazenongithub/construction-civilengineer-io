@@ -11,6 +11,7 @@ class MakeID {
                 if (employee.hasOwnProperty("benefits")) {
                     while (benefitid === false) {
                         benefitid = makeID(16);
+                        // eslint-disable-next-line
                         employee.benefits.benefit.map(benefit => {
                             if (benefit.benefitid === benefitid) {
                                 benefitid = false;
@@ -105,8 +106,9 @@ class MakeID {
         if (invoices) {
             while (!invoiceid) {
                 invoiceid = makeID(4);
-                // eslint-disable-next-line
+
                 if (invoices) {
+                    // eslint-disable-next-line
                     invoices.map(myinvoice => {
                         if (myinvoice.invoiceid === invoiceid) {
                             invoiceid = false;
@@ -128,8 +130,9 @@ class MakeID {
         if (proposals) {
             while (!proposalid) {
                 proposalid = makeID(4);
-                // eslint-disable-next-line
+
                 if (proposals) {
+                    // eslint-disable-next-line
                     proposals.map(myproposal => {
                         if (myproposal.proposalid === proposalid) {
                             proposalid = false;
@@ -149,8 +152,9 @@ class MakeID {
         if (actualmaterials) {
             while (!materialid) {
                 materialid = makeID(16);
-                // eslint-disable-next-line
+
                 if (actualmaterials) {
+                    // eslint-disable-next-line
                     actualmaterials.map(mymaterial => {
                         if (mymaterial.materialid === materialid) {
                             materialid = false;
@@ -172,8 +176,9 @@ class MakeID {
         if (schedulematerials) {
             while (!materialid) {
                 materialid = makeID(16);
-                // eslint-disable-next-line
+
                 if (schedulematerials) {
+                    // eslint-disable-next-line
                     schedulematerials.map(mymaterial => {
                         if (mymaterial.materialid === materialid) {
                             materialid = false;
@@ -195,8 +200,9 @@ class MakeID {
         if (actuallabor) {
             while (!laborid) {
                 laborid = makeID(16);
-                // eslint-disable-next-line
+
                 if (actuallabor) {
+                    // eslint-disable-next-line
                     actuallabor.map(mylabor => {
                         if (mylabor.laborid === laborid) {
                             laborid = false;
@@ -217,8 +223,9 @@ class MakeID {
         if (schedulelabor) {
             while (!laborid) {
                 laborid = makeID(16);
-                // eslint-disable-next-line
+
                 if (schedulelabor) {
+                    // eslint-disable-next-line
                     schedulelabor.map(mylabor => {
                         if (mylabor.laborid === laborid) {
                             laborid = false;
@@ -241,8 +248,9 @@ class MakeID {
         if (scheduleequipment) {
             while (!equipmentid) {
                 equipmentid = makeID(16);
-                // eslint-disable-next-line
+
                 if (scheduleequipment) {
+                    // eslint-disable-next-line
                     scheduleequipment.map(myequipment => {
                         if (myequipment.equipmentid === equipmentid) {
                             equipmentid = false;
@@ -264,8 +272,9 @@ class MakeID {
         if (actualequipment) {
             while (!equipmentid) {
                 equipmentid = makeID(16);
-                // eslint-disable-next-line
+
                 if (actualequipment) {
+                    // eslint-disable-next-line
                     actualequipment.map(myequipment => {
                         if (myequipment.equipmentid === equipmentid) {
                             equipmentid = false;

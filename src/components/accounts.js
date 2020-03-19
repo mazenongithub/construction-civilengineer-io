@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
-import { CreateAccount, makeID } from './functions';
+import { CreateAccount } from './functions';
 import DynamicStyles from './dynamicstyles';
 import MakeID from './makeids';
 
