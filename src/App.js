@@ -103,9 +103,9 @@ class App extends Component {
         <Route exact path="/:providerid/company/:companyid/projects" component={Projects} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule" component={BidSchedule} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule/:csiid" component={ScheduleLineItem} />
+        <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule/csi/:csiid" component={ScheduleLineItem} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid" component={Bid} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid/:csiid" component={BidLineItem} />
+        <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid/csi/:csiid" component={BidLineItem} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedulelabor" component={ScheduleLabor} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/actuallabor" component={ActualLabor} />
         <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedulematerials" component={ScheduleMaterials} />

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { CreateBidScheduleItem, makeID, ProfitForLabor, DirectCostForMaterial, DirectCostForLabor, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment } from './functions'
+import { ProfitForLabor, DirectCostForMaterial, DirectCostForLabor, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem } from './functions'
 import DynamicStyles from './dynamicstyles';
 import { Link } from 'react-router-dom';
 
@@ -57,95 +57,60 @@ class Bid extends Component {
         }
 
     }
-    getbiditems() {
-        let items = [];
+    getitems() {
         const dynamicstyles = new DynamicStyles();
-        let myproject = dynamicstyles.getproject.call(this)
-        if (myproject) {
+        let payitems = dynamicstyles.getAllActual.call(this)
 
-            let lineid = makeID(16);
-            let profit = "";
-            let unit = "";
-            let quantity = "";
-            if (myproject.hasOwnProperty("actuallabor")) {
-                // eslint-disable-next-line
-                myproject.actuallabor.mylabor.map(mylabor => {
-                    let csiid = mylabor.csiid;
+        let items = [];
+        const validateNewItem = (items, item) => {
+            let validate = true;
+            // eslint-disable-next-line
+            items.map(myitem => {
+                if (myitem.csiid === item.csiid) {
+                    validate = false;
+                }
+            })
+            return validate;
+        }
+        // eslint-disable-next-line
+        payitems.map(item => {
 
-                    let insertlabor = true;
-                    // eslint-disable-next-line
-                    items.map(item => {
-                        if (item.csiid === csiid) {
-                            insertlabor = false;
+            if (item.hasOwnProperty("laborid")) {
 
-                        }
-                    })
+                items.push(item)
 
-                    if (insertlabor) {
-
-                        let newItem = CreateBidScheduleItem(lineid, csiid, profit, unit, quantity)
-
-                        items.push(newItem)
-                    }
-
-                })
 
             }
-            if (myproject.hasOwnProperty("actualmaterials")) {
+            if (item.hasOwnProperty("materialid")) {
 
-                // eslint-disable-next-line
-                myproject.actualmaterials.mymaterial.map(mymaterial => {
-                    let csiid = mymaterial.csiid;
-                    let insertmaterial = true;
-                    // eslint-disable-next-line
-                    items.map(item => {
+                items.push(item)
 
-                        if (item.csiid === csiid) {
-                            insertmaterial = false;
-
-                        }
-                    })
-
-                    if (insertmaterial) {
-
-                        let newItem = CreateBidScheduleItem(lineid, csiid, profit, unit, quantity)
-                        items.push(newItem)
-                    }
-
-                })
 
             }
-            if (myproject.hasOwnProperty("actualequipment")) {
-                // eslint-disable-next-line
-                myproject.actualequipment.myequipment.map(myequipment => {
-                    let csiid = myequipment.csiid;
-                    let insertequipment = true;
-                    // eslint-disable-next-line
-                    items.map(item => {
-                        if (item.csiid === csiid) {
-                            insertequipment = false;
+            if (item.hasOwnProperty("equipmentid")) {
 
-                        }
-                    })
+                items.push(item)
 
-                    if (insertequipment) {
-
-                        let newItem = CreateBidScheduleItem(lineid, csiid, profit, unit, quantity)
-                        items.push(newItem)
-                    }
-
-                })
 
             }
 
+        })
+        let csis = [];
+        if (items.length > 0) {
+            // eslint-disable-next-line
+            items.map(lineitem => {
+                if (validateNewItem(csis, lineitem)) {
 
+                    let newItem = CreateBidItem(lineitem.csiid, "", 0)
+                    csis.push(newItem)
+                }
+            })
         }
 
-        return (items)
-
+        return csis;
     }
     showbiditems() {
-        let biditems = this.getbiditems();
+        let biditems = this.getitems();
 
         let lineids = [];
         if (biditems.length > 0) {
@@ -471,31 +436,56 @@ class Bid extends Component {
 
     }
     showbiditem(item) {
+
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const csi = dynamicstyles.getcsibyid.call(this, item.csiid);
-        let profit = this.getprofit(item.csiid)
-        let quantity = this.getquantity(item.csiid)
+
+
         let bidprice = Number(this.getbidprice(item.csiid)).toFixed(2);
         let unitprice = +Number(this.getunitprice(item.csiid)).toFixed(4);
         let directcost = Number(this.getdirectcost(item.csiid)).toFixed(2);
-        let unit = this.getunit(item.csiid);
         let providerid = this.props.match.params.providerid;
         let companyid = this.props.match.params.companyid;
         let projectid = this.props.match.params.projectid;
+
+        let profit = () => {
+            return (
+                Number(this.getprofit(item.csiid)).toFixed(4)
+            )
+        }
+        const quantity = () => {
+            return (<div style={{ ...styles.generalContainer }}>
+                Quantity <br />
+
+                {this.getquantity(csi.csiid)}
+
+            </div>)
+        }
+        const unit = () => {
+            return (
+                <div style={{ ...styles.generalContainer }}>
+                    Unit <br />
+                    {this.getunit(csi.csiid)}
+
+                </div>)
+        }
         if (this.state.width > 1200) {
             return (
                 <tr>
-                    <td><Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/bid/${csi.csiid}`}> Line Item <br />
+                    <td> <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/bid/csi/${csi.csiid}`}> Line Item <br />
                         {csi.csi}-{csi.title} </Link></td>
-                    <td style={{ ...styles.alignCenter }}>{quantity} </td>
-                    <td style={{ ...styles.alignCenter }}> {unit}</td>
+                    <td style={{ ...styles.alignCenter }}>
+                        {quantity()}
+                    </td>
+                    <td style={{ ...styles.alignCenter }}>{unit()}</td>
                     <td style={{ ...styles.alignCenter }}>{directcost}</td>
-                    <td style={{ ...styles.alignCenter }}>{profit}</td>
-                    <td style={{ ...styles.alignCenter }}>${bidprice}</td>
-                    <td style={{ ...styles.alignCenter }}> {`$${unitprice}/${unit}`}</td>
+                    <td style={{ ...styles.alignCenter }}>{profit()}</td>
+                    <td style={{ ...styles.alignCenter }}>{bidprice}</td>
+                    <td style={{ ...styles.alignCenter }}> {`$${unitprice}/${this.getunit(csi.csiid)}`}</td>
                 </tr>)
+
 
 
         } else {
@@ -504,16 +494,18 @@ class Bid extends Component {
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont, ...styles.showBorder }}>
-                                <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/bid/${csi.csiid}`}> Line Item <br />
+                                <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/bid/csi/${csi.csiid}`}> Line Item <br />
                                     {csi.csi}-{csi.title} </Link>
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Quantity <br />
-                                {quantity}
+                                {this.getquantity(csi.csiid)}
+
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit <br />
-                                {unit}
+                                {this.getunit(csi.csiid)}
+
                             </div>
                         </div>
 
@@ -524,7 +516,9 @@ class Bid extends Component {
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Overhead And Profit % <br />
-                                {profit}
+                                {+Number(this.getprofit(csi.csiid).toFixed(4))}
+
+
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Bid Price <br />
@@ -532,7 +526,7 @@ class Bid extends Component {
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit Price
-                                {`$${unitprice}/${unit}`}
+                                {`$${unitprice}/${this.getunit(csi.csiid)}`}
                             </div>
                         </div>
                     </div>
