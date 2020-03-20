@@ -145,7 +145,7 @@ class ViewInvoice extends Component {
         let profit = 0;
         let directcost = 0;
         let items = this.invoiceitemsbycsiid(csiid);
-        console.log(items)
+
         // eslint-disable-next-line
         items.map(item => {
             if (item.hasOwnProperty("laborid")) {
@@ -162,7 +162,7 @@ class ViewInvoice extends Component {
             }
 
         })
-        console.log(profit, directcost)
+
         return ((profit / directcost) * 100)
 
     }

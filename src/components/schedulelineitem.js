@@ -153,7 +153,7 @@ class ScheduleLineItem extends Component {
         let laboritems = [];
         // eslint-disable-next-line
         schedule.map(item => {
-            if ((item.hasOwnProperty("equipmentid")) && item.csiid === csiid && (item.proposalid === proposalid)) {
+            if ((item.hasOwnProperty("equipmentid")) && item.csiid === csiid) {
                 laboritems.push(item)
             }
         })
@@ -163,6 +163,7 @@ class ScheduleLineItem extends Component {
     }
     getequipmenttotal() {
         let items = this.getequipment();
+
         let cost = 0;
         if (items.length > 0) {
             // eslint-disable-next-line
