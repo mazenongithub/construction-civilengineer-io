@@ -448,6 +448,7 @@ class ViewInvoice extends Component {
                 </tr>)
 
 
+
         } else {
             return (
                 <div style={{ ...styles.generalFlex }} key={item.lineid}>
