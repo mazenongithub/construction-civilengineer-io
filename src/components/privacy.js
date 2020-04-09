@@ -8,7 +8,7 @@ class Privacy {
         return(
             <div>
                 <div style={{...styles.font24, ...styles.regularFont}}>Privacy Policy</div>
-                <div style={{...styles.font20, ...styles.regularFont}}>Our Privacy Policy was posted on 6 March 2012 and last updated on 22 Mar 2020. It governs the privacy terms of our website, located at civilengineer.io, and the tools we provide you (the "Website" or the "Service"). Any capitalized terms not defined in our Privacy Policy, have the meaning as specified in our Terms of Use accessible at https://civilengineer.io </div>
+                <div style={{...styles.font20, ...styles.regularFont}}>Our Privacy Policy was posted on 6 November 2019 and last updated on 22 Mar 2020. It governs the privacy terms of our website, located at civilengineer.io, and the tools we provide you (the "Website" or the "Service"). Any capitalized terms not defined in our Privacy Policy, have the meaning as specified in our Terms of Use accessible at https://civilengineer.io </div>
         
                 <div style={{...styles.font24, ...styles.regularFont}}>Your Privacy</div>
                 <div style={{...styles.font20, ...styles.regularFont}}>Our Website follows all legal requirements to protect your privacy. Our Privacy Policy is a legal statement that explains how we may collect information from you, how we may share your information, and how you can limit our sharing of your information. You will see terms in our Privacy Policy that are capitalized. These terms have meanings as described in the Definitions section below.</div>
