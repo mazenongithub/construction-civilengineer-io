@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { MyStylesheet } from './styles';
-
+import Privacy from './privacy';
 
 class Landing extends Component {
     constructor(props) {
@@ -34,10 +34,30 @@ class Landing extends Component {
             return (styles.font30)
         }
     }
+    makeprivacyactive() {
+        if(this.state.privacy) {
+            this.setState({privacy:false})
+        } else {
+            this.setState({privacy:true})
+        }
+    }
     render() {
         const styles = MyStylesheet();
         const generalFontHeight = this.getFontHeight();
         const getTitleFont = this.getTitleFont();
+        const privacy = new Privacy();
+        const privacymessage = () => {
+            if(this.state.privacy) {
+                return(`Hide Privacy Policy`)
+            } else {
+                return(`Show Privacy Policy`) 
+            }
+        }
+        const ShowPrivacy = () => {
+            if(this.state.privacy) {
+                return(privacy.showprivacy.call(this))
+            }
+        }
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
@@ -62,6 +82,14 @@ class Landing extends Component {
                                 See for yourself, most comprehensive construction management application, go ahead and join
                             </div>
                         </div>
+
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div className="createlink" style={{ ...styles.flex1, ...styles.generalFont, ...generalFontHeight }} onClick={()=>{this.makeprivacyactive()}}>
+                               {privacymessage()}
+                            </div> 
+                        </div>
+
+                        {ShowPrivacy()}
 
 
                     </div>

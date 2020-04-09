@@ -149,7 +149,6 @@ class ScheduleLineItem extends Component {
         const dynamicstyles = new DynamicStyles();
         const schedule = dynamicstyles.getAllSchedule.call(this)
         let csiid = this.props.match.params.csiid;
-        let proposalid = this.props.match.params.proposalid;
         let laboritems = [];
         // eslint-disable-next-line
         schedule.map(item => {
