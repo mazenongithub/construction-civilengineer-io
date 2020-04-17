@@ -22,7 +22,15 @@ class DynamicStyles {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
-
+    getupdatepassword() {
+        return({width:'266px',height:'64px'})
+    }
+    getplusicon() {
+        return({width:'63px', height:'63px'})
+    }
+    getminusicon() {
+        return({width:'63px', height:'18px'})
+    }
     getLoginButton() {
         if (this.state.width > 1200) {
             return ({ width: '276px', height: '63px' })

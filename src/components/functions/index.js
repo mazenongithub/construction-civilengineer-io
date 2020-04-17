@@ -1487,19 +1487,24 @@ export function inputUTCStringForMaterialIDWithTime(timein) {
     return (`${month}/${date}/${year}`);
 
 }
-export function validatePassword(val) {
 
+export function validatePassword(val) {
+    let validate = {};
+    validate.validate = true;
+    validate.message = '';
     const reg_ex = /^[a-zA-Z0-9!#$%&?"]{6,}$/
     let test = reg_ex.test(val)
-    let errmsg = false;
     if (val.length < 6) {
-        errmsg = `Password min length is 6 `;
+        validate.message = `Password min length is 6 `;
+        validate.validate = false;
     } else if (!test) {
-        errmsg = `Invalid Password format`;
+        validate.message = `Invalid Password format`;
+        validate.validate = false;
     }
 
-    return errmsg;
+    return validate;
 }
+
 export function validateCompanyID(value) {
     const reg_ex = /^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,34}(?:[A-Za-z0-9_]))?)$/
     const test = reg_ex.test(value);

@@ -83,6 +83,15 @@ export function DateArrowDown() {
 export function addIcon() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 114.39 66.72"><defs><style></style></defs><title>addIcon</title><g id="Layer_2" data-name="Layer 2"><g id="hide"><rect className="addicon-1" x="1" y="1" width="112.39" height="64.72" rx="5.02" /><text className="addicon-2" transform="translate(18.1 40.42) scale(1.04 1)">Add +</text></g></g></svg>)
 }
+export function updatePasswordIcon() {
+    return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256.42 63.44"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="updatepassword-1" x="0.5" y="0.5" width="255.42" height="62.44" rx="6.46"/><path d="M249.46,1a6,6,0,0,1,6,6V56.49a6,6,0,0,1-6,5.95H7a6,6,0,0,1-6-5.95V7A6,6,0,0,1,7,1h242.5m0-1H7A7,7,0,0,0,0,7V56.49a7,7,0,0,0,7,6.95h242.5a7,7,0,0,0,7-6.95V7a7,7,0,0,0-7-7Z"/><text className="updatepassword-2" transform="translate(8.73 40.39) scale(0.82 1)">Update <tspan className="updatepassword-3" x="129.27" y="0">P</tspan><tspan x="152.31" y="0">as</tspan><tspan className="updatepassword-4" x="188.92" y="0">s</tspan><tspan className="updatepassword-5" x="205.99" y="0">w</tspan><tspan x="236.26" y="0">o</tspan><tspan className="updatepassword-6" x="256.57" y="0">r</tspan><tspan x="269.39" y="0">d</tspan></text></g></g></svg>)
+}
+export function minusIcon() {
+    return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62.29 17.48"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="image"><rect className="minusicon-1" x="0.5" y="0.5" width="61.29" height="16.48"/><path d="M61.29,1V16.48H1V1H61.29m1-1H0V17.48H62.29V0Z"/></g></g></svg>)
+}
+export function plusIcon() {
+    return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62.29 62.29"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="image"><polygon className="plusicon-1" points="22.9 61.79 22.9 39.39 0.5 39.39 0.5 22.91 22.9 22.91 22.9 0.5 39.38 0.5 39.38 22.91 61.79 22.91 61.79 39.39 39.38 39.39 39.38 61.79 22.9 61.79"/><path d="M38.88,1V23.41H61.29V38.89H38.88v22.4H23.4V38.89H1V23.41H23.4V1H38.88m1-1H22.4V22.41H0V39.89H22.4v22.4H39.88V39.89H62.29V22.41H39.88V0Z"/></g></g></svg>)
+}
 export function goCheckIcon() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 54"><defs><style></style></defs><title>updatepasswordicon</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="checkclientidicon-1" x="0.5" y="0.5" width="63" height="53" /><polygon className="checkclientidicon-2" points="51.39 12.66 24.52 39.53 15.06 30.07 17.93 27.2 24.43 33.7 48.43 9.7 51.39 12.66" /></g></g></svg>)
 }
