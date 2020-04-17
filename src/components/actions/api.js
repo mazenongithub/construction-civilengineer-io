@@ -249,7 +249,7 @@ export async function ValidateCompanyID(url) {
 }
 export async function CheckProviderID(profile) {
 
-    var APIURL = `https://civilengineer.io/construction/api/checkproviderid.php?profile=${profile}`
+    var APIURL = `https://civilengineer.io/projectmanagement/api/checkproviderid.php?profile=${profile}`
 
     return fetch(APIURL, { credentials: 'include' })
         .then(resp => {

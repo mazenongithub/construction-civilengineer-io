@@ -22,6 +22,14 @@ class DynamicStyles {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
+
+    getLoginButton() {
+        if (this.state.width > 1200) {
+            return ({ width: '276px', height: '63px' })
+        } else {
+            return ({ width: '181px', height: '49px' })
+        }
+    }
     getFolderSize() {
         if (this.state.width > 1200) {
             return (
@@ -188,53 +196,59 @@ class DynamicStyles {
     }
     async appleSignIn() {
         let provider = new firebase.auth.OAuthProvider('apple.com');
-
         provider.addScope('email');
         provider.addScope('name');
         try {
             let result = await firebase.auth().signInWithPopup(provider)
-
             // The signed-in user info.
             var user = result.user;
-
-            let client = 'apple';
-            let clientid = user.providerData[0].uid;
-            let firstname = '';
+            console.log(user)
+            let firstname = "";
+            let lastname = "";
             if (user.providerData[0].displayName) {
                 firstname = user.providerData[0].displayName.split(' ')[0]
-            }
-
-            let lastname = '';
-            if (user.providerData[0].displayName) {
                 lastname = user.providerData[0].displayName.split(' ')[1]
             }
-            let emailaddress = user.providerData[0].email;
+            let phonenumber = user.providerData[0].phoneNumber
             let profileurl = user.providerData[0].photoURL;
-            let phonenumber = user.phoneNumber;
-            let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber }
-            const response = await ClientLogin(values);
-            if (response.hasOwnProperty("allusers")) {
-                let companys = returnCompanyList(response.allusers);
-                this.props.reduxAllCompanys(companys)
-                this.props.reduxAllUsers(response.allusers);
-                delete response.allusers;
-
+            let client = 'apple';
+            let clientid = user.providerData[0].uid;
+            let emailaddress = user.providerData[0].email;
+            let emailaddresscheck = false;
+            if(emailaddress) {
+                emailaddresscheck = true;
             }
-            if (response.hasOwnProperty("providerid")) {
-                this.props.reduxUser(response)
-            }
+            let profile = this.state.profile;
+            this.setState({ client,clientid,firstname,lastname,profileurl,phonenumber,emailaddress, emailaddresscheck})
+            if (emailaddress && clientid && client && (this.state.login || this.state.profile)) {
+                try {
 
+                    let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber,profile }
+                    const response = await ClientLogin(values);
+                    console.log(response)
+                    if (response.hasOwnProperty("allusers")) {
+                        let companys = returnCompanyList(response.allusers);
+                        this.props.reduxAllCompanys(companys)
+                        this.props.reduxAllUsers(response.allusers);
+                    }
+                    if (response.hasOwnProperty("myuser")) {
+                        this.props.reduxUser(response.myuser)
+                        this.setState({ client: '', clientid: '', emailaddress: '', message:'' })
+                    } else if (response.hasOwnProperty("message")) {
+                        this.setState({ message: response.message })
+                    }
+                } catch (err) {
+                    alert(err)
+                }
 
+            } 
 
-
-        } catch (error) {
-
-            alert(error.message);
-
+        } catch (err) {
+            alert(err)
         }
 
-
     }
+
     getallcsicodes() {
         let codes = [];
         const dynamicstyles = new DynamicStyles();
@@ -1097,6 +1111,42 @@ class DynamicStyles {
         }
 
     }
+
+    async clientlogin() {
+        try {
+
+            let client = this.state.client;
+            let clientid = this.state.clientid;
+            let firstname = this.state.firstname;
+            let lastname = this.state.lastname;
+            let emailaddress = this.state.emailaddress;
+            let profileurl = this.state.profileurl;
+            let phonenumber = this.state.phonumber;
+            let profile = this.state.profile
+            let password = this.state.password;
+            let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, profile, password }
+            console.log(values)
+            const response = await ClientLogin(values);
+            console.log(response)
+            if (response.hasOwnProperty("allusers")) {
+                let companys = returnCompanyList(response.allusers);
+                this.props.reduxAllCompanys(companys)
+                this.props.reduxAllUsers(response.allusers);
+
+            }
+            if (response.hasOwnProperty("myuser")) {
+
+                this.props.reduxUser(response.myuser)
+                this.setState({ client: '', clientid: '', emailaddress: '', message:'' })
+            } else if (response.hasOwnProperty("message")) {
+                this.setState({ message: response.message })
+            }
+           
+        } catch (err) {
+            alert(err)
+        }
+    }
+
     async googleSignIn() {
 
 
@@ -1120,20 +1170,44 @@ class DynamicStyles {
                 lastname = user.providerData[0].displayName.split(' ')[1]
             }
             let emailaddress = user.providerData[0].email;
+            let emailaddresscheck = false;
+            if(emailaddress) {
+                emailaddresscheck = true;
+            }
             let profileurl = user.providerData[0].photoURL;
             let phonenumber = user.phoneNumber;
-            let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber }
-            const response = await ClientLogin(values);
-            if (response.hasOwnProperty("allusers")) {
-                let companys = returnCompanyList(response.allusers);
-                this.props.reduxAllCompanys(companys)
-                this.props.reduxAllUsers(response.allusers);
-                delete response.allusers;
+            this.setState({client,clientid, emailaddress, firstname,lastname,profileurl,phonenumber,emailaddresscheck})
 
+            if (emailaddress && clientid && client && (this.state.login || this.state.profile)) {
+                let profile = this.state.profile;
+                try {
+
+
+                    let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, profile }
+                    
+                    const response = await ClientLogin(values);
+                    console.log(response)
+                    if (response.hasOwnProperty("allusers")) {
+                        let companys = returnCompanyList(response.allusers);
+                        this.props.reduxAllCompanys(companys)
+                        this.props.reduxAllUsers(response.allusers);
+                    }
+                    if (response.hasOwnProperty("myuser")) {
+                        this.props.reduxUser(response.myuser)
+                        this.setState({ client: '', clientid: '', emailaddress: '', message:'' })
+                    } else if (response.hasOwnProperty("message")) {
+                        this.setState({ message: response.message })
+                    }
+                } catch (err) {
+                    alert(err)
+                }
+
+            } else {
+                this.setState({ client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber })
             }
-            if (response.hasOwnProperty("providerid")) {
-                this.props.reduxUser(response)
-            }
+
+
+
 
 
         } catch (error) {
