@@ -37,6 +37,7 @@ import InvoiceLineItem from './components/invoicelineitem'
 import { Link } from 'react-router-dom';
 import { returnCompanyList } from './components/functions';
 import DynamicStyles from './components/dynamicstyles';
+import PrivacyPolicy from './components/privacypolicy';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { firebaseConfig } from './firebaseconfig';
@@ -93,6 +94,7 @@ class App extends Component {
         <Route exact path="/" component={Landing} />
         <Route exact path="/providers/register" component={Register} />
         <Route exact path="/providers/login" component={Login} />
+        <Route exact path="/providers/privacy_policy" component={PrivacyPolicy} />
         <Route exact path="/:providerid/profile" component={Profile} />
         <Route exact path="/:providerid/company" component={Company} />
         <Route exact path="/:providerid/company/:companyid/accounts" component={Accounts} />
