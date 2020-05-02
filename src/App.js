@@ -33,6 +33,7 @@ import ViewProposal from './components/viewproposal';
 import ProposalLineItem from './components/proposallineitem'
 import Invoices from './components/invoices';
 import ViewInvoice from './components/viewinvoice'
+import ViewAccount from './components/viewaccount'
 import InvoiceLineItem from './components/invoicelineitem'
 import { Link } from 'react-router-dom';
 import { returnCompanyList } from './components/functions';
@@ -64,6 +65,7 @@ class App extends Component {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
+
   async checkuser() {
     try {
       //let response = TestUser();
@@ -81,6 +83,7 @@ class App extends Component {
 
         this.props.reduxUser(response.myuser)
       }
+      
 
 
     } catch (err) {
@@ -98,6 +101,7 @@ class App extends Component {
         <Route exact path="/:providerid/profile" component={Profile} />
         <Route exact path="/:providerid/company" component={Company} />
         <Route exact path="/:providerid/company/:companyid/accounts" component={Accounts} />
+        <Route exact path="/:providerid/company/:companyid/accounts/:accountid" component={ViewAccount} />
         <Route exact path="/:providerid/company/:companyid/equipment" component={Equipment} />
         <Route exact path="/:providerid/company/:companyid/employees" component={Employees} />
         <Route exact path="/:providerid/company/:companyid/construction" component={Construction} />

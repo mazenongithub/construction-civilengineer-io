@@ -166,6 +166,7 @@ class DynamicStyles {
             })
         }
     }
+  
     getMaxWidth() {
         if (this.state.width > 1200) {
             return ({ maxWidth: '900px' })
@@ -1154,6 +1155,8 @@ class DynamicStyles {
             alert(err)
         }
     }
+
+    
 
     async googleSignIn() {
 
@@ -2727,6 +2730,21 @@ class DynamicStyles {
             }
         }
         return myaccounts;
+    }
+
+    getaccountbyid(accountid) {
+        const dynamicstyles = new DynamicStyles();
+        const myaccounts = dynamicstyles.getmyaccounts.call(this);
+        let myaccount = false;
+        if (myaccounts.hasOwnProperty("length")) {
+            // eslint-disable-next-line
+            myaccounts.map((account, i) => {
+                if (account.accountid === accountid) {
+                    myaccount = account;
+                }
+            })
+        }
+        return myaccount;
     }
     getmycsicodes() {
         const dynamicstyles = new DynamicStyles();

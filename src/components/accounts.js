@@ -6,6 +6,7 @@ import { removeIconSmall } from './svg';
 import { CreateAccount } from './functions';
 import DynamicStyles from './dynamicstyles';
 import MakeID from './makeids';
+import { Link } from 'react-router-dom';
 
 class Accounts extends Component {
     constructor(props) {
@@ -297,6 +298,7 @@ class Accounts extends Component {
                             onChange={event => { this.handleaccountname(event.target.value) }}
                             value={this.getaccountname()}
                             style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }} />
+                           
                     </div>
                 </div>
             )
@@ -348,17 +350,11 @@ class Accounts extends Component {
     }
     makeaccountactive(accountid) {
         if (this.state.activeaccountid !== accountid) {
-            let myaccount = this.getaccountfromid(accountid);
-            let account = myaccount.account;
-            let account_1 = account.substr(0, 2)
-            let account_2 = account.substr(2, 2)
-            let account_3 = account.substr(4, 2)
-            console.log(account, account_3)
-
-            this.setState({ activeaccountid: accountid, account_1, account_2, account_3 })
+                   
+           this.setState({ activeaccountid: accountid })
 
         } else {
-            this.setState({ activeaccountid: '', account_1: '', account_2: '', account_3: '', account: '', accountname: '' })
+            this.setState({ activeaccountid: '' })
         }
 
 
@@ -448,7 +444,8 @@ class Accounts extends Component {
 
     }
     showmyaccounts() {
-        let myaccounts = this.getmyaccounts();
+        const dynamicstyles = new DynamicStyles();
+        const myaccounts = dynamicstyles.getmyaccounts.call(this);
         let accounts = [];
         let styles = MyStylesheet();
         let regularFont = this.getRegularFont();
@@ -461,7 +458,9 @@ class Accounts extends Component {
                 accounts.push(
                     <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...this.getactivebackground(account.accountid) }}>
                         <span onClick={() => { this.makeaccountactive(account.accountid) }}>{account.accountname}</span>
-                        <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeaccount(account) }}>{removeIconSmall()} </button>
+                        
+                        <Link style={{...styles.generalLink,...styles.addLeftMargin15}} to={`/${this.props.match.params.providerid}/company/${this.props.match.params.companyid}/accounts/${account.accountid}`}>View Account</Link>
+                      <span style={{...styles.addLeftMargin15}}> Delete Account</span> <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeaccount(account) }}>{removeIconSmall()} </button>
                     </div>
                 )
 

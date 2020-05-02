@@ -16,6 +16,25 @@ class ClientID {
                 return `Secure your Sign in`
             }
         }
+        const apple = () => {
+            if(!this.state.client || !this.state.clientid) {
+                return( <div style={{...styles.flex1}}>
+                    <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.appleSignIn.call(this) }}>
+                        {AppleSignIcon()}
+                    </button>
+                </div>
+)
+            }
+        }
+        const google = () => {
+            if(!this.state.client || !this.state.clientid) {
+                return( <div style={{...styles.flex1}}>
+                    <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.googleSignIn.call(this) }}>
+                        {GoogleSignIcon()}
+                    </button>
+                </div>)
+            }
+        }
         if (this.state.width > 800) {
 
             return (
@@ -25,18 +44,9 @@ class ClientID {
                         {signinmessage()}
                     </div>
 
-                    <div style={{...styles.flex1}}>
-                        <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.googleSignIn.call(this) }}>
-                            {GoogleSignIcon()}
-                        </button>
-                    </div>
+                   {google()}
 
-                    <div style={{...styles.flex1}}>
-                        <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.appleSignIn.call(this) }}>
-                            {AppleSignIcon()}
-                        </button>
-                    </div>
-
+                   {apple()}
                 </div>)
 
         }

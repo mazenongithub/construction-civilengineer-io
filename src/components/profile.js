@@ -6,7 +6,7 @@ import { folderIcon, scrollImageDown } from './svg';
 import DynamicStyles from './dynamicstyles';
 import { UploadProfileImage, CheckProviderID } from './actions/api';
 import { returnCompanyList, inputUTCStringForLaborID, validateProviderID } from './functions';
-import UpdatePassword from './updatepassword'
+
 
 class Profile extends Component {
     constructor(props) {
@@ -404,7 +404,6 @@ class Profile extends Component {
         const profileDimensions = dynamicstyles.getprofiledimensions.call(this);
         const folderSize = dynamicstyles.getFolderSize.call(this);
         const arrowHeight = dynamicstyles.getArrowHeight.call(this);
-        const updatepassword = new UpdatePassword();
 
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
@@ -456,8 +455,6 @@ class Profile extends Component {
                 {this.showadditional()}
 
                 {dynamicstyles.showsaveprofile.call(this)}
-
-                {updatepassword.showupdatepassword.call(this)}
 
 
             </div>
