@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { CheckUserLogin, LogoutUser } from './components/actions/api';
+import { CheckUserLogin, CheckUserNode, LogoutUser, LogoutUserNode } from './components/actions/api';
 import * as actions from './components/actions';
 import './App.css';
 import { MyStylesheet } from './components/styles'
@@ -65,7 +65,9 @@ class App extends Component {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
-
+  getstripedashboard() {
+    this.setState({ render: 'render' })
+  }
   async checkuser() {
     try {
       //let response = TestUser();
@@ -80,10 +82,17 @@ class App extends Component {
 
       }
       if (response.hasOwnProperty("myuser")) {
+        let myuser = response.myuser;
+        let payments = await CheckUserNode();
+        console.log("payments", payments)
+        if (payments.hasOwnProperty("myuser")) {
+          myuser.payments = true;
 
-        this.props.reduxUser(response.myuser)
+        }
+        this.props.reduxUser(myuser)
+
       }
-      
+
 
 
     } catch (err) {
@@ -640,9 +649,17 @@ class App extends Component {
 
       let response = await LogoutUser();
       console.log(response)
+      let message = "";
       if (response.hasOwnProperty("message")) {
+        message += `${response.message}`
         this.props.reduxUser(response)
       }
+      let payments = await LogoutUserNode();
+      if (payments.hasOwnProperty("message")) {
+        message += `${response.message}`
+      }
+      this.props.reduxUser({ message })
+
     } catch (err) {
       alert(err)
     }

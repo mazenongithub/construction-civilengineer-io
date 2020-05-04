@@ -122,9 +122,9 @@ export async function CheckUserLogin() {
     })
 }
 
-export async function LogoutUserNode() {
+export async function LogoutUserNode(providerid) {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/logout`
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/logout`
     console.log(APIURL)
 
     return fetch(APIURL, { credentials: 'include' }).then(resp => {

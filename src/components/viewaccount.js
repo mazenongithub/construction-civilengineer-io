@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { StripeConnect, ClientLoginNode,LogoutUserNode } from './actions/api'
+import { StripeConnect, ClientLoginNode, LogoutUserNode } from './actions/api'
 import { GoogleSignIcon, AppleSignIcon } from './svg';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -11,13 +11,25 @@ class ViewAccount extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, nodesignin: false }
+        this.state = { render: '', width: 0, height: 0, nodesignin: false, stripedashboard:true }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
 
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+    
+
+
+    }
+
+    async checkpayments() {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+    
+        if (myuser.payments) {
+            this.getstripedashboard();
+        }
 
 
     }
@@ -30,22 +42,23 @@ class ViewAccount extends Component {
     async getstripedashboard() {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
-        
+  
         if (myuser) {
             const account = dynamicstyles.getaccountbyid.call(this, this.props.match.params.accountid);
-            if (account.stripe) {
+            if (account.stripe && !account.stripedashboard && this.state.stripedashboard) {
                 let response = await StripeConnect(myuser.profile, account.stripe)
                 console.log(response)
                 let i = dynamicstyles.getaccountkeybyid.call(this, this.props.match.params.accountid)
                 if (response.url) {
-                    myuser.company.office.accounts.account[i].stripeurl = response.url;
+                    myuser.company.office.accounts.account[i].stripedashboard = response.url;
                     this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                   
                 }
+                this.setState({ stripdashboard:false })
 
             }
         } else {
-            this.setState({ render: 'render' }) 
+            this.setState({ render: 'render' })
         }
     }
 
@@ -60,7 +73,6 @@ class ViewAccount extends Component {
             let result = await firebase.auth().signInWithPopup(provider)
             // The signed-in user info.
             var user = result.user;
-            console.log(user)
             let client = 'apple';
             let clientid = user.providerData[0].uid;
             let emailaddress = user.providerData[0].email;
@@ -71,7 +83,7 @@ class ViewAccount extends Component {
                     console.log(values)
                     const response = await ClientLoginNode(values);
                     if (response.hasOwnProperty("myuser")) {
-                        myuser.node = true;
+                        myuser.payments = true;
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                         this.getstripedashboard();
@@ -111,7 +123,7 @@ class ViewAccount extends Component {
                     let values = { client, clientid, emailaddress }
                     const response = await ClientLoginNode(values);
                     if (response.hasOwnProperty("myuser")) {
-                        myuser.node = true;
+                        myuser.payments = true;
                         this.props.reduxUser(myuser);
                         this.getstripedashboard();
                         this.setState({ render: 'render' })
@@ -136,7 +148,7 @@ class ViewAccount extends Component {
             try {
                 let response = await LogoutUserNode();
                 if (response.hasOwnProperty("response")) {
-                    myuser.node = false;
+                    myuser.payments = false;
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 }
@@ -152,13 +164,14 @@ class ViewAccount extends Component {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const account = dynamicstyles.getaccountbyid.call(this, this.props.match.params.accountid);
+
         const myuser = dynamicstyles.getuser.call(this);
         const headerFont = dynamicstyles.gettitlefont.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const loginButton = dynamicstyles.getLoginButton.call(this);
-
+        this.checkpayments();
         const showlogin = () => {
-            if (!myuser.node) {
+            if (!myuser.payments) {
                 return (
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
 
@@ -186,18 +199,17 @@ class ViewAccount extends Component {
         }
 
         const stripe = () => {
-            if (myuser.node) {
+            if (myuser.payments) {
 
-                if (account.stripeurl) {
+                if (account.stripedashboard) {
 
-                    return (<a href={account.stripeurl} style={{...styles.generalLink,...regularFont}}>Account Connected View Account Dashboard </a>)
+                    return (<a href={account.stripedashboard} style={{ ...styles.generalLink, ...regularFont }}>Account Connected View Account Dashboard </a>)
 
                 } else {
-                 
                     return (<a href={`https://connect.stripe.com/express/oauth/authorize?response_type=code&redirect_uri=${process.env.REACT_APP_SERVER_API}/construction/stripe/accounts&client_id=${process.env.REACT_APP_STRIPE_CONNECT}&state=${this.props.match.params.accountid}&scope=read_write`} style={{ ...styles.generalLink, ...regularFont }}>Not Connected, Click Link to Connect Account</a>)
                 }
 
-            } 
+            }
 
         }
         return (
@@ -221,7 +233,7 @@ class ViewAccount extends Component {
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...regularFont }}>
-                        {stripe()}
+                            {stripe()}
                         </div>
                     </div>
 
