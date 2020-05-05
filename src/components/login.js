@@ -7,7 +7,7 @@ import DynamicStyles from './dynamicstyles'
 import { MyStylesheet } from './styles';
 import ClientID from './clientid';
 import EmailAddress from './emailaddress';
-import Password from './password';
+
 
 class Login extends Component {
     constructor(props) {
@@ -65,16 +65,9 @@ class Login extends Component {
         const styles = MyStylesheet();
         const clientid = new ClientID();
         const emailaddress = new EmailAddress();
-        const password = new Password();
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this);
-        const showpassword = () => {
-            if (!this.state.client && !this.state.clientid) {
-                return (password.showpassword.call(this))
-            } else {
-                return (<span>&nbsp;</span>)
-            }
-        }
+  
         const loginNow = () => {
 
             const dynamicstyles = new DynamicStyles();
@@ -116,8 +109,6 @@ class Login extends Component {
                         {clientid.showclientid.call(this)}
 
                         {emailaddress.showemailaddress.call(this)}
-
-                        {showpassword()}
 
                         {loginNow()}
 

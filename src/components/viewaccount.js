@@ -4,7 +4,6 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import { StripeConnect, ClientLoginNode, LogoutUserNode } from './actions/api'
-import { GoogleSignIcon, AppleSignIcon } from './svg';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 class ViewAccount extends Component {
@@ -18,21 +17,11 @@ class ViewAccount extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+      
     
-
-
     }
 
-    async checkpayments() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-    
-        if (myuser.payments) {
-            this.getstripedashboard();
-        }
-
-
-    }
+   
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
     }
@@ -41,9 +30,10 @@ class ViewAccount extends Component {
     }
     async getstripedashboard() {
         const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this);
   
         if (myuser) {
+            
             const account = dynamicstyles.getaccountbyid.call(this, this.props.match.params.accountid);
             if (account.stripe && !account.stripedashboard && this.state.stripedashboard) {
                 let response = await StripeConnect(myuser.profile, account.stripe)
@@ -57,8 +47,6 @@ class ViewAccount extends Component {
                 this.setState({ stripdashboard:false })
 
             }
-        } else {
-            this.setState({ render: 'render' })
         }
     }
 
@@ -164,43 +152,11 @@ class ViewAccount extends Component {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const account = dynamicstyles.getaccountbyid.call(this, this.props.match.params.accountid);
-
-        const myuser = dynamicstyles.getuser.call(this);
         const headerFont = dynamicstyles.gettitlefont.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        const loginButton = dynamicstyles.getLoginButton.call(this);
-        this.checkpayments();
-        const showlogin = () => {
-            if (!myuser.payments) {
-                return (
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-
-                        <div style={{ ...styles.flex1, ...regularFont }}>
-                            Login to {process.env.REACT_APP_SERVER_API} to Before Connecting Account`
-                        </div>
-                        <div style={{ ...styles.flex1 }}>
-                            <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { this.googleSignIn.call(this) }}>
-                                {GoogleSignIcon()}
-                            </button>
-                        </div>
-
-                        <div style={{ ...styles.flex1 }}>
-                            <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { this.appleSignIn.call(this) }}>
-                                {AppleSignIcon()}
-                            </button>
-                        </div>
-                    </div>
-
-                )
-
-            } else {
-                return (<div className='createlink' style={{ ...styles.generalContainer, ...regularFont, ...styles.bottomMargin15 }}>You are logged into Payments and ready to connect accounts</div>)
-            }
-        }
-
+   this.getstripedashboard();
         const stripe = () => {
-            if (myuser.payments) {
-
+        
                 if (account.stripedashboard) {
 
                     return (<a href={account.stripedashboard} style={{ ...styles.generalLink, ...regularFont }}>Account Connected View Account Dashboard </a>)
@@ -209,7 +165,6 @@ class ViewAccount extends Component {
                     return (<a href={`https://connect.stripe.com/express/oauth/authorize?response_type=code&redirect_uri=${process.env.REACT_APP_SERVER_API}/construction/stripe/accounts&client_id=${process.env.REACT_APP_STRIPE_CONNECT}&state=${this.props.match.params.accountid}&scope=read_write`} style={{ ...styles.generalLink, ...regularFont }}>Not Connected, Click Link to Connect Account</a>)
                 }
 
-            }
 
         }
         return (
@@ -229,7 +184,7 @@ class ViewAccount extends Component {
                         </div>
                     </div>
 
-                    {showlogin()}
+             
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...regularFont }}>

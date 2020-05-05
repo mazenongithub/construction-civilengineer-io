@@ -5,7 +5,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
-import { SaveCompany, ClientLogin, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile } from './actions/api';
+import { SaveCompany, ClientLoginNode, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile } from './actions/api';
 
 
 class DynamicStyles {
@@ -233,7 +233,7 @@ class DynamicStyles {
                 try {
 
                     let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber,profile }
-                    const response = await ClientLogin(values);
+                    const response = await ClientLoginNode(values);
                     console.log(response)
                     if (response.hasOwnProperty("allusers")) {
                         let companys = returnCompanyList(response.allusers);
@@ -1135,7 +1135,7 @@ class DynamicStyles {
             let password = this.state.password;
             let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, profile, password }
             console.log(values)
-            const response = await ClientLogin(values);
+            const response = await ClientLoginNode(values);
             console.log(response)
             if (response.hasOwnProperty("allusers")) {
                 let companys = returnCompanyList(response.allusers);
@@ -1196,7 +1196,7 @@ class DynamicStyles {
 
                     let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, profile }
                     
-                    const response = await ClientLogin(values);
+                    const response = await ClientLoginNode(values);
                     console.log(response)
                     if (response.hasOwnProperty("allusers")) {
                         let companys = returnCompanyList(response.allusers);

@@ -315,7 +315,7 @@ class Profile extends Component {
             formData.append("profilephoto", myfile.files[0]);
             formData.append("myuser", JSON.stringify(params.myuser))
             try {
-                let response = await UploadProfileImage(formData);
+                let response = await UploadProfileImage(params.myuser.providerid,formData);
                 console.log(response)
                 if (response.hasOwnProperty("allusers")) {
                     let companys = returnCompanyList(response.allusers);

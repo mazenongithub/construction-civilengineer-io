@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { CheckUserLogin, CheckUserNode, LogoutUser, LogoutUserNode } from './components/actions/api';
+import { CheckUserNode, LogoutUserNode } from './components/actions/api';
 import * as actions from './components/actions';
 import './App.css';
 import { MyStylesheet } from './components/styles'
@@ -72,7 +72,7 @@ class App extends Component {
     try {
       //let response = TestUser();
 
-      let response = await CheckUserLogin();
+      let response = await CheckUserNode();
 
       console.log(response)
       if (response.hasOwnProperty("allusers")) {
@@ -83,12 +83,6 @@ class App extends Component {
       }
       if (response.hasOwnProperty("myuser")) {
         let myuser = response.myuser;
-        let payments = await CheckUserNode();
-        console.log("payments", payments)
-        if (payments.hasOwnProperty("myuser")) {
-          myuser.payments = true;
-
-        }
         this.props.reduxUser(myuser)
 
       }
@@ -96,7 +90,8 @@ class App extends Component {
 
 
     } catch (err) {
-      alert(err)
+      console.log(err)
+     // alert(err)
     }
   }
   showRouter() {
@@ -644,25 +639,20 @@ class App extends Component {
     }
   }
   async logoutuser() {
+    const dynamicstyles = new DynamicStyles();
+    const myuser = dynamicstyles.getuser.call(this);
+    if(myuser) {
     try {
 
-
-      let response = await LogoutUser();
+      let response = await LogoutUserNode(myuser.providerid);
       console.log(response)
-      let message = "";
-      if (response.hasOwnProperty("message")) {
-        message += `${response.message}`
-        this.props.reduxUser(response)
-      }
-      let payments = await LogoutUserNode();
-      if (payments.hasOwnProperty("message")) {
-        message += `${response.message}`
-      }
-      this.props.reduxUser({ message })
-
+      this.props.reduxUser(response)
+    
     } catch (err) {
       alert(err)
     }
+
+  }
 
   }
   handleloginlink() {
