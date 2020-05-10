@@ -23,13 +23,13 @@ class DynamicStyles {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
     getupdatepassword() {
-        return({width:'266px',height:'64px'})
+        return ({ width: '266px', height: '64px' })
     }
     getplusicon() {
-        return({width:'63px', height:'63px'})
+        return ({ width: '63px', height: '63px' })
     }
     getminusicon() {
-        return({width:'63px', height:'18px'})
+        return ({ width: '63px', height: '18px' })
     }
     getLoginButton() {
         if (this.state.width > 1200) {
@@ -166,7 +166,146 @@ class DynamicStyles {
             })
         }
     }
-  
+    getemployeebenefitsbyid(providerid) {
+        const dynamicstyles = new DynamicStyles();
+        let benefits = false;
+        const employee = dynamicstyles.getemployeebyid.call(this, providerid)
+        if (employee.hasOwnProperty("benefits")) {
+            benefits = employee.benefits.benefit;
+        }
+        return benefits;
+    }
+    getemployeeaccountratio(providerid,accountid) {
+        const dynamicstyles = new DynamicStyles();
+        const accounts = dynamicstyles.getemployeeaccountsbyid.call(this,providerid)
+        let ratio = false;
+        if(accounts) {
+            // eslint-disable-next-line
+            accounts.map(account=> {
+                if(account.accountid === accountid) {
+                    ratio = account.ratio;
+                }
+            })
+        }
+        return ratio;
+    }
+    getemployeeaccountsbyid(providerid) {
+        const dynamicstyles = new DynamicStyles();
+        const accountratio = (benefits, accountid) => {
+            let benefitamount = 0;
+            let totalbenefits = 0;
+            // eslint-disable-next-line
+            benefits.map(benefit => {
+                if (benefit.accountid === accountid) {
+                    benefitamount = benefit.amount;
+                }
+            })
+            // eslint-disable-next-line
+            benefits.map(benefit => {
+                totalbenefits += benefit.amount;
+            })
+            return (benefitamount / totalbenefits);
+        }
+        const checkaccounts = (accounts, accountid) => {
+            let checkaccount = true;
+            // eslint-disable-next-line
+            accounts.map(account => {
+                if (account.accountid === accountid) {
+                    checkaccount = false;
+                }
+            })
+            return checkaccount;
+
+        }
+        let accounts = [];
+        const benefits = dynamicstyles.getemployeebenefitsbyid.call(this, providerid)
+        // eslint-disable-next-line
+        benefits.map(benefit => {
+            if (checkaccounts(accounts, benefit.accountid)) {
+                accounts.push({ accountid: benefit.accountid, ratio: accountratio(benefits, benefit.accountid) })
+            }
+        })
+        return accounts;
+    }
+
+
+
+    showchargesbyaccountid(accountid) {
+        const dynamicstyles = new DynamicStyles();
+        const myprojects = dynamicstyles.getmyprojects.call(this)
+        let charges = false;
+        const calculatelabor = (mylabor) => {
+            let hours = calculatetotalhours(mylabor.timeout, mylabor.timein);
+            
+            let labor = hours * mylabor.laborrate * (1 + (mylabor.profit / 100));
+            return labor;
+
+        }
+        const calculatematerialamount = (mymaterial) => {
+            let materialamount = mymaterial.quantity * mymaterial.unitcost * (1 + (mymaterial.profit / 100))
+            return materialamount;
+        }
+        const calculateequipmentamount = (myequipment) => {
+            let hours = calculatetotalhours(myequipment.timeout, myequipment.timein)
+            let equipment = hours * myequipment.equipmentrate * (1 + (myequipment.profit / 100))
+            return equipment;
+        }
+        if (myprojects) {
+            charges = {};
+            charges.project = {};
+            charges.project.myproject = [];
+            // eslint-disable-next-line
+            myprojects.map((myproject, i) => {
+                charges.project.myproject[i] = {}
+                charges.project.myproject[i].projectid = myproject.projectid;
+                charges.project.myproject[i].charges = {};
+                charges.project.myproject[i].charges.charge = [];
+                if (myproject.hasOwnProperty("actuallabor")) {
+                    // eslint-disable-next-line
+                    myproject.actuallabor.mylabor.map(mylabor => {
+                        let accounts = dynamicstyles.getemployeeaccountsbyid.call(this, mylabor.providerid)
+                        let laboramount = calculatelabor(mylabor)
+                        let laborid = mylabor.laborid;
+                        // eslint-disable-next-line
+                        accounts.map(account => {
+                            if (account.accountid === accountid) {
+                                let ratio = account.ratio;
+                                let amount = laboramount * ratio;
+                                charges.project.myproject[i].charges.charge.push({ laborid, amount })
+                            }
+                        })
+
+                    })
+                }
+                if (myproject.hasOwnProperty("actualmaterials")) {
+                    // eslint-disable-next-line
+                    myproject.actualmaterials.mymaterial.map(mymaterial => {
+
+                        let materialid = mymaterial.materialid;
+                        let material = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid);
+                        if (material.accountid === accountid) {
+                            let materialamount = calculatematerialamount(mymaterial)
+                            charges.project.myproject[i].charges.charge.push({ materialid, amount: materialamount })
+                        }
+                    })
+
+                }
+                if (myproject.hasOwnProperty("actualequipment")) {
+                    // eslint-disable-next-line
+                    myproject.actualequipment.myequipment.map(myequipment => {
+                        let equipment = dynamicstyles.getequipmentfromid.call(this, myequipment.myequipmentid)
+                        if (equipment.accountid === accountid) {
+                            let equipmentamount = calculateequipmentamount(myequipment)
+                            charges.project.myproject[i].charges.charge.push({ equipmentid: myequipment.equipmentid, amount: equipmentamount })
+                        }
+                    })
+
+                }
+            })
+
+        }
+        return charges;
+    }
     getMaxWidth() {
         if (this.state.width > 1200) {
             return ({ maxWidth: '900px' })
@@ -224,15 +363,15 @@ class DynamicStyles {
             let clientid = user.providerData[0].uid;
             let emailaddress = user.providerData[0].email;
             let emailaddresscheck = false;
-            if(emailaddress) {
+            if (emailaddress) {
                 emailaddresscheck = true;
             }
             let profile = this.state.profile;
-            this.setState({ client,clientid,firstname,lastname,profileurl,phonenumber,emailaddress, emailaddresscheck})
+            this.setState({ client, clientid, firstname, lastname, profileurl, phonenumber, emailaddress, emailaddresscheck })
             if (emailaddress && clientid && client && (this.state.login || this.state.profile)) {
                 try {
 
-                    let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber,profile }
+                    let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, profile }
                     const response = await ClientLoginNode(values);
                     console.log(response)
                     if (response.hasOwnProperty("allusers")) {
@@ -242,7 +381,7 @@ class DynamicStyles {
                     }
                     if (response.hasOwnProperty("myuser")) {
                         this.props.reduxUser(response.myuser)
-                        this.setState({ client: '', clientid: '', emailaddress: '', message:'' })
+                        this.setState({ client: '', clientid: '', emailaddress: '', message: '' })
                     } else if (response.hasOwnProperty("message")) {
                         this.setState({ message: response.message })
                     }
@@ -250,7 +389,7 @@ class DynamicStyles {
                     alert(err)
                 }
 
-            } 
+            }
 
         } catch (err) {
             alert(err)
@@ -1146,17 +1285,17 @@ class DynamicStyles {
             if (response.hasOwnProperty("myuser")) {
 
                 this.props.reduxUser(response.myuser)
-                this.setState({ client: '', clientid: '', emailaddress: '', message:'' })
+                this.setState({ client: '', clientid: '', emailaddress: '', message: '' })
             } else if (response.hasOwnProperty("message")) {
                 this.setState({ message: response.message })
             }
-           
+
         } catch (err) {
             alert(err)
         }
     }
 
-    
+
 
     async googleSignIn() {
 
@@ -1182,12 +1321,12 @@ class DynamicStyles {
             }
             let emailaddress = user.providerData[0].email;
             let emailaddresscheck = false;
-            if(emailaddress) {
+            if (emailaddress) {
                 emailaddresscheck = true;
             }
             let profileurl = user.providerData[0].photoURL;
             let phonenumber = user.phoneNumber;
-            this.setState({client,clientid, emailaddress, firstname,lastname,profileurl,phonenumber,emailaddresscheck})
+            this.setState({ client, clientid, emailaddress, firstname, lastname, profileurl, phonenumber, emailaddresscheck })
 
             if (emailaddress && clientid && client && (this.state.login || this.state.profile)) {
                 let profile = this.state.profile;
@@ -1195,7 +1334,7 @@ class DynamicStyles {
 
 
                     let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, profile }
-                    
+
                     const response = await ClientLoginNode(values);
                     console.log(response)
                     if (response.hasOwnProperty("allusers")) {
@@ -1205,7 +1344,7 @@ class DynamicStyles {
                     }
                     if (response.hasOwnProperty("myuser")) {
                         this.props.reduxUser(response.myuser)
-                        this.setState({ client: '', clientid: '', emailaddress: '', message:'' })
+                        this.setState({ client: '', clientid: '', emailaddress: '', message: '' })
                     } else if (response.hasOwnProperty("message")) {
                         this.setState({ message: response.message })
                     }
@@ -1966,6 +2105,105 @@ class DynamicStyles {
         }
         return allusers;
     }
+
+    getinvoiceidfromtransferid(transferid) {
+        const dynamicstyles = new DynamicStyles();
+        const projects = dynamicstyles.getmyprojects.call(this)
+        let invoiceid = false;
+        if (projects) {
+            // eslint-disable-next-line 
+            projects.map(myproject => {
+                if (myproject.hasOwnProperty("invoices")) {
+                    // eslint-disable-next-line
+                    myproject.invoices.myinvoice.map(myinvoice => {
+
+                        if (myinvoice.hasOwnProperty("transfers")) {
+                            if (myinvoice.transfers.hasOwnProperty("transfer")) {
+                                // eslint-disable-next-line
+                                myinvoice.transfers.transfer.map(transfer => {
+                                    if (transfer.transferid === transferid) {
+                                        invoiceid = myinvoice.invoiceid;
+                                    }
+
+                                })
+
+                            }
+                        }
+                    })
+
+
+                }
+            })
+        }
+        return invoiceid;
+    }
+    gettransfersbyaccountid(accountid) {
+        const dynamicstyles = new DynamicStyles();
+        const projects = dynamicstyles.getmyprojects.call(this)
+        const account = dynamicstyles.getaccountbyid.call(this, accountid);
+        let transfers = [];
+        if (projects) {
+            // eslint-disable-next-line
+            projects.map(myproject => {
+                if (myproject.hasOwnProperty("invoices")) {
+                    // eslint-disable-next-line
+                    myproject.invoices.myinvoice.map(myinvoice => {
+                        if (myinvoice.hasOwnProperty("transfers")) {
+                            if (myinvoice.transfers.hasOwnProperty("transfer")) {
+                                // eslint-disable-next-line
+                                myinvoice.transfers.transfer.map(transfer => {
+                                    if (transfer.destination === account.stripe) {
+                                        transfers.push(transfer)
+                                    }
+
+                                })
+                            }
+                        }
+                    })
+                }
+            })
+        }
+        return transfers;
+    }
+    findactualequipmentbyid(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        const projects = dynamicstyles.getmyprojects.call(this)
+        let equipment = false;
+        if (projects) {
+            // eslint-disable-next-line
+            projects.map(myproject => {
+                if (myproject.hasOwnProperty("actualequipment")) {
+                    // eslint-disable-next-line
+                    myproject.actualequipment.myequipment.map(myequipment => {
+                        if (myequipment.equipmentid === equipmentid) {
+                            equipment = myequipment;
+                        }
+                    })
+                }
+            })
+        }
+        return equipment;
+    }
+    findactualmaterialbyid(materialid) {
+        const dynamicstyles = new DynamicStyles();
+        const projects = dynamicstyles.getmyprojects.call(this)
+        let material = false;
+        if (projects) {
+            // eslint-disable-next-line
+            projects.map(myproject => {
+                if (myproject.hasOwnProperty("actualmaterials")) {
+                    // eslint-disable-next-line
+                    myproject.actualmaterials.mymaterial.map(mymaterial => {
+                        if (mymaterial.materialid === materialid) {
+                            material = mymaterial;
+                        }
+                    })
+                }
+
+            })
+        }
+        return material;
+    }
     getemployeebyproviderid(providerid) {
         let dynamicstyles = new DynamicStyles();
         let allusers = dynamicstyles.getallusers.call(this);
@@ -2597,6 +2835,25 @@ class DynamicStyles {
 
         }
         return equipment;
+    }
+    findactuallaborbyid(laborid) {
+        const dynamicstyles = new DynamicStyles();
+        const projects = dynamicstyles.getmyprojects.call(this)
+        let labor = false;
+        if (projects) {
+            // eslint-disable-next-line
+            projects.map(myproject => {
+                if (myproject.hasOwnProperty("actuallabor")) {
+                    // eslint-disable-next-line
+                    myproject.actuallabor.mylabor.map(mylabor => {
+                        if (mylabor.laborid === laborid) {
+                            labor = mylabor;
+                        }
+                    })
+                }
+            })
+        }
+        return labor;
     }
 
     getactuallaborbyid(laborid) {

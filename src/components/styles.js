@@ -174,6 +174,9 @@ export function MyStylesheet() {
         font72: {
             fontSize: '72px'
         },
+        blueLink:{
+            color:'#5F88C9'
+        },
         font54: {
             fontSize: '54px'
         },
