@@ -492,35 +492,72 @@ class ActualLabor extends Component {
         const styles = MyStylesheet();
         const Timein = new ActualLaborTimeIn();
         const Timeout = new ActualLaborTimeOut();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const checklaborid = () => {
+            let check = true;
+            if(this.state.activelaborid) {
+                const mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid);
+               
+                const invoiceid = mylabor.invoiceid;
+                if(invoiceid) {
+                    console.log(invoiceid)
+                    check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
+                
+                }
+            }
+            console.log(check)
+            return check;
+        }
+
+        const showtimeout =() => {
+            if(!this.state.activelaborid || checklaborid()) {
+                return(Timeout.showtimeout.call(this))
+            } else {
+                let mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid)
+                const timeout = mylabor.timeout;
+                return(<span style={{...styles.generalFont,...regularFont}}>Time Out {inputUTCStringForLaborID(timeout)}</span>)
+            }
+        }
+        const showtimein =() => {
+            if(!this.state.activelaborid || checklaborid()) {
+                return(Timein.showtimein.call(this))
+            } else {
+                let mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid)
+                const timein = mylabor.timein;
+                return(<span style={{...styles.generalFont,...regularFont}}>Time In {inputUTCStringForLaborID(timein)}</span>)
+            }
+        }
         if (this.props.navigation) {
 
             let navigation = this.props.navigation.position;
 
             if (this.state.width > 1200 && navigation === 'closed') {
-                return (<div style={{ ...styles.generalFlex }}>
+
+                return (<div style={{ ...styles.generalFlex,...styles.topMargin15 }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont }}>
-                        {Timein.showtimein.call(this)}
+                        {showtimein()}
                     </div>
                     <div style={{ ...styles.flex1, ...styles.generalFont }}>
-                        {Timeout.showtimeout.call(this)}
+                        {showtimeout()}
                     </div>
                 </div>)
 
             } else {
                 return (
-                    <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.generalFlex,...styles.topMargin15 }}>
                         <div style={{ ...styles.flex1 }}>
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont }}>
-                                    {Timein.showtimein.call(this)}
+                                    {showtimein()}
                                 </div>
                             </div>
 
                             <div style={{ ...styles.generalFlex }}>
                                 <div style={{ ...styles.flex1 }}>
                                     <div style={{ ...styles.flex1, ...styles.generalFont }}>
-                                        {Timeout.showtimeout.call(this)}
+                                    {showtimeout()}
                                     </div>
                                 </div>
                             </div>
@@ -537,6 +574,80 @@ class ActualLabor extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const csi = new CSI();
         const milestoneid = new MilestoneID();
+        const showdescription = () => {
+            if(checklaborid() || !this.state.activelaborid) {
+                return(<div style={{ ...styles.generalFlex,...styles.topMargin15}}>
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                        Description <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
+                            value={this.getdescription()}
+                            onChange={event => { this.handledescription(event.target.value) }}
+                        />
+                    </div>
+                </div>)
+            } else {
+                return(<div style={{ ...styles.generalFlex,...styles.topMargin15 }}>
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                        Description <br />
+                           {this.getdescription()}
+                    </div>
+                </div>)
+            }
+        }
+        const showmilestoneid =() => {
+            if(checklaborid() || !this.state.activelaborid) {
+               return(milestoneid.showmilestoneid.call(this))
+            } else {
+                let mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid);
+                const milestoneid = mylabor.milestoneid
+                const getmilestone= dynamicstyles.getmilestonebyid.call(this,milestoneid)
+                return(<span>Milestone <br/>
+                {getmilestone.milestone} </span>)
+            }
+        }
+        const showcsi = () => {
+            if(checklaborid() || !this.state.activelaborid) {
+                return(csi.showCSI.call(this))
+            } else {
+                let mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid);
+                const csiid = mylabor.csiid;
+                const getcsi = dynamicstyles.getcsibyid.call(this,csiid)
+                return(<span>CSI <br/>
+                {getcsi.csi} - {getcsi.title} </span>)
+            }
+        }
+        const checklaborid = () => {
+            let check = true;
+            if(this.state.activelaborid) {
+                const mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid);
+               
+                const invoiceid = mylabor.invoiceid;
+                if(invoiceid) {
+                    console.log(invoiceid)
+                    check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
+                
+                }
+            }
+            console.log(check)
+            return check;
+        }
+        const showemployee = () => {
+            if(checklaborid()) {
+                return(<div style={{ ...styles.generalFlex,...styles.topMargin15 }}>
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
+                        <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
+                            value={this.getemployee()}
+                            onChange={event => { this.handleproviderid(event.target.value) }}>
+                            <option value={false}>Select An Employee</option>
+                            {this.loademployees()}
+                        </select>
+                    </div>
+                </div>)
+            } else {
+                const providerid = this.getemployee()
+                const employee = dynamicstyles.getemployeebyproviderid.call(this,providerid)
+                return(<span style={{...regularFont,...styles.generalFont,...styles.topMargin15}}>{employee.firstname} {employee.lastname}</span>)
+            }
+        }
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
@@ -546,16 +657,8 @@ class ActualLabor extends Component {
                 </div>
                 </div>
 
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                        <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                            value={this.getemployee()}
-                            onChange={event => { this.handleproviderid(event.target.value) }}>
-                            <option value={false}>Select An Employee</option>
-                            {this.loademployees()}
-                        </select>
-                    </div>
-                </div>
+
+                {showemployee()}
 
 
                 {this.handletimes()}
@@ -563,22 +666,15 @@ class ActualLabor extends Component {
 
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        {csi.showCSI.call(this)}
+                        {showcsi()}
                     </div>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        {milestoneid.showmilestoneid.call(this)}
+                        {showmilestoneid()}
                     </div>
                 </div>
 
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        Description <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                            value={this.getdescription()}
-                            onChange={event => { this.handledescription(event.target.value) }}
-                        />
-                    </div>
-                </div>
-
+                
+                {showdescription()}
 
 
                 {dynamicstyles.showsaveproject.call(this)}

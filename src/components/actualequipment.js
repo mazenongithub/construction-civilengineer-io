@@ -496,6 +496,7 @@ class ActualEquipment extends Component {
 
         }
     }
+    
     handlemilestoneid(milestoneid) {
         const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
