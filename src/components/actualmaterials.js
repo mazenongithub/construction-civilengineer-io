@@ -261,24 +261,59 @@ class ActualMaterials extends Component {
         const regularFont = this.getRegularFont();
         const csi = new CSI();
         const milestoneid = new MilestoneID();
+        const dynamicstyles = new DynamicStyles();
+        const checkmaterialid = () => {
+            let check = true;
+            if (this.state.activematerialid) {
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                const invoiceid = mymaterial.invoiceid;
+                if (invoiceid) {
+                    check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
+                }
+
+            }
+            return check;
+        }
+        const showcsi = () => {
+            if (!this.state.activematerialid || checkmaterialid()) {
+                return (csi.showCSI.call(this))
+            } else {
+                let mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                const csiid = mymaterial.csiid;
+                const getcsi = dynamicstyles.getcsibyid.call(this, csiid)
+                return (<span>CSI <br />
+                    {getcsi.csi} - {getcsi.title} </span>)
+            }
+        }
+        const showmilestoneid = () => {
+            if (!this.state.activematerialid || checkmaterialid()) {
+                return (milestoneid.showmilestoneid.call(this))
+            } else {
+                let mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                const milestoneid = mymaterial.milestoneid
+                const getmilestone = dynamicstyles.getmilestonebyid.call(this, milestoneid)
+                return (<span>Milestone <br />
+                    {getmilestone.milestone} </span>)
+            }
+        }
         if (this.state.width > 800) {
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        {csi.showCSI.call(this)}
+                        {showcsi()}
                     </div>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        {milestoneid.showmilestoneid.call(this)}
+                        {showmilestoneid()}
                     </div>
                 </div>)
         } else {
             return (
                 <div style={{ ...styles.generalContainer }}>
                     <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        {csi.showCSI.call(this)}
+                        {showcsi()}
                     </div>
                     <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        {milestoneid.showmilestoneid.call(this)}
+                        {showmilestoneid()}
                     </div>
                 </div>)
 
@@ -295,33 +330,96 @@ class ActualMaterials extends Component {
         return amount;
     }
     showquantitymenus() {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
-        const amount = `$${this.getamount().toFixed(2)}`;
-        if (this.state.width > 800) {
-            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
+        const amount =  () => {
+            let getamount = 0;
+            if(this.state.activematerialid) {
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid)
+         getamount = Number(mymaterial.quantity)*Number(mymaterial.unitcost);
+         getamount = Number(getamount).toFixed(2)
+         return (`$${getamount}`)
+            }
+        }
+        const checkmaterialid = () => {
+            let check = true;
+            if (this.state.activematerialid) {
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                const invoiceid = mymaterial.invoiceid;
+                if (invoiceid) {
+                    check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
+                }
+
+            }
+            return check;
+        }
+
+        const showquantity = () => {
+            if (!this.state.activematerialid || checkmaterialid()) {
+                return (<div style={{ ...styles.generalContainer }}>
                     Quantity <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
                         value={this.getquantity()}
                         onChange={event => { this.handlequantity(event.target.value) }}
 
                     />
-                </div>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
+                </div>)
+            } else {
+                return (<div style={{ ...styles.generalContainer }}>
+                    Quantity <br />
+                    {this.getquantity()}
+                </div>)
+            }
+        }
+        const showunit = () => {
+            if (!this.state.activematerialid || checkmaterialid()) {
+                return (<div style={{ ...styles.generalContainer }}>
                     Unit<br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
                         value={this.getunit()}
                         onChange={event => { this.handleunit(event.target.value) }}
                     />
-                </div>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                    Unit Price <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
+                </div>)
+            } else {
+                return (<div style={{ ...styles.generalContainer }}>
+                    Unit<br /> 
+                    {this.getunit()}
+                  
+                </div>)
+            }
+        }
+
+        const showunitprice = () => {
+            if (!this.state.activematerialid || checkmaterialid()) {
+               return (<div style={{ ...styles.generalContainer }}>
+                Unit Price <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
                         value={this.getunitcost()}
                         onChange={event => { this.handleunitcost(event.target.value) }}
                     />
+               </div>)
+            } else {
+                return (<div style={{ ...styles.generalContainer }}>
+                 Unit Price <br />
+                 {this.getunitcost()}
+                      
+                    </div>)
+            }
+        }
+
+       
+        if (this.state.width > 800) {
+            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
+                    {showquantity()}
+                </div>
+                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
+                    {showunit()}
+                </div>
+                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
+                   {showunitprice()}
                 </div>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
                     Amount <br />
-                    {amount}
+                    {amount()}
                 </div>
             </div>
             )
@@ -332,27 +430,20 @@ class ActualMaterials extends Component {
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                                Quantity <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.getquantity()}
-                                    onChange={event => { this.handlequantity(event.target.value) }}
-
-                                />
+                                {showquantity()}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                                Unit<br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.getunit()}
-                                    onChange={event => { this.handleunit(event.target.value) }} />
+                               {showunit()}
                             </div>
                         </div>
 
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                                Unit Price <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.getunitcost()}
-                                    onChange={event => { this.handleunitcost(event.target.value) }} />
+                               {showunitprice()}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                                Amount
+                                Amount <br/>
+                                {amount()}
                    </div>
                         </div>
                     </div>
@@ -772,23 +863,34 @@ class ActualMaterials extends Component {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
         const regularFont = this.getRegularFont();
-
         const Datein = new ActualMaterialDate();
         const dynamicstyles = new DynamicStyles();
-        return (<div style={{ ...styles.generalFlex }}>
-            <div style={{ ...styles.flex1 }}>
+        const checkmaterialid = () => {
+            let check = true;
+            if (this.state.activematerialid) {
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                const invoiceid = mymaterial.invoiceid;
+                if (invoiceid) {
+                    check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
+                }
 
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                        /actualmaterials
-                </div>
-                </div>
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
-                        {Datein.showdatein.call(this)}
-                    </div>
-                </div>
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+            }
+            return check;
+        }
+
+        const showmaterialdate = () => {
+            if (!this.state.activematerialid || checkmaterialid()) {
+                return (Datein.showdatein.call(this))
+            } else {
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
+                return (<span style={{ ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
+                    Actual Material Date <br />
+                    {formatDateStringDisplay(mymaterial.timein)}</span>)
+            }
+        }
+        const showmaterial = () => {
+            if (!this.state.activematerialid || checkmaterialid()) {
+                return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                         Material <br />  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
                             value={this.getmaterial()}
@@ -799,7 +901,33 @@ class ActualMaterials extends Component {
 
                         </select>
                     </div>
+                </div>)
+            } else {
+                const mymaterialid = this.getmaterial();
+                const material = dynamicstyles.getmymaterialfromid.call(this, mymaterialid);
+                return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                        Material <br />
+                        {material.material}
+                    </div>
                 </div>
+                )
+            }
+        }
+        return (<div style={{ ...styles.generalFlex }}>
+            <div style={{ ...styles.flex1 }}>
+
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
+                        /actualmaterials
+                </div>
+                </div>
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
+                        {showmaterialdate()}
+                    </div>
+                </div>
+                {showmaterial()}
                 {this.showmilestonemenus()}
 
 
