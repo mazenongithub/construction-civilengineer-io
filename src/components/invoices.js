@@ -4,7 +4,7 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import { activeCheckIcon, CreateInvoiceIcon } from './svg'
-import { UTCStringFormatDateforProposal, CreateInvoice, inputDateObjOutputAdjString } from './functions'
+import { UTCStringFormatDateforProposal, CreateInvoice, inputDateObjOutputAdjString, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime } from './functions'
 import { Link } from 'react-router-dom';
 import MakeID from './makeids';
 
@@ -115,9 +115,10 @@ class Invoices extends Component {
 
         if (myuser) {
             if (this.state.activeinvoiceid) {
-
-
+              
                 let invoiceid = this.state.activeinvoiceid;
+                const checkinvoice = dynamicstyles.checkupdateinvoice.call(this,invoiceid)
+                if(checkinvoice) {
                 let i = dynamicstyles.getprojectkey.call(this)
 
                 let result = this.checkinvoiceitem(item);
@@ -164,6 +165,8 @@ class Invoices extends Component {
 
 
                 }
+
+            }
 
             }
         }
@@ -296,6 +299,197 @@ class Invoices extends Component {
         return profit;
     }
 
+    showequipmentitem(item) {
+        let dynamicstyles = new DynamicStyles()
+        const styles = MyStylesheet();
+        const smallFont = dynamicstyles.getSmallFont.call(this);
+        const myequipment = dynamicstyles.getequipmentfromid.call(this, item.myequipmentid);
+        const csi = dynamicstyles.getcsibyid.call(this, item.csiid)
+        const totalhours = Number(calculatetotalhours(item.timeout, item.timein))
+        const profitField = dynamicstyles.getprofitfield.call(this)
+        const equipmentrate = item.equipmentrate;
+        const largeField = dynamicstyles.getitemfieldlarge.call(this)
+        const amount = Number(totalhours * Number(item.equipmentrate))
+        const profit = Number(item.profit) / 100;
+        const checkequipment = () => {
+            const check = dynamicstyles.checkinvoiceequipmentid.call(this, item.equipmentid);
+            return check;
+        }
+        const showequipmentrate = () => {
+            if(checkequipment()) {
+                return(<input type="text" style={{ ...styles.generalFont, ...smallFont, ...largeField }}
+                onChange={event => { this.handleequipmentrate(event.target.value, item.equipmentid) }}
+                value={equipmentrate} />)
+            } else {
+                return equipmentrate;
+            }
+        }
+        const showprofit = () => {
+            if (checkequipment()) {
+                return (
+                    <div style={{ ...styles.generalContainer }}>
+                        Profit <input type="text" style={{ ...styles.generalField, ...smallFont, ...styles.generalFont, ...profitField }}
+                            value={this.getequipmentprofitbyid(item.equipmentid)}
+                            onChange={event => { this.handleequipmentprofit(event.target.value, item.equipmentid) }}
+                        />
+                    </div>)
+            }
+        }
+        return (
+
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
+
+                <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
+                    {myequipment.equipment} CSI: {csi.csi} - {csi.title}   TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)}
+                    Total Hours:{totalhours.toFixed(2)} x $
+                    {showequipmentrate()}
+                         = {amount} x {`${Number(1 + profit).toFixed(2)}`} = ${Number(amount * (1 + profit)).toFixed(2)}
+                </div>
+                <div style={{ ...styles.flex1 }}>
+
+
+                    {showprofit()}
+
+                </div>
+            </div>
+        )
+
+    }
+
+    showmaterialitem(item) {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles()
+        const profitField = dynamicstyles.getprofitfield.call(this)
+        const getprofit = () => {
+            if (item.profit) {
+                return Number(1 + (item.profit / 100))
+            } else {
+                return 1;
+            }
+        }
+        const profit = getprofit();
+        const csi = dynamicstyles.getcsibyid.call(this, item.csiid)
+        const material = dynamicstyles.getmymaterialfromid.call(this, item.mymaterialid)
+        const amount = Number(item.quantity * item.unitcost);
+        const smallFont = dynamicstyles.getSmallFont.call(this)
+        const proposalFieldLarge = dynamicstyles.getitemfieldlarge.call(this)
+        const proposalFieldSmall = dynamicstyles.getitemfieldsmall.call(this)
+        const checkmaterial = () => {
+            let check = dynamicstyles.checkinvoicematerialid.call(this, item.materialid)
+            console.log(check, item.materialid)
+            return check;
+        }
+        const showprofit = () => {
+            if (checkmaterial()) {
+                return (<div style={{ ...styles.generalContainer }}>
+                    Profit <input type="text" style={{ ...styles.generalField, ...smallFont, ...styles.generalFont, ...profitField }}
+                        value={this.getmaterialprofitbyid(item.materialid)}
+                        onChange={event => { this.handlematerialprofit(event.target.value, item.materialid) }} />
+                </div>)
+            }
+        }
+        const showunitcost = () => {
+            if (checkmaterial()) {
+                return (<input type="text" value={item.unitcost}
+                    onChange={event => { this.handlematerialunitcost(event.target.value, item.materialid) }}
+                    style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} />)
+            } else {
+                return item.unitcost;
+            }
+        }
+        const showquantity = () => {
+            if (checkmaterial()) {
+                return (<input type="text"
+                    value={item.quantity}
+                    onChange={event => { this.handlematerialquantity(event.target.value, item.materialid) }}
+                    style={{ ...styles.generalFont, ...smallFont, ...proposalFieldLarge }} />)
+            } else {
+                return item.quantity;
+            }
+        }
+        const showunit = () => {
+            if (checkmaterial()) {
+                return (<input type="text" value={item.unit} onChange={event => { this.handlematerialunit(event.target.value, item.materialid) }} style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} />)
+            } else {
+                return item.unit;
+            }
+        }
+        return (
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
+
+                <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
+                    {inputUTCStringForMaterialIDWithTime(item.timein)} {material.material} CSI: {csi.csi}-{csi.title}
+                    {showquantity()}   x $
+             {showunitcost()}/
+             {showunit()}
+              = ${amount.toFixed(2)} x {profit} = ${Number(amount * profit).toFixed(2)}
+                </div>
+                <div style={{ ...styles.flex1 }}>
+                    {showprofit()}
+                </div>
+            </div>
+        )
+
+    }
+    showlaboritem(item) {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const smallFont = dynamicstyles.getSmallFont.call(this)
+        const amount = (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.laborrate))
+        const employee = dynamicstyles.getemployeebyproviderid.call(this, item.providerid);
+        const csi = dynamicstyles.getcsibyid.call(this, item.csiid)
+        const totalhours = Number(calculatetotalhours(item.timeout, item.timein))
+        const profitField = dynamicstyles.getprofitfield.call(this)
+        const largeField = dynamicstyles.getitemfieldlarge.call(this);
+        const getprofit = () => {
+            if (item.profit) {
+                return Number(1 + (item.profit / 100))
+            } else {
+                return 1;
+            }
+        }
+        const checklabor = () => {
+            let check = dynamicstyles.checkinvoicelaborid.call(this, item.laborid)
+            return check;
+        }
+        const profit = getprofit();
+        const showprofit = () => {
+
+            if (checklabor()) {
+                return (<div style={{ ...styles.generalContainer }}>
+                    Profit <input type="text" style={{ ...styles.generalField, ...smallFont, ...styles.generalFont, ...profitField }}
+                        value={this.getlaborprofitbyid(item.laborid)}
+                        onChange={event => { this.handlelaborprofit(event.target.value, item.laborid) }}
+                    />
+                </div>)
+            }
+
+
+        }
+        const showlaborrate = () => {
+            if (checklabor()) {
+                return (<input type="text" value={item.laborrate} style={{ ...styles.generalFont, ...largeField, ...smallFont }} onChange={event => { this.handlelaborrate(event.target.value, item.laborid) }} />)
+            } else {
+                return (item.laborrate)
+            }
+        }
+        return (
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
+
+                <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
+                    {employee.firstname} {employee.lastname} TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)} CSI {csi.csi}-{csi.title}  Total Hours {totalhours.toFixed(2)} Hrs at  $
+                    {showlaborrate()}
+                    =  ${amount.toFixed(2)}  x {profit} = ${Number(amount * profit).toFixed(2)}
+                </div>
+                <div style={{ ...styles.flex1 }}>
+
+                    {showprofit()}
+                </div>
+            </div>
+        )
+
+
+    }
 
     showallpayitems() {
         const dynamicstyles = new DynamicStyles();
@@ -305,14 +499,14 @@ class Invoices extends Component {
             // eslint-disable-next-line
             payitems.map(item => {
                 if (item.hasOwnProperty("laborid")) {
-                    items.push(dynamicstyles.showlaboritem.call(this, item))
+                    items.push(this.showlaboritem(item))
                 }
                 if (item.hasOwnProperty("materialid")) {
-                    items.push(dynamicstyles.showmaterialitem.call(this, item))
+                    items.push(this.showmaterialitem(item))
 
                 }
                 if (item.hasOwnProperty("equipmentid")) {
-                    items.push(dynamicstyles.showequipmentitem.call(this, item))
+                    items.push(this.showequipmentitem(item))
 
                 }
 

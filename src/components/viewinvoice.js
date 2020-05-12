@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem } from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem,UTCStringFormatDateforProposal } from './functions';
 import { Link } from 'react-router-dom'
 class ViewInvoice extends Component {
     constructor(props) {
@@ -404,33 +404,50 @@ class ViewInvoice extends Component {
         let companyid = this.props.match.params.companyid;
         let projectid = this.props.match.params.projectid;
         let invoiceid = this.props.match.params.invoiceid;
+        const checkinvoice = dynamicstyles.checkupdateinvoice.call(this,invoiceid)
+        console.log(checkinvoice)
         let profit = () => {
+            if(checkinvoice) {
             return (
                 <input type="text"
                     value={Number(this.getprofit(item.csiid)).toFixed(4)}
                     onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                 />)
+
+            } else {
+                return(this.getprofit(item.csiid).toFixed(4))
+            }
         }
         const quantity = () => {
+            if(checkinvoice) {
             return (<div style={{ ...styles.generalContainer }}>
-                Quantity <br />
+              
                 <input type="text"
                     value={this.getquantity(csi.csiid)}
                     onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
             </div>)
+
+            } else {
+                return(this.getquantity(csi.csiid))
+            }
         }
         const unit = () => {
+            if(checkinvoice)  {
             return (
                 <div style={{ ...styles.generalContainer }}>
-                    Unit <br />
+                  
                     <input type="text"
                         value={this.getunit(csi.csiid)}
                         onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
                         style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                     />
                 </div>)
+
+            }else {
+                return(this.getunit(csi.csiid))
+            }
         }
         if (this.state.width > 1200) {
             return (
@@ -438,9 +455,11 @@ class ViewInvoice extends Component {
                     <td> <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/invoices/${invoiceid}/csi/${csi.csiid}`}> Line Item <br />
                         {csi.csi}-{csi.title} </Link></td>
                     <td style={{ ...styles.alignCenter }}>
+                    Quantity <br />
                         {quantity()}
                     </td>
-                    <td style={{ ...styles.alignCenter }}>{unit()}</td>
+                    <td style={{ ...styles.alignCenter }}>
+                    Unit <br />{unit()}</td>
                     <td style={{ ...styles.alignCenter }}>{directcost}</td>
                     <td style={{ ...styles.alignCenter }}>{profit()}</td>
                     <td style={{ ...styles.alignCenter }}>{bidprice}</td>
@@ -459,19 +478,12 @@ class ViewInvoice extends Component {
                                     {csi.csi}-{csi.title} </Link>
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                                Quantity <br />
-                                <input type="text"
-                                    value={this.getquantity(csi.csiid)}
-                                    onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
-                                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
+                            Quantity <br />
+                                {quantity()}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit <br />
-                                <input type="text"
-                                    value={this.getunit(csi.csiid)}
-                                    onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
-                                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
-                                />
+                                {unit()}
                             </div>
                         </div>
 
@@ -482,11 +494,7 @@ class ViewInvoice extends Component {
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Overhead And Profit % <br />
-                                <input type="text"
-                                    value={+Number(this.getprofit(csi.csiid).toFixed(4))}
-                                    onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
-                                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
-                                />
+                               {profit()}
 
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
@@ -546,6 +554,20 @@ class ViewInvoice extends Component {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles()
         const titleFont = dynamicstyles.gettitlefont.call(this)
+        const invoice = dynamicstyles.getinvoicebyid.call(this,this.props.match.params.invoiceid)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const captured = () => {
+            if(invoice.approved) {
+                return(<div style={{...styles.generalFont,...regularFont,...styles.alignCenter,...styles.topMargin15}}>Payment Captured {UTCStringFormatDateforProposal(invoice.approved)}</div>)
+            }
+
+        }
+        const settlement = () => {
+            if(invoice.settlement) {
+                return(<div style={{...styles.generalFont,...regularFont,...styles.alignCenter,...styles.topMargin15}}>Settlement Occurred {UTCStringFormatDateforProposal(invoice.settlement)}</div>)
+            }
+
+        }
 
 
         return (
@@ -560,6 +582,8 @@ class ViewInvoice extends Component {
 
                     {dynamicstyles.showbidtable.call(this)}
                     {dynamicstyles.showsaveproject.call(this)}
+                    {captured()}
+                    {settlement()}
                 </div>
             </div>
         )

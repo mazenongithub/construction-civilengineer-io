@@ -229,7 +229,17 @@ class DynamicStyles {
     }
 
 
-
+    checkupdateinvoice(invoiceid) {
+        const dynamicstyles = new DynamicStyles();
+        console.log(invoiceid)
+        const invoice = dynamicstyles.getinvoicebyid.call(this,invoiceid)
+        console.log(invoice)
+        let checkinvoice = true;
+        if(invoice.hasOwnProperty("approved")) {
+            checkinvoice = false;
+        }
+        return checkinvoice;
+    }
     showchargesbyaccountid(accountid) {
         const dynamicstyles = new DynamicStyles();
         const myprojects = dynamicstyles.getmyprojects.call(this)
@@ -811,22 +821,22 @@ class DynamicStyles {
     }
     getinvoicebyid(invoiceid) {
         let dynamicstyles = new DynamicStyles();
-        let key = false;
-        if (this.state.activeinvoiceid) {
+        let invoice = false;
+   
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject.hasOwnProperty("invoices")) {
                 // eslint-disable-next-line
-                myproject.invoices.myinvoice.map((myinvoice, i) => {
+                myproject.invoices.myinvoice.map((myinvoice) => {
                     if (myinvoice.invoiceid === invoiceid) {
-                        key = i;
+                        invoice = myinvoice
                     }
                 })
 
             }
 
-        }
+        
 
-        return key;
+        return invoice;
     }
 
     handleprojectids(response) {
@@ -2552,6 +2562,49 @@ class DynamicStyles {
         }
 
     }
+
+    checkinvoiceequipmentid(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        const myequipment = dynamicstyles.getactualequipmentbyid.call(this,equipmentid);
+        const invoiceid = myequipment.invoiceid;
+        const invoice = dynamicstyles.getinvoicebyid.call(this,invoiceid);
+        let checkinvoice = true;
+        if(invoice) {
+        if(invoice.hasOwnProperty("approved")) {
+            checkinvoice = false;
+        }
+    }
+    return checkinvoice;
+        
+    }
+
+    checkinvoicematerialid(materialid) {
+        const dynamicstyles = new DynamicStyles();
+        const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,materialid);
+        const invoiceid = mymaterial.invoiceid;
+        const invoice = dynamicstyles.getinvoicebyid.call(this,invoiceid);
+        let checkinvoice = true;
+        if(invoice) {
+        if(invoice.hasOwnProperty("approved")) {
+            checkinvoice = false;
+        }
+    }
+        return checkinvoice;
+
+    }
+    checkinvoicelaborid(laborid) {
+        const dynamicstyles = new DynamicStyles();
+        const mylabor = dynamicstyles.getactuallaborbyid.call(this,laborid);
+        let checkinvoice = true;
+        if(mylabor.invoiceid) {
+            const invoice = dynamicstyles.getinvoicebyid.call(this,mylabor.invoiceid);
+            if(invoice.hasOwnProperty("approved")) {
+                checkinvoice = false;
+            }
+
+        }
+        return checkinvoice;
+    }   
 
     showequipmentitem(item) {
         let dynamicstyles = new DynamicStyles()

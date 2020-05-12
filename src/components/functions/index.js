@@ -92,7 +92,7 @@ export function UTCStringFormatDateforProposal(timeout) {
     if (hours > 12) {
         hours = hours - 12;
     }
-    return (`${month}/${day}/${year} on ${hours}:${minutes} ${timeofday}`)
+    return (`${month}/${day}/${year} at ${hours}:${minutes} ${timeofday}`)
 }
 
 export function sorttimes(timeina, timeinb) {
