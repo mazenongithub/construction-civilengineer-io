@@ -682,9 +682,10 @@ class ActualEquipment extends Component {
         const titleFont = this.gettitlefont();
         const regularFont = this.getRegularFont();
         const dynamicstyles = new DynamicStyles();
-        const totalhours = +Number(this.gettotalhours()).toFixed(2)
-        const amount = `$${Number(this.getamount()).toFixed(2)}`;
-   
+        const myuser = dynamicstyles.getuser.call(this)
+   if(myuser) {
+    const totalhours = +Number(this.gettotalhours()).toFixed(2)
+    const amount = `$${Number(this.getamount()).toFixed(2)}`;
 const showequipmentid = () => {
     if(this.checkequipment() || !this.state.activeequipmentid) {
         return( 
@@ -748,6 +749,10 @@ const showequipmentid = () => {
                 </div>
             </div>
         )
+
+   } else {
+       return(<div style={{...styles.generalFont,...regularFont}}>Login to View Actual Equipment</div>)
+   }
     }
 }
 

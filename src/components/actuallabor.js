@@ -574,6 +574,8 @@ class ActualLabor extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const csi = new CSI();
         const milestoneid = new MilestoneID();
+        const myuser = dynamicstyles.getuser.call(this)
+        if(myuser) {
         const showdescription = () => {
             if(checklaborid() || !this.state.activelaborid) {
                 return(<div style={{ ...styles.generalFlex,...styles.topMargin15}}>
@@ -683,6 +685,10 @@ class ActualLabor extends Component {
 
 
             </div></div>)
+
+        } else {
+            return(<div style={{...styles.generalFont,...regularFont}}>Login to View Actual Labor </div>)
+        }
 
     }
 }
