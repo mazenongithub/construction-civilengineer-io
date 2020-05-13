@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { CreateActualEquipment, inputDateObjOutputAdjString, calculatetotalhours } from './functions'
+import { CreateActualEquipment, inputDateObjOutputAdjString, calculatetotalhours,inputUTCStringForLaborID } from './functions'
 import ActualEquipmentTimeIn from './actualequipmenttimein';
 import ActualEquipmentTimeOut from './actualequipmenttimeout';
 import DynamicStyles from './dynamicstyles';
@@ -164,18 +164,46 @@ class ActualEquipment extends Component {
         }
 
     }
+  checkequipment () {
+      const dynamicstyles = new DynamicStyles();
+        if(this.state.activeequipmentid) {
+            let equipmentid = this.state.activeequipmentid;
+            let check = dynamicstyles.checkinvoiceequipmentid.call(this,equipmentid);
+            return check;
+        }
+    }
     showtimes() {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
         const Timein = new ActualEquipmentTimeIn();
         const Timeout = new ActualEquipmentTimeOut();
+        const dynamicstyles = new DynamicStyles();
+        const showtimein =() => {
+            if(!this.state.activeequipmentid || this.checkequipment()) {
+                return(Timein.showtimein.call(this))
+            } else {
+                let myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                const timein = myequipment.timein;
+                return(<span style={{...styles.generalFont,...regularFont}}>Time In {inputUTCStringForLaborID(timein)}</span>)
+            }
+        }
+
+        const showtimeout =() => {
+            if(!this.state.activeequipmentid || this.checkequipment()) {
+                return(Timeout.showtimeout.call(this))
+            } else {
+                let myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                const timeout = myequipment.timeout;
+                return(<span style={{...styles.generalFont,...regularFont}}>Time Out {inputUTCStringForLaborID(timeout)}</span>)
+            }
+        }
         if (this.state.width > 1200) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    {Timein.showtimein.call(this)}
+                    {showtimein()}
                 </div>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    {Timeout.showtimeout.call(this)}
+                    {showtimeout()}
                 </div>
             </div>)
         } else {
@@ -183,10 +211,10 @@ class ActualEquipment extends Component {
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                            {Timein.showtimein.call(this)}
+                        {showtimein()}
                         </div>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                            {Timeout.showtimeout.call(this)}
+                            {showtimeout()}
                         </div>
                     </div>
                 </div>
@@ -230,13 +258,36 @@ class ActualEquipment extends Component {
         const regularFont = this.getRegularFont();
         const csi = new CSI();
         const milestoneid = new MilestoneID();
+        const dynamicstyles = new DynamicStyles();
+        const showmilestoneid =() => {
+            if(this.checkequipment() || !this.state.activeequipmentid) {
+               return(milestoneid.showmilestoneid.call(this))
+            } else {
+                let myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid);
+                const milestoneid = myequipment.milestoneid
+                const getmilestone= dynamicstyles.getmilestonebyid.call(this,milestoneid)
+                return(<span>Milestone <br/>
+                {getmilestone.milestone} </span>)
+            }
+        }
+        const showcsi = () => {
+            if(this.checkequipment() || !this.state.activeequipmentid) {
+                return(csi.showCSI.call(this))
+            } else {
+                let myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid);
+                const csiid = myequipment.csiid;
+                const getcsi = dynamicstyles.getcsibyid.call(this,csiid)
+                return(<span>CSI <br/>
+                {getcsi.csi} - {getcsi.title} </span>)
+            }
+        }
         if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    {csi.showCSI.call(this)}
+                    {showcsi()}
                 </div>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    {milestoneid.showmilestoneid.call(this)}
+                    {showmilestoneid()}
                 </div>
             </div>
             )
@@ -245,10 +296,11 @@ class ActualEquipment extends Component {
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                            {csi.showCSI.call(this)}
+                            {showcsi()}
                         </div>
-
-                        {milestoneid.showmilestoneid.call(this)}
+                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
+                        {showmilestoneid()}
+                        </div>
 
                     </div>
                 </div>
@@ -631,7 +683,27 @@ class ActualEquipment extends Component {
         const regularFont = this.getRegularFont();
         const dynamicstyles = new DynamicStyles();
         const totalhours = +Number(this.gettotalhours()).toFixed(2)
-        const amount = `$${Number(this.getamount()).toFixed(2)}`
+        const amount = `$${Number(this.getamount()).toFixed(2)}`;
+   
+const showequipmentid = () => {
+    if(this.checkequipment() || !this.state.activeequipmentid) {
+        return( 
+            <div style={{...styles.generalFont, ...regularFont}}>
+            Equipment ID 
+            <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
+                value={this.getequipmentid()}
+                onChange={event => { this.handleequipment(event.target.value) }}>
+                <option value={false}>Select Equipment</option>
+                {this.loadequipment()}
+            </select>
+            </div>)
+    } else {
+        const activeequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+        const equipmentid = activeequipment.myequipmentid;
+        const equipment = dynamicstyles.getmyequipmentbyid.call(this,equipmentid)
+        return(<div style={{...styles.generalFont, ...regularFont}}>{equipment.equipment} </div>)
+    }
+}
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }} >
@@ -644,16 +716,8 @@ class ActualEquipment extends Component {
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                            Equipment ID <div style={{ ...styles.generalFlex }}>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                                        value={this.getequipmentid()}
-                                        onChange={event => { this.handleequipment(event.target.value) }}>
-                                        <option value={false}>Select Equipment</option>
-                                        {this.loadequipment()}
-                                    </select>
-                                </div>
-                            </div>
+                           {showequipmentid()}
+                             
                         </div>
                     </div>
 

@@ -2067,12 +2067,15 @@ class DynamicStyles {
         return key;
     }
     getmyequipmentbyid(equipmentid) {
+        console.log(equipmentid)
         const dynamicstyles = new DynamicStyles();
         let equipments = false;
 
         let myequipment = dynamicstyles.getmyequipment.call(this)
+        console.log(myequipment)
         // eslint-disable-next-line
         myequipment.map((equipment) => {
+            console.log(equipment)
             if (equipment.equipmentid === equipmentid) {
                 equipments = equipment
             }
