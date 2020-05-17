@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
-import { CreateCSI, makeID } from './functions';
+import { CreateCSI, makeID} from './functions';
 import DynamicStyles from './dynamicstyles';
 import CSI from './csi'
 
@@ -221,6 +221,9 @@ class Construction extends Component {
         }
         return csi;
     }
+
+
+
     makecsiactive(csiid) {
 
         const dynamicstyles = new DynamicStyles()

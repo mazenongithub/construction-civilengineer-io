@@ -109,10 +109,20 @@ class Proposals extends Component {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
-                let j = dynamicstyles.getactiveequipmentkeybyid.call(this, equipmentid);
-                myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].profit = profit;
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+                const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this,equipmentid)
+                if(myequipment) {
+                    let j = dynamicstyles.getscheduleequipmentkeybyid.call(this,equipmentid)
+                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].profit = profit;
+                    this.props.reduxUser(myuser);
+                    if(myequipment.proposalid) {
+                        dynamicstyles.updateproposal.call(this,myequipment.proposalid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+                    
+
+                }
+             
             }
         }
     }
@@ -124,10 +134,20 @@ class Proposals extends Component {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
+                const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,materialid)
+                if(mymaterial) {
                 let j = dynamicstyles.getactivematerialkeybyid.call(this, materialid);
                 myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].profit = profit;
                 this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+                if(mymaterial.proposalid) {
+                    dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
+
+                } else {
+                    this.setState({ render: 'render' })
+                }
+
+                }
+              
             }
         }
     }
@@ -139,10 +159,18 @@ class Proposals extends Component {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
+                const mylabor = dynamicstyles.getschedulelaborbyid.call(this,laborid)
+                if(mylabor) {
                 let j = dynamicstyles.getschedulelaborkeybyid.call(this, laborid);
                 myuser.company.projects.myproject[i].schedulelabor.mylabor[j].profit = profit;
                 this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+                if(mylabor.proposalid) {
+                    dynamicstyles.updateproposal.call(this,mylabor.proposalid)
+                } else {
+                    this.setState({ render: 'render' })
+                }
+                
+                }
             }
         }
     }
@@ -303,10 +331,18 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            let j = dynamicstyles.getschedulelaborbyid.call(this, laborid)
+            const mylabor = dynamicstyles.getschedulelaborbyid.call(this,laborid)
+            if(mylabor) {
+            let j = dynamicstyles.getschedulelaborkeybyid.call(this, laborid)
             myuser.company.projects.myproject[i].schedulelabor.mylabor[j].laborrate = laborrate;
             this.props.reduxUser(myuser);
-            this.setState({ render: 'render' })
+            if(mylabor.proposalid) {
+                dynamicstyles.updateproposal.call(this,mylabor.proposalid)
+            } else {
+                this.setState({ render: 'render' })
+            }
+
+            }
         }
     }
     handleequipmentrate(equipmentrate, equipmentid) {
@@ -314,10 +350,18 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
+            const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this,equipmentid)
+            if(myequipment) {
             let j = dynamicstyles.getactiveequipmentkeybyid.call(this, equipmentid);
             myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate;
             this.props.reduxUser(myuser);
-            this.setState({ render: 'render' })
+            if(myequipment.proposalid) {
+                dynamicstyles.updateproposal.call(this,myequipment.proposalid)
+            } else {
+                this.setState({ render: 'render' })
+            }
+
+            }
         }
     }
     handlematerialunit(unit, materialid) {
@@ -325,10 +369,18 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
+            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,materialid)
+            if(mymaterial) {
             let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
             myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unit = unit;
             this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
+            if(mymaterial.proposalid) {
+                dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
+            } else {
+                this.setState({ render: 'render' })
+            }
+
+            }
         }
     }
     handlematerialunitcost(unitcost, materialid) {
@@ -336,10 +388,18 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
+            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,materialid)
+            if(mymaterial) {
             let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
             myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unitcost = unitcost;
             this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
+            if(mymaterial.proposalid) {
+                dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
+            } else {
+                this.setState({ render: 'render' })
+            }
+
+            }
         }
     }
     handlematerialquantity(quantity, materialid) {
@@ -347,10 +407,19 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
+            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,materialid)
+            if(mymaterial) {
             let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
             myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].quantity = quantity;
             this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
+            if(mymaterial.proposalid) {
+                dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
+            } else {
+                this.setState({ render: 'render' })
+            }
+            
+
+                }
         }
     }
     showallpayitems() {

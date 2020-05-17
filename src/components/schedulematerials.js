@@ -379,10 +379,17 @@ class ScheduleMaterials extends Component {
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getschedulematerialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].mymaterialid = mymaterialid
                     this.props.reduxUser(myuser);
+                    if(mymaterial.proposalid) {
+                        dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+                    }
                 } else {
                     let materialid = makeID.schedulelaborid.call(this);
                     let providerid = this.state.employeeid;
@@ -428,10 +435,17 @@ class ScheduleMaterials extends Component {
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getschedulematerialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].csiid = csiid
                     this.props.reduxUser(myuser);
+                    if(mymaterial.laborid) {
+                        dynamicstyles.updateproposal.call(this)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+                    }
                 } else {
                     let materialid = makeID.schedulelaborid.call(this)
                     let providerid = this.state.employeeid;
@@ -467,10 +481,17 @@ class ScheduleMaterials extends Component {
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getschedulematerialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].milestoneid = milestoneid
                     this.props.reduxUser(myuser);
+                    if(mymaterial.proposalid) {
+                        dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+                    }
                 } else {
                     let materialid = makeID.schedulelaborid.call(this)
                     let providerid = this.state.employeeid;
@@ -506,10 +527,19 @@ class ScheduleMaterials extends Component {
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getschedulematerialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].quantity = quantity
                     this.props.reduxUser(myuser);
+                    if(mymaterial.proposalid) {
+                        dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
+                    } else {
+
+                    
                     this.setState({ render: 'render' })
+                    }
+                    }
                 } else {
                     let materialid = makeID.schedulelaborid.call(this)
                     let providerid = this.state.employeeid;
@@ -545,10 +575,19 @@ class ScheduleMaterials extends Component {
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getschedulematerialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unit = unit
                     this.props.reduxUser(myuser);
+                    if(mymaterial.proposalid) {
+                        dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+                    }
+
                 } else {
                     let materialid = makeID.schedulelaborid.call(this)
                     let providerid = this.state.employeeid;
@@ -583,10 +622,18 @@ class ScheduleMaterials extends Component {
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getschedulematerialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unitcost = unitcost
                     this.props.reduxUser(myuser);
+                    if(mymaterial.proposalid) {
+                        dynamicstyles.updateproposal.call(this)
+
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+                    }
                 } else {
                     let materialid = makeID.schedulelaborid.call(this)
                     let providerid = this.state.employeeid;

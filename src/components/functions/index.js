@@ -517,6 +517,69 @@ export function toggleAMTimeString(timein) {
     return (`${year}-${month}-${day} ${hours}:${minutes}:00`)
 
 }
+
+
+export function UTCTimefromCurrentDate() {
+    let offset = new Date().getTimezoneOffset() / 60;
+    let sym = "";
+    if (offset < 0) {
+        offset = -offset;
+        sym = "+"
+    }
+    else {
+        sym = "-"
+    }
+    if (offset < 10) {
+        offset = `0${offset}`
+    }
+    let newDate = new Date();
+    let month = newDate.getMonth() + 1;
+    if (month < 10) {
+        month = `0${month}`;
+    }
+    let day = newDate.getDate();
+    if (day < 10) {
+        day = `0${day}`
+    }
+    let year = newDate.getFullYear();
+    let hours = newDate.getHours();
+    if (hours < 10) {
+        hours = `0${hours}`
+    }
+    let minutes = newDate.getMinutes();
+    if (minutes < 10) {
+        minutes = `0${minutes}`
+    }
+    let seconds = newDate.getSeconds();
+    if (seconds < 10) {
+        seconds = `0${seconds}`
+    }
+    let fakedate = new Date(`${year}/${month}/${day} ${hours}:${minutes}:${seconds}${sym}${2 * offset}:00`)
+    year = fakedate.getFullYear();
+    month = fakedate.getMonth() + 1;
+    day = fakedate.getDate();
+    hours = fakedate.getHours();
+    minutes = fakedate.getMinutes();
+    seconds = fakedate.getSeconds();
+    if (month < 10) {
+        month = `0${month}`;
+    }
+    if (day < 10) {
+        day = `0${day}`
+    }
+
+    if (hours < 10) {
+        hours = `0${hours}`
+    }
+    if (minutes < 10) {
+        minutes = `0${minutes}`
+    }
+    if (seconds < 10) {
+        seconds = `0${seconds}`
+    }
+    return (`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`)
+}
+
 export function increaseDateStringByOneMonth(timein) {
 
     let offset = new Date().getTimezoneOffset() / 60;
@@ -943,6 +1006,31 @@ export function inputDateTimeOutDateObj(timein) {
     return (newDate)
 }
 
+export function getFirstIsOn(mydate) {
+    let monthdisplay = mydate.getMonth() + 1;
+    let fullyear = mydate.getFullYear();
+    let thefirstofthemonth = new Date(`${fullyear}/${monthdisplay}/1`);
+    let firstday = thefirstofthemonth.getDay();
+    switch (firstday) {
+        case 0:
+            return "Sun";
+        case 1:
+            return "Mon";
+        case 2:
+            return "Tues";
+        case 3:
+            return "Weds";
+        case 4:
+            return "Thurs";
+        case 5:
+            return "Fri";
+        case 6:
+            return "Sat";
+        default:
+            return;
+    }
+}
+
 export function inputUTCStringAddOffsetString(timein) {
 
     let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`)
@@ -1083,30 +1171,7 @@ export function check_30(dateobj) {
         return 30;
     }
 }
-export function getFirstIsOn(mydate) {
-    let monthdisplay = mydate.getMonth() + 1;
-    let fullyear = mydate.getFullYear();
-    let thefirstofthemonth = new Date(`${fullyear}/${monthdisplay}/1`);
-    let firstday = thefirstofthemonth.getDay();
-    switch (firstday) {
-        case 0:
-            return "Sun";
-        case 1:
-            return "Mon";
-        case 2:
-            return "Tues";
-        case 3:
-            return "Weds";
-        case 4:
-            return "Thurs";
-        case 5:
-            return "Fri";
-        case 6:
-            return "Sat";
-        default:
-            return;
-    }
-}
+
 
 export function CreateEmployee(providerid, workinghours) {
     return ({ providerid, workinghours })

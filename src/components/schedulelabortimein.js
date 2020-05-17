@@ -14,7 +14,6 @@ import {
     addincDateObj,
     inputTimeInDateStringforPicker,
     inputDateObjOutputString,
-    inputTimeDateOutputUTCString,
     inputDateTimeOutDateObj,
     inputUTCStringForLaborID,
     inputDateObjOutputCalendarString,
@@ -69,25 +68,35 @@ class ScheduleLaborTimeIn {
     toggletimeinampm(dir) {
         const dynamicstyles = new DynamicStyles();
         const Timein = new ScheduleLaborTimeIn();
-        let myuser = dynamicstyles.getuser.call(this);
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let project = dynamicstyles.getproject.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
 
-            if (project) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();
-                    let validate = Timein.checkampmtimein.call(this, dir);
-                    if (validate) {
-                        let mylabor = this.getactivelabor();
-                        let timein = mylabor.timein;
-                        timein = toggleAMTimeString(mylabor.timein)
-                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = timein;
-                        this.props.reduxUser(myuser)
-                        this.setState({ render: 'render' })
+                    const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+                    if (mylabor) {
+                        const j = dynamicstyles.getschedulelaborkeybyid.call(this, mylabor.laborid)
+                        let validate = Timein.checkampmtimein.call(this, dir);
+                        if (validate) {
+
+                            let timein = mylabor.timein;
+                            timein = toggleAMTimeString(mylabor.timein)
+                            myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = timein;
+                            this.props.reduxUser(myuser)
+                            if (mylabor.proposalid) {
+                                dynamicstyles.updateproposal.call(this, mylabor.proposalid)
+
+                            } else {
+                                this.setState({ render: 'render' })
+                            }
 
 
-                    } // if validate
+                        } // if validate
+
+                    }
+
 
                 } else {
                     let datein = toggleAMDateObj(this.state.timein)
@@ -97,25 +106,35 @@ class ScheduleLaborTimeIn {
             }
 
 
+
+
         }
 
 
     }
     setDay(dateencoded) {
         const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
                 if (this.state.activelaborid) {
-                    let mylabor = this.getactivelabor();
-                    let timein = mylabor.timein
-                    let newtimein = inputDateSecActiveIDTimein(dateencoded, timein)
-                    let j = this.getactivelaborkey();
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein;
-                    this.props.reduxUser(myuser);
-                    this.setState({ render: 'render' })
+                    const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+                    if (mylabor) {
+                        const j = dynamicstyles.getschedulelaborkeybyid.call(this, mylabor.laborid);
+                        let timein = mylabor.timein
+                        let newtimein = inputDateSecActiveIDTimein(dateencoded, timein)
+                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein;
+                        this.props.reduxUser(myuser);
+                        if (mylabor.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mylabor.proposalid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
                 }
                 else {
@@ -125,6 +144,8 @@ class ScheduleLaborTimeIn {
                 }
 
             }
+
+
 
         }
     }
@@ -822,25 +843,33 @@ class ScheduleLaborTimeIn {
     }
     timeinmonthup(event) {
         const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
-                if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
-                    let newtimein = increaseDateStringByOneMonth(mylabor.timein);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
 
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
+                if (this.state.activelaborid) {
+                    const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+                    if (mylabor) {
+                        const j = dynamicstyles.getschedulelaborkeybyid.call(this, mylabor.laborid)
+                        let newtimein = increaseDateStringByOneMonth(mylabor.timein);
+                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
+                        this.props.reduxUser(myuser)
+                        if (mylabor.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mylabor.proposalid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
                 }
                 else {
                     let newDate = addoneMonthDateObj(this.state.timein);
                     this.setState({ timein: newDate })
                 }
+
             }
         }
     }
@@ -906,20 +935,27 @@ class ScheduleLaborTimeIn {
     }
     increasetimeinbyinc(inc) {
         const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
+                    const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+                    if (mylabor) {
+                        const j = dynamicstyles.getschedulelaborkeybyid.call(this, mylabor.laborid)
+                        let newtimein = increasedateStringbyInc(mylabor.timein, inc);
+                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
 
-                    let mylabor = this.getactivelabor()
-                    let newtimein = increasedateStringbyInc(mylabor.timein, inc);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
+                        this.props.reduxUser(myuser)
+                        if (mylabor.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mylabor.proposalid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
 
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    }
 
 
                 }
@@ -931,24 +967,33 @@ class ScheduleLaborTimeIn {
 
             }
 
-        }
 
+
+        }
     }
     decreasetimeinbyinc(inc) {
         const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
-                if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
-                    let newtimein = decreasedateStringbyInc(mylabor.timein, inc);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
 
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
+                if (this.state.activelaborid) {
+                    const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+                    if (mylabor) {
+                        const j = dynamicstyles.getschedulelaborkeybyid.call(this, mylabor.laborid)
+                        let newtimein = decreasedateStringbyInc(mylabor.timein, inc);
+                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
+                        this.props.reduxUser(myuser)
+                        if (mylabor.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mylabor.proposalid)
+
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
                 }
                 else {
@@ -956,23 +1001,32 @@ class ScheduleLaborTimeIn {
                     this.setState({ timein: newDate })
                 }
             }
+
         }
     }
+
     timeinmonthdown(event) {
         const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
-                if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
-                    let newtimein = decreaseDateStringByOneMonth(mylabor.timein);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
 
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
+                if (this.state.activelaborid) {
+                    const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+                    if (mylabor) {
+                        const j = dynamicstyles.getschedulelaborkeybyid.call(this, mylabor.laborid)
+                        let newtimein = decreaseDateStringByOneMonth(mylabor.timein);
+                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
+                        this.props.reduxUser(myuser)
+                        if (mylabor.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mylabor.proposalid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
                 }
                 else {
@@ -981,22 +1035,31 @@ class ScheduleLaborTimeIn {
                 }
             }
 
+
         }
     }
     timeinyearup(event) {
         const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
-                    let newtimein = increaseDateStringByOneYear(mylabor.timein);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+                    if (mylabor) {
+                        const j = dynamicstyles.getschedulelaborkeybyid.call(this, mylabor.laborid)
+                        let newtimein = increaseDateStringByOneYear(mylabor.timein);
+                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
+                        this.props.reduxUser(myuser)
+                        if (mylabor.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mylabor.proposalid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
 
                 }
@@ -1007,29 +1070,39 @@ class ScheduleLaborTimeIn {
 
             }
 
+
         }
     }
 
     timeinyeardown(event) {
         const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
-                    let newtimein = decreaseDateStringByOneYear(mylabor.timein);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+                    if (mylabor) {
+                        const j = dynamicstyles.getschedulelaborkeybyid.call(this, mylabor.laborid)
+                        let newtimein = decreaseDateStringByOneYear(mylabor.timein);
+                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = newtimein
+                        this.props.reduxUser(myuser)
+                        if (mylabor.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mylabor.proposalid)
+
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+                    }
                 }
                 else {
                     let newDate = subtractoneYearDateObj(this.state.timein);
                     this.setState({ timein: newDate })
                 }
             }
+
         }
     }
 
@@ -1046,43 +1119,6 @@ class ScheduleLaborTimeIn {
             timein = inputDateObjOutputString(this.state.timein);
         }
         return timein;
-    }
-    handletimein(value) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
-        if (myuser) {
-            if (this.state.activelaborid) {
-                let laborid = this.state.activelaborid;
-
-                let timein = inputTimeDateOutputUTCString(value);
-                if (this.props.projectsprovider.hasOwnProperty("length")) {
-                    let projectid = this.props.projectid.projectid;
-                    // eslint-disable-next-line
-                    this.props.projectsprovider.map((myproject, i) => {
-                        if (myproject.projectid === projectid) {
-
-                            if (myproject.hasOwnProperty("schedulelabor")) {
-                                // eslint-disable-next-line
-                                myproject.schedulelabor.mylabor.map((mylabor, j) => {
-                                    if (mylabor.laborid === laborid) {
-                                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = timein;
-                                        this.props.reduxUser(myuser);
-                                        this.setState({ render: 'render' });
-
-                                    }
-                                });
-                            }
-
-                        }
-                    });
-                }
-            }
-            else {
-                let timein = inputDateTimeOutDateObj(value);
-                this.setState({ timein })
-            }
-
-        }
     }
 
 

@@ -448,18 +448,24 @@ class ScheduleEquipment extends Component {
         let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
-            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 let equipmentrate = 0;
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
-                    let myequipment = this.getactiveequipment();
+                    const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    const j = dynamicstyles.getscheduleequipmentkeybyid.call(this,this.state.activeequipmentid)
                     equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, myequipment.timein, myequipment.timeout);
                     myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].myequipmentid = myequipmentid;
                     myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate;
                     this.props.reduxUser(myuser)
+                    if(myequipment.proposalid) {
+                        dynamicstyles.updateproposal.call(this,myequipment.proposalid)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+                    }
                 } else {
                     let equipmentid = makeID.scheduleequipmentid.call(this)
                     let providerid = myuser.providerid;
@@ -503,15 +509,23 @@ class ScheduleEquipment extends Component {
         this.setState({ csi_1, csi_2, csi_3 })
         let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
 
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
-                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].csiid = csiid;
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                    if (myequipment) {
+                        const j = dynamicstyles.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
+                        myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].csiid = csiid;
+                        this.props.reduxUser(myuser)
+                       
+                        if (myequipment.proposalid) {
+                            dynamicstyles.updateproposal.call(this, myequipment.proposalid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+                    }
                 } else {
                     let equipmentid = makeID.scheduleequipmentid.call(this)
                     let providerid = myuser.providerid;
@@ -544,15 +558,23 @@ class ScheduleEquipment extends Component {
         const makeID = new MakeID();
         let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
 
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
-                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].milestoneid = milestoneid;
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                    if (myequipment) {
+                        const j = dynamicstyles.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
+                        myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].milestoneid = milestoneid;
+                        this.props.reduxUser(myuser)
+                        if (myequipment.proposalid) {
+                            dynamicstyles.updateproposal.call(this, myequipment.proposalid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+                    }
+                    
                 } else {
                     let equipmentid = makeID.scheduleequipmentid.call(this)
                     let providerid = myuser.providerid;

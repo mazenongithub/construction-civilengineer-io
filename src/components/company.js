@@ -482,6 +482,7 @@ class Company extends Component {
             this.setState({ message })
         }
     }
+    
     async registernewcompany() {
 
         const dynamicstyles = new DynamicStyles();

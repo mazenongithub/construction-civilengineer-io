@@ -30,24 +30,37 @@ import DynamicStyles from './dynamicstyles';
 class ScheduleMaterialDate {
 
     setDay(dateencoded) {
-        console.log(dateencoded)
         const dynamicstyles = new DynamicStyles();
-        if (this.state.activematerialid) {
-            let myuser = dynamicstyles.getuser.call(this)
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = this.getactivematerialkey();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
+                if (this.state.activematerialid) {
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
+                    if (mymaterial) {
+                        const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                        let newtimein = inputSecOutDateString(dateencoded)
+                        console.log(newtimein)
+                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtimein;
+                        this.props.reduxUser(myuser)
+                        if (mymaterial.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mymaterial.proposalid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
 
-            let newtimein = inputSecOutDateString(dateencoded)
-            console.log(newtimein)
-            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtimein;
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
+                    }
 
 
-        }
-        else {
-            let datein = inputDateObjandSecReturnObj(dateencoded, this.state.datein);
-            this.setState({ datein, render: 'render' })
+                }
+                else {
+                    let datein = inputDateObjandSecReturnObj(dateencoded, this.state.datein);
+                    this.setState({ datein, render: 'render' })
+                }
+
+            }
+
         }
 
 
@@ -624,23 +637,34 @@ class ScheduleMaterialDate {
     }
     handleChange(value) {
         const dynamicstyles = new DynamicStyles();
-        let myuser = this.getuser();
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
+                if (this.state.activematerialid) {
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
+                    if (mymaterial) {
+                        const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                        let newtimein = value
+                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtimein;
+                        this.props.reduxUser(myuser)
+                        if (mymaterial.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mymaterial.proposalid)
 
-            if (this.state.activematerialid) {
-                let i = dynamicstyles.getprojectkey.call(this);
-                let j = this.getactivematerialkey()
-                let newtimein = value
-                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtimein;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+                    }
+
+                }
+                else {
+
+                    this.setState({ datein: inputDatePickerOutputDateObj(value) })
+                }
+
 
             }
-            else {
-
-                this.setState({ datein: inputDatePickerOutputDateObj(value) })
-            }
-
 
         }
 
@@ -657,87 +681,126 @@ class ScheduleMaterialDate {
 
     yeardown() {
         const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
+                if (this.state.activematerialid) {
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
+                    if (mymaterial) {
+                        const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                        let timein = mymaterial.timein;
+                        let newtime = decreaseCalendarDaybyOneYear(timein);
+                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtime;
+                        this.props.reduxUser(myuser)
+                        if (mymaterial.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mymaterial.proposalid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+                    }
+                }
+                else {
+                    let newDate = subtractoneYearDateObj(this.state.datein);
+                    this.setState({ datein: newDate })
+                }
+            }
 
-            if (this.state.activematerialid) {
-                let mymaterial = this.getactivematerial();
-                let timein = mymaterial.timein;
-                let newtime = decreaseCalendarDaybyOneYear(timein);
-                let i = dynamicstyles.getprojectkey.call(this);
-                let j = this.getactivematerialkey()
-                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtime;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
-            }
-            else {
-                let newDate = subtractoneYearDateObj(this.state.datein);
-                this.setState({ datein: newDate })
-            }
         }
-
 
     }
     yearup() {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
+                if (this.state.activematerialid) {
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
+                    if (mymaterial) {
+                        const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                        let timein = mymaterial.timein;
+                        let newtimein = increaseCalendarDaybyOneYear(timein);
+                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtimein;
+                        this.props.reduxUser(myuser);
+                        if (mymaterial.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mymaterial.proposalid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+                    }
 
+                }
+                else {
+                    let newDate = addoneYearDateObj(this.state.datein);
+                    this.setState({ datein: newDate })
+                }
 
-        if (this.state.activematerialid) {
-            const dynamicstyles = new DynamicStyles();
-            const myuser = dynamicstyles.getuser.call(this)
-            let mymaterial = this.getactivematerial();
-            let timein = mymaterial.timein;
-            let newtimein = increaseCalendarDaybyOneYear(timein);
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = this.getactivematerialkey()
-            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtimein;
-            this.props.reduxUser(myuser);
-            this.setState({ render: 'render' })
-
-        }
-        else {
-            let newDate = addoneYearDateObj(this.state.datein);
-            this.setState({ datein: newDate })
+            }
         }
 
     }
     increasemonth(event) {
-        if (this.state.activematerialid) {
-            const dynamicstyles = new DynamicStyles();
-            const myuser = dynamicstyles.getuser.call(this)
-            let mymaterial = this.getactivematerial();
-            let timein = mymaterial.timein;
-            let newtimein = increaseCalendarDayOneMonth(timein);
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = this.getactivematerialkey()
-            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtimein;
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
+                if (this.state.activematerialid) {
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
+                    if (mymaterial) {
+                        const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                        let timein = mymaterial.timein;
+                        let newtimein = increaseCalendarDayOneMonth(timein);
+                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtimein;
+                        this.props.reduxUser(myuser)
+                        if (mymaterial.proposalid) {
+                            dynamicstyles.updateproposal.call(this, mymaterial.proposalid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+                    }
 
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
-
-        }
-        else {
-            let newDate = addoneMonthDateObj(this.state.datein);
-            this.setState({ datein: newDate })
+                }
+                else {
+                    let newDate = addoneMonthDateObj(this.state.datein);
+                    this.setState({ datein: newDate })
+                }
+            }
         }
 
     }
     decreasemonth() {
-        if (this.state.activematerialid) {
-            const dynamicstyles = new DynamicStyles();
-            const myuser = dynamicstyles.getuser.call(this)
-            let mymaterial = this.getactivematerial();
-            let timein = mymaterial.timein;
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = this.getactivematerialkey()
-            let newtimein = decreaseCalendarDaybyOneMonth(timein);
-            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtimein;
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
+                if (this.state.activematerialid) {
+                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
+                    if (mymaterial) {
+                        const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                        let timein = mymaterial.timein;
+                        let newtimein = decreaseCalendarDaybyOneMonth(timein);
+                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtimein;
+                        this.props.reduxUser(myuser)
+                        if(mymaterial.proposalid) {
+                            dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
+                        } else {
+                        this.setState({ render: 'render' })
+                        }
+                    }
 
-        }
-        else {
-            let newDate = subtractMonthDateObj(this.state.datein);
-            this.setState({ datein: newDate })
+                }
+                else {
+                    let newDate = subtractMonthDateObj(this.state.datein);
+                    this.setState({ datein: newDate })
+                }
+            }
         }
     }
     getvalue() {

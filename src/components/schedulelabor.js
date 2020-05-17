@@ -384,16 +384,29 @@ class ScheduleLabor extends Component {
     }
 
     handledescription(description) {
-        let dynamicstyles = new DynamicStyles();
+        const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
-        let myuser = dynamicstyles.getuser.call(this);
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid)
+           if(myproject) {
+
+            const  i = dynamicstyles.getprojectkeybyid.call(this,this.props.match.params.projectid)
             if (this.state.activelaborid) {
-                let j = this.getactivelaborkey();
-                myuser.company.projects.myproject[i].schedulelabor.mylabor[j].description = description;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+                const mylabor = dynamicstyles.getschedulelaborbyid.call(this,this.state.activelaborid)
+                if(mylabor) {
+                    const j = dynamicstyles.getschedulelaborkeybyid.call(this,mylabor.laborid)
+                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].description = description;
+                    this.props.reduxUser(myuser)
+                    if(mylabor.proposalid) {
+                        dynamicstyles.updateproposal.call(this,mylabor.proposalid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+                    
+                   
+
+                }
 
 
             } else {
@@ -411,6 +424,8 @@ class ScheduleLabor extends Component {
             }
 
         }
+
+    }
     }
     handlecsiid(csiid) {
         const dynamicstyles = new DynamicStyles();
@@ -420,14 +435,26 @@ class ScheduleLabor extends Component {
         let csi_2 = csi.csi.substr(2, 2)
         let csi_3 = csi.csi.substr(4, 2)
         this.setState({ csi_1, csi_2, csi_3 })
-        let myuser = dynamicstyles.getuser.call(this);
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid)
+           if(myproject) {
+
+            const  i = dynamicstyles.getprojectkeybyid.call(this,this.props.match.params.projectid)
             if (this.state.activelaborid) {
-                let j = this.getactivelaborkey();
-                myuser.company.projects.myproject[i].schedulelabor.mylabor[j].csiid = csiid;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+                const mylabor = dynamicstyles.getschedulelaborbyid.call(this,this.state.activelaborid)
+                if(mylabor) {
+                    const j = dynamicstyles.getschedulelaborkeybyid.call(this,mylabor.laborid)
+                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].csiid = csiid
+                    this.props.reduxUser(myuser)
+                if(mylabor.proposalid) {
+                dynamicstyles.updateproposal.call(this,mylabor.proposalid)
+
+                } else {
+                    this.setState({render:'render'})
+                }
+
+                }
 
 
             } else {
@@ -445,19 +472,31 @@ class ScheduleLabor extends Component {
             }
 
         }
+
+        }
     }
     handlemilestoneid(milestoneid) {
-        let dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
-
+        const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid)
+           if(myproject) {
+
+            const  i = dynamicstyles.getprojectkeybyid.call(this,this.props.match.params.projectid)
             if (this.state.activelaborid) {
-                let j = this.getactivelaborkey();
+                const mylabor = dynamicstyles.getschedulelaborbyid.call(this,this.state.activelaborid)
+                if(mylabor) {
+                    const j = dynamicstyles.getschedulelaborkeybyid.call(this,mylabor.laborid)
                 myuser.company.projects.myproject[i].schedulelabor.mylabor[j].milestoneid = milestoneid;
                 this.props.reduxUser(myuser)
+                if(mylabor.proposalid) {
+                    dynamicstyles.updateproposal.call(this,mylabor.proposalid)
+                } else {
                 this.setState({ render: 'render' })
+                }
+
+                }
 
 
             } else {
@@ -475,19 +514,35 @@ class ScheduleLabor extends Component {
             }
 
         }
-    }
+    
+}
+
+}
 
     handleproviderid(providerid) {
         const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
-        let myuser = dynamicstyles.getuser.call(this);
+        const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid)
+           if(myproject) {
+
+            const  i = dynamicstyles.getprojectkeybyid.call(this,this.props.match.params.projectid)
             if (this.state.activelaborid) {
-                let j = this.getactivelaborkey();
+                const mylabor = dynamicstyles.getschedulelaborbyid.call(this,this.state.activelaborid)
+                if(mylabor) {
+                    const j = dynamicstyles.getschedulelaborkeybyid.call(this,mylabor.laborid)
                 myuser.company.projects.myproject[i].schedulelabor.mylabor[j].providerid = providerid;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+                
+                if(mylabor.proposalid) {
+                    dynamicstyles.updateproposal.call(this)
+                }     else {
+                   this.setState({render:'render'}) 
+                }
+
+                }
+
+            
 
 
             } else {
@@ -505,6 +560,7 @@ class ScheduleLabor extends Component {
             }
 
         }
+    }
     }
     handlelaborrate(laborrate) {
         const dynamicstyles = new DynamicStyles();

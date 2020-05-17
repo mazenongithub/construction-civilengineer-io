@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode } from './functions'
+import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode,UTCTimefromCurrentDate } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, ClientLoginNode, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile } from './actions/api';
 
@@ -782,7 +782,6 @@ class DynamicStyles {
     getproposalbyid(proposalid) {
         let dynamicstyles = new DynamicStyles();
         let proposal = false;
-        if (this.state.activeproposalid) {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject.hasOwnProperty("proposals")) {
                 // eslint-disable-next-line
@@ -793,9 +792,6 @@ class DynamicStyles {
                 })
 
             }
-
-
-        }
 
 
         return proposal;
@@ -2491,6 +2487,31 @@ class DynamicStyles {
 
         }
         return key
+    }
+        
+    updateproposal(proposalid) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        const projectid = this.props.match.params.projectid;
+   
+        if(myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this,projectid);
+            if(myproject) {
+                const i = dynamicstyles.getprojectkeybyid.call(this,projectid)
+                const myproposal = dynamicstyles.getproposalbyid.call(this,proposalid)
+                if(myproposal) {
+                    
+                const j = dynamicstyles.getproposalkeybyid.call(this,proposalid)
+                console.log('updateproposal', i,j, proposalid, projectid, UTCTimefromCurrentDate())
+                myuser.company.projects.myproject[i].proposals.myproposal[j].updated =  UTCTimefromCurrentDate();
+                this.props.reduxUser(myuser)
+                this.setState({render:'render'})
+                }
+            }
+        
+
+        }
+        
     }
     getactualmaterialbyid(materialid) {
         const dynamicstyles = new DynamicStyles();
