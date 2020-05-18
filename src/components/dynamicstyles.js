@@ -235,9 +235,11 @@ class DynamicStyles {
         const invoice = dynamicstyles.getinvoicebyid.call(this,invoiceid)
         console.log(invoice)
         let checkinvoice = true;
-        if(invoice.hasOwnProperty("approved")) {
+        if(invoice) {
+        if(invoice.approved) {
             checkinvoice = false;
         }
+    }
         return checkinvoice;
     }
     showchargesbyaccountid(accountid) {
@@ -2488,6 +2490,31 @@ class DynamicStyles {
         }
         return key
     }
+
+    updateinvoice(invoiceid) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        const projectid = this.props.match.params.projectid;
+      
+        if(myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this,projectid);
+            if(myproject) {
+                const i = dynamicstyles.getprojectkeybyid.call(this,projectid)
+                const myinvoice = dynamicstyles.getinvoicebyid.call(this,invoiceid)
+                if(myinvoice) {
+                    
+                const j = dynamicstyles.getinvoicekeybyid.call(this,invoiceid)
+              
+                myuser.company.projects.myproject[i].invoices.myinvoice[j].updated =  UTCTimefromCurrentDate();
+                this.props.reduxUser(myuser)
+                this.setState({render:'render'})
+                }
+            }
+        
+      
+        }
+        
+      }
         
     updateproposal(proposalid) {
         const dynamicstyles = new DynamicStyles();
@@ -2502,7 +2529,7 @@ class DynamicStyles {
                 if(myproposal) {
                     
                 const j = dynamicstyles.getproposalkeybyid.call(this,proposalid)
-                console.log('updateproposal', i,j, proposalid, projectid, UTCTimefromCurrentDate())
+              
                 myuser.company.projects.myproject[i].proposals.myproposal[j].updated =  UTCTimefromCurrentDate();
                 this.props.reduxUser(myuser)
                 this.setState({render:'render'})
@@ -2594,7 +2621,7 @@ class DynamicStyles {
         const invoice = dynamicstyles.getinvoicebyid.call(this,invoiceid);
         let checkinvoice = true;
         if(invoice) {
-        if(invoice.hasOwnProperty("approved")) {
+        if(invoice.approved) {
             checkinvoice = false;
         }
     }
@@ -2609,7 +2636,7 @@ class DynamicStyles {
         const invoice = dynamicstyles.getinvoicebyid.call(this,invoiceid);
         let checkinvoice = true;
         if(invoice) {
-        if(invoice.hasOwnProperty("approved")) {
+        if(invoice.approved) {
             checkinvoice = false;
         }
     }
@@ -2622,7 +2649,7 @@ class DynamicStyles {
         let checkinvoice = true;
         if(mylabor.invoiceid) {
             const invoice = dynamicstyles.getinvoicebyid.call(this,mylabor.invoiceid);
-            if(invoice.hasOwnProperty("approved")) {
+            if(invoice.approved) {
                 checkinvoice = false;
             }
 

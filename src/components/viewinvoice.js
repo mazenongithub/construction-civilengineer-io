@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem,UTCStringFormatDateforProposal } from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem,UTCStringFormatDateforProposal, UTCTimefromCurrentDate } from './functions';
 import { Link } from 'react-router-dom'
 class ViewInvoice extends Component {
     constructor(props) {
@@ -343,14 +343,20 @@ class ViewInvoice extends Component {
     handlechangequantity(quantity, csiid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-        const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
+  
 
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid)
+            if(myproject) {
+            let i = dynamicstyles.getprojectkeybyid.call(this,this.props.match.params.projectid);
+            const myinvoice = dynamicstyles.getinvoicebyid.call(this,this.props.match.params.invoiceid)
+            if(myinvoice) {
             let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
+            const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
             if (lineitem) {
                 let k = dynamicstyles.getinvoiceitemkey.call(this, csiid)
                 myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].quantity = quantity;
+                myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = UTCTimefromCurrentDate()
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
             } else {
@@ -360,6 +366,10 @@ class ViewInvoice extends Component {
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
             }
+
+        }
+
+        }
         }
 
     }
@@ -368,26 +378,36 @@ class ViewInvoice extends Component {
     handlechangeunit(unit, csiid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-        const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
-
+      
+      
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
+            const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid)
+            if(myproject) {
+            let i = dynamicstyles.getprojectkeybyid.call(this,this.props.match.params.projectid);
+            const myinvoice = dynamicstyles.getinvoicebyid.call(this,this.props.match.params.invoiceid)
+            if(myinvoice) {
             let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
+            const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
             if (lineitem) {
                 let k = dynamicstyles.getinvoiceitemkey.call(this, csiid)
                 myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].unit = unit;
+                myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = UTCTimefromCurrentDate()
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
             } else {
-                let quantity = "";
+                let quantity = 1;
                 let newItem = CreateBidItem(csiid, unit, quantity)
                 myuser.company.projects.myproject[i].invoices.myinvoice[j].bid = { biditem: [newItem] }
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
             }
+      
         }
-
-    }
+      
+        }
+        }
+      
+      }
     showbiditem(item) {
 
         const dynamicstyles = new DynamicStyles();
@@ -404,10 +424,9 @@ class ViewInvoice extends Component {
         let companyid = this.props.match.params.companyid;
         let projectid = this.props.match.params.projectid;
         let invoiceid = this.props.match.params.invoiceid;
-        const checkinvoice = dynamicstyles.checkupdateinvoice.call(this,invoiceid)
-        console.log(checkinvoice)
+ 
         let profit = () => {
-            if(checkinvoice) {
+     
             return (
                 <input type="text"
                     value={Number(this.getprofit(item.csiid)).toFixed(4)}
@@ -415,12 +434,9 @@ class ViewInvoice extends Component {
                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                 />)
 
-            } else {
-                return(this.getprofit(item.csiid).toFixed(4))
-            }
-        }
+            } 
         const quantity = () => {
-            if(checkinvoice) {
+          
             return (<div style={{ ...styles.generalContainer }}>
               
                 <input type="text"
@@ -429,12 +445,10 @@ class ViewInvoice extends Component {
                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
             </div>)
 
-            } else {
-                return(this.getquantity(csi.csiid))
-            }
-        }
+            } 
+        
         const unit = () => {
-            if(checkinvoice)  {
+      
             return (
                 <div style={{ ...styles.generalContainer }}>
                   
@@ -445,10 +459,8 @@ class ViewInvoice extends Component {
                     />
                 </div>)
 
-            }else {
-                return(this.getunit(csi.csiid))
             }
-        }
+        
         if (this.state.width > 1200) {
             return (
                 <tr>
@@ -513,15 +525,20 @@ class ViewInvoice extends Component {
     handlechangeprofit(profit, csiid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-        let invoiceid = this.props.match.params.invoiceid;
+        const invoiceid = this.props.match.params.invoiceid;
         if (myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid);
+            if(myproject) {
             let i = dynamicstyles.getprojectkey.call(this);
-            let myproject = dynamicstyles.getproject.call(this);
+            
+            let k = false
             if (myproject.hasOwnProperty("actuallabor")) {
                 // eslint-disable-next-line
                 myproject.actuallabor.mylabor.map((mylabor, j) => {
                     if (mylabor.invoiceid === invoiceid && (mylabor.csiid === csiid)) {
                         myuser.company.projects.myproject[i].actuallabor.mylabor[j].profit = profit;
+                         k = dynamicstyles.getinvoicekeybyid.call(this,invoiceid)
+                         myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()
                     }
 
                 })
@@ -532,6 +549,8 @@ class ViewInvoice extends Component {
                 myproject.actualmaterials.mymaterial.map((mymaterial, j) => {
                     if (mymaterial.invoiceid === invoiceid && (mymaterial.csiid === csiid)) {
                         myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].profit = profit;
+                        k = dynamicstyles.getinvoicekeybyid.call(this,invoiceid)
+                        myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()
                     }
 
                 })
@@ -541,6 +560,8 @@ class ViewInvoice extends Component {
                 myproject.actualequipment.myequipment.map((myequipment, j) => {
                     if (myequipment.invoiceid === invoiceid && (myequipment.csiid === csiid)) {
                         myuser.company.projects.myproject[i].actualequipment.myequipment[j].profit = profit;
+                        k = dynamicstyles.getinvoicekeybyid.call(this,invoiceid)
+                        myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()
                     }
 
                 })
@@ -549,6 +570,8 @@ class ViewInvoice extends Component {
             this.setState({ render: 'render' })
 
         }
+
+    }
     }
     render() {
         const styles = MyStylesheet();
@@ -556,19 +579,13 @@ class ViewInvoice extends Component {
         const titleFont = dynamicstyles.gettitlefont.call(this)
         const invoice = dynamicstyles.getinvoicebyid.call(this,this.props.match.params.invoiceid)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        const captured = () => {
-            if(invoice.approved) {
-                return(<div style={{...styles.generalFont,...regularFont,...styles.alignCenter,...styles.topMargin15}}>Payment Captured {UTCStringFormatDateforProposal(invoice.approved)}</div>)
+        const updated = () => {
+            if(invoice.updated) {
+                return(<div style={{...styles.generalFont,...regularFont,...styles.alignCenter,...styles.topMargin15}}>Invoice Updated On {UTCStringFormatDateforProposal(invoice.updated)}</div>)
             }
 
         }
-        const settlement = () => {
-            if(invoice.settlement) {
-                return(<div style={{...styles.generalFont,...regularFont,...styles.alignCenter,...styles.topMargin15}}>Settlement Occurred {UTCStringFormatDateforProposal(invoice.settlement)}</div>)
-            }
-
-        }
-
+       
 
         return (
             <div style={{ ...styles.generalFlex }}>
@@ -582,8 +599,7 @@ class ViewInvoice extends Component {
 
                     {dynamicstyles.showbidtable.call(this)}
                     {dynamicstyles.showsaveproject.call(this)}
-                    {captured()}
-                    {settlement()}
+                    {updated()}
                 </div>
             </div>
         )

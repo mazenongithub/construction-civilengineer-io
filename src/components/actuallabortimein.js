@@ -69,25 +69,33 @@ class ActualLaborTimeIn {
     toggletimeinampm(dir) {
         const dynamicstyles = new DynamicStyles();
         const Timein = new ActualLaborTimeIn();
-        let myuser = dynamicstyles.getuser.call(this);
+        const myuser = dynamicstyles.getuser.call(this)
+
         if (myuser) {
-            let project = dynamicstyles.getproject.call(this);
-
-            if (project) {
-                let i = dynamicstyles.getprojectkey.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();
-                    let validate = Timein.checkampmtimein.call(this, dir);
-                    if (validate) {
-                        let mylabor = this.getactivelabor();
-                        let timein = mylabor.timein;
-                        timein = toggleAMTimeString(mylabor.timein)
-                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = timein;
-                        this.props.reduxUser(myuser)
-                        this.setState({ render: 'render' })
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
+                        let validate = Timein.checkampmtimein.call(this, dir);
+                        if (validate) {
+                            let timein = mylabor.timein;
+                            timein = toggleAMTimeString(mylabor.timein)
+                            myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = timein;
+                            this.props.reduxUser(myuser)
+                            if (mylabor.invoiceid) {
+                                dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                            } else {
+                                this.setState({ render: 'render' })
+                            }
 
 
-                    } // if validate
+                        } // if validate
+
+                    }
+
 
                 } else {
                     let datein = toggleAMDateObj(this.state.timein)
@@ -102,20 +110,28 @@ class ActualLaborTimeIn {
 
     }
     setDay(dateencoded) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let mylabor = this.getactivelabor();
-                    let timein = mylabor.timein
-                    let newtimein = inputDateSecActiveIDTimein(dateencoded, timein)
-                    let j = this.getactivelaborkey();
-                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein;
-                    this.props.reduxUser(myuser);
-                    this.setState({ render: 'render' })
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
+                        const timein = mylabor.timein;
+                        const newtimein = inputDateSecActiveIDTimein(dateencoded, timein)
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein;
+                        this.props.reduxUser(myuser);
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
                 }
                 else {
@@ -821,20 +837,28 @@ class ActualLaborTimeIn {
         return `${month}/`;
     }
     timeinmonthup(event) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
-            if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
-                if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
-                    let newtimein = increaseDateStringByOneMonth(mylabor.timein);
-                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
 
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+        if (myuser) {
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                if (this.state.activelaborid) {
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
+                        let newtimein = increaseDateStringByOneMonth(mylabor.timein);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
+
+                        this.props.reduxUser(myuser)
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
                 }
                 else {
@@ -905,21 +929,30 @@ class ActualLaborTimeIn {
         return `${hours}:`;
     }
     increasetimeinbyinc(inc) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
+
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
 
-                    let mylabor = this.getactivelabor()
-                    let newtimein = increasedateStringbyInc(mylabor.timein, inc);
-                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
 
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                        let newtimein = increasedateStringbyInc(mylabor.timein, inc);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
+
+                        this.props.reduxUser(myuser)
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
 
                 }
@@ -935,19 +968,26 @@ class ActualLaborTimeIn {
 
     }
     decreasetimeinbyinc(inc) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this)
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
-                    let newtimein = decreasedateStringbyInc(mylabor.timein, inc);
-                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
+
+                        let newtimein = decreasedateStringbyInc(mylabor.timein, inc);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
+                        this.props.reduxUser(myuser)
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+                    }
 
 
                 }
@@ -959,20 +999,29 @@ class ActualLaborTimeIn {
         }
     }
     timeinmonthdown(event) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
-            if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
-                if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
-                    let newtimein = decreaseDateStringByOneMonth(mylabor.timein);
-                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
 
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+        if (myuser) {
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                if (this.state.activelaborid) {
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
+
+                        let newtimein = decreaseDateStringByOneMonth(mylabor.timein);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
+
+                        this.props.reduxUser(myuser)
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
                 }
                 else {
@@ -984,19 +1033,28 @@ class ActualLaborTimeIn {
         }
     }
     timeinyearup(event) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
+
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
-                    let newtimein = increaseDateStringByOneYear(mylabor.timein);
-                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
+
+                        let newtimein = increaseDateStringByOneYear(mylabor.timein);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
+                        this.props.reduxUser(myuser)
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
 
                 }
@@ -1011,19 +1069,26 @@ class ActualLaborTimeIn {
     }
 
     timeinyeardown(event) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
-                    let newtimein = decreaseDateStringByOneYear(mylabor.timein);
-                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
+                        let newtimein = decreaseDateStringByOneYear(mylabor.timein);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = newtimein
+                        this.props.reduxUser(myuser)
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
                 }
                 else {
                     let newDate = subtractoneYearDateObj(this.state.timein);

@@ -58,13 +58,23 @@ class Invoices extends Component {
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
-                let j = dynamicstyles.getactualequipmentkeybyid.call(this, equipmentid);
-                myuser.company.projects.myproject[i].actualequipment.myequipment[j].profit = profit;
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid)
+                if (myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this, equipmentid);
+                    myuser.company.projects.myproject[i].actualequipment.myequipment[j].profit = profit;
+                    this.props.reduxUser(myuser);
+                    if (myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, myequipment.invoiceid)
+                    } else {
+
+                        this.setState({ render: 'render' })
+
+                    }
+
+                }
             }
         }
     }
@@ -73,13 +83,21 @@ class Invoices extends Component {
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
-                let j = dynamicstyles.getactualmaterialkeybyid.call(this, materialid);
-                myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].profit = profit;
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid)
+                if (mymaterial) {
+                    let j = dynamicstyles.getactualmaterialkeybyid.call(this, materialid);
+                    myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].profit = profit;
+                    this.props.reduxUser(myuser);
+                    if (mymaterial.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mymaterial.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+
+                }
             }
         }
     }
@@ -88,13 +106,20 @@ class Invoices extends Component {
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
-                let j = dynamicstyles.getactuallaborkeybyid.call(this, laborid);
-                myuser.company.projects.myproject[i].actuallabor.mylabor[j].profit = profit;
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
+                if (mylabor) {
+                    let j = dynamicstyles.getactuallaborkeybyid.call(this, laborid);
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].profit = profit;
+                    this.props.reduxUser(myuser);
+                    if (mylabor.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+                }
             }
         }
     }
@@ -115,58 +140,58 @@ class Invoices extends Component {
 
         if (myuser) {
             if (this.state.activeinvoiceid) {
-              
+
                 let invoiceid = this.state.activeinvoiceid;
-                const checkinvoice = dynamicstyles.checkupdateinvoice.call(this,invoiceid)
-                if(checkinvoice) {
-                let i = dynamicstyles.getprojectkey.call(this)
+                const checkinvoice = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
+                if (checkinvoice) {
+                    let i = dynamicstyles.getprojectkey.call(this)
 
-                let result = this.checkinvoiceitem(item);
-                let j = false;
-                if (result === 'add') {
+                    let result = this.checkinvoiceitem(item);
+                    let j = false;
+                    if (result === 'add') {
 
-                    if (item.hasOwnProperty("laborid")) {
-                        j = dynamicstyles.getactuallaborkeybyid.call(this, item.laborid)
-                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].invoiceid = invoiceid;
-                        this.props.reduxUser(myuser);
-                        this.setState({ render: 'render' })
-                    } else if (item.hasOwnProperty("materialid")) {
-                        j = dynamicstyles.getactualmaterialkeybyid.call(this, item.materialid)
-                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].invoiceid = invoiceid;
-                        this.props.reduxUser(myuser);
-                        this.setState({ render: 'render' })
-                    } else if (item.hasOwnProperty("equipmentid")) {
-                        j = dynamicstyles.getactualequipmentkeybyid.call(this, item.equipmentid);
+                        if (item.hasOwnProperty("laborid")) {
+                            j = dynamicstyles.getactuallaborkeybyid.call(this, item.laborid)
+                            myuser.company.projects.myproject[i].actuallabor.mylabor[j].invoiceid = invoiceid;
+                            this.props.reduxUser(myuser);
+                            this.setState({ render: 'render' })
+                        } else if (item.hasOwnProperty("materialid")) {
+                            j = dynamicstyles.getactualmaterialkeybyid.call(this, item.materialid)
+                            myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].invoiceid = invoiceid;
+                            this.props.reduxUser(myuser);
+                            this.setState({ render: 'render' })
+                        } else if (item.hasOwnProperty("equipmentid")) {
+                            j = dynamicstyles.getactualequipmentkeybyid.call(this, item.equipmentid);
 
-                        myuser.company.projects.myproject[i].actualequipment.myequipment[j].invoiceid = invoiceid;
-                        this.props.reduxUser(myuser);
-                        this.setState({ render: 'render' })
+                            myuser.company.projects.myproject[i].actualequipment.myequipment[j].invoiceid = invoiceid;
+                            this.props.reduxUser(myuser);
+                            this.setState({ render: 'render' })
+                        }
+
+                    } else if (result === 'remove') {
+
+                        if (item.hasOwnProperty("laborid")) {
+                            j = dynamicstyles.getactuallaborkeybyid.call(this, item.laborid)
+                            myuser.company.projects.myproject[i].actuallabor.mylabor[j].invoiceid = ""
+                            this.props.reduxUser(myuser);
+                            this.setState({ render: 'render' })
+                        } else if (item.hasOwnProperty("materialid")) {
+                            j = dynamicstyles.getactualmaterialkeybyid.call(this, item.materialid)
+                            myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].invoiceid = ""
+                            this.props.reduxUser(myuser);
+                            this.setState({ render: 'render' })
+                        } else if (item.hasOwnProperty("equipmentid")) {
+                            j = dynamicstyles.getactualequipmentkeybyid.call(this, item.equipmentid);
+
+                            myuser.company.projects.myproject[i].actualequipment.myequipment[j].invoiceid = ""
+                            this.props.reduxUser(myuser);
+                            this.setState({ render: 'render' })
+                        }
+
+
                     }
-
-                } else if (result === 'remove') {
-
-                    if (item.hasOwnProperty("laborid")) {
-                        j = dynamicstyles.getactuallaborkeybyid.call(this, item.laborid)
-                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].invoiceid = ""
-                        this.props.reduxUser(myuser);
-                        this.setState({ render: 'render' })
-                    } else if (item.hasOwnProperty("materialid")) {
-                        j = dynamicstyles.getactualmaterialkeybyid.call(this, item.materialid)
-                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].invoiceid = ""
-                        this.props.reduxUser(myuser);
-                        this.setState({ render: 'render' })
-                    } else if (item.hasOwnProperty("equipmentid")) {
-                        j = dynamicstyles.getactualequipmentkeybyid.call(this, item.equipmentid);
-
-                        myuser.company.projects.myproject[i].actualequipment.myequipment[j].invoiceid = ""
-                        this.props.reduxUser(myuser);
-                        this.setState({ render: 'render' })
-                    }
-
 
                 }
-
-            }
 
             }
         }
@@ -316,10 +341,10 @@ class Invoices extends Component {
             return check;
         }
         const showequipmentrate = () => {
-            if(checkequipment()) {
-                return(<input type="text" style={{ ...styles.generalFont, ...smallFont, ...largeField }}
-                onChange={event => { this.handleequipmentrate(event.target.value, item.equipmentid) }}
-                value={equipmentrate} />)
+            if (checkequipment()) {
+                return (<input type="text" style={{ ...styles.generalFont, ...smallFont, ...largeField }}
+                    onChange={event => { this.handleequipmentrate(event.target.value, item.equipmentid) }}
+                    value={equipmentrate} />)
             } else {
                 return equipmentrate;
             }
@@ -537,58 +562,115 @@ class Invoices extends Component {
 
     }
     handlelaborrate(laborrate, laborid) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = dynamicstyles.getactuallaborkeybyid.call(this, laborid)
-            myuser.company.projects.myproject[i].actuallabor.mylabor[j].laborrate = laborrate;
-            this.props.reduxUser(myuser);
-            this.setState({ render: 'render' })
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
+                if (mylabor) {
+                    let j = dynamicstyles.getactuallaborkeybyid.call(this, laborid);
+                    myuser.company.projects.myproject[i].actuallabor.mylabor[j].laborrate = laborrate;
+                    this.props.reduxUser(myuser);
+                    if (mylabor.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+                }
+
+            }
         }
     }
     handleequipmentrate(equipmentrate, equipmentid) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = dynamicstyles.getactualequipmentkeybyid.call(this, equipmentid);
-            myuser.company.projects.myproject[i].actualequipment.myequipment[j].equipmentrate = equipmentrate;
-            this.props.reduxUser(myuser);
-            this.setState({ render: 'render' })
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid)
+                if (myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this, equipmentid);
+                    myuser.company.projects.myproject[i].actualequipment.myequipment[j].equipmentrate = equipmentrate;
+                    this.props.reduxUser(myuser);
+                    if (myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, myequipment.invoiceid)
+                    } else {
+
+                        this.setState({ render: 'render' })
+
+                    }
+                }
+
+            }
         }
     }
     handlematerialunit(unit, materialid) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = dynamicstyles.getactualmaterialkeybyid.call(this, materialid)
-            myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unit = unit;
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                let i = dynamicstyles.getprojectkey.call(this);
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid)
+                if (mymaterial) {
+                    let j = dynamicstyles.getactualmaterialkeybyid.call(this, materialid);
+                    myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unit = unit;
+                    this.props.reduxUser(myuser)
+                    if (mymaterial.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mymaterial.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+                }
+            }
         }
     }
     handlematerialunitcost(unitcost, materialid) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = dynamicstyles.getactualmaterialkeybyid.call(this, materialid)
-            myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unitcost = unitcost;
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                let i = dynamicstyles.getprojectkey.call(this);
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid)
+                if (mymaterial) {
+                    let j = dynamicstyles.getactualmaterialkeybyid.call(this, materialid);
+                    myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unitcost = unitcost;
+                    this.props.reduxUser(myuser)
+                    if (mymaterial.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mymaterial.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+                }
+
+            }
         }
     }
     handlematerialquantity(quantity, materialid) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = dynamicstyles.getactualmaterialkeybyid.call(this, materialid)
-            myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].quantity = quantity;
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                let i = dynamicstyles.getprojectkey.call(this);
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid)
+                if (mymaterial) {
+                    let j = dynamicstyles.getactualmaterialkeybyid.call(this, materialid);
+
+                    myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].quantity = quantity;
+                    this.props.reduxUser(myuser)
+                    if (mymaterial.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mymaterial.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+                }
+
+            }
         }
     }
     createnewinvoice() {

@@ -323,33 +323,45 @@ class ActualLabor extends Component {
     }
 
     handledescription(description) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         const makeID = new MakeID();
-        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            if (this.state.activelaborid) {
-                let j = this.getactivelaborkey();
-                myuser.company.projects.myproject[i].actuallabor.mylabor[j].description = description;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                if (this.state.activelaborid) {
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].description = description;
+                        this.props.reduxUser(myuser)
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+                    }
 
 
-            } else {
-                let laborid = makeID.actuallaborid.call(this)
-                let providerid = this.state.employeeid;
-                let milestoneid = this.state.milestoneid;
-                let csiid = this.state.csiid;
-                let timein = inputDateObjOutputAdjString(this.state.timein);
-                let timeout = inputDateObjOutputAdjString(this.state.timeout);
-                let invoiceid = "";
-                let profit = 0;
-                let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
-                let newlabor = CreateActualLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit)
-                this.createnewlabor(newlabor, myuser, i)
+                } else {
+                    let laborid = makeID.actuallaborid.call(this)
+                    let providerid = this.state.employeeid;
+                    let milestoneid = this.state.milestoneid;
+                    let csiid = this.state.csiid;
+                    let timein = inputDateObjOutputAdjString(this.state.timein);
+                    let timeout = inputDateObjOutputAdjString(this.state.timeout);
+                    let invoiceid = "";
+                    let profit = 0;
+                    let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
+                    let newlabor = CreateActualLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit)
+                    this.createnewlabor(newlabor, myuser, i)
+                }
+
             }
 
         }
+
     }
     handlecsiid(csiid) {
         const dynamicstyles = new DynamicStyles();
@@ -359,87 +371,123 @@ class ActualLabor extends Component {
         let csi_2 = csi.csi.substr(2, 2)
         let csi_3 = csi.csi.substr(4, 2)
         this.setState({ csi_1, csi_2, csi_3 })
-        let myuser = dynamicstyles.getuser.call(this);
+        const myuser = dynamicstyles.getuser.call(this)
+
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            if (this.state.activelaborid) {
-                let j = this.getactivelaborkey();
-                myuser.company.projects.myproject[i].actuallabor.mylabor[j].csiid = csiid;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                if (this.state.activelaborid) {
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].csiid = csiid;
+                        this.props.reduxUser(myuser)
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
 
-            } else {
-                let laborid = makeID.actuallaborid.call(this)
-                let providerid = this.state.employeeid;
-                let milestoneid = this.state.milestoneid;
-                let description = this.state.description;
-                let timein = inputDateObjOutputAdjString(this.state.timein);
-                let timeout = inputDateObjOutputAdjString(this.state.timeout);
-                let invoiceid = "";
-                let profit = 0;
-                let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
-                let newlabor = CreateActualLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit)
-                this.createnewlabor(newlabor, myuser, i)
+                } else {
+                    let laborid = makeID.actuallaborid.call(this)
+                    let providerid = this.state.employeeid;
+                    let milestoneid = this.state.milestoneid;
+                    let description = this.state.description;
+                    let timein = inputDateObjOutputAdjString(this.state.timein);
+                    let timeout = inputDateObjOutputAdjString(this.state.timeout);
+                    let invoiceid = "";
+                    let profit = 0;
+                    let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
+                    let newlabor = CreateActualLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit)
+                    this.createnewlabor(newlabor, myuser, i)
+                }
+
             }
 
         }
     }
     handlemilestoneid(milestoneid) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         const makeID = new MakeID();
-        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            if (this.state.activelaborid) {
-                let j = this.getactivelaborkey();
-                myuser.company.projects.myproject[i].actuallabor.mylabor[j].milestoneid = milestoneid;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                if (this.state.activelaborid) {
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].milestoneid = milestoneid;
+                        this.props.reduxUser(myuser)
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
 
-            } else {
-                let laborid = makeID.actuallaborid.call(this)
-                let providerid = this.state.employeeid;
-                let csiid = this.state.csiid;
-                let description = this.state.description;
-                let timein = inputDateObjOutputAdjString(this.state.timein);
-                let timeout = inputDateObjOutputAdjString(this.state.timeout);
-                let invoiceid = "";
-                let profit = 0;
-                let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
-                let newlabor = CreateActualLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, invoiceid, profit)
-                this.createnewlabor(newlabor, myuser, i)
+                } else {
+                    let laborid = makeID.actuallaborid.call(this)
+                    let providerid = this.state.employeeid;
+                    let csiid = this.state.csiid;
+                    let description = this.state.description;
+                    let timein = inputDateObjOutputAdjString(this.state.timein);
+                    let timeout = inputDateObjOutputAdjString(this.state.timeout);
+                    let invoiceid = "";
+                    let profit = 0;
+                    let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
+                    let newlabor = CreateActualLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, invoiceid, profit)
+                    this.createnewlabor(newlabor, myuser, i)
+                }
+
             }
-
         }
     }
 
     handleproviderid(providerid) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         const makeID = new MakeID();
-        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            if (this.state.activelaborid) {
-                let j = this.getactivelaborkey();
-                myuser.company.projects.myproject[i].actuallabor.mylabor[j].providerid = providerid;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                if (this.state.activelaborid) {
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        let j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].providerid = providerid;
+                        this.props.reduxUser(myuser)
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
 
 
-            } else {
-                let laborid = makeID.actuallaborid.call(this)
-                let csiid = this.state.csiid;
-                let description = this.state.description;
-                let timein = inputDateObjOutputAdjString(this.state.timein);
-                let timeout = inputDateObjOutputAdjString(this.state.timeout);
-                let milestoneid = this.state.milestoneid;
-                let invoiceid = "";
-                let profit = 0;
-                let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
-                let newlabor = CreateActualLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, invoiceid, profit)
-                this.createnewlabor(newlabor, myuser, i)
+                } else {
+                    let laborid = makeID.actuallaborid.call(this)
+                    let csiid = this.state.csiid;
+                    let description = this.state.description;
+                    let timein = inputDateObjOutputAdjString(this.state.timein);
+                    let timeout = inputDateObjOutputAdjString(this.state.timeout);
+                    let milestoneid = this.state.milestoneid;
+                    let invoiceid = "";
+                    let profit = 0;
+                    let laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
+                    let newlabor = CreateActualLabor(laborid, providerid, csiid, milestoneid, timein, timeout, laborrate, description, invoiceid, profit)
+                    this.createnewlabor(newlabor, myuser, i)
+                }
+
             }
 
         }
@@ -496,36 +544,36 @@ class ActualLabor extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const checklaborid = () => {
             let check = true;
-            if(this.state.activelaborid) {
-                const mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid);
-               
+            if (this.state.activelaborid) {
+                const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+
                 const invoiceid = mylabor.invoiceid;
-                if(invoiceid) {
+                if (invoiceid) {
                     console.log(invoiceid)
                     check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
-                
+
                 }
             }
             console.log(check)
             return check;
         }
 
-        const showtimeout =() => {
-            if(!this.state.activelaborid || checklaborid()) {
-                return(Timeout.showtimeout.call(this))
+        const showtimeout = () => {
+            if (!this.state.activelaborid || checklaborid()) {
+                return (Timeout.showtimeout.call(this))
             } else {
-                let mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid)
+                let mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid)
                 const timeout = mylabor.timeout;
-                return(<span style={{...styles.generalFont,...regularFont}}>Time Out {inputUTCStringForLaborID(timeout)}</span>)
+                return (<span style={{ ...styles.generalFont, ...regularFont }}>Time Out {inputUTCStringForLaborID(timeout)}</span>)
             }
         }
-        const showtimein =() => {
-            if(!this.state.activelaborid || checklaborid()) {
-                return(Timein.showtimein.call(this))
+        const showtimein = () => {
+            if (!this.state.activelaborid || checklaborid()) {
+                return (Timein.showtimein.call(this))
             } else {
-                let mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid)
+                let mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid)
                 const timein = mylabor.timein;
-                return(<span style={{...styles.generalFont,...regularFont}}>Time In {inputUTCStringForLaborID(timein)}</span>)
+                return (<span style={{ ...styles.generalFont, ...regularFont }}>Time In {inputUTCStringForLaborID(timein)}</span>)
             }
         }
         if (this.props.navigation) {
@@ -534,7 +582,7 @@ class ActualLabor extends Component {
 
             if (this.state.width > 1200 && navigation === 'closed') {
 
-                return (<div style={{ ...styles.generalFlex,...styles.topMargin15 }}>
+                return (<div style={{ ...styles.generalFlex, ...styles.topMargin15 }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont }}>
                         {showtimein()}
                     </div>
@@ -545,7 +593,7 @@ class ActualLabor extends Component {
 
             } else {
                 return (
-                    <div style={{ ...styles.generalFlex,...styles.topMargin15 }}>
+                    <div style={{ ...styles.generalFlex, ...styles.topMargin15 }}>
                         <div style={{ ...styles.flex1 }}>
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
@@ -557,7 +605,7 @@ class ActualLabor extends Component {
                             <div style={{ ...styles.generalFlex }}>
                                 <div style={{ ...styles.flex1 }}>
                                     <div style={{ ...styles.flex1, ...styles.generalFont }}>
-                                    {showtimeout()}
+                                        {showtimeout()}
                                     </div>
                                 </div>
                             </div>
@@ -575,119 +623,119 @@ class ActualLabor extends Component {
         const csi = new CSI();
         const milestoneid = new MilestoneID();
         const myuser = dynamicstyles.getuser.call(this)
-        if(myuser) {
-        const showdescription = () => {
-            if(checklaborid() || !this.state.activelaborid) {
-                return(<div style={{ ...styles.generalFlex,...styles.topMargin15}}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        Description <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                            value={this.getdescription()}
-                            onChange={event => { this.handledescription(event.target.value) }}
-                        />
-                    </div>
-                </div>)
-            } else {
-                return(<div style={{ ...styles.generalFlex,...styles.topMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        Description <br />
-                           {this.getdescription()}
-                    </div>
-                </div>)
-            }
-        }
-        const showmilestoneid =() => {
-            if(checklaborid() || !this.state.activelaborid) {
-               return(milestoneid.showmilestoneid.call(this))
-            } else {
-                let mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid);
-                const milestoneid = mylabor.milestoneid
-                const getmilestone= dynamicstyles.getmilestonebyid.call(this,milestoneid)
-                return(<span>Milestone <br/>
-                {getmilestone.milestone} </span>)
-            }
-        }
-        const showcsi = () => {
-            if(checklaborid() || !this.state.activelaborid) {
-                return(csi.showCSI.call(this))
-            } else {
-                let mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid);
-                const csiid = mylabor.csiid;
-                const getcsi = dynamicstyles.getcsibyid.call(this,csiid)
-                return(<span>CSI <br/>
-                {getcsi.csi} - {getcsi.title} </span>)
-            }
-        }
-        const checklaborid = () => {
-            let check = true;
-            if(this.state.activelaborid) {
-                const mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid);
-               
-                const invoiceid = mylabor.invoiceid;
-                if(invoiceid) {
-                    console.log(invoiceid)
-                    check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
-                
+        if (myuser) {
+            const showdescription = () => {
+                if (checklaborid() || !this.state.activelaborid) {
+                    return (<div style={{ ...styles.generalFlex, ...styles.topMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                            Description <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
+                                value={this.getdescription()}
+                                onChange={event => { this.handledescription(event.target.value) }}
+                            />
+                        </div>
+                    </div>)
+                } else {
+                    return (<div style={{ ...styles.generalFlex, ...styles.topMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                            Description <br />
+                            {this.getdescription()}
+                        </div>
+                    </div>)
                 }
             }
-            console.log(check)
-            return check;
-        }
-        const showemployee = () => {
-            if(checklaborid()) {
-                return(<div style={{ ...styles.generalFlex,...styles.topMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                        <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                            value={this.getemployee()}
-                            onChange={event => { this.handleproviderid(event.target.value) }}>
-                            <option value={false}>Select An Employee</option>
-                            {this.loademployees()}
-                        </select>
-                    </div>
-                </div>)
-            } else {
-                const providerid = this.getemployee()
-                const employee = dynamicstyles.getemployeebyproviderid.call(this,providerid)
-                return(<span style={{...regularFont,...styles.generalFont,...styles.topMargin15}}>{employee.firstname} {employee.lastname}</span>)
+            const showmilestoneid = () => {
+                if (checklaborid() || !this.state.activelaborid) {
+                    return (milestoneid.showmilestoneid.call(this))
+                } else {
+                    let mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    const milestoneid = mylabor.milestoneid
+                    const getmilestone = dynamicstyles.getmilestonebyid.call(this, milestoneid)
+                    return (<span>Milestone <br />
+                        {getmilestone.milestone} </span>)
+                }
             }
-        }
-        return (<div style={{ ...styles.generalFlex }}>
-            <div style={{ ...styles.flex1 }}>
+            const showcsi = () => {
+                if (checklaborid() || !this.state.activelaborid) {
+                    return (csi.showCSI.call(this))
+                } else {
+                    let mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    const csiid = mylabor.csiid;
+                    const getcsi = dynamicstyles.getcsibyid.call(this, csiid)
+                    return (<span>CSI <br />
+                        {getcsi.csi} - {getcsi.title} </span>)
+                }
+            }
+            const checklaborid = () => {
+                let check = true;
+                if (this.state.activelaborid) {
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
 
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                        /actuallabor
+                    const invoiceid = mylabor.invoiceid;
+                    if (invoiceid) {
+                        console.log(invoiceid)
+                        check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
+
+                    }
+                }
+                console.log(check)
+                return check;
+            }
+            const showemployee = () => {
+                if (checklaborid()) {
+                    return (<div style={{ ...styles.generalFlex, ...styles.topMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
+                            <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
+                                value={this.getemployee()}
+                                onChange={event => { this.handleproviderid(event.target.value) }}>
+                                <option value={false}>Select An Employee</option>
+                                {this.loademployees()}
+                            </select>
+                        </div>
+                    </div>)
+                } else {
+                    const providerid = this.getemployee()
+                    const employee = dynamicstyles.getemployeebyproviderid.call(this, providerid)
+                    return (<span style={{ ...regularFont, ...styles.generalFont, ...styles.topMargin15 }}>{employee.firstname} {employee.lastname}</span>)
+                }
+            }
+            return (<div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex1 }}>
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
+                            /actuallabor
                 </div>
-                </div>
-
-
-                {showemployee()}
-
-
-                {this.handletimes()}
-
-
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        {showcsi()}
                     </div>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                        {showmilestoneid()}
+
+
+                    {showemployee()}
+
+
+                    {this.handletimes()}
+
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                            {showcsi()}
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                            {showmilestoneid()}
+                        </div>
                     </div>
-                </div>
-
-                
-                {showdescription()}
 
 
-                {dynamicstyles.showsaveproject.call(this)}
-
-                {this.showlaborids()}
+                    {showdescription()}
 
 
-            </div></div>)
+                    {dynamicstyles.showsaveproject.call(this)}
+
+                    {this.showlaborids()}
+
+
+                </div></div>)
 
         } else {
-            return(<div style={{...styles.generalFont,...regularFont}}>Login to View Actual Labor </div>)
+            return (<div style={{ ...styles.generalFont, ...regularFont }}>Login to View Actual Labor </div>)
         }
 
     }

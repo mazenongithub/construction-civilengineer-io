@@ -67,27 +67,33 @@ class ActualLaborTimeOut {
 
     }
     toggletimeoutampm(dir) {
-        const dynamicstyles = new DynamicStyles();
-        const Timein = new ActualLaborTimeOut();
-        let myuser = dynamicstyles.getuser.call(this);
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+        const Timeout = new ActualLaborTimeOut();
         if (myuser) {
-            let project = dynamicstyles.getproject.call(this);
-
-            if (project) {
-                let i = dynamicstyles.getprojectkey.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();
-                    let validate = Timein.checkampmtimeout.call(this, dir);
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
+                        const j = dynamicstyles.getactuallaborkeybyid.call(this,this.state.activelaborid)
+                    let validate = Timeout.checkampmtimeout.call(this, dir);
                     if (validate) {
-                        let mylabor = this.getactivelabor();
                         let timeout = mylabor.timeout;
                         timeout = toggleAMTimeString(mylabor.timeout)
+                        const j = dynamicstyles.getactuallaborkeybyid.call(this,this.state.activelaborid)
                         myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = timeout;
                         this.props.reduxUser(myuser)
-                        this.setState({ render: 'render' })
+                        if (mylabor.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
 
 
                     } // if validate
+                }
 
                 } else {
                     let datein = toggleAMDateObj(this.state.timeout)
@@ -102,20 +108,27 @@ class ActualLaborTimeOut {
 
     }
     setDay(dateencoded) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let mylabor = this.getactivelabor();
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
                     let timeout = mylabor.timeout
                     let newtimeout = inputDateSecActiveIDTimein(dateencoded, timeout)
-                    let j = this.getactivelaborkey();
+                    const j = dynamicstyles.getactuallaborkeybyid.call(this,this.state.activelaborid)
                     myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout;
                     this.props.reduxUser(myuser);
-                    this.setState({ render: 'render' })
+                    if (mylabor.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+
+                    }
 
                 }
                 else {
@@ -821,20 +834,27 @@ class ActualLaborTimeOut {
         return `${month}/`;
     }
     timeoutmonthup(event) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
                     let newtimeout = increaseDateStringByOneMonth(mylabor.timeout);
+                    const j = dynamicstyles.getactuallaborkeybyid.call(this,this.state.activelaborid)
                     myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    if (mylabor.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+
+                    }
 
                 }
                 else {
@@ -905,21 +925,27 @@ class ActualLaborTimeOut {
         return `${hours}:`;
     }
     increasetimeoutbyinc(inc) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-
-                    let mylabor = this.getactivelabor()
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
                     let newtimeout = increasedateStringbyInc(mylabor.timeout, inc);
+                    const j = dynamicstyles.getactuallaborkeybyid.call(this,this.state.activelaborid)
                     myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    if (mylabor.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+
+                    }
 
 
                 }
@@ -935,19 +961,26 @@ class ActualLaborTimeOut {
 
     }
     decreasetimeoutbyinc(inc) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this)
+        let dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
                     let newtimeout = decreasedateStringbyInc(mylabor.timeout, inc);
+                    const j = dynamicstyles.getactuallaborkeybyid.call(this,this.state.activelaborid)
                     myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    if (mylabor.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+
+                    }
 
 
                 }
@@ -959,20 +992,27 @@ class ActualLaborTimeOut {
         }
     }
     timeoutmonthdown(event) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
                     let newtimeout = decreaseDateStringByOneMonth(mylabor.timeout);
+                    const j = dynamicstyles.getactuallaborkeybyid.call(this,this.state.activelaborid)
                     myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
 
                     this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    if (mylabor.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+
+                    }
 
                 }
                 else {
@@ -984,19 +1024,26 @@ class ActualLaborTimeOut {
         }
     }
     timeoutyearup(event) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
                     let newtimeout = increaseDateStringByOneYear(mylabor.timeout);
+                    const j = dynamicstyles.getactuallaborkeybyid.call(this,this.state.activelaborid)
                     myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    if (mylabor.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+
+                    }
 
 
                 }
@@ -1011,19 +1058,26 @@ class ActualLaborTimeOut {
     }
 
     timeoutyeardown(event) {
-        const dynamicstyles = new DynamicStyles();
+        let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getproject.call(this);
+            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
             if (myproject) {
-                let i = dynamicstyles.getprojectkey.call(this);
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 if (this.state.activelaborid) {
-                    let j = this.getactivelaborkey();;
-                    let mylabor = this.getactivelabor()
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                    if (mylabor) {
                     let newtimeout = decreaseDateStringByOneYear(mylabor.timeout);
+                    const j = dynamicstyles.getactuallaborkeybyid.call(this,this.state.activelaborid)
                     myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = newtimeout
                     this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    if (mylabor.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this, mylabor.invoiceid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+
+                    }
                 }
                 else {
                     let newDate = subtractoneYearDateObj(this.state.timeout);
@@ -1047,44 +1101,7 @@ class ActualLaborTimeOut {
         }
         return timeout;
     }
-    handletimeout(value) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
-        if (myuser) {
-            if (this.state.activelaborid) {
-                let laborid = this.state.activelaborid;
-
-                let timeout = inputTimeDateOutputUTCString(value);
-                if (this.props.projectsprovider.hasOwnProperty("length")) {
-                    let projectid = this.props.projectid.projectid;
-                    // eslint-disable-next-line
-                    this.props.projectsprovider.map((myproject, i) => {
-                        if (myproject.projectid === projectid) {
-
-                            if (myproject.hasOwnProperty("actuallabor")) {
-                                // eslint-disable-next-line
-                                myproject.actuallabor.mylabor.map((mylabor, j) => {
-                                    if (mylabor.laborid === laborid) {
-                                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = timeout;
-                                        this.props.reduxUser(myuser);
-                                        this.setState({ render: 'render' });
-
-                                    }
-                                });
-                            }
-
-                        }
-                    });
-                }
-            }
-            else {
-                let timeout = inputDateTimeOutDateObj(value);
-                this.setState({ timeout })
-            }
-
-        }
-    }
-
+ 
 
     activetimeoutcalendar() {
         let activetimeoutcalendar = this.state.activetimeoutcalendar;

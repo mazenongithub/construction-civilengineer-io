@@ -77,7 +77,9 @@ class ActualEquipmentTimeIn {
             if (project) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this,this.state.activeequipmentid)
                     let validate = Timein.checkampmtimein.call(this, dir);
                     if (validate) {
                         let mylabor = this.getactiveequipment();
@@ -85,10 +87,16 @@ class ActualEquipmentTimeIn {
                         timein = toggleAMTimeString(mylabor.timein)
                         myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = timein;
                         this.props.reduxUser(myuser)
+                        if(myequipment.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this,myequipment.invoiceid)
+                        } else {
                         this.setState({ render: 'render' })
+                        }
 
 
                     } // if validate
+
+                }
 
                 } else {
                     let datein = toggleAMDateObj(this.state.timein)
@@ -110,13 +118,20 @@ class ActualEquipmentTimeIn {
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let mylabor = this.getactiveequipment();
-                    let timein = mylabor.timein
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this,this.state.activeequipmentid)
+                    let timein = myequipment.timein
                     let newtimein = inputDateSecActiveIDTimein(dateencoded, timein)
-                    let j = this.getactiveequipmentkey();
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein;
                     this.props.reduxUser(myuser);
+                    if(myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,myequipment.invoiceid)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+                    }
 
                 }
                 else {
@@ -828,13 +843,22 @@ class ActualEquipmentTimeIn {
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();;
-                    let mylabor = this.getactiveequipment()
-                    let newtimein = increaseDateStringByOneMonth(mylabor.timein);
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this,this.state.activeequipmentid)
+                    let newtimein = increaseDateStringByOneMonth(myequipment.timein);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
 
+                    
+
                     this.props.reduxUser(myuser)
+                    if(myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,myequipment.invoiceid)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+                    }
 
                 }
                 else {
@@ -912,14 +936,20 @@ class ActualEquipmentTimeIn {
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();;
-
-                    let mylabor = this.getactiveequipment()
-                    let newtimein = increasedateStringbyInc(mylabor.timein, inc);
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this,this.state.activeequipmentid)
+                    let newtimein = increasedateStringbyInc(myequipment.timein, inc);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
 
                     this.props.reduxUser(myuser)
+                    if(myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,myequipment.invoiceid)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+                    }
 
 
                 }
@@ -942,12 +972,19 @@ class ActualEquipmentTimeIn {
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();;
-                    let mylabor = this.getactiveequipment()
-                    let newtimein = decreasedateStringbyInc(mylabor.timein, inc);
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this,this.state.activeequipmentid)
+                    let newtimein = decreasedateStringbyInc(myequipment.timein, inc);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
                     this.props.reduxUser(myuser)
+                    if(myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,myequipment.invoiceid)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+                    }
 
 
                 }
@@ -966,13 +1003,20 @@ class ActualEquipmentTimeIn {
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();;
-                    let mylabor = this.getactiveequipment()
-                    let newtimein = decreaseDateStringByOneMonth(mylabor.timein);
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this,this.state.activeequipmentid)
+                    let newtimein = decreaseDateStringByOneMonth(myequipment.timein);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
 
                     this.props.reduxUser(myuser)
+                    if(myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,myequipment.invoiceid)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+                    }
 
                 }
                 else {
@@ -991,12 +1035,19 @@ class ActualEquipmentTimeIn {
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();;
-                    let mylabor = this.getactiveequipment()
-                    let newtimein = increaseDateStringByOneYear(mylabor.timein);
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this,this.state.activeequipmentid)
+                    let newtimein = increaseDateStringByOneYear(myequipment.timein);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
                     this.props.reduxUser(myuser)
+                    if(myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,myequipment.invoiceid)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+                    }
 
 
                 }
@@ -1018,12 +1069,19 @@ class ActualEquipmentTimeIn {
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();;
-                    let mylabor = this.getactiveequipment()
-                    let newtimein = decreaseDateStringByOneYear(mylabor.timein);
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this,this.state.activeequipmentid)
+                    let newtimein = decreaseDateStringByOneYear(myequipment.timein);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = newtimein
                     this.props.reduxUser(myuser)
+                    if(myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,myequipment.invoiceid)
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+                    }
                 }
                 else {
                     let newDate = subtractoneYearDateObj(this.state.timein);

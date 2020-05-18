@@ -463,18 +463,27 @@ class ActualMaterials extends Component {
         return mymaterial;
     }
     handlemymaterial(mymaterialid) {
-        const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        const myuser=dynamicstyles.getuser.call(this)
         if (myuser) {
             let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].mymaterialid = mymaterialid
                     this.props.reduxUser(myuser);
-                    this.setState({ render: 'render' })
+                    if(mymaterial.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+
+                    } else {
+                    this.setState({render:'render'})
+
+                    }
+                }
                 } else {
 
                     let materialid = makeID.actualmaterialid.call(this)
@@ -504,7 +513,6 @@ class ActualMaterials extends Component {
 
     handlecsiid(csiid) {
         const dynamicstyles = new DynamicStyles();
-        let myuser = this.getuser();
         const makeID = new MakeID();
         let csi_1 = "";
         let csi_2 = "";
@@ -516,15 +524,28 @@ class ActualMaterials extends Component {
             csi_3 = csi.csi.substr(4, 2)
         }
         this.setState({ csi_1, csi_2, csi_3 })
+
+        let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].csiid = csiid
                     this.props.reduxUser(myuser);
-                    this.setState({ render: 'render' })
+                    this.props.reduxUser(myuser);
+                    if(mymaterial.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+
+                    } else {
+                    this.setState({render:'render'})
+
+                    }
+
+                    }
                 } else {
                     let materialid = makeID.actualmaterialid.call(this);
                     let providerid = this.state.employeeid;
@@ -552,18 +573,29 @@ class ActualMaterials extends Component {
     }
 
     handlemilestoneid(milestoneid) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = this.getuser();
         const makeID = new MakeID();
+        const dynamicstyles = new DynamicStyles();
+        const myuser=dynamicstyles.getuser.call(this)
         if (myuser) {
             let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].milestoneid = milestoneid
                     this.props.reduxUser(myuser);
-                    this.setState({ render: 'render' })
+                    if(mymaterial.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+
+                    } else {
+                    this.setState({render:'render'})
+
+                    }
+
+
+                    }
                 } else {
                     let materialid = makeID.actualmaterialid.call(this)
                     let providerid = this.state.employeeid;
@@ -591,18 +623,26 @@ class ActualMaterials extends Component {
     }
 
     handlequantity(quantity) {
-        let myuser = this.getuser();
         const makeID = new MakeID();
         const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].quantity = quantity
                     this.props.reduxUser(myuser);
+                    if(mymaterial.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+                    }
                 } else {
                     let materialid = makeID.actualmaterialid.call(this)
                     let providerid = this.state.employeeid;
@@ -630,18 +670,27 @@ class ActualMaterials extends Component {
     }
 
     handleunit(unit) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = this.getuser();
         const makeID = new MakeID();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unit = unit
                     this.props.reduxUser(myuser);
+                     if(mymaterial.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+                    }
+
                 } else {
                     let materialid = makeID.actualmaterialid.call(this)
                     let providerid = this.state.employeeid;
@@ -668,18 +717,27 @@ class ActualMaterials extends Component {
         }
     }
     handleunitcost(unitcost) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = this.getuser();
         const makeID = new MakeID();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    let j = this.getactivematerialkey();
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
+                    if(mymaterial) {
+                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unitcost = unitcost
                     this.props.reduxUser(myuser);
+                    if(mymaterial.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+                    }
                 } else {
                     let materialid = makeID.actualmaterialid.call(this)
                     let providerid = this.state.employeeid;

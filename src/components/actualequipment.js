@@ -454,7 +454,7 @@ class ActualEquipment extends Component {
     }
     handleequipment(myequipmentid) {
         const dynamicstyles = new DynamicStyles();
-        let myuser = this.getuser();
+        const myuser=dynamicstyles.getuser.call(this)
         const makeID = new MakeID();
         if (myuser) {
             let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
@@ -462,13 +462,21 @@ class ActualEquipment extends Component {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 let equipmentrate = 0;
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
-                    const myequipment = this.getactiveequipment();
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this,this.state.activeequipmentid)
                     equipmentrate = +Number(dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, myequipment.timein, myequipment.timeout)).toFixed(4);
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].myequipmentid = myequipmentid;
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].equipmentrate = equipmentrate;
                     this.props.reduxUser(myuser)
+                    if(myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,myequipment.invoiceid)
+
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+                    }
                 } else {
                     let equipmentid = makeID.actualequipmentid.call(this);
                     let providerid = myuser.providerid;
@@ -510,17 +518,27 @@ class ActualEquipment extends Component {
         }
         this.setState({ csi_1, csi_2, csi_3 })
 
-        let myuser = this.getuser();
+        const myuser=dynamicstyles.getuser.call(this)
         if (myuser) {
             let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
 
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this,this.state.activeequipmentid)
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].csiid = csiid;
                     this.props.reduxUser(myuser)
+                    if(myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,myequipment.invoiceid)
+
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+                    }
+
                 } else {
                     let equipmentid = makeID.actualequipmentid.call(this);
                     let providerid = myuser.providerid;
@@ -559,10 +577,21 @@ class ActualEquipment extends Component {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
 
                 if (this.state.activeequipmentid) {
-                    let j = this.getactiveequipmentkey();
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                    if(myequipment) {
+                    let j = dynamicstyles.getactualequipmentkeybyid.call(this,this.state.activeequipmentid)
                     myuser.company.projects.myproject[i].actualequipment.myequipment[j].milestoneid = milestoneid;
                     this.props.reduxUser(myuser)
+                    if(myequipment.invoiceid) {
+                        dynamicstyles.updateinvoice.call(this,myequipment.invoiceid)
+
+                    } else {
                     this.setState({ render: 'render' })
+                    }
+
+
+                    }
+
                 } else {
                     let equipmentid = makeID.actualequipmentid.call(this);
                     let providerid = myuser.providerid;
