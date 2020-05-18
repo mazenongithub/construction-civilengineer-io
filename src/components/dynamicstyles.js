@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode,UTCTimefromCurrentDate } from './functions'
+import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, ClientLoginNode, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile } from './actions/api';
 
@@ -175,14 +175,14 @@ class DynamicStyles {
         }
         return benefits;
     }
-    getemployeeaccountratio(providerid,accountid) {
+    getemployeeaccountratio(providerid, accountid) {
         const dynamicstyles = new DynamicStyles();
-        const accounts = dynamicstyles.getemployeeaccountsbyid.call(this,providerid)
+        const accounts = dynamicstyles.getemployeeaccountsbyid.call(this, providerid)
         let ratio = false;
-        if(accounts) {
+        if (accounts) {
             // eslint-disable-next-line
-            accounts.map(account=> {
-                if(account.accountid === accountid) {
+            accounts.map(account => {
+                if (account.accountid === accountid) {
                     ratio = account.ratio;
                 }
             })
@@ -232,14 +232,14 @@ class DynamicStyles {
     checkupdateinvoice(invoiceid) {
         const dynamicstyles = new DynamicStyles();
         console.log(invoiceid)
-        const invoice = dynamicstyles.getinvoicebyid.call(this,invoiceid)
+        const invoice = dynamicstyles.getinvoicebyid.call(this, invoiceid)
         console.log(invoice)
         let checkinvoice = true;
-        if(invoice) {
-        if(invoice.approved) {
-            checkinvoice = false;
+        if (invoice) {
+            if (invoice.approved) {
+                checkinvoice = false;
+            }
         }
-    }
         return checkinvoice;
     }
     showchargesbyaccountid(accountid) {
@@ -248,7 +248,7 @@ class DynamicStyles {
         let charges = false;
         const calculatelabor = (mylabor) => {
             let hours = calculatetotalhours(mylabor.timeout, mylabor.timein);
-            
+
             let labor = hours * mylabor.laborrate * (1 + (mylabor.profit / 100));
             return labor;
 
@@ -784,16 +784,16 @@ class DynamicStyles {
     getproposalbyid(proposalid) {
         let dynamicstyles = new DynamicStyles();
         let proposal = false;
-            let myproject = dynamicstyles.getproject.call(this);
-            if (myproject.hasOwnProperty("proposals")) {
-                // eslint-disable-next-line
-                myproject.proposals.myproposal.map((myproposal, i) => {
-                    if (myproposal.proposalid === proposalid) {
-                        proposal = myproposal;
-                    }
-                })
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("proposals")) {
+            // eslint-disable-next-line
+            myproject.proposals.myproposal.map((myproposal, i) => {
+                if (myproposal.proposalid === proposalid) {
+                    proposal = myproposal;
+                }
+            })
 
-            }
+        }
 
 
         return proposal;
@@ -820,19 +820,19 @@ class DynamicStyles {
     getinvoicebyid(invoiceid) {
         let dynamicstyles = new DynamicStyles();
         let invoice = false;
-   
-            let myproject = dynamicstyles.getproject.call(this);
-            if (myproject.hasOwnProperty("invoices")) {
-                // eslint-disable-next-line
-                myproject.invoices.myinvoice.map((myinvoice) => {
-                    if (myinvoice.invoiceid === invoiceid) {
-                        invoice = myinvoice
-                    }
-                })
 
-            }
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject.hasOwnProperty("invoices")) {
+            // eslint-disable-next-line
+            myproject.invoices.myinvoice.map((myinvoice) => {
+                if (myinvoice.invoiceid === invoiceid) {
+                    invoice = myinvoice
+                }
+            })
 
-        
+        }
+
+
 
         return invoice;
     }
@@ -2495,50 +2495,50 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
         const projectid = this.props.match.params.projectid;
-      
-        if(myuser) {
-            const myproject = dynamicstyles.getprojectbyid.call(this,projectid);
-            if(myproject) {
-                const i = dynamicstyles.getprojectkeybyid.call(this,projectid)
-                const myinvoice = dynamicstyles.getinvoicebyid.call(this,invoiceid)
-                if(myinvoice) {
-                    
-                const j = dynamicstyles.getinvoicekeybyid.call(this,invoiceid)
-              
-                myuser.company.projects.myproject[i].invoices.myinvoice[j].updated =  UTCTimefromCurrentDate();
-                this.props.reduxUser(myuser)
-                this.setState({render:'render'})
+
+        if (myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this, projectid);
+            if (myproject) {
+                const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                const myinvoice = dynamicstyles.getinvoicebyid.call(this, invoiceid)
+                if (myinvoice) {
+
+                    const j = dynamicstyles.getinvoicekeybyid.call(this, invoiceid)
+
+                    myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = UTCTimefromCurrentDate();
+                    this.props.reduxUser(myuser)
+                    this.setState({ render: 'render' })
                 }
             }
-        
-      
+
+
         }
-        
-      }
-        
+
+    }
+
     updateproposal(proposalid) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
         const projectid = this.props.match.params.projectid;
-   
-        if(myuser) {
-            const myproject = dynamicstyles.getprojectbyid.call(this,projectid);
-            if(myproject) {
-                const i = dynamicstyles.getprojectkeybyid.call(this,projectid)
-                const myproposal = dynamicstyles.getproposalbyid.call(this,proposalid)
-                if(myproposal) {
-                    
-                const j = dynamicstyles.getproposalkeybyid.call(this,proposalid)
-              
-                myuser.company.projects.myproject[i].proposals.myproposal[j].updated =  UTCTimefromCurrentDate();
-                this.props.reduxUser(myuser)
-                this.setState({render:'render'})
+
+        if (myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this, projectid);
+            if (myproject) {
+                const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                const myproposal = dynamicstyles.getproposalbyid.call(this, proposalid)
+                if (myproposal) {
+
+                    const j = dynamicstyles.getproposalkeybyid.call(this, proposalid)
+
+                    myuser.company.projects.myproject[i].proposals.myproposal[j].updated = UTCTimefromCurrentDate();
+                    this.props.reduxUser(myuser)
+                    this.setState({ render: 'render' })
                 }
             }
-        
+
 
         }
-        
+
     }
     getactualmaterialbyid(materialid) {
         const dynamicstyles = new DynamicStyles();
@@ -2616,46 +2616,42 @@ class DynamicStyles {
 
     checkinvoiceequipmentid(equipmentid) {
         const dynamicstyles = new DynamicStyles();
-        const myequipment = dynamicstyles.getactualequipmentbyid.call(this,equipmentid);
-        const invoiceid = myequipment.invoiceid;
-        const invoice = dynamicstyles.getinvoicebyid.call(this,invoiceid);
+        const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid);
         let checkinvoice = true;
-        if(invoice) {
-        if(invoice.approved) {
-            checkinvoice = false;
+        if (myequipment) {
+            if (myequipment.charge) {
+                checkinvoice = false;
+            }
         }
-    }
-    return checkinvoice;
-        
+        return checkinvoice;
+
     }
 
     checkinvoicematerialid(materialid) {
         const dynamicstyles = new DynamicStyles();
-        const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,materialid);
-        const invoiceid = mymaterial.invoiceid;
-        const invoice = dynamicstyles.getinvoicebyid.call(this,invoiceid);
+        const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid);
         let checkinvoice = true;
-        if(invoice) {
-        if(invoice.approved) {
-            checkinvoice = false;
+        if (mymaterial) {
+            if (mymaterial.charge) {
+                checkinvoice = false;
+            }
         }
-    }
         return checkinvoice;
 
     }
     checkinvoicelaborid(laborid) {
         const dynamicstyles = new DynamicStyles();
-        const mylabor = dynamicstyles.getactuallaborbyid.call(this,laborid);
+        const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
         let checkinvoice = true;
-        if(mylabor.invoiceid) {
-            const invoice = dynamicstyles.getinvoicebyid.call(this,mylabor.invoiceid);
-            if(invoice.approved) {
+        if (mylabor) {
+            if (mylabor.charge) {
+
                 checkinvoice = false;
             }
 
         }
         return checkinvoice;
-    }   
+    }
 
     showequipmentitem(item) {
         let dynamicstyles = new DynamicStyles()
