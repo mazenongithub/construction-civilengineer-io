@@ -14,7 +14,6 @@ import {
     addincDateObj,
     inputTimeInDateStringforPicker,
     inputDateObjOutputString,
-    inputTimeDateOutputUTCString,
     inputDateTimeOutDateObj,
     inputUTCStringForLaborID,
     inputDateObjOutputCalendarString,
@@ -82,7 +81,6 @@ class ActualLaborTimeOut {
                     if (validate) {
                         let timeout = mylabor.timeout;
                         timeout = toggleAMTimeString(mylabor.timeout)
-                        const j = dynamicstyles.getactuallaborkeybyid.call(this,this.state.activelaborid)
                         myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = timeout;
                         this.props.reduxUser(myuser)
                         if (mylabor.invoiceid) {

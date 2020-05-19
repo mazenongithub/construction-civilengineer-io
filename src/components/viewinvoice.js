@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem,UTCStringFormatDateforProposal, UTCTimefromCurrentDate } from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, inputUTCStringForLaborID } from './functions';
 import { Link } from 'react-router-dom'
 class ViewInvoice extends Component {
     constructor(props) {
@@ -50,6 +50,35 @@ class ViewInvoice extends Component {
 
         return (items)
 
+    }
+    getallpayitems() {
+        const dynamicstyles = new DynamicStyles();
+        let payitems = dynamicstyles.getAllActual.call(this)
+        const invoiceid = this.props.match.params.invoiceid;
+        let items = [];
+        // eslint-disable-next-line
+        payitems.map(item => {
+            if (item.hasOwnProperty("laborid")) {
+                if (item.invoiceid === invoiceid) {
+                    items.push(item)
+                }
+
+            }
+            if (item.hasOwnProperty("materialid")) {
+                if (item.invoiceid === invoiceid) {
+                    items.push(item)
+                }
+
+            }
+            if (item.hasOwnProperty("equipmentid")) {
+                if (item.invoiceid === invoiceid) {
+                    items.push(item)
+                }
+
+            }
+
+        })
+        return items;
     }
     getitems() {
         const dynamicstyles = new DynamicStyles();
@@ -253,7 +282,36 @@ class ViewInvoice extends Component {
         }
 
     }
+    sumoftransfers() {
+        const dynamicstyles = new DynamicStyles();
+        const transfers = dynamicstyles.getTransfersbyinvoiceid.call(this, this.props.match.params.invoiceid)
+        let amount = 0;
+        if (transfers) {
+            // eslint-disable-next-line
+            transfers.map(transfer => {
+                amount += Number(transfer.amount)
+            })
+        }
 
+        return amount;
+    }
+
+    getamount() {
+
+        const biditems = this.getitems();
+        let amount = 0;
+        if (biditems.length > 0) {
+            // eslint-disable-next-line
+            biditems.map(item => {
+                amount += this.getbidprice(item.csiid)
+            })
+        }
+
+        // 
+        return Math.round((amount * 100))
+
+
+    }
 
     getbidprice(csiid) {
 
@@ -343,33 +401,33 @@ class ViewInvoice extends Component {
     handlechangequantity(quantity, csiid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-  
+
 
         if (myuser) {
-            const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid)
-            if(myproject) {
-            let i = dynamicstyles.getprojectkeybyid.call(this,this.props.match.params.projectid);
-            const myinvoice = dynamicstyles.getinvoicebyid.call(this,this.props.match.params.invoiceid)
-            if(myinvoice) {
-            let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
-            const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
-            if (lineitem) {
-                let k = dynamicstyles.getinvoiceitemkey.call(this, csiid)
-                myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].quantity = quantity;
-                myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = UTCTimefromCurrentDate()
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
-            } else {
-                let unit = "";
-                let newItem = CreateBidItem(csiid, unit, quantity)
-                myuser.company.projects.myproject[i].invoices.myinvoice[j].bid = { biditem: [newItem] }
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                const myinvoice = dynamicstyles.getinvoicebyid.call(this, this.props.match.params.invoiceid)
+                if (myinvoice) {
+                    let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
+                    const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
+                    if (lineitem) {
+                        let k = dynamicstyles.getinvoiceitemkey.call(this, csiid)
+                        myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].quantity = quantity;
+                        myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = UTCTimefromCurrentDate()
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    } else {
+                        let unit = "";
+                        let newItem = CreateBidItem(csiid, unit, quantity)
+                        myuser.company.projects.myproject[i].invoices.myinvoice[j].bid = { biditem: [newItem] }
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    }
+
+                }
+
             }
-
-        }
-
-        }
         }
 
     }
@@ -378,36 +436,36 @@ class ViewInvoice extends Component {
     handlechangeunit(unit, csiid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-      
-      
+
+
         if (myuser) {
-            const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid)
-            if(myproject) {
-            let i = dynamicstyles.getprojectkeybyid.call(this,this.props.match.params.projectid);
-            const myinvoice = dynamicstyles.getinvoicebyid.call(this,this.props.match.params.invoiceid)
-            if(myinvoice) {
-            let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
-            const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
-            if (lineitem) {
-                let k = dynamicstyles.getinvoiceitemkey.call(this, csiid)
-                myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].unit = unit;
-                myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = UTCTimefromCurrentDate()
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
-            } else {
-                let quantity = 1;
-                let newItem = CreateBidItem(csiid, unit, quantity)
-                myuser.company.projects.myproject[i].invoices.myinvoice[j].bid = { biditem: [newItem] }
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                const myinvoice = dynamicstyles.getinvoicebyid.call(this, this.props.match.params.invoiceid)
+                if (myinvoice) {
+                    let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
+                    const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
+                    if (lineitem) {
+                        let k = dynamicstyles.getinvoiceitemkey.call(this, csiid)
+                        myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].unit = unit;
+                        myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = UTCTimefromCurrentDate()
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    } else {
+                        let quantity = 1;
+                        let newItem = CreateBidItem(csiid, unit, quantity)
+                        myuser.company.projects.myproject[i].invoices.myinvoice[j].bid = { biditem: [newItem] }
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    }
+
+                }
+
             }
-      
         }
-      
-        }
-        }
-      
-      }
+
+    }
     showbiditem(item) {
 
         const dynamicstyles = new DynamicStyles();
@@ -424,54 +482,65 @@ class ViewInvoice extends Component {
         let companyid = this.props.match.params.companyid;
         let projectid = this.props.match.params.projectid;
         let invoiceid = this.props.match.params.invoiceid;
- 
+        const checkinvoice = dynamicstyles.checkupdateinvoice.call(this, this.props.match.params.invoiceid)
+
         let profit = () => {
-     
-            return (
-                <input type="text"
-                    value={Number(this.getprofit(item.csiid)).toFixed(4)}
-                    onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
-                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
-                />)
-
-            } 
-        const quantity = () => {
-          
-            return (<div style={{ ...styles.generalContainer }}>
-              
-                <input type="text"
-                    value={this.getquantity(csi.csiid)}
-                    onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
-                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
-            </div>)
-
-            } 
-        
-        const unit = () => {
-      
-            return (
-                <div style={{ ...styles.generalContainer }}>
-                  
+            if (checkinvoice) {
+                return (
                     <input type="text"
-                        value={this.getunit(csi.csiid)}
-                        onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
+                        value={Number(this.getprofit(item.csiid)).toFixed(4)}
+                        onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
                         style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
-                    />
-                </div>)
-
+                    />)
+            } else {
+                return (Number(this.getprofit(item.csiid)).toFixed(4))
             }
-        
+
+        }
+        const quantity = () => {
+            if (checkinvoice) {
+                return (<div style={{ ...styles.generalContainer }}>
+
+                    <input type="text"
+                        value={this.getquantity(csi.csiid)}
+                        onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
+                        style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
+                </div>)
+            } else {
+                return (this.getquantity(csi.csiid))
+            }
+
+        }
+
+        const unit = () => {
+            if (checkinvoice) {
+                return (
+                    <div style={{ ...styles.generalContainer }}>
+
+                        <input type="text"
+                            value={this.getunit(csi.csiid)}
+                            onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
+                            style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
+                        />
+                    </div>)
+
+            } else {
+                return (this.getunit(csi.csiid))
+            }
+
+        }
+
         if (this.state.width > 1200) {
             return (
                 <tr>
                     <td> <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/invoices/${invoiceid}/csi/${csi.csiid}`}> Line Item <br />
                         {csi.csi}-{csi.title} </Link></td>
                     <td style={{ ...styles.alignCenter }}>
-                    Quantity <br />
+                        Quantity <br />
                         {quantity()}
                     </td>
                     <td style={{ ...styles.alignCenter }}>
-                    Unit <br />{unit()}</td>
+                        Unit <br />{unit()}</td>
                     <td style={{ ...styles.alignCenter }}>{directcost}</td>
                     <td style={{ ...styles.alignCenter }}>{profit()}</td>
                     <td style={{ ...styles.alignCenter }}>{bidprice}</td>
@@ -490,7 +559,7 @@ class ViewInvoice extends Component {
                                     {csi.csi}-{csi.title} </Link>
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                            Quantity <br />
+                                Quantity <br />
                                 {quantity()}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
@@ -506,7 +575,7 @@ class ViewInvoice extends Component {
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Overhead And Profit % <br />
-                               {profit()}
+                                {profit()}
 
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
@@ -527,65 +596,209 @@ class ViewInvoice extends Component {
         let myuser = dynamicstyles.getuser.call(this);
         const invoiceid = this.props.match.params.invoiceid;
         if (myuser) {
-            const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid);
-            if(myproject) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            
-            let k = false
-            if (myproject.hasOwnProperty("actuallabor")) {
-                // eslint-disable-next-line
-                myproject.actuallabor.mylabor.map((mylabor, j) => {
-                    if (mylabor.invoiceid === invoiceid && (mylabor.csiid === csiid)) {
-                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].profit = profit;
-                         k = dynamicstyles.getinvoicekeybyid.call(this,invoiceid)
-                         myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()
-                    }
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            if (myproject) {
+                let i = dynamicstyles.getprojectkey.call(this);
 
-                })
+                let k = false
+                if (myproject.hasOwnProperty("actuallabor")) {
+                    // eslint-disable-next-line
+                    myproject.actuallabor.mylabor.map((mylabor, j) => {
+                        if (mylabor.invoiceid === invoiceid && (mylabor.csiid === csiid)) {
+                            myuser.company.projects.myproject[i].actuallabor.mylabor[j].profit = profit;
+                            k = dynamicstyles.getinvoicekeybyid.call(this, invoiceid)
+                            myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()
+                        }
+
+                    })
+
+                }
+                if (myproject.hasOwnProperty("actualmaterials")) {
+                    // eslint-disable-next-line
+                    myproject.actualmaterials.mymaterial.map((mymaterial, j) => {
+                        if (mymaterial.invoiceid === invoiceid && (mymaterial.csiid === csiid)) {
+                            myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].profit = profit;
+                            k = dynamicstyles.getinvoicekeybyid.call(this, invoiceid)
+                            myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()
+                        }
+
+                    })
+                }
+                if (myproject.hasOwnProperty("actualequipment")) {
+                    // eslint-disable-next-line
+                    myproject.actualequipment.myequipment.map((myequipment, j) => {
+                        if (myequipment.invoiceid === invoiceid && (myequipment.csiid === csiid)) {
+                            myuser.company.projects.myproject[i].actualequipment.myequipment[j].profit = profit;
+                            k = dynamicstyles.getinvoicekeybyid.call(this, invoiceid)
+                            myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()
+                        }
+
+                    })
+                }
+                this.props.reduxUser(myuser)
+                this.setState({ render: 'render' })
 
             }
-            if (myproject.hasOwnProperty("actualmaterials")) {
-                // eslint-disable-next-line
-                myproject.actualmaterials.mymaterial.map((mymaterial, j) => {
-                    if (mymaterial.invoiceid === invoiceid && (mymaterial.csiid === csiid)) {
-                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].profit = profit;
-                        k = dynamicstyles.getinvoicekeybyid.call(this,invoiceid)
-                        myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()
-                    }
-
-                })
-            }
-            if (myproject.hasOwnProperty("actualequipment")) {
-                // eslint-disable-next-line
-                myproject.actualequipment.myequipment.map((myequipment, j) => {
-                    if (myequipment.invoiceid === invoiceid && (myequipment.csiid === csiid)) {
-                        myuser.company.projects.myproject[i].actualequipment.myequipment[j].profit = profit;
-                        k = dynamicstyles.getinvoicekeybyid.call(this,invoiceid)
-                        myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()
-                    }
-
-                })
-            }
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
 
         }
-
     }
+    showtransfer(transfer) {
+        const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const created = inputUTCStringForLaborID(transfer.created);
+        const account = dynamicstyles.getaccountbydestination.call(this, transfer.destination)
+        return (<div style={{ ...regularFont, ...styles.generalFont }}>
+            Transfer Created {created} for the Amount ${transfer.amount} to Account {account.accountname}
+        </div>)
+    }
+    getcollected() {
+        const dynamicstyles = new DynamicStyles();
+        const items = dynamicstyles.getAllActual.call(this)
+        const invoiceid = this.props.match.params.invoiceid;
+        let pendings = [];
+        let amount = 0;
+        if (items) {
+            // eslint-disable-next-line
+            items.map(item => {
+                if ((item.invoiceid === invoiceid) && item.chargeid && !item.transferid) {
+                    pendings.push(item)
+
+                }
+            })
+        }
+        console.log(pendings)
+
+        if (pendings.length > 0) {
+            // eslint-disable-next-line
+            pendings.map(myitem => {
+                console.log(myitem)
+                if (myitem.hasOwnProperty("laborid")) {
+                    amount += DirectCostForLabor(myitem) + ProfitForLabor(myitem)
+
+                } else if (myitem.hasOwnProperty("materialid")) {
+                    amount += DirectCostForMaterial(myitem) + ProfitForMaterial(myitem)
+
+                } else if (myitem.hasOwnProperty("equipmentid")) {
+                    amount += DirectCostForEquipment(myitem) + ProfitForEquipment(myitem)
+
+                }
+
+            })
+
+        }
+        return amount;
+    }
+    transferSummary() {
+        const dynamicstyles = new DynamicStyles()
+        const styles = MyStylesheet();
+        const transfers = dynamicstyles.getTransfersbyinvoiceid.call(this, this.props.match.params.invoiceid)
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const sumoftransfers = () => {
+            let sum = 0;
+
+            if (transfers) {
+                // eslint-disable-next-line
+                transfers.map(transfer => {
+                    sum += Number(transfer.amount)
+                })
+            }
+            return sum;
+        }
+        let transferids = [];
+        const jsx = (transferids) => {
+            return (<div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex1 }}>
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...headerFont, ...styles.underline }}>
+                            Transfer Summary
+                </div>
+                    </div>
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1 }}>
+                            {transferids}
+                        </div>
+                    </div>
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...regularFont }}>
+                            Sum of Transfers  ${Number(sumoftransfers()).toFixed(2)}
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>)
+        }
+
+
+
+        if (transfers) {
+            // eslint-disable-next-line
+            transfers.map(transfer => {
+                transferids.push(this.showtransfer(transfer))
+
+            })
+        }
+        return (jsx(transferids))
+    }
+    invoicesummary() {
+        const dynamicstyles = new DynamicStyles()
+        const styles = MyStylesheet();
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const amount = Number(this.getamount() / 100).toFixed(2)
+        const sumoftransfers = Number(this.sumoftransfers()).toFixed(2);
+        const invoicebalance = Number(amount - sumoftransfers).toFixed(2);
+
+        const collected = Number(this.getcollected()).toFixed(2)
+        const pending = () => {
+            if (this.getcollected()) {
+                return (` Total of $${collected} has been collected and is due for transfer`)
+            }
+        }
+
+        return (
+            <div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.generalFont, ...headerFont, ...styles.flex1 }}>
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.generalFont, ...headerFont, ...styles.flex1, ...styles.underline }}>Invoice Summary</div>
+                    </div>
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.generalFont, ...regularFont, ...styles.flex1 }}>Calculated Invoice Amount is ${amount} Total amount of Transfers is ${sumoftransfers} Total Amount left to be paid out ${invoicebalance} {pending()} </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>)
     }
     render() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles()
         const titleFont = dynamicstyles.gettitlefont.call(this)
-        const invoice = dynamicstyles.getinvoicebyid.call(this,this.props.match.params.invoiceid)
+        const invoice = dynamicstyles.getinvoicebyid.call(this, this.props.match.params.invoiceid)
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const updated = () => {
-            if(invoice.updated) {
-                return(<div style={{...styles.generalFont,...regularFont,...styles.alignCenter,...styles.topMargin15}}>Invoice Updated On {UTCStringFormatDateforProposal(invoice.updated)}</div>)
+            if (invoice.updated) {
+                return (<div style={{ ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.topMargin15 }}>Invoice Updated On {UTCStringFormatDateforProposal(invoice.updated)}</div>)
             }
 
         }
-       
+
+        const approved = () => {
+            if (invoice.approved) {
+                return (<div style={{ ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.topMargin15 }}>Invoice Charged On {UTCStringFormatDateforProposal(invoice.approved)}</div>)
+            }
+
+        }
+
 
         return (
             <div style={{ ...styles.generalFlex }}>
@@ -600,6 +813,9 @@ class ViewInvoice extends Component {
                     {dynamicstyles.showbidtable.call(this)}
                     {dynamicstyles.showsaveproject.call(this)}
                     {updated()}
+                    {approved()}
+                    {this.invoicesummary()}
+                    {this.transferSummary()}
                 </div>
             </div>
         )

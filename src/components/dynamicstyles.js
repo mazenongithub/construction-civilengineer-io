@@ -189,6 +189,21 @@ class DynamicStyles {
         }
         return ratio;
     }
+    getaccountbydestination(stripe) {
+        const dynamicstyles = new DynamicStyles();
+        const myaccounts = dynamicstyles.getmyaccounts.call(this);
+        let myaccount = false;
+        if(myaccounts) {
+            // eslint-disable-next-line
+            myaccounts.map(account=> {
+                if(account.stripe === stripe) {
+                    myaccount = account;
+                }
+            })
+
+        }
+        return myaccount;
+    }
     getemployeeaccountsbyid(providerid) {
         const dynamicstyles = new DynamicStyles();
         const accountratio = (benefits, accountid) => {
@@ -2619,7 +2634,7 @@ class DynamicStyles {
         const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid);
         let checkinvoice = true;
         if (myequipment) {
-            if (myequipment.charge) {
+            if (myequipment.chargeid) {
                 checkinvoice = false;
             }
         }
@@ -2632,7 +2647,7 @@ class DynamicStyles {
         const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid);
         let checkinvoice = true;
         if (mymaterial) {
-            if (mymaterial.charge) {
+            if (mymaterial.chargeid) {
                 checkinvoice = false;
             }
         }
@@ -2644,7 +2659,7 @@ class DynamicStyles {
         const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
         let checkinvoice = true;
         if (mylabor) {
-            if (mylabor.charge) {
+            if (mylabor.chargeid) {
 
                 checkinvoice = false;
             }
@@ -2824,6 +2839,17 @@ class DynamicStyles {
         }
         return equipmentrate;
 
+    }
+    getTransfersbyinvoiceid(invoiceid) {
+        const dynamicstyles = new DynamicStyles();
+        const myinvoice = dynamicstyles.getinvoicebyid.call(this,invoiceid)
+        let transfers = false;
+        if(myinvoice) {
+            if(myinvoice.hasOwnProperty("transfers")) {
+            transfers = myinvoice.transfers.transfer;
+            }
+        }
+        return transfers;
     }
     calculateequipmentratebyownership(equipmentid) {
         const dynamicstyles = new DynamicStyles();
