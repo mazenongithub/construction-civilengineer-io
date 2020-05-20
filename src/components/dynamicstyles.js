@@ -2634,8 +2634,8 @@ class DynamicStyles {
         const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid);
         let checkinvoice = true;
         if (myequipment) {
-            if (myequipment.chargeid) {
-                checkinvoice = false;
+            if (myequipment.invoiceid) {
+                checkinvoice = dynamicstyles.checkupdateinvoice.call(this,myequipment.invoiceid);
             }
         }
         return checkinvoice;
@@ -2647,8 +2647,8 @@ class DynamicStyles {
         const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid);
         let checkinvoice = true;
         if (mymaterial) {
-            if (mymaterial.chargeid) {
-                checkinvoice = false;
+            if (mymaterial.invoiceid) {
+                checkinvoice = dynamicstyles.checkupdateinvoice.call(this,mymaterial.invoiceid);
             }
         }
         return checkinvoice;
@@ -2659,9 +2659,9 @@ class DynamicStyles {
         const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
         let checkinvoice = true;
         if (mylabor) {
-            if (mylabor.chargeid) {
+            if (mylabor.invoiceid) {
 
-                checkinvoice = false;
+                checkinvoice = dynamicstyles.checkupdateinvoice.call(this,mylabor.invoiceid)
             }
 
         }

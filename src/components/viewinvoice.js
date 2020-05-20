@@ -652,43 +652,7 @@ class ViewInvoice extends Component {
             Transfer Created {created} for the Amount ${transfer.amount} to Account {account.accountname}
         </div>)
     }
-    getcollected() {
-        const dynamicstyles = new DynamicStyles();
-        const items = dynamicstyles.getAllActual.call(this)
-        const invoiceid = this.props.match.params.invoiceid;
-        let pendings = [];
-        let amount = 0;
-        if (items) {
-            // eslint-disable-next-line
-            items.map(item => {
-                if ((item.invoiceid === invoiceid) && item.chargeid && !item.transferid) {
-                    pendings.push(item)
 
-                }
-            })
-        }
-        console.log(pendings)
-
-        if (pendings.length > 0) {
-            // eslint-disable-next-line
-            pendings.map(myitem => {
-                console.log(myitem)
-                if (myitem.hasOwnProperty("laborid")) {
-                    amount += DirectCostForLabor(myitem) + ProfitForLabor(myitem)
-
-                } else if (myitem.hasOwnProperty("materialid")) {
-                    amount += DirectCostForMaterial(myitem) + ProfitForMaterial(myitem)
-
-                } else if (myitem.hasOwnProperty("equipmentid")) {
-                    amount += DirectCostForEquipment(myitem) + ProfitForEquipment(myitem)
-
-                }
-
-            })
-
-        }
-        return amount;
-    }
     transferSummary() {
         const dynamicstyles = new DynamicStyles()
         const styles = MyStylesheet();
@@ -754,12 +718,6 @@ class ViewInvoice extends Component {
         const sumoftransfers = Number(this.sumoftransfers()).toFixed(2);
         const invoicebalance = Number(amount - sumoftransfers).toFixed(2);
 
-        const collected = Number(this.getcollected()).toFixed(2)
-        const pending = () => {
-            if (this.getcollected()) {
-                return (` Total of $${collected} has been collected and is due for transfer`)
-            }
-        }
 
         return (
             <div style={{ ...styles.generalFlex }}>
@@ -770,7 +728,7 @@ class ViewInvoice extends Component {
                     </div>
 
                     <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.generalFont, ...regularFont, ...styles.flex1 }}>Calculated Invoice Amount is ${amount} Total amount of Transfers is ${sumoftransfers} Total Amount left to be paid out ${invoicebalance} {pending()} </div>
+                        <div style={{ ...styles.generalFont, ...regularFont, ...styles.flex1 }}>Calculated Invoice Amount is ${amount} Total amount of Transfers is ${sumoftransfers} Total Amount left to be paid out ${invoicebalance} </div>
                     </div>
 
 
