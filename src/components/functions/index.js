@@ -360,7 +360,8 @@ export function getmonth(dateobj) {
     }
 }
 export function makeDatefromTimein(timein) {
-    let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`)
+    const offset = getOffset();
+    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
     let year = datein.getFullYear();
     let month = datein.getMonth() + 1;
     if (month < 10) {
