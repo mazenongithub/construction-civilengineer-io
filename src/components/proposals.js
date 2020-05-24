@@ -497,6 +497,9 @@ class Proposals extends Component {
         let titleFont = dynamicstyles.gettitlefont.call(this)
         let proposalButton = dynamicstyles.getcreateproposal.call(this)
         let headerFont = dynamicstyles.getHeaderFont.call(this)
+        const regularFont  = dynamicstyles.getRegularFont.call(this)
+        const myuser = dynamicstyles.getuser.call(this)
+        if(myuser) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -534,6 +537,12 @@ class Proposals extends Component {
                 </div>
             </div>
         )
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Proposals </span>
+            </div>)
+        }
 
 
     }

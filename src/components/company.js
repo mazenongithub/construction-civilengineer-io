@@ -780,14 +780,18 @@ class Company extends Component {
     handlesavecompany() {
         const dynamicstyles = new DynamicStyles();
         const mycompany = dynamicstyles.getcompany.call(this);
+       
         if (mycompany) {
             return (dynamicstyles.showsavecompany.call(this))
         }
     }
     render() {
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this)
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
-
+        const myuser = dynamicstyles.getuser.call(this)
+if(myuser) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -806,7 +810,15 @@ class Company extends Component {
             </div>
 
         )
+    } else {
+        return(<div style={{...styles.generalContainer,...regularFont}}>
+            <span style={{...styles.generalFont,...regularFont}}>Please Login to View Company </span>
+        </div>)
     }
+
+}
+
+
 }
 
 function mapStateToProps(state) {

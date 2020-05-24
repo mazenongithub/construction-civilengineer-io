@@ -735,7 +735,9 @@ class ActualLabor extends Component {
                 </div></div>)
 
         } else {
-            return (<div style={{ ...styles.generalFont, ...regularFont }}>Login to View Actual Labor </div>)
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Actual Labor </span>
+            </div>)
         }
 
     }

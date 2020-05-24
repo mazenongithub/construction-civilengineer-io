@@ -473,6 +473,9 @@ class Accounts extends Component {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
         const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        if(myuser) {
 
         return (
             <div style={{ ...styles.generalFlex }}>
@@ -494,7 +497,13 @@ class Accounts extends Component {
                 </div>
             </div>
         )
+    } else {
+        return(<div style={{...styles.generalContainer,...regularFont}}>
+            <span style={{...styles.generalFont,...regularFont}}>Please Login to View Accounts</span>
+        </div>)
     }
+
+}
 
 }
 function mapStateToProps(state) {

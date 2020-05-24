@@ -49,11 +49,11 @@ class Profile extends Component {
     showprofileurl() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
-        const regularFontHeight = dynamicstyles.getRegularFont.call(this);
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
-                    Profile URL <input type="text" style={{ ...styles.addLeftMargin, ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
+                <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont }}>
+                    Profile URL <input type="text" style={{ ...styles.addLeftMargin, ...styles.regularFont, ...regularFont, ...styles.generalField }}
                         value={this.getprofileurl()}
                         onChange={event => { this.handleprofileurl(event.target.value) }}
 
@@ -65,8 +65,8 @@ class Profile extends Component {
 
         } else {
             return (<div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
-                    Profile URL <br /> <input type="text" style={{ ...styles.regularFont, ...regularFontHeight, ...styles.generalField }}
+                <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont }}>
+                    Profile URL <br /> <input type="text" style={{ ...styles.regularFont, ...regularFont, ...styles.generalField }}
                         value={this.getprofileurl()}
                         onChange={event => { this.handleprofileurl(event.target.value) }}
                     />
@@ -209,20 +209,20 @@ class Profile extends Component {
     showlogininfo() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
-        const regularFontHeight = dynamicstyles.getRegularFont.call(this);
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
                 <div style={{ ...styles.generalFlex, ...styles.addPadding }}>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont }}>
                         {this.getclientmessage()}
                     </div>
                 </div>
 
                 <div style={{ ...styles.generalFlex, ...styles.addPadding }}>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight, ...styles.addMargin }}>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
                         Email <br />
-                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFontHeight }}
+                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
                             value={this.getemailaddress()}
                             onChange={event => { this.handleemailaddress(event.target.value) }}
                         />
@@ -236,21 +236,21 @@ class Profile extends Component {
     showadditional() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
-        const regularFontHeight = dynamicstyles.getRegularFont.call(this);
+        const regularFont = dynamicstyles.getRegularFont.call(this);
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
                 <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight, ...styles.addMargin }}>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
                         First Name <br />
-                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFontHeight }}
+                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
                             value={this.getfirstname()}
                             onChange={event => { this.handlefirstname(event.target.value) }}
                         />
                     </div>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight, ...styles.addMargin }}>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
                         Last Name <br />
-                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFontHeight }}
+                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
                             value={this.getlastname()}
                             onChange={event => { this.handlelastname(event.target.value) }}
                         />
@@ -260,9 +260,9 @@ class Profile extends Component {
 
                 <div style={{ ...styles.generalFlex }}>
 
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight, ...styles.addMargin }}>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
                         Phone Number <br />
-                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFontHeight }}
+                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
                             value={this.getphonenumber()}
                             onChange={event => { this.handlephonenumber(event.target.value) }}
                         />
@@ -399,12 +399,13 @@ class Profile extends Component {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFontHeight = dynamicstyles.getRegularFont.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
         let myuser = dynamicstyles.getuser.call(this)
         const profileDimensions = dynamicstyles.getprofiledimensions.call(this);
         const folderSize = dynamicstyles.getFolderSize.call(this);
         const arrowHeight = dynamicstyles.getArrowHeight.call(this);
-
+        
+        if(myuser) {
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
@@ -435,7 +436,7 @@ class Profile extends Component {
                 {this.showprofileurl()}
 
                 <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont }}>
                         Login Info <button style={{ ...styles.generalButton, ...styles.addLeftMargin, ...arrowHeight }}>
                             {scrollImageDown()}
                         </button>
@@ -445,7 +446,7 @@ class Profile extends Component {
                 {this.showlogininfo()}
 
                 <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFontHeight }}>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont }}>
                         Additional Info <button style={{ ...styles.generalButton, ...styles.addLeftMargin, ...arrowHeight }}>
                             {scrollImageDown()}
                         </button>
@@ -459,6 +460,12 @@ class Profile extends Component {
 
             </div>
         </div>)
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Profile </span>
+            </div>)
+        }
     }
 }
 

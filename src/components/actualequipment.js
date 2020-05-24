@@ -780,7 +780,9 @@ const showequipmentid = () => {
         )
 
    } else {
-       return(<div style={{...styles.generalFont,...regularFont}}>Login to View Actual Equipment</div>)
+    return(<div style={{...styles.generalContainer,...regularFont}}>
+        <span style={{...styles.generalFont,...regularFont}}>Please Login to View Actual Equipment</span>
+    </div>)
    }
     }
 }

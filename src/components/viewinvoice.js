@@ -743,6 +743,7 @@ class ViewInvoice extends Component {
         const titleFont = dynamicstyles.gettitlefont.call(this)
         const invoice = dynamicstyles.getinvoicebyid.call(this, this.props.match.params.invoiceid)
         const regularFont = dynamicstyles.getRegularFont.call(this)
+        const myuser = dynamicstyles.getuser.call(this)
         const updated = () => {
             if (invoice.updated) {
                 return (<div style={{ ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.topMargin15 }}>Invoice Updated On {UTCStringFormatDateforProposal(invoice.updated)}</div>)
@@ -757,7 +758,7 @@ class ViewInvoice extends Component {
 
         }
 
-
+if(myuser) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -777,6 +778,11 @@ class ViewInvoice extends Component {
                 </div>
             </div>
         )
+} else {
+    return(<div style={{...styles.generalContainer,...regularFont}}>
+        <span style={{...styles.generalFont,...regularFont}}>Please Login to View Invoice </span>
+    </div>)
+}
 
     }
 }

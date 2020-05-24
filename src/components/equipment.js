@@ -1226,6 +1226,8 @@ class Equipment extends Component {
         const styles = MyStylesheet();
         const titleFont = dynamicstyles.gettitlefont.call(this);
         const accountid = new AccountID();
+        const myuser = dynamicstyles.getuser.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
         const showaccountid = () => {
             if (this.state.activeequipmentid) {
                 return (accountid.showaccountmenu.call(this))
@@ -1233,6 +1235,7 @@ class Equipment extends Component {
                 return;
             }
         }
+        if(myuser) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -1257,6 +1260,12 @@ class Equipment extends Component {
                 </div>
             </div>
         )
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Equipment </span>
+            </div>)
+        }
     }
 }
 

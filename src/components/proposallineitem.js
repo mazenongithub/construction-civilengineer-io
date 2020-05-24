@@ -237,6 +237,9 @@ class ProposalLineItem extends Component {
         const titleFont = dynamicstyles.gettitlefont.call(this)
         const csiid = this.props.match.params.csiid;
         const csi = dynamicstyles.getcsibyid.call(this, csiid)
+        const myuser =dynamicstyles.getuser.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        if(myuser) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -252,6 +255,12 @@ class ProposalLineItem extends Component {
 
                 </div>
             </div>)
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Proposal Line Item </span>
+            </div>)
+        }
 
     }
 }

@@ -683,6 +683,8 @@ class ScheduleEquipment extends Component {
 
         const totalhours = +Number(this.gettotalhours()).toFixed(2)
         const amount = `$${Number(this.getamount()).toFixed(2)}`
+        const myuser = dynamicstyles.getuser.call(this);
+        if(myuser) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }} >
@@ -735,6 +737,12 @@ class ScheduleEquipment extends Component {
                 </div>
             </div>
         )
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Schedule Equipment </span>
+            </div>)
+        }
     }
 }
 

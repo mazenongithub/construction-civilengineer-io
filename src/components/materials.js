@@ -602,6 +602,8 @@ class Materials extends Component {
         const titleFont = this.gettitlefont();
         const dynamicstyles = new DynamicStyles();
         const maxWidth = dynamicstyles.getMaxWidth.call(this)
+        const myuser =dynamicstyles.getuser.call(this)
+        if(myuser) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -641,6 +643,12 @@ class Materials extends Component {
                 </div>
             </div>
         )
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Materials </span>
+            </div>)
+        }
     }
 }
 

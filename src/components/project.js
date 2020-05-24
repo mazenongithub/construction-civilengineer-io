@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { Link } from 'react-router-dom';
+import DynamicStyles from './dynamicstyles'
 class Project extends Component {
     constructor(props) {
         super(props);
@@ -281,9 +282,13 @@ class Project extends Component {
 
     render() {
         const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
         const titleFont = this.gettitlefont();
         const regularFont = this.getRegularFont();
+        const myuser = dynamicstyles.getuser.call(this)
+        if(myuser) {
         return (
+
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
 
@@ -310,6 +315,11 @@ class Project extends Component {
                 </div>
             </div>
         )
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Project </span>
+            </div>)
+        }
     }
 
 }

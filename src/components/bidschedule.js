@@ -654,7 +654,10 @@ class BidSchedule extends Component {
         const titleFont = this.gettitlefont();
         const headerFont = this.getHeaderFont();
         const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
 
+        if(myuser) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -678,6 +681,12 @@ class BidSchedule extends Component {
                 </div>
             </div>
         )
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Bid Schedule </span>
+            </div>)
+        }
     }
 }
 

@@ -575,6 +575,7 @@ class ViewProposal extends Component {
         const titleFont = dynamicstyles.gettitlefont.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const proposal = dynamicstyles.getproposalbyid.call(this,this.props.match.params.proposalid)
+        const myuser =dynamicstyles.getuser.call(this)
         console.log(proposal)
         const getupdated = () => {
             if(proposal.updated) {
@@ -595,7 +596,7 @@ class ViewProposal extends Component {
                     </div>)
             }
         }
-
+        if(myuser) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -619,6 +620,12 @@ class ViewProposal extends Component {
                 </div>
             </div>
         )
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Proposal </span>
+            </div>)
+        }
 
     }
 }

@@ -333,13 +333,13 @@ class ActualMaterials extends Component {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
-        const amount =  () => {
+        const amount = () => {
             let getamount = 0;
-            if(this.state.activematerialid) {
-                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid)
-         getamount = Number(mymaterial.quantity)*Number(mymaterial.unitcost);
-         getamount = Number(getamount).toFixed(2)
-         return (`$${getamount}`)
+            if (this.state.activematerialid) {
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
+                getamount = Number(mymaterial.quantity) * Number(mymaterial.unitcost);
+                getamount = Number(getamount).toFixed(2)
+                return (`$${getamount}`)
             }
         }
         const checkmaterialid = () => {
@@ -381,31 +381,31 @@ class ActualMaterials extends Component {
                 </div>)
             } else {
                 return (<div style={{ ...styles.generalContainer }}>
-                    Unit<br /> 
+                    Unit<br />
                     {this.getunit()}
-                  
+
                 </div>)
             }
         }
 
         const showunitprice = () => {
             if (!this.state.activematerialid || checkmaterialid()) {
-               return (<div style={{ ...styles.generalContainer }}>
-                Unit Price <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
+                return (<div style={{ ...styles.generalContainer }}>
+                    Unit Price <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
                         value={this.getunitcost()}
                         onChange={event => { this.handleunitcost(event.target.value) }}
                     />
-               </div>)
+                </div>)
             } else {
                 return (<div style={{ ...styles.generalContainer }}>
-                 Unit Price <br />
-                 {this.getunitcost()}
-                      
-                    </div>)
+                    Unit Price <br />
+                    {this.getunitcost()}
+
+                </div>)
             }
         }
 
-       
+
         if (this.state.width > 800) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
@@ -415,7 +415,7 @@ class ActualMaterials extends Component {
                     {showunit()}
                 </div>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                   {showunitprice()}
+                    {showunitprice()}
                 </div>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
                     Amount <br />
@@ -433,18 +433,18 @@ class ActualMaterials extends Component {
                                 {showquantity()}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                               {showunit()}
+                                {showunit()}
                             </div>
                         </div>
 
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                               {showunitprice()}
+                                {showunitprice()}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                                Amount <br/>
+                                Amount <br />
                                 {amount()}
-                   </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -465,25 +465,25 @@ class ActualMaterials extends Component {
     handlemymaterial(mymaterialid) {
         const makeID = new MakeID();
         const dynamicstyles = new DynamicStyles();
-        const myuser=dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
-                    if(mymaterial) {
-                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
-                    myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].mymaterialid = mymaterialid
-                    this.props.reduxUser(myuser);
-                    if(mymaterial.invoiceid) {
-                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                    if (mymaterial) {
+                        let j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].mymaterialid = mymaterialid
+                        this.props.reduxUser(myuser);
+                        if (mymaterial.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mymaterial.invoiceid)
 
-                    } else {
-                    this.setState({render:'render'})
+                        } else {
+                            this.setState({ render: 'render' })
 
+                        }
                     }
-                }
                 } else {
 
                     let materialid = makeID.actualmaterialid.call(this)
@@ -531,19 +531,19 @@ class ActualMaterials extends Component {
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
-                    if(mymaterial) {
-                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
-                    myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].csiid = csiid
-                    this.props.reduxUser(myuser);
-                    this.props.reduxUser(myuser);
-                    if(mymaterial.invoiceid) {
-                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                    if (mymaterial) {
+                        let j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].csiid = csiid
+                        this.props.reduxUser(myuser);
+                        this.props.reduxUser(myuser);
+                        if (mymaterial.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mymaterial.invoiceid)
 
-                    } else {
-                    this.setState({render:'render'})
+                        } else {
+                            this.setState({ render: 'render' })
 
-                    }
+                        }
 
                     }
                 } else {
@@ -575,24 +575,24 @@ class ActualMaterials extends Component {
     handlemilestoneid(milestoneid) {
         const makeID = new MakeID();
         const dynamicstyles = new DynamicStyles();
-        const myuser=dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
-                    if(mymaterial) {
-                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
-                    myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].milestoneid = milestoneid
-                    this.props.reduxUser(myuser);
-                    if(mymaterial.invoiceid) {
-                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                    if (mymaterial) {
+                        let j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].milestoneid = milestoneid
+                        this.props.reduxUser(myuser);
+                        if (mymaterial.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mymaterial.invoiceid)
 
-                    } else {
-                    this.setState({render:'render'})
+                        } else {
+                            this.setState({ render: 'render' })
 
-                    }
+                        }
 
 
                     }
@@ -631,17 +631,17 @@ class ActualMaterials extends Component {
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
-                    if(mymaterial) {
-                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
-                    myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].quantity = quantity
-                    this.props.reduxUser(myuser);
-                    if(mymaterial.invoiceid) {
-                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                    if (mymaterial) {
+                        let j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].quantity = quantity
+                        this.props.reduxUser(myuser);
+                        if (mymaterial.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mymaterial.invoiceid)
 
-                    } else {
-                    this.setState({ render: 'render' })
-                    }
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
                     }
                 } else {
                     let materialid = makeID.actualmaterialid.call(this)
@@ -678,17 +678,17 @@ class ActualMaterials extends Component {
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
-                    if(mymaterial) {
-                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
-                    myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unit = unit
-                    this.props.reduxUser(myuser);
-                     if(mymaterial.invoiceid) {
-                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                    if (mymaterial) {
+                        let j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unit = unit
+                        this.props.reduxUser(myuser);
+                        if (mymaterial.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mymaterial.invoiceid)
 
-                    } else {
-                    this.setState({ render: 'render' })
-                    }
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
                     }
 
                 } else {
@@ -725,17 +725,17 @@ class ActualMaterials extends Component {
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
-                    if(mymaterial) {
-                    let j = dynamicstyles.getactualmaterialkeybyid.call(this,this.state.activematerialid)
-                    myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unitcost = unitcost
-                    this.props.reduxUser(myuser);
-                    if(mymaterial.invoiceid) {
-                        dynamicstyles.updateinvoice.call(this,mymaterial.invoiceid)
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                    if (mymaterial) {
+                        let j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unitcost = unitcost
+                        this.props.reduxUser(myuser);
+                        if (mymaterial.invoiceid) {
+                            dynamicstyles.updateinvoice.call(this, mymaterial.invoiceid)
 
-                    } else {
-                    this.setState({ render: 'render' })
-                    }
+                        } else {
+                            this.setState({ render: 'render' })
+                        }
 
                     }
                 } else {
@@ -923,6 +923,7 @@ class ActualMaterials extends Component {
         const regularFont = this.getRegularFont();
         const Datein = new ActualMaterialDate();
         const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
         const checkmaterialid = () => {
             let check = true;
             if (this.state.activematerialid) {
@@ -972,33 +973,42 @@ class ActualMaterials extends Component {
                 )
             }
         }
-        return (<div style={{ ...styles.generalFlex }}>
-            <div style={{ ...styles.flex1 }}>
 
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                        /actualmaterials
+        if (myuser) {
+            return (<div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex1 }}>
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
+                            /actualmaterials
                 </div>
-                </div>
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
-                        {showmaterialdate()}
                     </div>
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1 }}>
+                            {showmaterialdate()}
+                        </div>
+                    </div>
+                    {showmaterial()}
+                    {this.showmilestonemenus()}
+
+
+                    {this.showquantitymenus()}
+
+                    {dynamicstyles.showsaveproject.call(this)}
+
+                    {this.showmaterialids()}
+
                 </div>
-                {showmaterial()}
-                {this.showmilestonemenus()}
-
-
-                {this.showquantitymenus()}
-
-                {dynamicstyles.showsaveproject.call(this)}
-
-                {this.showmaterialids()}
-
-            </div>
-        </div>)
+            </div>)
+        }
+        else {
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Actual ,aterials </span>
+            </div>)
+        }
     }
-}
+    
+    }
 
 
 function mapStateToProps(state) {

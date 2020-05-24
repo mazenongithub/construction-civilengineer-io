@@ -713,7 +713,9 @@ class ScheduleLabor extends Component {
             </div></div>)
 
         } else {
-            return(<div style={{...styles.generalContainer}}><span style={{...regularFont, ...styles.generalFont}}>You must be logged in to view schedule materials</span></div>)
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Schedule Labor </span>
+            </div>)
         }
 
     }

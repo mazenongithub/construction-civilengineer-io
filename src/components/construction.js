@@ -557,6 +557,8 @@ class Construction extends Component {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const regularFont = dynamicstyles.getRegularFont.call(this)
+        const myuser =dynamicstyles.getuser.call(this)
+        if(myuser) {
         return (<div style={{ ...styles.generalContainer }}>
             <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont }}>
                 Create A Construction Specification (xx xx xx)
@@ -590,6 +592,12 @@ class Construction extends Component {
                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin15 }} />
             </div>
         </div>)
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Construction </span>
+            </div>)
+        }
     }
     render() {
         const styles = MyStylesheet();
