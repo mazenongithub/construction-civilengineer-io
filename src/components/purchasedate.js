@@ -762,7 +762,8 @@ class PurchaseDate {
 
             let myequipment = this.getactiveequipment()
             let timein = myequipment.ownership.purchasedate;
-            let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00 UTC`);
+            let offset = getOffset();
+            let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`);
             return (formatDateforCalendarDisplay(datein))
         }
         else

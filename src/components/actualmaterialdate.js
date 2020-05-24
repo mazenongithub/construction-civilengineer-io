@@ -839,7 +839,8 @@ class ActualMaterialDate {
 
             let mymaterial = this.getactivematerial()
             let timein = mymaterial.timein;
-            let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`);
+            let offset = getOffset();
+            let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`);
             return (formatDateforCalendarDisplay(datein))
         }
         else
