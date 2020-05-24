@@ -657,9 +657,10 @@ class ScheduleLabor extends Component {
         const styles = MyStylesheet();
         const titleFont = this.gettitlefont();
         const regularFont = dynamicstyles.getRegularFont.call(this);
-
         const csi = new CSI();
         const milestoneid = new MilestoneID();
+        const myuser = dynamicstyles.getuser.call(this)
+        if(myuser) {
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
@@ -710,6 +711,10 @@ class ScheduleLabor extends Component {
 
 
             </div></div>)
+
+        } else {
+            return(<div style={{...styles.generalContainer}}><span style={{...regularFont, ...styles.generalFont}}>You must be logged in to view schedule materials</span></div>)
+        }
 
     }
 }

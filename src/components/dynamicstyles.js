@@ -301,9 +301,44 @@ class DynamicStyles {
                     title:'Labor',
                     id:'labor',
                     url:'http://civilengineer.io/construction/slides/schedulelabor.png',
-                    caption:`Draft Project Specfication by Code`
+                    caption:`Entering Schedule Labor for the Project`
 
                 },
+                {
+                    title:'Materials',
+                    id:'schedulematerial',
+                    url:'http://civilengineer.io/construction/slides/schedulematerial.png',
+                    caption:`Enter Schedule Materials for the Project`
+
+                },
+                {
+                    title:'Schedule Equipment',
+                    id:'scheduleequipment',
+                    url:'http://civilengineer.io/construction/slides/scheduleequipment.png',
+                    caption:`Enter Schedule Equipment for the Project`
+
+                },
+                {
+                    title:'Invoice',
+                    id:'invoice',
+                    url:'http://civilengineer.io/construction/slides/viewinvoice.png',
+                    caption:`Invoice after transfer has been completed to the contractor `
+
+                },
+                {
+                    title:'Labor, Equipment, Materials',
+                    id:'lem',
+                    url:'http://civilengineer.io/construction/slides/lem.png',
+                    caption:`Labor, Material, Equipment breakdown for each pay item used `
+
+                },
+                {
+                    title:'View Account',
+                    id:'viewaccount',
+                    url:'http://civilengineer.io/construction/slides/viewaccount.png',
+                    caption:`View Balances for Each Account you create including all charges and transfers `
+
+                }
                 
         ])
         }

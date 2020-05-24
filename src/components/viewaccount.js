@@ -312,7 +312,8 @@ render() {
     const dynamicstyles = new DynamicStyles();
     const account = dynamicstyles.getaccountbyid.call(this, this.props.match.params.accountid);
     const headerFont = dynamicstyles.gettitlefont.call(this);
-    const regularFont = dynamicstyles.getRegularFont.call(this)
+    const regularFont = dynamicstyles.getRegularFont.call(this);
+    const myuser = dynamicstyles.getuser.call(this)
     this.getstripedashboard();
     let accountbalance = Number(this.state.amount) - Number(this.state.transferamount)
     accountbalance = Number(accountbalance).toFixed(2)
@@ -328,6 +329,7 @@ render() {
 
 
     }
+    if(myuser) {
     return (
 
         <div style={{ ...styles.generalFlex }}>
@@ -380,6 +382,12 @@ render() {
             </div>
         </div>
     )
+
+    } else {
+        return(<div style={{...styles.generalContainer}}>
+            <span style={{...regularFont,...styles.generalFont}}>Please login to view accounts </span>
+        </div>)
+    }
 }
 
 
