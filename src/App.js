@@ -496,7 +496,7 @@ class App extends Component {
 
     const submenulink_3 = () => {
       if (myuser) {
-        return (<Link to={`/${myuser.profile}/company/${myuser.company.companyid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /company </Link>)
+        return (<Link to={`/${myuser.profile}/company/${myuser.company}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /company </Link>)
       } else {
         return (<Link to={`/providers/login`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.fontBold }}>/login </Link>)
       }
