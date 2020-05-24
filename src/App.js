@@ -691,13 +691,16 @@ class App extends Component {
     }
   }
   toogleappmenu() {
+    
     if (this.props.navigation) {
       if (this.props.navigation.hasOwnProperty("position")) {
         let position = this.props.navigation.position;
         if (position === 'closed') {
           this.props.reduxNavigation({ position: 'open' })
+          this.setState({render:'render'})
         } else if (position === "open") {
           this.props.reduxNavigation({ position: 'closed' })
+          this.setState({render:'render'})
         }
 
       }
