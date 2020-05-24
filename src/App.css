@@ -59,7 +59,7 @@
   
 }
 .calendar-grid {
-  max-width:540px;
+  width:540px;
   display: grid;
   grid-template-columns: 15% 14% 14% 14% 14% 14% 15%;
   grid-column-gap: 5px;
