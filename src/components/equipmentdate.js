@@ -621,7 +621,8 @@ class EquipmentDate {
 
     }
     handleChange(value) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
 
             if (this.state.activecostid) {

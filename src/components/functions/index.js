@@ -423,7 +423,7 @@ export function formatDateforCalendarDisplay(datein) {
 }
 export function adjustdatefromcalendar(timein, value) {
 
-    let offset = new Date().getTimezoneOffset() / 60;
+    let offset = new Date(`${timein.replace(/-/g, '/')} 00:00:00`).getTimezoneOffset() / 60;
     let sym = "";
     if (offset < 0) {
         offset = -offset;

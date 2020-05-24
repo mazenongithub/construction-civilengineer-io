@@ -623,15 +623,16 @@ class PurchaseDate {
 
     }
     handleChange(value) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             if (this.state.activeequipmentid) {
                 const equipment = this.getactiveequipment();
                 const i = this.getactiveequipmentkey();
                 if (equipment.hasOwnProperty("ownership")) {
-                    let timein = equipment.purchasedate;
-                    let newtimein = adjustdatefromcalendar(timein, value)
-                    myuser.company.equipment.myequipment[i].ownership.purchasedate = newtimein;
+                    
+                   
+                    myuser.company.equipment.myequipment[i].ownership.purchasedate = value;
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 } else {
@@ -643,6 +644,7 @@ class PurchaseDate {
 
 
             else {
+                console.log(value)
                 this.setState({ datein: inputDatePickerOutputDateObj(value) })
 
             }

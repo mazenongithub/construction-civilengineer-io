@@ -621,16 +621,13 @@ class SaleDate {
 
     }
     handleChange(value) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
 
             if (this.state.activeequipmentid) {
                 let i = this.getactiveequipmentkey();
-
-                let myequipment = this.getactiveequipment();
-                let timein = myequipment.ownership.saledate;
-                let newtimein = adjustdatefromcalendar(timein, value)
-                myuser.company.equipment.myequipment[i].ownership.saledate = newtimein;
+                myuser.company.equipment.myequipment[i].ownership.saledate = value;
                 this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
 
