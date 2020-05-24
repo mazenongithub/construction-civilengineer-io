@@ -48,7 +48,7 @@ import { firebaseConfig } from './firebaseconfig';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { render: '', width: 0, height: 0,activeslideid:'construction' }
+    this.state = { render: '', width: 0, height: 0, activeslideid: 'construction' }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
   }
   componentDidMount() {
@@ -98,48 +98,52 @@ class App extends Component {
     const dynamicstyles = new DynamicStyles();
     const myuser = dynamicstyles.getuser.call(this)
     const landing = new Landing();
+    const styles = MyStylesheet();
     const showlanding = () => {
-      if(myuser) {
-        return(<Profile/>)
+      if (myuser) {
+        return (<Profile />)
       } else {
-        return(landing.showlanding.call(this))
+        return (landing.showlanding.call(this))
       }
 
     }
     return (
 
-      <Switch>
-        <Route exact path="/" component={showlanding} />
-        <Route exact path="/providers/register" component={Register} />
-        <Route exact path="/providers/login" component={Login} />
-        <Route exact path="/providers/privacy_policy" component={PrivacyPolicy} />
-        <Route exact path="/:providerid/profile" component={Profile} />
-        <Route exact path="/:providerid/company" component={Company} />
-        <Route exact path="/:providerid/company/:companyid/accounts" component={Accounts} />
-        <Route exact path="/:providerid/company/:companyid/accounts/:accountid" component={ViewAccount} />
-        <Route exact path="/:providerid/company/:companyid/equipment" component={Equipment} />
-        <Route exact path="/:providerid/company/:companyid/employees" component={Employees} />
-        <Route exact path="/:providerid/company/:companyid/construction" component={Construction} />
-        <Route exact path="/:providerid/company/:companyid/materials" component={Materials} />
-        <Route exact path="/:providerid/company/:companyid/projects" component={Projects} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule" component={BidSchedule} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule/csi/:csiid" component={ScheduleLineItem} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid" component={Bid} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid/csi/:csiid" component={BidLineItem} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedulelabor" component={ScheduleLabor} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/actuallabor" component={ActualLabor} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedulematerials" component={ScheduleMaterials} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/actualmaterials" component={ActualMaterials} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/scheduleequipment" component={ScheduleEquipment} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/actualequipment" component={ActualEquipment} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals" component={Proposals} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals/:proposalid" component={ViewProposal} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals/:proposalid/csi/:csiid" component={ProposalLineItem} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/invoices" component={Invoices} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/invoices/:invoiceid" component={ViewInvoice} />
-        <Route exact path="/:providerid/company/:companyid/projects/:projectid/invoices/:invoiceid/csi/:csiid" component={InvoiceLineItem} />
-      </Switch>)
+      <div style={{ ...styles.generalContainer }}>
+        <Switch>
+          <Route exact path="/" component={showlanding} />
+          <Route exact path="/providers/register" component={Register} />
+          <Route exact path="/providers/login" component={Login} />
+          <Route exact path="/providers/privacy_policy" component={PrivacyPolicy} />
+          <Route exact path="/:providerid/profile" component={Profile} />
+          <Route exact path="/:providerid/company" component={Company} />
+          <Route exact path="/:providerid/company/:companyid/accounts" component={Accounts} />
+          <Route exact path="/:providerid/company/:companyid/accounts/:accountid" component={ViewAccount} />
+          <Route exact path="/:providerid/company/:companyid/equipment" component={Equipment} />
+          <Route exact path="/:providerid/company/:companyid/employees" component={Employees} />
+          <Route exact path="/:providerid/company/:companyid/construction" component={Construction} />
+          <Route exact path="/:providerid/company/:companyid/materials" component={Materials} />
+          <Route exact path="/:providerid/company/:companyid/projects" component={Projects} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule" component={BidSchedule} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule/csi/:csiid" component={ScheduleLineItem} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid" component={Bid} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid/csi/:csiid" component={BidLineItem} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedulelabor" component={ScheduleLabor} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/actuallabor" component={ActualLabor} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedulematerials" component={ScheduleMaterials} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/actualmaterials" component={ActualMaterials} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/scheduleequipment" component={ScheduleEquipment} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/actualequipment" component={ActualEquipment} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals" component={Proposals} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals/:proposalid" component={ViewProposal} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals/:proposalid/csi/:csiid" component={ProposalLineItem} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/invoices" component={Invoices} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/invoices/:invoiceid" component={ViewInvoice} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/invoices/:invoiceid/csi/:csiid" component={InvoiceLineItem} />
+        </Switch>
+      </div>
+    )
   }
 
   showcompanylinks() {
@@ -187,87 +191,9 @@ class App extends Component {
       return;
     }
   }
-  handleshowcompanylinks() {
-    const dynamicstyles = new DynamicStyles();
-    const styles = MyStylesheet();
-    let myuser = dynamicstyles.getuser.call(this)
-    if (myuser) {
-      return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin, ...styles.alignCenter }}>
-        {this.handlecompanylink()}
-        {this.showcompanylinks()}
-      </div>)
-    }
+ 
+ 
 
-  }
-  handleregisterlink_400() {
-    const dynamicstyles = new DynamicStyles();
-    const styles = MyStylesheet();
-    let myuser = dynamicstyles.getuser.call(this)
-    const headerFont = dynamicstyles.getHeaderFont.call(this);
-    if (!myuser) {
-      return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin, ...styles.alignCenter }}>
-        <Link to={`/providers/register`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.fontBold }}>/register </Link>
-      </div>)
-    }
-
-  }
-  app400open() {
-    const styles = MyStylesheet();
-
-    return (<div style={{ ...styles.generalFlex }}>
-      <div style={{ ...styles.flex1 }}>
-
-        <div style={{ ...styles.generalFlex }}>
-          <div style={{ ...styles.flex1, ...styles.headerBackground, ...styles.thickBorder, ...styles.alignCenter, ...styles.addMargin, ...styles.addBorderRadius }}>
-            <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
-          </div>
-          <div style={{ ...styles.flex2, ...styles.headerBackground, ...styles.thickBorder, ...styles.addMargin, ...styles.addBorderRadius }}>
-            {Logo()}
-          </div>
-        </div>
-
-        <div style={{ ...styles.generalFlex }}>
-          <div style={{ ...styles.flex2, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius, ...styles.addMargin, ...styles.addPadding }}>
-            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin, ...styles.alignCenter }}>
-              {this.handleprofilelink()}
-            </div>
-            {this.handleregisterlink_400()}
-            {this.handleshowcompanylinks()}
-            {this.handleshowprojectlinks()}
-            {this.showactiveprojectlinks()}
-            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin, ...styles.alignCenter }}>
-              {this.handleloginlink()}
-            </div>
-
-
-          </div>
-          <div style={{ ...styles.flex1 }}>
-
-            <div style={{ ...styles.generalFlex, ...styles.regularFont }}>
-              <div style={{ ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>{this.handleprofilelink()}</div>
-            </div>
-
-            <div style={styles.generalContainer}>
-              {this.showRouter()}
-            </div>
-
-
-
-
-
-
-          </div>
-        </div>
-
-
-
-
-
-      </div>
-
-    </div>)
-
-  }
   getRegularFont() {
     const styles = MyStylesheet();
     if (this.state.width > 800) {
@@ -277,54 +203,7 @@ class App extends Component {
     }
 
   }
-  handle400closed_1() {
-    const dynamicstyles = new DynamicStyles();
-    const styles = MyStylesheet();
-    const myuser = dynamicstyles.getuser.call(this);
-    const headerFont = dynamicstyles.getHeaderFont.call(this);
-    if (myuser) {
-      return (<Link to={`/${myuser.profile}/profile`}
-        style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}
-      > /{myuser.profile} </Link>)
-    } else {
-      return (<Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> / </Link>)
-    }
-  }
-  app400closed() {
-    const styles = MyStylesheet();
-    return (
-      <div style={{ ...styles.generalFlex }}>
-        <div style={{ ...styles.flex1 }}>
 
-          <div style={{ ...styles.generalFlex }}>
-            <div style={{ ...styles.flex1, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius, ...styles.addMargin }}>
-              <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
-            </div>
-            <div style={{ ...styles.flex2, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius, ...styles.addMargin }}>
-              {Logo()}
-            </div>
-          </div>
-
-          <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-            <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin, ...styles.alignCenter }}>
-              {this.handle400closed_1()}
-            </div>
-            <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin, ...styles.alignCenter }}>
-              {this.handleregisterlink()}
-            </div>
-            <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin, ...styles.alignCenter }}>
-              {this.handleloginlink()}
-            </div>
-          </div>
-
-          <div style={styles.generalContainer}>
-            {this.showRouter()}
-          </div>
-
-        </div>
-      </div>)
-
-  }
   getprojects() {
     let myuser = this.getuser();
     let projects = false;
@@ -418,49 +297,9 @@ class App extends Component {
     }
     return projects;
   }
-  handleshowprojectlinksnomenu() {
-    const styles = MyStylesheet();
-    let projects = this.getcompanyprojects();
-    if (projects) {
-      return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.alignCenter }}>
-        {this.handleprojectlink()}
-      </div>)
-    } else {
-      return;
-    }
-  }
-  handleshowprojectlinks() {
-    const styles = MyStylesheet();
-    let projects = this.getcompanyprojects();
-    if (projects) {
-      return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-        {this.handleprojectlink()}
-        {this.projectidlinks()}
-      </div>)
-    } else {
-      return;
-    }
-  }
-  handlecompanylinks_1200() {
-    const styles = MyStylesheet();
-    const dynamicstyles = new DynamicStyles();
-    const myuser = dynamicstyles.getuser.call(this);
-    if (myuser) {
-      if (myuser.hasOwnProperty("company")) {
+ 
+ 
 
-        return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-          {this.handlecompanylink()}
-          {this.showcompanylinks()}
-        </div>)
-
-      } else {
-        return;
-      }
-    } else {
-      return;
-    }
-
-  }
   showactiveprojectlinks() {
     const dynamicstyles = new DynamicStyles();
     const myuser = dynamicstyles.getuser.call(this);
@@ -480,7 +319,7 @@ class App extends Component {
             const projectid = project.title;
 
             return (
-              <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+              <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15,...styles.addMargin }}>
                 <div style={{ ...styles.generalContainer }}>
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }} > /{projectid} </Link>
                 </div>
@@ -523,109 +362,8 @@ class App extends Component {
       }
     }
   }
-  app1200open() {
-    const styles = MyStylesheet();
-    return (
-      <div style={{ ...styles.generalFlex }}>
-        <div style={{ ...styles.flex1, ...styles.extraThickBorder, ...styles.addBorderRadius, ...styles.headerBackground, ...styles.openNav, ...styles.addRightMargin, ...styles.addLeftMargin }}>
 
-          <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
-
-          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-            {this.handleprofilelink()}
-          </div>
-
-          {this.handleregisterlink_400()}
-
-          {this.handlecompanylinks_1200()}
-          {this.handleshowprojectlinks()}
-          {this.showactiveprojectlinks()}
-          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addBottomMargin, ...styles.alignCenter }}>
-            {this.handleloginlink()}
-          </div>
-
-
-
-        </div>
-        <div style={{ ...styles.flex3 }}>
-
-          <div style={{ ...styles.generalContainer, ...styles.headerBackground, ...styles.extraThickBorder, ...styles.addBorderRadius, ...styles.addRightMargin }}>{Logo()}</div>
-
-          <div style={{ ...styles.generalFlex, ...styles.regularFont }}>
-            <div style={{ ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>{this.handleprojectlink()}</div>
-            <div style={{ ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>{this.handleregisterlink()}</div>
-            <div style={{ ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}> {this.handleloginlink()}</div>
-          </div>
-
-          <div style={styles.generalContainer}>
-            {this.showRouter()}
-          </div>
-
-
-        </div>
-      </div>)
-
-  }
-  app1200closed() {
-    const styles = MyStylesheet();
-    return (
-      <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-        <div style={{ ...styles.flex1 }}>
-
-          <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-            <div style={{ ...styles.flex1 }}>
-
-
-
-              <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-
-                <div style={{ ...styles.flex1, ...styles.headerBackground, ...styles.iconBorder, ...styles.alignCenter, ...styles.iconBorder, ...styles.addMarginTop, ...styles.addBottomMargin, ...styles.addLeftMargin }}>
-                  <button style={{ ...styles.logoIcon, ...styles.generalButton, ...styles.headerBackground }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
-                </div>
-
-                <div style={{ ...styles.flex3, ...styles.headerBackground, ...styles.logoBorder, ...styles.addMarginTop, ...styles.addBottomMargin, ...styles.addRightMargin }}>
-                  {Logo()}
-                </div>
-              </div>
-
-              <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin, ...styles.alignCenter }}>
-                  {this.handleprofilelink()}
-                </div>
-                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin }}>
-                  {this.handleshowprojectlinksnomenu()}
-                </div>
-                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin, ...styles.alignCenter }}>
-                  {this.handleregisterlink()}
-                </div>
-                <div style={{ ...styles.flex1, ...styles.thickBorder, ...styles.navContainer, ...styles.addMargin, ...styles.alignCenter }}>
-                  {this.handleloginlink()}
-                </div>
-              </div>
-
-              <div style={styles.generalContainer}>
-                {this.showRouter()}
-              </div>
-
-            </div>
-          </div>
-
-
-
-
-          <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-            <div style={{ ...styles.flex1, ...styles.showBorder }}>
-              &nbsp;
-            </div>
-          </div>
-
-
-
-        </div>
-      </div>
-    )
-
-  }
+ 
   getuser() {
     let user = false;
     if (this.props.myusermodel) {
@@ -652,18 +390,18 @@ class App extends Component {
   async logoutuser() {
     const dynamicstyles = new DynamicStyles();
     const myuser = dynamicstyles.getuser.call(this);
-    if(myuser) {
-    try {
+    if (myuser) {
+      try {
 
-      let response = await LogoutUserNode(myuser.providerid);
-      console.log(response)
-      this.props.reduxUser(response)
-    
-    } catch (err) {
-      alert(err)
+        let response = await LogoutUserNode(myuser.providerid);
+        console.log(response)
+        this.props.reduxUser(response)
+
+      } catch (err) {
+        alert(err)
+      }
+
     }
-
-  }
 
   }
   handleloginlink() {
@@ -691,16 +429,16 @@ class App extends Component {
     }
   }
   toogleappmenu() {
-    
+
     if (this.props.navigation) {
       if (this.props.navigation.hasOwnProperty("position")) {
         let position = this.props.navigation.position;
         if (position === 'closed') {
           this.props.reduxNavigation({ position: 'open' })
-          this.setState({render:'render'})
+          this.setState({ render: 'render' })
         } else if (position === "open") {
           this.props.reduxNavigation({ position: 'closed' })
-          this.setState({render:'render'})
+          this.setState({ render: 'render' })
         }
 
       }
@@ -735,12 +473,209 @@ class App extends Component {
 
     }
   }
+
   render() {
-    return (<BrowserRouter>
-      <div className="general-container">
-        {this.handleapp()}
-      </div>
-    </BrowserRouter>)
+    const styles = MyStylesheet();
+    const dynamicstyles = new DynamicStyles();
+    const position = dynamicstyles.getnavigation.call(this)
+    const iconwidth = dynamicstyles.getlogoicon.call(this)
+    const myuser = dynamicstyles.getuser.call(this)
+    const headerFont = dynamicstyles.getHeaderFont.call(this)
+    const getflex = () => {
+      if (this.state.width > 800) {
+        return (styles.flex3)
+      } else {
+        return (styles.flex2)
+      }
+    }
+    const getflex_1 = () => {
+
+      if (this.state.width > 800) {
+        return ({ ...styles.flex3 })
+      } else {
+        return ({ ...styles.flex1 })
+      }
+    }
+
+    const getflex_2 = () => {
+
+      if (this.state.width > 800) {
+        return ({ ...styles.flex1 })
+      } else {
+        return ({ ...styles.flex2 })
+      }
+    }
+    const link_1 = () => {
+      if (myuser) {
+        return (<Link to={`/${myuser.profile}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /{myuser.profile} </Link>)
+      } else {
+        return (<Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> / </Link>)
+      }
+
+    }
+    const logoutlink = () => {
+      if (myuser) {
+        return (
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
+            <div className="createlink" style={{ ...styles.generalFont, ...headerFont, ...styles.fontBold }} onClick={() => { this.logoutuser() }}>  logout </div>
+          </div>)
+      }
+    }
+
+    const loginlink = () => {
+      if (!myuser) {
+        return (
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
+            <Link to={`/providers/login`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /login </Link>
+          </div>)
+      }
+    }
+
+    const registerlink = () => {
+      if (!myuser) {
+        return (
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
+
+            <Link to={`/providers/register`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.fontBold }}>/register </Link>
+          </div>
+        )
+      }
+    }
+    const projectlinks = () => {
+      if (myuser) {
+        if (myuser.hasOwnProperty("company")) {
+          if (myuser.company.hasOwnProperty("projects")) {
+            return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15,...styles.addMargin }}>
+              {this.handleprojectlink()}
+              {this.projectidlinks()}
+            </div>)
+          }
+        }
+      }
+    }
+    const companylinks = () => {
+      if (myuser) {
+        if (myuser.hasOwnProperty("company")) {
+          return (
+            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
+              {this.handlecompanylink()}
+              {this.showcompanylinks()}
+            </div>)
+        }
+      }
+    }
+    const navmenu = () => {
+      if (position === 'open') {
+
+        return (
+          <div style={{ ...getflex_2(), ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius, ...styles.addMargin, ...styles.addPadding }}>
+            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
+              {link_1()}
+            </div>
+            {loginlink()}
+            {registerlink()}
+            {companylinks()}
+            {projectlinks()}
+            {this.showactiveprojectlinks()}
+            {logoutlink()}
+          </div>
+        )
+
+      }
+
+
+    }
+    const extramenu = () => {
+      if (myuser && this.state.width > 800 && position === 'closed') {
+        return (
+          <div style={{ ...styles.flex1, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
+            <div className="createlink" style={{ ...styles.generalFont, ...headerFont, ...styles.fontBold }} onClick={() => { this.logoutuser() }}>  logout </div>
+          </div>)
+      }
+    }
+
+    const submenulink_1 = () => {
+      if (myuser) {
+        return (<Link to={`/${myuser.profile}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /{myuser.profile} </Link>)
+      } else {
+        return (<Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> / </Link>)
+      }
+    }
+
+    const submenulink_2 = () => {
+      if (myuser) {
+        return (<Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /projects </Link>)
+      } else {
+        return (<Link to={`/providers/register`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.fontBold }}>/register </Link>)
+      }
+    }
+
+    const submenulink_3 = () => {
+      if (myuser) {
+        return (<Link to={`/${myuser.profile}/company/${myuser.company.companyid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /company </Link>)
+      } else {
+        return (<Link to={`/providers/login`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.fontBold }}>/login </Link>)
+      }
+    }
+    const submenus = () => {
+      if (position === 'closed') {
+
+        return (<div style={{ ...styles.generalFlex }}>
+          <div style={{ ...styles.flex1, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
+            {submenulink_1()}
+          </div>
+          <div style={{ ...styles.flex1, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
+            {submenulink_2()}
+          </div>
+          <div style={{ ...styles.flex1, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
+            {submenulink_3()}
+          </div>
+          {extramenu()}
+        </div>)
+
+
+      }
+    }
+    console.log(getflex())
+    return (
+      <BrowserRouter>
+        <div style={{ ...styles.generalFlex }}>
+          <div style={{ ...styles.flex1 }}>
+
+            <div style={{ ...styles.generalFlex }}>
+              <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius, ...styles.addMargin }}>
+
+                <button style={{ ...iconwidth, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
+
+
+              </div>
+
+              <div style={{ ...getflex(), ...styles.addMarginTop, ...styles.addBottomMargin, ...styles.addRightMargin }}>
+                {Logo()}
+              </div>
+
+            </div>
+
+
+            <div style={{ ...styles.generalFlex }}>
+              {navmenu()}
+              <div style={{ ...getflex_1() }}>
+
+                {submenus()}
+
+                {this.showRouter()}
+
+
+
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+      </BrowserRouter>
+    )
 
   }
 }

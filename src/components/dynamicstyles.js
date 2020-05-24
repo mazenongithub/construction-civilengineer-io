@@ -166,6 +166,29 @@ class DynamicStyles {
             })
         }
     }
+    getlogoicon() {
+        if(this.state.width>1200) {
+            return({width:'183px',height:'122px'})
+        } else if (this.state.width>800) {
+            return({width:'150px',height:'100px'})
+        } else {
+
+            return({width:'115px',height:'77px'})
+
+        }
+    }
+    getnavigation() {
+        let navigation = false;
+        
+        if(this.props.navigation) {
+            if(this.props.navigation.hasOwnProperty("position")) {
+                navigation  = this.props.navigation.position;
+            }
+           
+
+        }
+        return navigation;
+    }
     getemployeebenefitsbyid(providerid) {
         const dynamicstyles = new DynamicStyles();
         let benefits = false;

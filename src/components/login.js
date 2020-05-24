@@ -32,7 +32,6 @@ class Login extends Component {
     }
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
-        this.props.reduxNavigation({ navigation: "login" })
         this.updateWindowDimensions();
     }
 

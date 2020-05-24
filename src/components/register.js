@@ -34,7 +34,6 @@ class Register extends Component {
     componentDidMount() {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
-        this.props.reduxNavigation({ navigation: "register" })
     }
 
     componentWillUnmount() {
