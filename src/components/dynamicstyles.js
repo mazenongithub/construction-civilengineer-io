@@ -257,6 +257,68 @@ class DynamicStyles {
         }
         return checkinvoice;
     }
+    getslidebyid(id) {
+        const dynamicstyles = new DynamicStyles();
+        const slides = dynamicstyles.getslides.call(this)
+        let myslide = false;
+        if(slides) {
+            // eslint-disable-next-line
+            slides.map(slide=>{
+                if(slide.id === id) {
+                    myslide = slide;
+                }
+            })
+        }
+        return myslide;
+    }
+    getmainslide() {
+        if (this.state.width > 1200) {
+            return ({ width:'1087px',height:'1035px' })
+        } else if (this.state.width > 800) {
+            return ({ width:'762px',height:'725px' })
+        } else {
+            return ({ width:'356px',height:'339px' })
+        }
+    }
+    getslides() {
+        const slides = () => {
+            return([
+                {
+                    title:'Construction by civilengineer.io',
+                    id:'construction',
+                    url:'http://civilengineer.io/construction/slides/construction.png',
+                    caption:`Construction By civilengineer.io`
+
+                },
+                {
+                    title:'Equipment',
+                    id:'equipment',
+                    url:'http://civilengineer.io/construction/slides/equipment.png',
+                    caption:`Adding Equipment, costs, determining equipment rate based on cost of ownership`
+
+                },
+                {
+                    title:'Labor',
+                    id:'labor',
+                    url:'http://civilengineer.io/construction/slides/schedulelabor.png',
+                    caption:`Draft Project Specfication by Code`
+
+                },
+                
+        ])
+        }
+        return slides();
+    }
+    getsmallslide() {
+        if (this.state.width > 1200) {
+            return ({ width:'362px',height:'345px' })
+        } else if (this.state.width > 800) {
+            return ({ width:'254px',height:'241px' })
+        } else {
+            return ({ width:'178px',height:'169px' })
+        }
+    
+    }
     showchargesbyaccountid(accountid) {
         const dynamicstyles = new DynamicStyles();
         const myprojects = dynamicstyles.getmyprojects.call(this)

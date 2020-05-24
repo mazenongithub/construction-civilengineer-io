@@ -47,6 +47,16 @@ export function MyStylesheet() {
         generalContainer: {
             fontFamily: "'Nunito Sans', sans-serif"
         },
+        generalGrid:{
+            display:'grid',
+            gridRowGap:'15px'
+        },
+        doublegrid:{
+            gridTemplateColumns:'50% 50%'
+        },
+        triplegrid:{
+            gridTemplateColumns:'33% 33% 33%'
+        },
         csiField: {
             maxWidth: '120px',
             border: '1px solid'

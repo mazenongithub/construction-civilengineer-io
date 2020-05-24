@@ -1,104 +1,133 @@
-import React, { Component } from 'react';
-import { MyStylesheet } from './styles';
-import Privacy from './privacy';
+import React from 'react';
+import { MyStylesheet } from './styles'
+import DynamicStyles from './dynamicstyles'
 
-class Landing extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { render: '', width: 0, height: 0 }
-        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
-    }
-    componentDidMount() {
-        window.addEventListener('resize', this.updateWindowDimensions);
-        this.updateWindowDimensions();
-    }
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
-    }
-    updateWindowDimensions() {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
-    }
-    getFontHeight() {
+class Landing  {
+    showslide(slide) {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font30)
-        } else {
-            return (styles.font20)
-        }
+        const smallslide = dynamicstyles.getsmallslide.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        return(
+        <div style={{...styles.generalFlex}}>
+            <div style={{...styles.flex1}}>
+
+        <div style={{...styles.generalContainer,...styles.showBorder,...smallslide,...styles.marginAuto}} onClick={()=>{this.setState({activeslideid:slide.id})}}>
+            <img src={slide.url} alt={slide.title} style={{...smallslide}}  />
+        </div>
+        <div style={{...styles.generalContainer,...styles.marginAuto,...styles.alignCenter}} onClick={()=>{this.setState({activeslideid:slide.id})}}>
+            <span style={{...styles.generalFont,...regularFont}}>{slide.title}</span>
+        </div>
+
+
+        </div>
+        </div> )
+
     }
-    getTitleFont() {
+
+    showslides() {
+        const dynamicstyles = new DynamicStyles();
+        const slides = dynamicstyles.getslides.call(this);
         const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font40)
-        } else {
-            return (styles.font30)
+        const allslides = [];
+        const landing = new Landing()
+        if(slides) {
+            // eslint-disable-next-line
+            slides.map(slide=> {
+                allslides.push(landing.showslide.call(this,slide))
+
+            })
         }
-    }
-    makeprivacyactive() {
-        if(this.state.privacy) {
-            this.setState({privacy:false})
-        } else {
-            this.setState({privacy:true})
-        }
-    }
-    render() {
-        const styles = MyStylesheet();
-        const generalFontHeight = this.getFontHeight();
-        const getTitleFont = this.getTitleFont();
-        const privacy = new Privacy();
-        const privacymessage = () => {
-            if(this.state.privacy) {
-                return(`Hide Privacy Policy`)
+        const templatecolumns = () => {
+           
+            if(this.state.width>800) {
+            return (styles.triplegrid)
             } else {
-                return(`Show Privacy Policy`) 
+                return (styles.doublegrid)
             }
         }
-        const ShowPrivacy = () => {
-            if(this.state.privacy) {
-                return(privacy.showprivacy.call(this))
-            }
-        }
-        return (<div style={{ ...styles.generalFlex }}>
-            <div style={{ ...styles.flex1 }}>
-
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...getTitleFont, ...styles.fontBold, ...styles.alignCenter }}>
-                        Construction by CivilEngineer.io
-            </div>
-                </div>
-
-
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
-
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...generalFontHeight }}>
-                                Create your Company, Adds employees, benefits, determines labor rates, adds equipment, determines rates for equipment use, sets up accounts to distribute payment upon invoice to support different accounts, construction specification institute produces unit prices for different items for contruction, contractor bid schedule adds quantities producing unit pricing, equipment, labor and material components add Direct Costs, Compare proposed versus actual, project scheduling, cost estimating design for construction project
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...generalFontHeight }}>
-                                See for yourself, most comprehensive construction management application, go ahead and join
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div className="createlink" style={{ ...styles.flex1, ...styles.generalFont, ...generalFontHeight }} onClick={()=>{this.makeprivacyactive()}}>
-                               {privacymessage()}
-                            </div> 
-                        </div>
-
-                        {ShowPrivacy()}
-
-
-                    </div>
-                </div>
-
-            </div>
+        
+        return(<div style={{...styles.generalGrid,...templatecolumns(),...styles.bottomMargin15}}>
+            {allslides}
         </div>)
+        
+        
+    }
+
+    showlanding() {
+        const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
+        const mainslide = dynamicstyles.getmainslide.call(this)
+        const landing = new Landing();
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+
+        const myslide = () => {
+            if(this.state.activeslideid) {
+            return(dynamicstyles.getslidebyid.call(this,this.state.activeslideid))
+            } else {
+                return false;
+            }
+        }
+        const showmainslide = () => {
+ 
+            if(myslide()) {
+                return(<div style={{...styles.generalContainer,...styles.showBorder,...mainslide,...styles.marginAuto}}>
+                    <img src={myslide().url} alt={myslide().title} style={{...mainslide}}  />
+                </div> )
+            }
+
+        }
+        const showmaintitle = () => {
+
+            if(myslide()) {
+                return(<span style={{...styles.generalFont,...headerFont}}>{myslide().title}</span>)
+            }
+
+        }
+
+        const showmaincaption = () => {
+
+            if(myslide()) {
+                return(<span style={{...styles.generalFont,...regularFont}}>{myslide().caption}</span>)
+            }
+
+        }
+        return (
+            <div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex1 }}>
+
+                <div style={{ ...styles.generalFlex,...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+
+                          {showmaintitle()}
+
+                        </div>
+                    </div>
+
+
+                    <div style={{ ...styles.generalFlex,...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+
+                          {showmainslide()}
+
+                        </div>
+                    </div>
+
+                    <div style={{ ...styles.generalFlex,...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+
+                          {showmaincaption()}
+
+                        </div>
+                    </div>
+
+                    {landing.showslides.call(this)}
+
+                </div>
+            </div>
+        )
     }
 }
-
 
 export default Landing;

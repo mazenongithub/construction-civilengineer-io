@@ -48,7 +48,7 @@ import { firebaseConfig } from './firebaseconfig';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { render: '', width: 0, height: 0 }
+    this.state = { render: '', width: 0, height: 0,activeslideid:'construction' }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
   }
   componentDidMount() {
@@ -95,10 +95,21 @@ class App extends Component {
     }
   }
   showRouter() {
+    const dynamicstyles = new DynamicStyles();
+    const myuser = dynamicstyles.getuser.call(this)
+    const landing = new Landing();
+    const showlanding = () => {
+      if(myuser) {
+        return(<Profile/>)
+      } else {
+        return(landing.showlanding.call(this))
+      }
+
+    }
     return (
 
       <Switch>
-        <Route exact path="/" component={Landing} />
+        <Route exact path="/" component={showlanding} />
         <Route exact path="/providers/register" component={Register} />
         <Route exact path="/providers/login" component={Login} />
         <Route exact path="/providers/privacy_policy" component={PrivacyPolicy} />
