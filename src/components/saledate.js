@@ -8,7 +8,6 @@ import {
     check_30,
     check_31,
     trailingzero,
-    getOffset,
     inputDatePickerOutputDateObj,
     decreaseCalendarDaybyOneYear,
     subtractoneYearDateObj,
@@ -23,7 +22,8 @@ import {
     addoneYearDateObj,
     inputDateObjOutputCalendarDaySeconds,
     makeDatefromTimein,
-    makeDatefromObj
+    makeDatefromObj,
+    getOffsetDate
 
 
 } from './functions'
@@ -79,7 +79,8 @@ class SaleDate {
             month = trailingzero(month)
             let year = dateobj.getFullYear();
             let dayzero = trailingzero(day);
-            let offset = getOffset()
+            let timein = `${year}-${month}-${day}`
+            let offset = getOffsetDate(timein)
             let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
 
             let calendardate = new Date(timestring);
@@ -758,7 +759,7 @@ class SaleDate {
 
             let myequipment = this.getactiveequipment()
             let timein = myequipment.ownership.saledate;
-            let offset = getOffset();
+            let offset = getOffsetDate(timein);
             let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`);
             return (formatDateforCalendarDisplay(datein))
         }

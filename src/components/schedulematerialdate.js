@@ -21,7 +21,8 @@ import {
     addoneYearDateObj,
     inputDateObjOutputCalendarDaySeconds,
     makeDatefromObj,
-    inputDateStringOutputSeconds
+    inputDateStringOutputSeconds,
+    getOffsetDate
 
 
 } from './functions'
@@ -41,7 +42,7 @@ class ScheduleMaterialDate {
                     if (mymaterial) {
                         const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
                         let newtimein = inputSecOutDateString(dateencoded)
-                        console.log(newtimein)
+                       
                         myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = newtimein;
                         this.props.reduxUser(myuser)
                         if (mymaterial.proposalid) {
@@ -93,7 +94,8 @@ class ScheduleMaterialDate {
             month = trailingzero(month)
             let year = dateobj.getFullYear();
             let dayzero = trailingzero(day);
-            let offset = getOffset()
+            let timein = `${year}-${month}-${day}`
+            let offset = getOffsetDate(timein)
             let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
 
             let calendardate = new Date(timestring);
@@ -601,7 +603,7 @@ class ScheduleMaterialDate {
             let timein = mymaterial.timein;
 
             let datein = new Date(`${timein.replace(/-/g, '/')} UTC`);
-            console.log(datein)
+     
             showgrid.push(Datein.showgridcalender.call(this, datein))
 
         }
@@ -825,7 +827,7 @@ class ScheduleMaterialDate {
 
             let mymaterial = this.getactivematerial()
             let timein = mymaterial.timein;
-            let offset = getOffset();
+            let offset = getOffsetDate(timein);
             let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`);
             return (formatDateforCalendarDisplay(datein))
         }

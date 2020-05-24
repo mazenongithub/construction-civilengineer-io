@@ -21,7 +21,8 @@ import {
     addoneYearDateObj,
     inputDateObjOutputCalendarDaySeconds,
     makeDatefromObj,
-    inputDateStringOutputSeconds
+    inputDateStringOutputSeconds,
+    getOffsetDate
 
 
 } from './functions'
@@ -94,7 +95,8 @@ class ActualMaterialDate {
             month = trailingzero(month)
             let year = dateobj.getFullYear();
             let dayzero = trailingzero(day);
-            let offset = getOffset()
+            let timein = `${year}-${month}-${day}`
+            let offset = getOffsetDate(timein)
             let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
 
             let calendardate = new Date(timestring);
@@ -839,7 +841,7 @@ class ActualMaterialDate {
 
             let mymaterial = this.getactivematerial()
             let timein = mymaterial.timein;
-            let offset = getOffset();
+            let offset = getOffsetDate(timein);
             let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`);
             return (formatDateforCalendarDisplay(datein))
         }

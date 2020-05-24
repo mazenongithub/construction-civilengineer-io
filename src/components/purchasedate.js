@@ -23,7 +23,8 @@ import {
     addoneYearDateObj,
     inputDateObjOutputCalendarDaySeconds,
     makeDatefromTimein,
-    makeDatefromObj
+    makeDatefromObj,
+    getOffsetDate
 
 
 } from './functions'
@@ -38,6 +39,7 @@ class PurchaseDate {
             let myuser = dynamicstyles.getuser.call(this)
             let i = this.getactiveequipmentkey();
             let newtimein = inputSecOutDateString(dateencoded)
+      
             myuser.company.equipment.myequipment[i].ownership.purchasedate = newtimein;
             this.props.reduxUser(myuser)
             this.setState({ render: 'render' })
@@ -79,7 +81,8 @@ class PurchaseDate {
             month = trailingzero(month)
             let year = dateobj.getFullYear();
             let dayzero = trailingzero(day);
-            let offset = getOffset()
+            let timein = `${year}-${month}-${day}`
+            let offset = getOffsetDate(timein)
             let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
 
             let calendardate = new Date(timestring);
@@ -762,7 +765,7 @@ class PurchaseDate {
 
             let myequipment = this.getactiveequipment()
             let timein = myequipment.ownership.purchasedate;
-            let offset = getOffset();
+            let offset = getOffsetDate(timein);
             let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`);
             return (formatDateforCalendarDisplay(datein))
         }

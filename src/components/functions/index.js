@@ -181,7 +181,7 @@ export function inputDateSecActiveIDTimein(dateencoded, timein) {
     return (`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`)
 }
 export function decreaseCalendarDaybyOneYear(timein) {
-    let offset = getOffset();
+    let offset = getOffsetDate(timein);
     let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
     let currentYear = datein.getFullYear();
     let decreaseYear = currentYear - 1;
@@ -197,7 +197,7 @@ export function decreaseCalendarDaybyOneYear(timein) {
     return (newDate)
 }
 export function decreaseCalendarDaybyOneMonth(timein) {
-    let offset = getOffset();
+    let offset = getOffsetDate(timein);
     let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
     let currentMonth = datein.getMonth() + 1;
     let year = datein.getFullYear();
@@ -222,7 +222,7 @@ export function decreaseCalendarDaybyOneMonth(timein) {
     return (newDate)
 }
 export function increaseCalendarDayOneMonth(timein) {
-    let offset = getOffset();
+    let offset = getOffsetDate(timein);
     let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
     let currentMonth = datein.getMonth() + 1;
     let year = datein.getFullYear();
@@ -247,7 +247,7 @@ export function increaseCalendarDayOneMonth(timein) {
     return (newDate)
 }
 export function increaseCalendarDaybyOneYear(timein) {
-    let offset = getOffset();
+    let offset = getOffsetDate(timein);
     let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
     let currentYear = datein.getFullYear();
     let increaseYear = currentYear + 1;
@@ -359,9 +359,22 @@ export function getmonth(dateobj) {
             break;
     }
 }
+export function getOffsetDate(timein) {
+    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00 UTC`)
+    let offset = datein.getTimezoneOffset() / 60
+    let sym = "+";
+    if (offset > 0) {
+        sym = "-";
+    }
+    if (Math.abs(offset) < 10) {
+        offset = `0${offset}`
+    }
+    return (`${sym}${offset}:00`)
+}
 export function makeDatefromTimein(timein) {
-    const offset = getOffset();
+    const offset = getOffsetDate(timein);
     let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+    console.log(timein,datein)
     let year = datein.getFullYear();
     let month = datein.getMonth() + 1;
     if (month < 10) {
@@ -1125,6 +1138,7 @@ export function formatDateStringDisplay(timein) {
     return (`${month}/${day}/${year}`)
 }
 export function inputSecOutDateString(dateencoded) {
+    console.log(dateencoded)
     const newDate = new Date(dateencoded)
     let year = newDate.getFullYear();
     let month = newDate.getMonth() + 1;
@@ -1138,7 +1152,7 @@ export function inputSecOutDateString(dateencoded) {
     return (`${year}-${month}-${day}`)
 }
 export function inputDateStringOutputSeconds(timein) {
-    let offset = getOffset()
+    let offset = getOffsetDate(timein)
     let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`);
     return (datein.getTime())
 }
@@ -1154,7 +1168,7 @@ export function inputtimeDBoutputCalendarDaySeconds(timein) {
         date = `0${date}`
     }
     let year = datein.getFullYear();
-    let offset = getOffset();
+    let offset = getOffsetDate(timein);
     let newDate = new Date(`${year}/${month}/${date} 00:00:00${offset}`)
     return (newDate.getTime())
 }
