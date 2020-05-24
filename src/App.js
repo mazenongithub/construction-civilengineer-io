@@ -147,9 +147,10 @@ class App extends Component {
   }
 
   showcompanylinks() {
-    let myuser = this.getuser();
+    const dynamicstyles = new DynamicStyles()
+    let myuser = dynamicstyles.getuser.call(this)
     const styles = MyStylesheet();
-    const regularFont = this.getRegularFont();
+    const regularFont = dynamicstyles.getRegularFont.call(this)
     if (myuser) {
       if (myuser.hasOwnProperty("company")) {
         const profile = myuser.profile;
@@ -192,45 +193,15 @@ class App extends Component {
     }
   }
  
- 
-
-  getRegularFont() {
-    const styles = MyStylesheet();
-    if (this.state.width > 800) {
-      return (styles.font30)
-    } else {
-      return (styles.font24)
-    }
-
-  }
-
-  getprojects() {
-    let myuser = this.getuser();
-    let projects = false;
-    if (myuser.hasOwnProperty("company")) {
-      if (myuser.company.hasOwnProperty("projects")) {
-        projects = myuser.company.projects.myproject;
-
-      }
-    }
-    return projects;
-  }
-  getHeaderFont() {
-    const styles = MyStylesheet();
-    if (this.state.width > 800) {
-      return (styles.font40)
-    } else {
-      return (styles.font36)
-    }
-  }
   projectidlinks() {
-    let myproject = this.getprojects();
-    const regularFont = this.getRegularFont();
+    const dynamicstyles = new DynamicStyles()
+    const regularFont = dynamicstyles.getRegularFont.call(this)
     const styles = MyStylesheet();
     let projectidlinks = [];
-    const myuser = this.getuser();
+    const myuser = dynamicstyles.getuser.call(this)
     if (myuser) {
       let profile = myuser.profile;
+      const myproject = dynamicstyles.getmyprojects.call(this)
       if (myproject) {
         const companyid = myuser.company.url
         // eslint-disable-next-line
@@ -249,7 +220,7 @@ class App extends Component {
   }
   handleprojectlink() {
     const dynamicstyles = new DynamicStyles();
-    let myuser = this.getuser();
+    let myuser = dynamicstyles.getuser.call(this)
     const styles = MyStylesheet();
     const headerFont = dynamicstyles.getHeaderFont.call(this);
 
@@ -287,17 +258,6 @@ class App extends Component {
       return;
     }
   }
-  getcompanyprojects() {
-    let projects = false;
-    let myuser = this.getuser();
-    if (myuser.hasOwnProperty("company")) {
-      if (myuser.company.hasOwnProperty("projects")) {
-        projects = myuser.company.projects;
-      }
-    }
-    return projects;
-  }
- 
  
 
   showactiveprojectlinks() {
@@ -363,30 +323,7 @@ class App extends Component {
     }
   }
 
- 
-  getuser() {
-    let user = false;
-    if (this.props.myusermodel) {
-      if (this.props.myusermodel.hasOwnProperty("providerid")) {
-        user = this.props.myusermodel;
-      }
 
-    }
-    return user;
-  }
-  handleprofilelink() {
-    const dynamicstyles = new DynamicStyles();
-    let user = this.getuser();
-    const styles = MyStylesheet();
-    const headerFont = dynamicstyles.getHeaderFont.call(this)
-    if (user) {
-      return (<Link to={`/${user.profile}/profile`}
-        style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}
-      > /{user.profile} </Link>)
-    } else {
-      return (<Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> / </Link>)
-    }
-  }
   async logoutuser() {
     const dynamicstyles = new DynamicStyles();
     const myuser = dynamicstyles.getuser.call(this);
@@ -404,30 +341,7 @@ class App extends Component {
     }
 
   }
-  handleloginlink() {
-
-    const dynamicstyles = new DynamicStyles();
-    const styles = MyStylesheet();
-    const user = dynamicstyles.getuser.call(this);
-    const headerFont = dynamicstyles.getHeaderFont.call(this);
-    if (user) {
-      return (<div className="createlink" style={{ ...styles.generalFont, ...headerFont, ...styles.fontBold }} onClick={() => { this.logoutuser() }}>  logout </div>)
-    } else {
-      return (<Link to={`/providers/login`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /login </Link>)
-    }
-  }
-
-  handleregisterlink() {
-    const dynamicstyles = new DynamicStyles();
-    const headerFont = dynamicstyles.getHeaderFont.call(this);
-    const styles = MyStylesheet();
-    const user = this.getuser();
-    if (user) {
-      return (<Link to={`/${user.profile}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /company </Link>)
-    } else {
-      return (<Link to={`/providers/register`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /register </Link>)
-    }
-  }
+ 
   toogleappmenu() {
 
     if (this.props.navigation) {
@@ -444,36 +358,6 @@ class App extends Component {
       }
     }
   }
-  handleapp() {
-    if (this.props.navigation) {
-      if (this.props.navigation.position === 'closed') {
-        if (this.state.width > 800) {
-          return (this.app1200closed())
-        } else {
-          return (this.app400closed())
-        }
-
-      } else {
-        if (this.state.width > 800) {
-          return (this.app1200open())
-        } else {
-          return (this.app400open())
-        }
-
-
-      }
-    } else {
-
-      if (this.state.width > 800) {
-        return (this.app1200open())
-      } else {
-        return (this.app400open())
-      }
-
-
-    }
-  }
-
   render() {
     const styles = MyStylesheet();
     const dynamicstyles = new DynamicStyles();
