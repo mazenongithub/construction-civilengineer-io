@@ -12,8 +12,6 @@ import {
     subtractincDateObj,
     increasedateStringbyInc,
     addincDateObj,
-    inputTimeInDateStringforPicker,
-    inputDateObjOutputString,
     inputDateTimeOutDateObj,
     inputUTCStringForLaborID,
     inputDateObjOutputCalendarString,
@@ -27,7 +25,7 @@ import {
     inputDateSecActiveIDTimein,
     inputDateObjandSecReturnObj,
     trailingzero,
-    getOffset,
+    getOffsetDate,
     toggleAMTimeString,
     toggleAMDateObj,
     AMPMfromTimeIn
@@ -83,6 +81,7 @@ class ScheduleLaborTimeIn {
 
                             let timein = mylabor.timein;
                             timein = toggleAMTimeString(mylabor.timein)
+                           
                             myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = timein;
                             this.props.reduxUser(myuser)
                             if (mylabor.proposalid) {
@@ -178,7 +177,8 @@ class ScheduleLaborTimeIn {
             month = trailingzero(month)
             let year = dateobj.getFullYear();
             let dayzero = trailingzero(day);
-            let offset = getOffset()
+            const timein = `${year}-${month}-${dayzero}`
+            let offset = getOffsetDate(timein)
             let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
 
             let calendardate = new Date(timestring);
@@ -1107,19 +1107,6 @@ class ScheduleLaborTimeIn {
     }
 
 
-
-    gettimein() {
-        let timein = "";
-        if (this.state.activelaborid) {
-
-            let mylabor = this.getactivelabor();
-            timein = inputTimeInDateStringforPicker(mylabor.timein);
-        }
-        else {
-            timein = inputDateObjOutputString(this.state.timein);
-        }
-        return timein;
-    }
 
 
     activetimeincalendar() {

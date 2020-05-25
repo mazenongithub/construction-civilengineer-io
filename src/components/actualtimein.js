@@ -28,7 +28,7 @@ import {
     inputDateSecActiveIDTimein,
     inputDateObjandSecReturnObj,
     trailingzero,
-    getOffset,
+    getOffsetDate,
     toggleAMTimeString,
     toggleAMDateObj,
     AMPMfromTimeIn
@@ -162,7 +162,8 @@ class TimeIn {
                 month = trailingzero(month)
                 let year = dateobj.getFullYear();
                 let dayzero = trailingzero(day);
-                let offset = getOffset()
+                const timein = `${year}-${month}-${dayzero}`
+                let offset = getOffsetDate(timein)
                 let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
 
                 let calendardate = new Date(timestring);

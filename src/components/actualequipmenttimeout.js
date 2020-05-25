@@ -27,10 +27,11 @@ import {
     inputDateSecActiveIDTimein,
     inputDateObjandSecReturnObj,
     trailingzero,
-    getOffset,
+    getOffsetDate,
     toggleAMTimeString,
     toggleAMDateObj,
-    AMPMfromTimeIn
+    AMPMfromTimeIn,
+    getOffsetTime
 } from './functions';
 import { actualmajorDownIcon, ActualDateArrowDown, ActualDateArrowUp } from './svg';
 import { MyStylesheet } from './styles';
@@ -169,7 +170,8 @@ class ActualEquipmentTimeOut {
             month = trailingzero(month)
             let year = dateobj.getFullYear();
             let dayzero = trailingzero(day);
-            let offset = getOffset()
+            const timeout = `${year}-${month}-${dayzero}`
+            let offset = getOffsetTime(timeout)
             let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
 
             let calendardate = new Date(timestring);

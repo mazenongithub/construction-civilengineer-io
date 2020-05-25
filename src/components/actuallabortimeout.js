@@ -27,7 +27,7 @@ import {
     inputDateSecActiveIDTimein,
     inputDateObjandSecReturnObj,
     trailingzero,
-    getOffset,
+    getOffsetDate,
     toggleAMTimeString,
     toggleAMDateObj,
     AMPMfromTimeIn
@@ -168,7 +168,8 @@ class ActualLaborTimeOut {
             month = trailingzero(month)
             let year = dateobj.getFullYear();
             let dayzero = trailingzero(day);
-            let offset = getOffset()
+            const timeout = `${year}-${month}-${dayzero}`
+            let offset = getOffsetDate(timeout)
             let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
 
             let calendardate = new Date(timestring);

@@ -27,7 +27,7 @@ import {
     inputDateSecActiveIDTimein,
     inputDateObjandSecReturnObj,
     trailingzero,
-    getOffset,
+    getOffsetDate,
     toggleAMTimeString,
     toggleAMDateObj,
     AMPMfromTimeIn
@@ -177,7 +177,8 @@ class ScheduleEquipmentTimeOut {
             month = trailingzero(month)
             let year = dateobj.getFullYear();
             let dayzero = trailingzero(day);
-            let offset = getOffset()
+            const timeout = `${year}-${month}-${dayzero}`
+            let offset = getOffsetDate(timeout)
             let timestring = `${year}/${month}/${dayzero} 00:00:00${offset}`;
 
             let calendardate = new Date(timestring);
@@ -1061,7 +1062,7 @@ class ScheduleEquipmentTimeOut {
                         myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = newtimeout
                         this.props.reduxUser(myuser)
                         if (myequipment.proposalid) {
-                            dynamicstyles.updateproposal.call(this.myequipment.proposalid)
+                            dynamicstyles.updateproposal.call(this,myequipment.proposalid)
                         } else {
                             this.setState({ render: 'render' })
                         }

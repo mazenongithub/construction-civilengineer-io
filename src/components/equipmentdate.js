@@ -7,7 +7,6 @@ import {
     check_30,
     check_31,
     trailingzero,
-    getOffset,
     inputDatePickerOutputDateObj,
     decreaseCalendarDaybyOneYear,
     subtractoneYearDateObj,

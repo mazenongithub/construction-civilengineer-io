@@ -1,7 +1,6 @@
 import React from 'react'
 import { openDateMenu, closeDateMenu, dateYearDown, dateYearUp, dateMonthDown, dateMonthUp } from './svg'
 import {
-    adjustdatefromcalendar,
     formatDateforCalendarDisplay,
     getFirstIsOn,
     check_29_feb_leapyear,
