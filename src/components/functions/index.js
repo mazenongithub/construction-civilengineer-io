@@ -478,6 +478,30 @@ export function toggleAMDateObj(datein) {
     return (newDate)
 
 }
+
+export function LetterCounter(i) {
+    switch (Number(i)) {
+        case 1:
+            return 'A'
+        case 2:
+            return 'B'
+        case 3:
+            return 'C'
+
+        default:
+            break;
+    }
+}
+
+export function sortpart(b, a) {
+    if (Number(b.part) < Number(a.part)) {
+        return -1
+
+    } else {
+        return 1;
+    }
+
+}
 export function toggleAMTimeString(timein) {
     console.log(timein)
     //let timein = '2020-04-08 15:00:00'

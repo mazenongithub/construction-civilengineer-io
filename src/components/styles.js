@@ -76,6 +76,12 @@ export function MyStylesheet() {
             minHeight: '60px',
             maxWidth: '77px'
         },
+        marginLeft60:{
+            marginLeft:'60px'
+        },
+        marginLeft30:{
+            marginLeft:'30px'
+        },
         dateContainer: {
             maxWidth: '64px',
             maxHeight: '64px'

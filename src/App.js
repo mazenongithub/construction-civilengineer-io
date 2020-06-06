@@ -39,6 +39,9 @@ import { Link } from 'react-router-dom';
 import { returnCompanyList } from './components/functions';
 import DynamicStyles from './components/dynamicstyles';
 import PrivacyPolicy from './components/privacypolicy';
+import Estimate from './components/estimate';
+import Specifications from './components/specifications';
+import Specification from './components/specification';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { firebaseConfig } from './firebaseconfig';
@@ -136,6 +139,9 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/scheduleequipment" component={ScheduleEquipment} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/actualequipment" component={ActualEquipment} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals" component={Proposals} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/estimate" component={Estimate} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/specifications" component={Specifications} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/specifications/:csiid" component={Specification} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals/:proposalid" component={ViewProposal} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals/:proposalid/csi/:csiid" component={ProposalLineItem} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/invoices" component={Invoices} />
@@ -166,7 +172,7 @@ class App extends Component {
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link to={`/${profile}/company/${companyid}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /accounts
-                             </Link>
+                </Link>
             </div>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link to={`/${profile}/company/${companyid}/construction`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
@@ -315,6 +321,12 @@ class App extends Component {
                 </div>
                 <div style={{ ...styles.generalContainer }}>
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actualmaterials`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /materials </Link>
+                </div>
+                <div style={{ ...styles.generalContainer }}>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/estimate`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /costestimate </Link>
+                </div>
+                <div style={{ ...styles.generalContainer }}>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/specifications`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /specifications </Link>
                 </div>
               </div>)
           }

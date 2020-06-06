@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate } from './functions'
+import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart} from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, ClientLoginNode, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile } from './actions/api';
 
@@ -360,6 +360,20 @@ class DynamicStyles {
                     id:'viewaccount',
                     url:'http://civilengineer.io/construction/slides/viewaccount.png',
                     caption:`View Balances for Each Account you create including all charges and transfers `
+
+                },
+                {
+                    title:'Quantity Take Off Schedule',
+                    id:'takeoffschedule',
+                    url:'http://civilengineer.io/construction/slides/costestimate.png',
+                    caption:`Engineers provide the Contractor quantity take off schedules for bid `
+
+                },
+                {
+                    title:'Specification',
+                    id:'specification',
+                    url:'http://civilengineer.io/construction/slides/specification.png',
+                    caption:`Engineers deliver the specifications to the contractor for each item in their pay schedule or to be included in other items  `
 
                 }
                 
@@ -1832,6 +1846,114 @@ class DynamicStyles {
         return projects;
     }
 
+    getsectionbyid(projectid, csiid, sectionid) {
+        const dynamicstyles = new DynamicStyles();
+        const spec = dynamicstyles.getspecficationbycsi.call(this, projectid, csiid)
+        let mysection = false;
+        if (spec) {
+
+            if (spec.hasOwnProperty("sections")) {
+                // eslint-disable-next-line
+                spec.sections.map(section => {
+                    if (section.sectionid === sectionid) {
+                        mysection = section;
+                    }
+                })
+            }
+        }
+        return mysection;
+    }
+
+    getsectionnumberbyid(projectid, csiid, sectionid) {
+        const dynamicstyles = new DynamicStyles();
+        const spec = dynamicstyles.getspecficationbycsi.call(this, projectid, csiid)
+        let mycounter = "";
+        if (spec.hasOwnProperty("sections")) {
+            const section = dynamicstyles.getsectionbyid.call(this, projectid, csiid, sectionid)
+            if (section) {
+                let part = section.part;
+
+                spec.sections.sort((b, a) => {
+                    return sortpart(b, a)
+                })
+
+                let counter = 1;
+                // eslint-disable-next-line
+                spec.sections.map((section, i) => {
+                    if (section.part === part) {
+
+                        if (section.sectionid === sectionid) {
+                            mycounter = counter;
+                        } else {
+                            counter += 1;
+                        }
+
+                    }
+
+
+
+                })
+
+            }
+
+        }
+        if (Number(mycounter) < 10) {
+            mycounter = `0${mycounter}`
+        }
+        return mycounter;
+    }
+
+    getspecficationbycsi(projectid, csiid) {
+        const dynamicstyles = new DynamicStyles();
+        const specs = dynamicstyles.getspecficationsbyprojectid.call(this, projectid)
+        let myspec = false;
+        if (specs) {
+            // eslint-disable-next-line
+            specs.map(spec => {
+                if (spec.csiid === csiid) {
+                    myspec = spec;
+                }
+            })
+        }
+        return myspec;
+    }
+
+    getspecficationsbyprojectid(projectid) {
+        const dynamicstyles = new DynamicStyles();
+        const myproject = dynamicstyles.getprojectbyid.call(this, projectid)
+        let specifications = false;
+        if (myproject.hasOwnProperty("specifications")) {
+            specifications = myproject.specifications;
+        }
+       
+        return specifications;
+    }
+
+    getbiditembycsiid(projectid, csiid) {
+        const dynamicstyles= new DynamicStyles();
+        let schedule = false;
+        const project = dynamicstyles.getprojectbyid.call(this, projectid);
+        if (project.hasOwnProperty("costestimate")) {
+            if (project.costestimate.hasOwnProperty("bidschedule")) {
+                // eslint-disable-next-line
+                project.costestimate.bidschedule.map(bidschedule => {
+                    if (bidschedule.csiid === csiid) {
+                        schedule = bidschedule;
+                    }
+                })
+
+            }
+
+        }
+        return schedule;
+    }
+    getquantityfield() {
+        if (this.state.width > 1200) {
+            return ({ maxWidth: '145px' })
+        } else {
+            return ({ maxWidth: '96px' })
+        }
+    }
 
     getproject() {
 
