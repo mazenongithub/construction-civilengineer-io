@@ -51,7 +51,7 @@ import { firebaseConfig } from './firebaseconfig';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { render: '', width: 0, height: 0, activeslideid: 'construction' }
+    this.state = { render: '', width: 0, height: 0, activeslideid: 'viewaccount' }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
   }
   componentDidMount() {
@@ -532,22 +532,22 @@ class App extends Component {
 
       }
     }
+    const getmainlogo = dynamicstyles.getmainlogo.call(this)
   
     return (
       <BrowserRouter>
         <div style={{ ...styles.generalFlex }}>
           <div style={{ ...styles.flex1 }}>
 
-            <div style={{ ...styles.generalFlex }}>
-              <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius, ...styles.addMargin }}>
-
-                <button style={{ ...iconwidth, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
-
-
+            <div style={{ ...styles.generalFlex,...styles.bottomMargin15 }}>
+              <div style={{ ...styles.flex1, ...styles.alignCenter,  ...styles.addMargin}}>
+                <div className="createlink" style={{...styles.generalContainer,...iconwidth, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius}}>
+                    <button className="createlink" style={{ ...iconwidth, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
+                </div>
               </div>
 
               <div style={{ ...getflex(), ...styles.addMarginTop, ...styles.addBottomMargin, ...styles.addRightMargin }}>
-                {Logo()}
+                <div style={{...styles.generalContainer, ...getmainlogo}}>{Logo()} </div>
               </div>
 
             </div>

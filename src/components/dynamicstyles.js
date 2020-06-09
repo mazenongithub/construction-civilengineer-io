@@ -166,14 +166,26 @@ class DynamicStyles {
             })
         }
     }
-    getlogoicon() {
+    getmainlogo() {
         if(this.state.width>1200) {
-            return({width:'183px',height:'122px'})
+            return({width:'449px',height:'71px'})
         } else if (this.state.width>800) {
-            return({width:'150px',height:'100px'})
+            return({width:'376px',height:'59px'})
         } else {
 
-            return({width:'115px',height:'77px'})
+            return({width:'302px',height:'48px'})
+
+        }
+
+    }
+    getlogoicon() {
+        if(this.state.width>1200) {
+            return({width:'100px',height:'70px'})
+        } else if (this.state.width>800) {
+            return({width:'91px',height:'64px'})
+        } else {
+
+            return({width:'82px',height:'58px'})
 
         }
     }
