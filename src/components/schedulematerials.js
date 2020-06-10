@@ -13,7 +13,7 @@ import MilestoneID from './milestoneid';
 class ScheduleMaterials extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activematerialid: '', material: '', datein: new Date(), unit: '', quantity: '', unitcost: '', milestoneid: '', csiid: '', mymaterialid: '', calender: 'open', csi_1: '', csi_2: '', csi_3: '' }
+        this.state = { render: '', width: 0, height: 0, activematerialid: '', material: '', datein: new Date(), unit: '', quantity: '', unitcost: '', milestoneid: '', csiid: '', mymaterialid: '', calender: 'open', csi_1: '', csi_2: '', csi_3: '', csi_4:'' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -423,12 +423,14 @@ class ScheduleMaterials extends Component {
         let csi_1 = "";
         let csi_2 = "";
         let csi_3 = "";
+        let csi_4 = "";
         if (csi) {
             csi_1 = csi.csi.substr(0, 2)
             csi_2 = csi.csi.substr(2, 2)
             csi_3 = csi.csi.substr(4, 2)
+            csi_4 = csi.csi.substr(7,2)
         }
-        this.setState({ csi_1, csi_2, csi_3 })
+        this.setState({ csi_1, csi_2, csi_3, csi_4 })
         let myuser = this.getuser();
         if (myuser) {
             let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)

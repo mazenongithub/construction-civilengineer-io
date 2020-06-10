@@ -23,6 +23,7 @@ class CSI {
         let csi_1 = this.state.csi_1;
         let csi_2 = this.state.csi_2;
         let csi_3 = this.state.csi_3;
+        let csi_4 = this.state.csi_4;
         let searchcsi = "";
         let results = [];
         const validatecode = (results, code) => {
@@ -38,14 +39,17 @@ class CSI {
             }
             return validate;
         }
-        if (csi_1) {
-            searchcsi += csi_1.substr(0, 2)
+        if (csi_1.length === 2) {
+            searchcsi = csi_1.substr(0,2);
         }
-        if (csi_2) {
-            searchcsi += csi_2.substr(0, 2)
+        if (csi_2.length === 2) {
+            searchcsi += csi_2.substr(0,2);
         }
-        if (csi_3) {
-            searchcsi += csi_3.substr(0, 2)
+        if (csi_3.length === 2) {
+            searchcsi += csi_3.substr(0,2);
+        }
+        if(csi_4.length === 2) {
+            searchcsi += csi_4.substr(0,2);    
         }
 
         if (searchcsi) {
@@ -192,6 +196,11 @@ class CSI {
                             <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
                                 value={this.state.csi_3}
                                 onChange={event => { this.setState({ csi_3: event.target.value, activecsiid: false }) }} />
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
+                                value={this.state.csi_4}
+                                onChange={event => { this.setState({ csi_4: event.target.value, activecsiid: false }) }} />
                         </div>
                     </div>
 

@@ -20,7 +20,7 @@ class ScheduleLabor extends Component {
             timein: new Date(),
             timeout: new Date(new Date().getTime() + (1000 * 60 * 60)),
             activetimeincalendar: true, activetimeoutcalendar: true,
-            csi_1: ''
+            csi_1: '',csi_2:'',csi_3:'',csi_4:''
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
 
@@ -434,7 +434,8 @@ class ScheduleLabor extends Component {
         let csi_1 = csi.csi.substr(0, 2)
         let csi_2 = csi.csi.substr(2, 2)
         let csi_3 = csi.csi.substr(4, 2)
-        this.setState({ csi_1, csi_2, csi_3 })
+        let csi_4 = csi.csi.substr(7,2)
+        this.setState({ csi_1, csi_2, csi_3, csi_4 })
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid)

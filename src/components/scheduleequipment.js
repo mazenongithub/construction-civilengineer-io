@@ -17,7 +17,7 @@ class ScheduleEquipment extends Component {
             render: '', width: 0, height: 0, activeequipmentid: '', myequipmentid: '',
             timein: new Date(),
             timeout: new Date(new Date().getTime() + (1000 * 60 * 60)),
-            milestoneid: '', csiid: '', csi_1: '', csi_2: '', csi_3: '', proposalid: ''
+            milestoneid: '', csiid: '', csi_1: '', csi_2: '', csi_3: '', csi_4:'', proposalid: ''
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
 
@@ -500,13 +500,15 @@ class ScheduleEquipment extends Component {
         let csi_1 = "";
         let csi_2 = "";
         let csi_3 = "";
+        let csi_4 = "";
         const csi = dynamicstyles.getcsibyid.call(this, csiid);
         if (csi) {
             csi_1 = csi.csi.substr(0, 2)
             csi_2 = csi.csi.substr(2, 2)
             csi_3 = csi.csi.substr(4, 2)
+            csi_4 = csi.csi.substr(7,2)
         }
-        this.setState({ csi_1, csi_2, csi_3 })
+        this.setState({ csi_1, csi_2, csi_3, csi_4})
         let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);

@@ -71,9 +71,7 @@ class Specification extends Component {
         const projectid = project.projectid;
         const csiid = this.props.match.params.csiid;
         const sectionnumber = dynamicstyles.getsectionnumberbyid.call(this, projectid, csiid, section.sectionid);
-        const getremoveicon = dynamicstyles.getremoveicon.call(this)
-
-
+     
 
         return (<div style={{ ...styles.generalContainer }} key={`${section.sectionid}section`} ><span style={{ ...styles.generalFont, ...headerFont }}>{section.part}.{sectionnumber} {section.title} </span></div>)
     }
