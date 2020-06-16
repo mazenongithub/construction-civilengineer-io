@@ -142,8 +142,7 @@ class Invoices extends Component {
             if (this.state.activeinvoiceid) {
 
                 let invoiceid = this.state.activeinvoiceid;
-                const checkinvoice = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
-                if (checkinvoice) {
+          
                     let i = dynamicstyles.getprojectkey.call(this)
 
                     let result = this.checkinvoiceitem(item);
@@ -191,7 +190,7 @@ class Invoices extends Component {
 
                     }
 
-                }
+                
 
             }
         }
@@ -337,7 +336,10 @@ class Invoices extends Component {
         const amount = Number(totalhours * Number(item.equipmentrate))
         const profit = Number(item.profit) / 100;
         const checkequipment = () => {
-            const check = dynamicstyles.checkinvoiceequipmentid.call(this, item.equipmentid);
+            let check = true;
+            if(item.settlementid) {
+                check = false;
+            }
             return check;
         }
         const showequipmentrate = () => {
@@ -400,8 +402,10 @@ class Invoices extends Component {
         const proposalFieldLarge = dynamicstyles.getitemfieldlarge.call(this)
         const proposalFieldSmall = dynamicstyles.getitemfieldsmall.call(this)
         const checkmaterial = () => {
-            let check = dynamicstyles.checkinvoicematerialid.call(this, item.materialid)
-            console.log(check, item.materialid)
+            let check = true;
+            if(item.settlementid) {
+                check = false;
+            }
             return check;
         }
         const showprofit = () => {
@@ -474,7 +478,10 @@ class Invoices extends Component {
             }
         }
         const checklabor = () => {
-            let check = dynamicstyles.checkinvoicelaborid.call(this, item.laborid)
+            let check = true;
+            if(item.settlementid) {
+                check = false;
+            }
             return check;
         }
         const profit = getprofit();
@@ -562,7 +569,7 @@ class Invoices extends Component {
 
     }
     handlelaborrate(laborrate, laborid) {
-        let dynamicstyles = new DynamicStyles();
+        const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);

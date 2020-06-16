@@ -482,23 +482,19 @@ class ViewInvoice extends Component {
         let companyid = this.props.match.params.companyid;
         let projectid = this.props.match.params.projectid;
         let invoiceid = this.props.match.params.invoiceid;
-        const checkinvoice = dynamicstyles.checkupdateinvoice.call(this, this.props.match.params.invoiceid)
 
         let profit = () => {
-            if (checkinvoice) {
+        
                 return (
                     <input type="text"
                         value={Number(this.getprofit(item.csiid)).toFixed(4)}
                         onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
                         style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                     />)
-            } else {
-                return (Number(this.getprofit(item.csiid)).toFixed(4))
-            }
 
         }
         const quantity = () => {
-            if (checkinvoice) {
+ 
                 return (<div style={{ ...styles.generalContainer }}>
 
                     <input type="text"
@@ -506,14 +502,12 @@ class ViewInvoice extends Component {
                         onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
                         style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
                 </div>)
-            } else {
-                return (this.getquantity(csi.csiid))
-            }
+      
 
         }
 
         const unit = () => {
-            if (checkinvoice) {
+
                 return (
                     <div style={{ ...styles.generalContainer }}>
 
@@ -524,9 +518,6 @@ class ViewInvoice extends Component {
                         />
                     </div>)
 
-            } else {
-                return (this.getunit(csi.csiid))
-            }
 
         }
 
@@ -604,7 +595,7 @@ class ViewInvoice extends Component {
                 if (myproject.hasOwnProperty("actuallabor")) {
                     // eslint-disable-next-line
                     myproject.actuallabor.mylabor.map((mylabor, j) => {
-                        if (mylabor.invoiceid === invoiceid && (mylabor.csiid === csiid)) {
+                        if (mylabor.invoiceid === invoiceid && (mylabor.csiid === csiid) && !mylabor.settlementid) {
                             myuser.company.projects.myproject[i].actuallabor.mylabor[j].profit = profit;
                             k = dynamicstyles.getinvoicekeybyid.call(this, invoiceid)
                             myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()
@@ -616,7 +607,7 @@ class ViewInvoice extends Component {
                 if (myproject.hasOwnProperty("actualmaterials")) {
                     // eslint-disable-next-line
                     myproject.actualmaterials.mymaterial.map((mymaterial, j) => {
-                        if (mymaterial.invoiceid === invoiceid && (mymaterial.csiid === csiid)) {
+                        if (mymaterial.invoiceid === invoiceid && (mymaterial.csiid === csiid) && !mymaterial.settlementid) {
                             myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].profit = profit;
                             k = dynamicstyles.getinvoicekeybyid.call(this, invoiceid)
                             myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()
@@ -627,7 +618,7 @@ class ViewInvoice extends Component {
                 if (myproject.hasOwnProperty("actualequipment")) {
                     // eslint-disable-next-line
                     myproject.actualequipment.myequipment.map((myequipment, j) => {
-                        if (myequipment.invoiceid === invoiceid && (myequipment.csiid === csiid)) {
+                        if (myequipment.invoiceid === invoiceid && (myequipment.csiid === csiid) && !myequipment.settlementid) {
                             myuser.company.projects.myproject[i].actualequipment.myequipment[j].profit = profit;
                             k = dynamicstyles.getinvoicekeybyid.call(this, invoiceid)
                             myuser.company.projects.myproject[i].invoices.myinvoice[k].updated = UTCTimefromCurrentDate()

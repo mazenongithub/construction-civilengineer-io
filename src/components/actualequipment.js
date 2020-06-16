@@ -164,13 +164,16 @@ class ActualEquipment extends Component {
         }
 
     }
-  checkequipment () {
+  checkequipment() {
       const dynamicstyles = new DynamicStyles();
+      let check  = true;
         if(this.state.activeequipmentid) {
-            let equipmentid = this.state.activeequipmentid;
-            let check = dynamicstyles.checkinvoiceequipmentid.call(this,equipmentid);
-            return check;
+            let myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid);
+            if(myequipment.settlementid) {
+                check  = false;
+            }
         }
+        return check;
     }
     showtimes() {
         const styles = MyStylesheet();

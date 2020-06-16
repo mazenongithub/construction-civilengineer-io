@@ -19,7 +19,7 @@ class ActualLabor extends Component {
             timein: new Date(),
             timeout: new Date(new Date().getTime() + (1000 * 60 * 60)),
             activetimeincalendar: true, activetimeoutcalendar: true,
-            csi_1: '', csi_2: '', csi_3: '', csi_4:''
+            csi_1: '', csi_2: '', csi_3: '', csi_4: ''
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
 
@@ -370,7 +370,7 @@ class ActualLabor extends Component {
         let csi_1 = csi.csi.substr(0, 2)
         let csi_2 = csi.csi.substr(2, 2)
         let csi_3 = csi.csi.substr(4, 2)
-        let csi_4 = csi.csi.substr(7,2)
+        let csi_4 = csi.csi.substr(7, 2)
         this.setState({ csi_1, csi_2, csi_3, csi_4 })
         const myuser = dynamicstyles.getuser.call(this)
 
@@ -547,15 +547,14 @@ class ActualLabor extends Component {
             let check = true;
             if (this.state.activelaborid) {
                 const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
-
-                const invoiceid = mylabor.invoiceid;
-                if (invoiceid) {
-                    console.log(invoiceid)
-                    check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
-
+                console.log("checklabor",mylabor)
+                if (mylabor.settlementid) {
+                    check = false;
                 }
+
             }
-            console.log(check)
+            console.log("checklabor", check)
+
             return check;
         }
 
@@ -670,15 +669,11 @@ class ActualLabor extends Component {
                 let check = true;
                 if (this.state.activelaborid) {
                     const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
-
-                    const invoiceid = mylabor.invoiceid;
-                    if (invoiceid) {
-                        console.log(invoiceid)
-                        check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
-
+                    if (mylabor.settlementid) {
+                        check = false;
                     }
                 }
-                console.log(check)
+
                 return check;
             }
             const showemployee = () => {
@@ -736,8 +731,8 @@ class ActualLabor extends Component {
                 </div></div>)
 
         } else {
-            return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Actual Labor </span>
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Actual Labor </span>
             </div>)
         }
 

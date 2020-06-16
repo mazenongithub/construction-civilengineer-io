@@ -279,19 +279,7 @@ class DynamicStyles {
     }
 
 
-    checkupdateinvoice(invoiceid) {
-        const dynamicstyles = new DynamicStyles();
-        console.log(invoiceid)
-        const invoice = dynamicstyles.getinvoicebyid.call(this, invoiceid)
-        console.log(invoice)
-        let checkinvoice = true;
-        if (invoice) {
-            if (invoice.approved) {
-                checkinvoice = false;
-            }
-        }
-        return checkinvoice;
-    }
+ 
     getslidebyid(id) {
         const dynamicstyles = new DynamicStyles();
         const slides = dynamicstyles.getslides.call(this)
@@ -2888,8 +2876,8 @@ class DynamicStyles {
         const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid);
         let checkinvoice = true;
         if (myequipment) {
-            if (myequipment.invoiceid) {
-                checkinvoice = dynamicstyles.checkupdateinvoice.call(this,myequipment.invoiceid);
+            if (myequipment.settlementid) {
+                checkinvoice = false;
             }
         }
         return checkinvoice;
@@ -2901,21 +2889,22 @@ class DynamicStyles {
         const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid);
         let checkinvoice = true;
         if (mymaterial) {
-            if (mymaterial.invoiceid) {
-                checkinvoice = dynamicstyles.checkupdateinvoice.call(this,mymaterial.invoiceid);
+            if (mymaterial.settlementid) {
+                checkinvoice=false;
             }
         }
         return checkinvoice;
 
     }
+
     checkinvoicelaborid(laborid) {
         const dynamicstyles = new DynamicStyles();
         const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
         let checkinvoice = true;
         if (mylabor) {
-            if (mylabor.invoiceid) {
+            if (mylabor.settlementid) {
 
-                checkinvoice = dynamicstyles.checkupdateinvoice.call(this,mylabor.invoiceid)
+                checkinvoice = false;
             }
 
         }

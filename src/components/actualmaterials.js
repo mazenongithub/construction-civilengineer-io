@@ -266,9 +266,9 @@ class ActualMaterials extends Component {
             let check = true;
             if (this.state.activematerialid) {
                 const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
-                const invoiceid = mymaterial.invoiceid;
-                if (invoiceid) {
-                    check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
+                
+                if (mymaterial.settlementid) {
+                    check = false;
                 }
 
             }
@@ -346,9 +346,9 @@ class ActualMaterials extends Component {
             let check = true;
             if (this.state.activematerialid) {
                 const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
-                const invoiceid = mymaterial.invoiceid;
-                if (invoiceid) {
-                    check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
+                
+                if (mymaterial.settlementid) {
+                    check = false;
                 }
 
             }
@@ -930,9 +930,9 @@ class ActualMaterials extends Component {
             let check = true;
             if (this.state.activematerialid) {
                 const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
-                const invoiceid = mymaterial.invoiceid;
-                if (invoiceid) {
-                    check = dynamicstyles.checkupdateinvoice.call(this, invoiceid)
+                 
+                if (mymaterial.settlementid) {
+                    check = false;
                 }
 
             }
