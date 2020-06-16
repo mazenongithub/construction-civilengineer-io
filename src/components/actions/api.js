@@ -1,6 +1,27 @@
 
 
 
+export async function LoadCSIs() {
+
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/loadcsi`
+
+    return fetch(APIURL, { credentials: 'include' }).then(resp => {
+
+        if (!resp.ok) {
+            if (resp.status >= 400 && resp.status < 500) {
+                return resp.json().then(data => {
+                    throw data.message
+                })
+            }
+            else {
+                let err = { errorMessage: 'Please try again later, server is not responding' };
+                throw err;
+            }
+        }
+
+        return resp.json();
+    })
+}
 export async function UploadProfileImage(providerid, formdata) {
 
     var APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/uploadprofilephoto`

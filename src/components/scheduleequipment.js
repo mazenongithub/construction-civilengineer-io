@@ -752,7 +752,8 @@ class ScheduleEquipment extends Component {
 function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
-        navigation: state.navigation
+        navigation: state.navigation,
+        csis:state.csis
     }
 }
 

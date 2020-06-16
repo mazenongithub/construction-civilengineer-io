@@ -269,7 +269,8 @@ function mapStateToProps(state) {
         navigation: state.navigation,
         projectid: state.projectid,
         allusers: state.allusers,
-        allcompanys: state.allcompanys
+        allcompanys: state.allcompanys,
+        csis:state.csis
     }
 }
 

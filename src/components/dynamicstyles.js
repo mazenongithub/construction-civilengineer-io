@@ -2574,37 +2574,30 @@ class DynamicStyles {
         }
         return property;
     }
+    getcsis() {
+        let csis = false;
+        if(this.props.csis) {
+            if(this.props.csis.hasOwnProperty("length")) {
+                csis = this.props.csis;
+            }
+        }
+        return csis;
+    }
     getcsibyid(csiid) {
         let csi = false;
         let dynamicstyles = new DynamicStyles();
-        let company = dynamicstyles.getcompany.call(this);
-        if (company.hasOwnProperty("construction")) {
-            if (company.construction.hasOwnProperty("csicodes")) {
+       const csis = dynamicstyles.getcsis.call(this)
+       if(csis) {
                 // eslint-disable-next-line
-                company.construction.csicodes.code.map(code => {
+                csis.map(code => {
                     if (code.csiid === csiid) {
                         csi = code;
 
                     }
                 })
+            
             }
-
-            if (!csi) {
-                if (company.construction.hasOwnProperty("civilengineer")) {
-                    if (company.construction.civilengineer.hasOwnProperty("csicodes")) {
-                        // eslint-disable-next-line
-                        company.construction.civilengineer.csicodes.code.map(code => {
-                            if (code.csiid === csiid) {
-                                csi = code;
-
-                            }
-                        })
-                    }
-
-                }
-            }
-
-        }
+        
         return csi;
     }
     getprofitfield() {
@@ -2896,6 +2889,7 @@ class DynamicStyles {
         return checkinvoice;
 
     }
+   
 
     checkinvoicelaborid(laborid) {
         const dynamicstyles = new DynamicStyles();

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { CheckUserNode, LogoutUserNode } from './components/actions/api';
+import { CheckUserNode, LogoutUserNode, LoadCSIs } from './components/actions/api';
 import * as actions from './components/actions';
 import './App.css';
 import { MyStylesheet } from './components/styles'
@@ -58,7 +58,8 @@ class App extends Component {
     window.addEventListener('resize', this.updateWindowDimensions);
     this.props.reduxNavigation({ position: 'open' })
     firebase.initializeApp(firebaseConfig());
-    this.checkuser()
+    this.checkuser();
+    this.loadcsis();
     this.updateWindowDimensions();
   }
   componentWillUnmount() {
@@ -71,6 +72,19 @@ class App extends Component {
   getstripedashboard() {
     this.setState({ render: 'render' })
   }
+
+  async loadcsis() {
+    try {
+        let response = await LoadCSIs();
+        if (response.hasOwnProperty("csis")) {
+            this.props.reduxCSIs(response.csis);
+
+        }
+
+    } catch (err) {
+        alert(err)
+    }
+}
   async checkuser() {
     try {
       //let response = TestUser();
@@ -582,7 +596,8 @@ function mapStateToProps(state) {
     navigation: state.navigation,
     project: state.project,
     allusers: state.allusers,
-    allcompanys: state.allcompanys
+    allcompanys: state.allcompanys,
+    csis:state.csis
   }
 }
 

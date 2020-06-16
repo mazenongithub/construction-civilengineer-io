@@ -726,7 +726,8 @@ function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
         navigation: state.navigation,
-        allusers: state.allusers
+        allusers: state.allusers,
+        csis:state.csis
     }
 }
 

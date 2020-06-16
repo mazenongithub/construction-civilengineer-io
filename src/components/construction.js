@@ -10,7 +10,7 @@ import CSI from './csi'
 class Construction extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activecsiid: '', csi_1: '', csi_2: '', csi_3: '', title: '' }
+        this.state = { render: '', width: 0, height: 0, activecsiid: '', csi_1: '', csi_2: '', csi_3: '', csi_4:'', title: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -633,7 +633,8 @@ class Construction extends Component {
 function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
-        navigation: state.navigation
+        navigation: state.navigation,
+        csis:state.csis
     }
 }
 

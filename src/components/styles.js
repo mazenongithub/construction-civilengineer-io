@@ -86,6 +86,9 @@ export function MyStylesheet() {
             maxWidth: '64px',
             maxHeight: '64px'
         },
+        boldFont:{
+            fontWeight:'700'
+        },
         dateGridContainer: {
             maxWidth: '540px'
         },

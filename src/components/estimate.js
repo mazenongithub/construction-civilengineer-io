@@ -3,7 +3,6 @@ import { MyStylesheet } from './styles'
 import DynamicStyles from './dynamicstyles'
 import { connect } from 'react-redux';
 import * as actions from './actions';
-import { Link } from 'react-router-dom'
 
 class Estimate extends Component {
 
@@ -77,7 +76,7 @@ class Estimate extends Component {
                     return (
                         <div style={{ ...styles.generalFlex }} key={biditem.csiid}>
                             <div style={{ ...styles.flex2, ...styles.showBorder, ...styles.alignCenter }}>
-                                <span style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}><Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }} to={`/${myuser.profile}/projects/${project.title}/bidschedule/${csi.csiid}`}>{csi.csi}-{csi.title}</Link></span>
+                                <span style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}>{csi.csi}-{csi.title}</span>
                             </div>
                             <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter }}>
                                 <span style={{ ...styles.generalFont, ...regularFont, ...quantityfield, ...styles.alignCenter }}>
@@ -113,7 +112,7 @@ class Estimate extends Component {
 
                                 <div style={{ ...styles.generalFlex }}>
                                     <div style={{ ...styles.flex2, ...styles.showBorder, ...styles.alignCenter }}>
-                                        <span style={{ ...styles.generalFont, ...regularFont }}><Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }} to={`/${myuser.profile}/projects/${project.title}/bidschedule/${csi.csiid}`}>{csi.csi}-{csi.title}</Link></span>
+                                        <span style={{ ...styles.generalFont, ...regularFont }}>>{csi.csi}-{csi.title}</span>
                                     </div>
                                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter }}>
                                         <span style={{ ...styles.generalFont, ...regularFont, ...quantityfield, ...styles.alignCenter }}>
@@ -287,7 +286,8 @@ function mapStateToProps(state) {
         navigation: state.navigation,
         project: state.project,
         allusers: state.allusers,
-        allcompanys: state.allcompanys
+        allcompanys: state.allcompanys,
+        csis:state.csis
     }
 }
 
