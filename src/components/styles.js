@@ -6,6 +6,33 @@ export function MyStylesheet() {
         addPadding15: {
             padding: '15px'
         },
+
+        activeButton: {
+            border: '0px',
+            backgroundColor: '#D7A22A',
+        },
+        
+        activebutton:{
+            backgroundColor:'#043D1A'
+        },
+        activeBackground:{
+            backgroundColor:'#D7A22A'
+        },
+        notactivebutton:{
+            backgroundColor:'#E5D5B0'
+
+        },
+        calenderContainer:{
+            maxWidth:'585px'
+        },
+        csiContainer:{
+            maxWidth:'400px'
+        },
+       
+        addRadius:{
+            border:'1px solid',
+            borderRadius:'5px'
+        },
         addPadding: {
             padding: '5px'
         },
@@ -88,6 +115,17 @@ export function MyStylesheet() {
         },
         boldFont:{
             fontWeight:'700'
+        },
+        specialButton:{
+            color:'#977F1A',
+            WebkitTextStrokeWidth: '1px',
+            WebkitTextStrokeColor: 'black'
+        },
+        width75:{
+            width:'75%'
+        },
+        headerFamily:{
+            fontFamily:'Roboto, sans-serif'
         },
         dateGridContainer: {
             maxWidth: '540px'

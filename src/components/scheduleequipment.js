@@ -476,7 +476,7 @@ class ScheduleEquipment extends Component {
                     let proposalid = this.state.proposalid;
                     let profit = 0;
                     equipmentrate = +Number(dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout)).toFixed(4);
-
+                                      
                     let newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit)
                     if (myproject.hasOwnProperty("scheduleequipment")) {
                         myuser.company.projects.myproject[i].scheduleequipment.myequipment.push(newEquipment)

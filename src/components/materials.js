@@ -12,7 +12,7 @@ import MakeID from './makeids';
 class Materials extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activematerialid: '', materialid: '', material: '', accountid: '', csiid: '', unit: '', unitcost: '', csi_1: '', csi_2: '', csi_3: '', message: '' }
+        this.state = { render: '', width: 0, height: 0, activematerialid: '', materialid: '', material: '', accountid: '', csiid: '', unit: '', unitcost: '', csi_1: '', csi_2: '', csi_3: '', csi_4:'',message: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {

@@ -22,6 +22,52 @@ class DynamicStyles {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
+
+    getampmicon() {
+        if (this.state.width > 1200) {
+            return ({ width: '83px', height: '48px' })
+        } else if (this.state.width > 800) {
+            return ({ width: '70px', height: '41px' })
+        } else {
+            return ({ width: '57px', height: '33px' })
+        }
+
+    }
+
+    getdropicon() {
+        if (this.state.width > 1200) {
+            return (
+                {
+                    width: '93x',
+                    height: '45px'
+                })
+
+        } else if (this.state.width > 800) {
+            return (
+                {
+                    width: '78px',
+                    height: '38px'
+                })
+
+        } else {
+            return (
+                {
+                    width: '62px',
+                    height: '30px'
+                })
+        }
+    }
+
+    getbuttonheight() {
+        if (this.state.width > 1200) {
+            return ({ height: '75px' })
+        } else if (this.state.width > 800) {
+            return ({ height: '58px' })
+        } else {
+            return ({ height: '40px' })
+        }
+    }
+
     getupdatepassword() {
         return ({ width: '266px', height: '64px' })
     }

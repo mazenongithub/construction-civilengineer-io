@@ -45,13 +45,14 @@ import Specification from './components/specification';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { firebaseConfig } from './firebaseconfig';
+import Schedule from './components/schedule'
 //import { TestUser } from './components/functions/testuser'
 
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { render: '', width: 0, height: 0, activeslideid: 'viewaccount' }
+    this.state = { render: '', width: 0, height: 0, activeslideid: 'construction' }
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
   }
   componentDidMount() {
@@ -142,6 +143,7 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/materials" component={Materials} />
           <Route exact path="/:providerid/company/:companyid/projects" component={Projects} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedule" component={Schedule} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule" component={BidSchedule} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule/csi/:csiid" component={ScheduleLineItem} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid" component={Bid} />

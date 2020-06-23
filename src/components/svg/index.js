@@ -8,6 +8,10 @@ export function Logo() {
 export function closeDetail() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111.2 112.99"><defs><style></style></defs><title>closeDetail</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path className="closedetail-1" d="M2.38,101.05c15,9.35,33.83,10,48.8,1.44,17.18-9.78,26.5-30,23-50.24" /><polygon className="closedetail-2" points="74.02 3.52 40.65 51.96 107.39 51.96 74.02 3.52" /></g></g></svg>)
 }
+
+export function dropDateIcon() {
+    return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94 46"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_3" data-name="Layer 3"><rect className="dropicon-1" x="0.5" y="0.5" width="93" height="45" rx="4.43"/><polygon className="dropicon-2" points="47 39.5 15.5 12.5 78.5 12.5 47 39.5"/></g></g></svg>)
+}
 export function openDetail() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111.2 112.99"><defs><style></style></defs><title>openDetail</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path className="opendetail-1" d="M108.82,11.94C93.78,2.59,75,2,60,10.5c-17.18,9.78-26.5,30-23,50.24" /><polygon className="opendetail-2" points="37.18 109.46 70.55 61.03 3.81 61.03 37.18 109.46" /></g></g></svg>)
 }
