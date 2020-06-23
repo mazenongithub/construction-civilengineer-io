@@ -12,9 +12,6 @@ import Profile from './components/profile';
 import Register from './components/register';
 import Company from './components/company';
 import Projects from './components/projects';
-import ActualLabor from './components/actuallabor';
-import ActualMaterials from './components/actualmaterials';
-import ActualEquipment from './components/actualequipment';
 import Equipment from './components/equipment';
 import Employees from './components/employees';
 import Accounts from './components/accounts';
@@ -42,7 +39,8 @@ import Specification from './components/specification';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { firebaseConfig } from './firebaseconfig';
-import Schedule from './components/schedule'
+import Schedule from './components/schedule';
+import Actual from './components/actual'
 //import { TestUser } from './components/functions/testuser'
 
 
@@ -141,16 +139,11 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/projects" component={Projects} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedule" component={Schedule} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/actual" component={Actual} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule" component={BidSchedule} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule/csi/:csiid" component={ScheduleLineItem} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid" component={Bid} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid/csi/:csiid" component={BidLineItem} />
-
-          <Route exact path="/:providerid/company/:companyid/projects/:projectid/actuallabor" component={ActualLabor} />
-         
-          <Route exact path="/:providerid/company/:companyid/projects/:projectid/actualmaterials" component={ActualMaterials} />
-
-          <Route exact path="/:providerid/company/:companyid/projects/:projectid/actualequipment" component={ActualEquipment} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals" component={Proposals} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/estimate" component={Estimate} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/specifications" component={Specifications} />
@@ -322,14 +315,9 @@ class App extends Component {
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /invoices </Link>
                 </div>
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actuallabor`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /labor </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /actual </Link>
                 </div>
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actualequipment`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /equipment </Link>
-                </div>
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actualmaterials`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /materials </Link>
-                </div>
+               
                 <div style={{ ...styles.generalContainer }}>
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}/estimate`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /costestimate </Link>
                 </div>
