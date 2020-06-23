@@ -2288,10 +2288,12 @@ class DynamicStyles {
     }
     getHeaderFont() {
         const styles = MyStylesheet();
-        if (this.state.width > 800) {
+        if (this.state.width > 1200) {
             return (styles.font40)
-        } else {
+        } else if (this.state.wisth>800) {
             return (styles.font30)
+        } else {
+            return (styles.font24)
         }
 
     }

@@ -194,6 +194,9 @@ class Schedule extends Component {
             return `${csi.csi}-${csi.title}`
             }
 
+        } else if(this.state.csiid) {
+           let csi = dynamicstyles.getcsibyid.call(this, this.state.csiid);
+          return `${csi.csi}-${csi.title}`
         }
 
     }
@@ -208,6 +211,8 @@ class Schedule extends Component {
                 if (this.state.activelaborid) {
                     const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid);
                     milestoneid = mylabor.milestoneid;
+                } else {
+                    milestoneid = this.state.milestoneid;
                 }
 
             } else if (this.state.active === 'equipment') {
@@ -260,6 +265,8 @@ class Schedule extends Component {
                                 this.setState({ render: 'render' })
                             }
 
+                        } else {
+                            this.setState({csiid})
                         }
 
                     } else if (this.state.active === 'materials') {
@@ -272,6 +279,8 @@ class Schedule extends Component {
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
                             }
+                        } else {
+                            this.setState({csiid})
                         }
 
                     } else if (this.state.active === 'equipment') {
@@ -284,8 +293,12 @@ class Schedule extends Component {
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
                             }
-                        }
+                        } else {
+                            this.setState({csiid})
+                        } 
 
+                    } else {
+                        this.setState({csiid})
                     }
 
                 }
@@ -315,6 +328,8 @@ class Schedule extends Component {
                             this.setState({ render: 'render' })
                         }
 
+                    } else {
+                        this.setState({milestoneid})
                     }
 
                 } else if (this.state.active === 'materials') {
@@ -327,6 +342,8 @@ class Schedule extends Component {
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
+                    } else {
+                        this.setState({milestoneid})
                     }
 
                 } else if (this.state.active === 'equipment') {
@@ -339,8 +356,12 @@ class Schedule extends Component {
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
+                    } else {
+                        this.setState({milestoneid})
                     }
 
+                } else {
+                    this.setState({milestoneid})
                 }
 
             }
@@ -376,6 +397,7 @@ class Schedule extends Component {
     removelaborid(labor) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
+        if(window.confirm(`Are you sure you want to delete labor for ${labor.providerid}`)) {
         if (myuser) {
             const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
             if (project) {
@@ -384,12 +406,14 @@ class Schedule extends Component {
                 const mylabor = dynamicstyles.getschedulelaborbyid.call(this, labor.laborid);
                 if (mylabor) {
                     const j = dynamicstyles.getschedulelaborkeybyid.call(this,  mylabor.laborid);
-                    myuser.company.projects.myproject[i].schedulelabor.mylabor.labor.splice(j, 1);
+                    myuser.company.projects.myproject[i].schedulelabor.mylabor.splice(j, 1);
                     this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    this.reset();
                 }
             }
         }
+
+    }
 
     }
     getemployeeid() {
@@ -417,7 +441,8 @@ class Schedule extends Component {
 
             if (this.state.activematerialid === materialid) {
                 this.materialdatedefault();
-                this.setState({ activematerialid: false, csi_1: '', csi_2: '', csi_3: '', csi_4: '' })
+                this.setState({ activematerialid: false })
+                this.reset()
 
             } else {
  
@@ -453,9 +478,9 @@ class Schedule extends Component {
         if (project) {
 
             if (this.state.activeequipmentid === equipmentid) {
-                this.timeindefault()
-                this.timeoutdefault();
-                this.setState({ activeequipmentid: false, csi_1: '', csi_2: '', csi_3: '', csi_4: '' })
+              
+                this.setState({ activeequipmentid: false })
+                this.reset();
             } else {
             
                 const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, equipmentid)
@@ -505,9 +530,8 @@ class Schedule extends Component {
         if (project) {
 
             if (this.state.activelaborid === laborid) {
-                this.timeindefault()
-                this.timeoutdefault();
-                this.setState({ activelaborid: false, csi_1: '', csi_2: '', csi_3: '', csi_4: '' })
+                this.reset();
+                this.setState({ activelaborid: false })
             } else {
              
                 const mylabor = dynamicstyles.getschedulelaborbyid.call(this,  laborid)
@@ -616,6 +640,8 @@ class Schedule extends Component {
     removematerial(mymaterial) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
+        const material = dynamicstyles.getmymaterialfromid.call(this,mymaterial.mymaterialid)
+        if(window.confirm(`Are you sure you want to delete material for ${material.material}`)) {
         if (myuser) {
             const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
             if (project) {
@@ -626,12 +652,23 @@ class Schedule extends Component {
                     const j = dynamicstyles.getschedulematerialkeybyid.call(this,  material.materialid)
                      myuser.company.projects.myproject[i].schedulematerials.mymaterial.splice(j, 1)
                     this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    this.reset();
+                  
                 }
 
             }
 
         }
+
+    }
+    }
+
+    reset() {
+        this.timeindefault()
+        this.timeoutdefault();
+        this.materialdatedefault();
+        this.setState({quantity:'', unit:'', unitcost:'', laborrate:'', equipmentrate:''})
+      
     }
 
     showmaterialid(mymaterial) {
@@ -696,6 +733,8 @@ class Schedule extends Component {
     removeequipment(equipment) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
+        const myequipment = dynamicstyles.getmyequipmentbyid.call(this,equipment.myequipmentid)
+        if(window.confirm(`Are you sure you want to delete material for ${myequipment.equipment}`)) {
         if (myuser) {
             const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
             if (project) {
@@ -706,13 +745,15 @@ class Schedule extends Component {
                     const j = dynamicstyles.getscheduleequipmentkeybyid.call(this, equipment.equipmentid);
                      myuser.company.projects.myproject[i].scheduleequipment.myequipment.splice(j, 1)
                     this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
+                    this.reset();
                 }
 
 
             }
 
         }
+
+    }
 
 
     }
@@ -747,8 +788,9 @@ class Schedule extends Component {
             const myequipment = dynamicstyles.getequipmentfromid.call(this, equipment.myequipmentid);
 
             return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }} key={equipment.equipmentid}>
-                <span style={{ ...activeequipment(equipment.equipmentid) }} onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>{myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
-                CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone} <br />
+                <span style={{ ...activeequipment(equipment.equipmentid) }} onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>
+                {myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
+                 CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone} 
                 Total Hours: {totalhours} x  {equipmentrate} = ${amount.toFixed(2)}
                 </span>
                 <button style={{ ...getbutton(), ...removeIcon }}
@@ -957,10 +999,13 @@ class Schedule extends Component {
                             this.setState({ render: 'render' })
                         }
 
+                    } else {
+                        this.setState({equipmentrate})
                     }
                 }
             }
         } else {
+            this.setState({equipmentrate})
             alert(`Equipment rate ${equipmentrate} must be numeric `)
         }
     }
@@ -983,6 +1028,8 @@ class Schedule extends Component {
                             this.setState({ render: 'render' })
                         }
 
+                    } else {
+                        this.setState({laborrate})
                     }
                 }
             }
@@ -1056,11 +1103,14 @@ class Schedule extends Component {
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
+                    } else {
+                        this.setState({quantity})
                     }
                 }
             }
 
         } else {
+            this.setState({quantity})
             alert(`Quantity ${quantity} must be numeric`)
         }
 
@@ -1081,6 +1131,8 @@ class Schedule extends Component {
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
                     }
+                } else {
+                    this.setState({unit})
                 }
             }
         }
@@ -1103,11 +1155,14 @@ class Schedule extends Component {
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
+                    } else {
+                        this.setState({unitcost})
                     }
                 }
             }
 
         } else {
+            this.setState({unitcost})
             alert(`Unit cost ${unitcost} must be numeric`)
         }
 
@@ -1203,7 +1258,7 @@ class Schedule extends Component {
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
         const equipmentrate = () => {
-            if (this.state.active === 'equipment') {
+            if (this.state.active === 'equipment' && this.state.activeequipmentid) {
                 return (
                     <div style={{ ...styles.generalContainer }}>
                         <div style={{ ...styles.generalContainer }}>
@@ -1222,7 +1277,7 @@ class Schedule extends Component {
             }
         }
         const laborrate = () => {
-            if (this.state.active === 'labor') {
+            if (this.state.active === 'labor' && this.state.activelaborid) {
                 return (
                     <div style={{ ...styles.generalContainer }}>
                         <div style={{ ...styles.generalContainer }}>
@@ -1423,13 +1478,13 @@ class Schedule extends Component {
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{ ...styles.width75, ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...laborbackground() }} onClick={() => { this.setState({ active: 'labor', csi_1:'', csi_2:'', csi_3:'', csi_4:'' }) }}><span style={{ ...styles.specialButton }}>LABOR</span></button>
+                            <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...laborbackground() }} onClick={() => { this.setState({ active: 'labor' }) }}><span style={{ ...styles.specialButton }}>LABOR</span></button>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{ ...styles.width75, ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...equipmentbackground() }} onClick={() => { this.setState({ active: 'equipment', csi_1:'', csi_2:'', csi_3:'', csi_4:'' }) }}><span style={{ ...styles.specialButton }}>Equipment</span></button>
+                            <button style={{  ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...equipmentbackground() }} onClick={() => { this.setState({ active: 'equipment' }) }}><span style={{ ...styles.specialButton }}>Equipment</span></button>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{ ...styles.width75, ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...materialbackground() }} onClick={() => { this.setState({ active: 'materials',csi_1:'', csi_2:'', csi_3:'', csi_4:'' }) }}><span style={{ ...styles.specialButton }}>Materials</span></button>
+                            <button style={{  ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...materialbackground() }} onClick={() => { this.setState({ active: 'materials' }) }}><span style={{ ...styles.specialButton }}>Materials</span></button>
                         </div>
                     </div>
 
