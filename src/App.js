@@ -12,11 +12,8 @@ import Profile from './components/profile';
 import Register from './components/register';
 import Company from './components/company';
 import Projects from './components/projects';
-import ScheduleLabor from './components/schedulelabor';
 import ActualLabor from './components/actuallabor';
-import ScheduleMaterials from './components/schedulematerials';
 import ActualMaterials from './components/actualmaterials';
-import ScheduleEquipment from './components/scheduleequipment';
 import ActualEquipment from './components/actualequipment';
 import Equipment from './components/equipment';
 import Employees from './components/employees';
@@ -148,11 +145,11 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule/csi/:csiid" component={ScheduleLineItem} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid" component={Bid} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid/csi/:csiid" component={BidLineItem} />
-          <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedulelabor" component={ScheduleLabor} />
+
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/actuallabor" component={ActualLabor} />
-          <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedulematerials" component={ScheduleMaterials} />
+         
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/actualmaterials" component={ActualMaterials} />
-          <Route exact path="/:providerid/company/:companyid/projects/:projectid/scheduleequipment" component={ScheduleEquipment} />
+
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/actualequipment" component={ActualEquipment} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals" component={Proposals} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/estimate" component={Estimate} />
@@ -312,14 +309,9 @@ class App extends Component {
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /proposals </Link>
                 </div>
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/schedulelabor`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /labor </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /schedule </Link>
                 </div>
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/scheduleequipment`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /equipment </Link>
-                </div>
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/schedulematerials`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /materials </Link>
-                </div>
+             
 
 
 
@@ -402,10 +394,12 @@ class App extends Component {
     }
     const getflex_1 = () => {
 
-      if (this.state.width > 800) {
-        return ({ ...styles.flex3 })
+      if (this.state.width > 1200) {
+        return ({ ...styles.flex6 })
+      } else if (this.state.width>800) {
+        return ({ ...styles.flex4 })
       } else {
-        return ({ ...styles.flex1 })
+        return ({ ...styles.flex2 })
       }
     }
 

@@ -189,6 +189,9 @@ export function MyStylesheet() {
         flex5: {
             flex: 5
         },
+        flex6: {
+            flex: 6
+        },
         alignCenter: {
             textAlign: 'center'
         },
