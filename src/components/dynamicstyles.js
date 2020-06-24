@@ -356,7 +356,22 @@ class DynamicStyles {
                     title:'Construction by civilengineer.io',
                     id:'construction',
                     url:'http://civilengineer.io/construction/slides/construction.png',
-                    caption:`Construction By civilengineer.io`
+                    caption:`Construction by civilengineer.io. The Best construction management program online. Sign up and Create your company to Get Started! See the Slide Show `
+
+                },
+              
+                {
+                    title:'Schedule',
+                    id:'Schedule',
+                    url:'http://civilengineer.io/construction/slides/schedule.png',
+                    caption:`New Scheduling Cost Component, Includes Labor, Equipment, Materials, Milestones, Construction Spec, Timein, Timeout, Employee, Equipment, and Material subcomponents, handles scheduling and cost estimating`
+
+                },
+                {
+                    title:'Project',
+                    id:'project',
+                    url:'http://civilengineer.io/construction/slides/project.png',
+                    caption:`Project Component after the PM added your company to their project`
 
                 },
                 {
@@ -366,27 +381,7 @@ class DynamicStyles {
                     caption:`Adding Equipment, costs, determining equipment rate based on cost of ownership`
 
                 },
-                {
-                    title:'Labor',
-                    id:'labor',
-                    url:'http://civilengineer.io/construction/slides/schedulelabor.png',
-                    caption:`Entering Schedule Labor for the Project`
-
-                },
-                {
-                    title:'Materials',
-                    id:'schedulematerial',
-                    url:'http://civilengineer.io/construction/slides/schedulematerial.png',
-                    caption:`Enter Schedule Materials for the Project`
-
-                },
-                {
-                    title:'Schedule Equipment',
-                    id:'scheduleequipment',
-                    url:'http://civilengineer.io/construction/slides/scheduleequipment.png',
-                    caption:`Enter Schedule Equipment for the Project`
-
-                },
+            
                 {
                     title:'Invoice',
                     id:'invoice',
