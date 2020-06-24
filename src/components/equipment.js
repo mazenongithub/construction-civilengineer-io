@@ -1325,8 +1325,9 @@ class Equipment extends Component {
                     <div style={{ ...styles.flex1 }}>
 
                         <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                                /{this.props.match.params.companyid}/equipment
+                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                <span  style={{  ...titleFont, ...styles.fontBold }}>/{this.props.match.params.companyid}</span><br/>
+                                <span  style={{  ...titleFont, ...styles.fontBold }}>/equipment</span>
                         </div>
                         </div>
 

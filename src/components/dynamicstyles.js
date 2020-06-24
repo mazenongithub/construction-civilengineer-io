@@ -375,10 +375,17 @@ class DynamicStyles {
 
                 },
                 {
+                    title:'Proposal',
+                    id:'proposals',
+                    url:'http://civilengineer.io/construction/slides/proposals.png',
+                    caption:`Proposal components adds direct cost items. Allows you to make adjustments and add profit factor. Profit is attached to each item. `
+
+                },
+                {
                     title:'Equipment',
                     id:'equipment',
                     url:'http://civilengineer.io/construction/slides/equipment.png',
-                    caption:`Adding Equipment, costs, determining equipment rate based on cost of ownership`
+                    caption:`Equipment component holds company equipment. Calculates equipment rate based on ownership. Optionally allows you to store rental rates. The cost of Equipment is a Direct Cost on the Project `
 
                 },
             
@@ -394,6 +401,13 @@ class DynamicStyles {
                     id:'lem',
                     url:'http://civilengineer.io/construction/slides/lem.png',
                     caption:`Labor, Material, Equipment breakdown for each pay item used `
+
+                },
+                {
+                    title:'Accounts',
+                    id:'accounts',
+                    url:'http://civilengineer.io/construction/slides/accounts.png',
+                    caption:`Create accounts for employee benefits, equipment, and materials. These accounts are reimbersed when an invoice is settled by the PM. `
 
                 },
                 {

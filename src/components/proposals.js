@@ -500,12 +500,15 @@ class Proposals extends Component {
         const regularFont  = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         if(myuser) {
+            const project = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid);
+            if(project) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
                     <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...titleFont, ...styles.alignCenter }}>
-                            /proposals
+                        <div style={{ ...styles.flex1,  ...styles.alignCenter }}>
+                            <span style={{ ...styles.generalFont, ...titleFont}}>/proposals</span><br/>
+                            <span style={{ ...styles.generalFont, ...titleFont}}>{project.title}</span>
                         </div>
 
                     </div>
@@ -537,6 +540,11 @@ class Proposals extends Component {
                 </div>
             </div>
         )
+
+            } else {
+                return(<span>&nbsp;</span>)
+            }
+
 
         } else {
             return(<div style={{...styles.generalContainer,...regularFont}}>

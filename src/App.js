@@ -15,7 +15,6 @@ import Projects from './components/projects';
 import Equipment from './components/equipment';
 import Employees from './components/employees';
 import Accounts from './components/accounts';
-import Construction from './components/construction';
 import BidSchedule from './components/bidschedule';
 import ScheduleLineItem from './components/schedulelineitem';
 import Bid from './components/bid';
@@ -134,7 +133,6 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/accounts/:accountid" component={ViewAccount} />
           <Route exact path="/:providerid/company/:companyid/equipment" component={Equipment} />
           <Route exact path="/:providerid/company/:companyid/employees" component={Employees} />
-          <Route exact path="/:providerid/company/:companyid/construction" component={Construction} />
           <Route exact path="/:providerid/company/:companyid/materials" component={Materials} />
           <Route exact path="/:providerid/company/:companyid/projects" component={Projects} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
@@ -180,11 +178,7 @@ class App extends Component {
                 /accounts
                 </Link>
             </div>
-            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link to={`/${profile}/company/${companyid}/construction`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                /construction
-                              </Link>
-            </div>
+            
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link to={`/${profile}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /equipment
