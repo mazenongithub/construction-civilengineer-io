@@ -13,15 +13,14 @@ import MakeID from './makeids';
 class Equipment extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activeequipmentid: '', accountid: '', equipment: '', ownership: '', activecostid: '', cost: '', purchasedatecalender: new Date(), saledate: new Date(), purchasecalender: 'open', resaledate: '', detail: '', resalevalue: '', loaninterest: '', workinghours: '', showdetail: true, equipmentdate: new Date(), costmenu: true, purchasedatecalender:true, purchasedateday:'',purchasedatemonth:'',purchasedateyear:'',saledateday:'',saledatemonth:'',saledateyear:'',saledatecalender:true }
+        this.state = { render: '', width: 0, height: 0, activeequipmentid: '', accountid: '', equipment: '', ownership: '', activecostid: '', cost: '', resaledate: '', detail: '', resalevalue: '', loaninterest: '', workinghours: '', showdetail: true, equipmentdate: new Date(), costmenu: true, purchasecalender: true, purchasedateday: '', purchasedatemonth: '', purchasedateyear: '', saledateday: '', saledatemonth: '', saledateyear: '', salecalender: true, equipmentcalender: true, equipmentdateday: '', equipmentdateyear: '', equipmentdatemonth: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.purchasedatedefault();
-        this.saledatedefault();
-        console.log(this.state)
+        this.reset();
+
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -34,6 +33,7 @@ class Equipment extends Component {
 
         this.purchasedatedefault();
         this.saledatedefault();
+        this.equipmentdatedefault()
     }
 
     saledatedefault() {
@@ -57,6 +57,30 @@ class Equipment extends Component {
             return year;
         }
         this.setState({ saledateyear: saledateyear(), saledatemonth: saledatemonth(), saledateday: saledateday() })
+    }
+
+
+    equipmentdatedefault() {
+        const equipmentdatemonth = () => {
+            let month = new Date().getMonth() + 1;
+            if (month < 10) {
+                month = `0${month}`
+            }
+            return month;
+        }
+        const equipmentdateday = () => {
+            let day = new Date().getDate();
+            if (day < 10) {
+                day = `0${day}`
+            }
+            return day;
+        }
+        const equipmentdateyear = () => {
+            let year = new Date().getFullYear();
+
+            return year;
+        }
+        this.setState({ equipmentdateyear: equipmentdateyear(), equipmentdatemonth: equipmentdatemonth(), equipmentdateday: equipmentdateday() })
     }
 
 
@@ -287,11 +311,27 @@ class Equipment extends Component {
     }
 
     makeequipmentcostactive(costid) {
-        console.log(costid)
-        if (this.state.activecostid === costid) {
-            this.setState({ activecostid: false })
-        } else {
-            this.setState({ activecostid: costid })
+        const dynamicstyles = new DynamicStyles();
+
+        if (this.state.activeequipmentid) {
+            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+            if (myequipment) {
+                if (this.state.activecostid === costid) {
+                 
+                    this.setState({ activecostid: false, equipmentdateday:'', equipmentdatemonth:'', equipmentdateyear:'' })
+                } else {
+                    const cost = dynamicstyles.getcostbyid.call(this, myequipment.equipmentid, costid)
+                    if(cost) {
+                    const equipmentdateyear = cost.timein.substring(0, 4)
+                    const equipmentdatemonth = cost.timein.substring(5, 7);
+                    const equipmentdateday = cost.timein.substring(8, 10);
+                    this.setState({ activecostid: costid, equipmentdateday, equipmentdatemonth, equipmentdateyear })
+
+                    }
+                }
+
+            }
+
         }
 
     }
@@ -515,41 +555,13 @@ class Equipment extends Component {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const equipmentdate = new EquipmentDate();
-        const bidField = dynamicstyles.getbidfield.call(this)
+
         if (this.state.activeequipmentid) {
             let myequipment = this.getactiveequipment();
             if (myequipment.ownershipstatus === 'owned') {
 
 
-                if (this.state.width > 800) {
-                    return (
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1 }}>
-
-                                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                    <div style={{ ...styles.flex2, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                                        {equipmentdate.showdatein.call(this)}
-                                    </div>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                                        Cost <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...bidField }}
-                                            value={this.getcost()}
-                                            onChange={event => { this.handlecost(event.target.value) }}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                                    Detail  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                        value={this.getdetail()}
-                                        onChange={event => { this.handledetail(event.target.value) }}
-                                    />
-                                </div>
-
-                                {this.showequipmentcosts()}
-                            </div>
-                        </div>
-                    )
-                } else {
+        
                     return (
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1 }}>
@@ -557,16 +569,16 @@ class Equipment extends Component {
                                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                     <div style={{ ...styles.flex1 }}>
                                         <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...styles.addRightMargin }}>
-                                            {equipmentdate.showdatein.call(this)}
+                                            {equipmentdate.showequipmentdate.call(this)}
                                         </div>
-                                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...styles.addLeftMargin }}>
-                                            Cost <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
+                                            Cost <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont }}
                                                 value={this.getcost()}
                                                 onChange={event => { this.handlecost(event.target.value) }} />
                                         </div>
 
                                         <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                                            Detail <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                            Detail <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont }}
                                                 value={this.getdetail()}
                                                 onChange={event => { this.handledetail(event.target.value) }}
                                             />
@@ -582,7 +594,7 @@ class Equipment extends Component {
                             </div>
                         </div>
                     )
-                }
+                
             } else {
                 return;
             }
@@ -908,20 +920,20 @@ class Equipment extends Component {
     makequipmentactive(equipmentid) {
         const dynamicstyles = new DynamicStyles();
         if (this.state.activeequipmentid !== equipmentid) {
-        const myequipment = dynamicstyles.getmyequipmentbyid.call(this,equipmentid)
-        if(myequipment) {
-            const purchasedateyear = myequipment.ownership.purchasedate.substring(0, 4)
-            const purchasedatemonth = myequipment.ownership.purchasedate.substring(5, 7);
-            const purchasedateday = myequipment.ownership.purchasedate.substring(8, 10);
-            const saledateyear = myequipment.ownership.saledate.substring(0, 4)
-            const saledatemonth = myequipment.ownership.saledate.substring(5, 7);
-            const saledateday = myequipment.ownership.saledate.substring(8, 10);
-            this.setState({ activeequipmentid: equipmentid, purchasedateyear,purchasedatemonth,purchasedateday,saledateyear,saledatemonth,saledateday })
-        }
+            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, equipmentid)
+            if (myequipment) {
+                const purchasedateyear = myequipment.ownership.purchasedate.substring(0, 4)
+                const purchasedatemonth = myequipment.ownership.purchasedate.substring(5, 7);
+                const purchasedateday = myequipment.ownership.purchasedate.substring(8, 10);
+                const saledateyear = myequipment.ownership.saledate.substring(0, 4)
+                const saledatemonth = myequipment.ownership.saledate.substring(5, 7);
+                const saledateday = myequipment.ownership.saledate.substring(8, 10);
+                this.setState({ activeequipmentid: equipmentid, purchasedateyear, purchasedatemonth, purchasedateday, saledateyear, saledatemonth, saledateday })
+            }
         } else {
-                  
-                    this.reset();
-                    this.setState({ activeequipmentid: false })
+
+            this.reset();
+            this.setState({ activeequipmentid: false })
         }
     }
     checkremoveequipment(equipmentid) {
@@ -1301,35 +1313,35 @@ class Equipment extends Component {
                 return;
             }
         }
-        if(myuser) {
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
+        if (myuser) {
+            return (
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                            /{this.props.match.params.companyid}/equipment
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
+                                /{this.props.match.params.companyid}/equipment
                         </div>
+                        </div>
+
+                        {this.showequipment()}
+                        {showaccountid()}
+                        {this.showequipmentids()}
+                        {this.showequipmentdetail()}
+                        {this.equipmentdetail()}
+                        {this.showcostaccounts()}
+                        {this.showrentalrates()}
+
+
+                        {dynamicstyles.showsavecompany.call(this)}
+
                     </div>
-
-                    {this.showequipment()}
-                    {showaccountid()}
-                    {this.showequipmentids()}
-                    {this.showequipmentdetail()}
-                    {this.equipmentdetail()}
-                    {this.showcostaccounts()}
-                    {this.showrentalrates()}
-
-
-                    {dynamicstyles.showsavecompany.call(this)}
-
                 </div>
-            </div>
-        )
+            )
 
         } else {
-            return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Equipment </span>
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Equipment </span>
             </div>)
         }
     }

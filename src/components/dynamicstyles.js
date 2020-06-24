@@ -665,10 +665,10 @@ class DynamicStyles {
         values = { company, myuser: newuser }
         return values;
     }
-    getequipmentcostskeybyid(costid) {
-
+    getequipmentcostskeybyid(equipmentid,costid) {
+        const dynamicstyles = new DynamicStyles();
         let key = false;
-        const myequipment = this.getactiveequipment();
+        const myequipment = dynamicstyles.getmyequipmentbyid.call(this,equipmentid)
 
         if (myequipment.hasOwnProperty("ownership")) {
             // eslint-disable-next-line
@@ -3197,6 +3197,25 @@ class DynamicStyles {
         }
 
         return equipmentrate;
+    }
+    getcostbyid(equipmentid,costid) {
+        console.log(equipmentid,costid)
+        const dynamicstyles = new DynamicStyles();
+        let costs = false;
+        const myequipment = dynamicstyles.getmyequipmentbyid.call(this,equipmentid)
+
+        if (myequipment.hasOwnProperty("ownership")) {
+            // eslint-disable-next-line
+            myequipment.ownership.cost.map((cost, i) => {
+                if (cost.costid === costid) {
+                    costs = cost;
+                }
+
+            })
+
+        }
+
+        return costs
     }
     getequipmentcostsbyid(equipmentid) {
         const dynamicstyles = new DynamicStyles();

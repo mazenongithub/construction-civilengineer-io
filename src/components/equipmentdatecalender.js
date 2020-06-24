@@ -3,12 +3,12 @@ import DynamicStyles from './dynamicstyles';
 import { MyStylesheet } from './styles';
 import { removeIconSmall, dropDateIcon } from './svg';
 import {  monthstring, getFirstIsOnDate, check_29_feb_leapyear_date, check_30_date, check_31_date, getDayString } from './functions'
-import SaleDate from './saledate';
+import EquipmentDate from './equipmentdate';
 
 class MaterialCalender {
 
     handleday(day) {
-        const timein = new SaleDate();
+        const timein = new EquipmentDate();
         if (day < 10) {
             day = `0${day}`
         }
@@ -20,13 +20,13 @@ class MaterialCalender {
         const dynamicstyles = new DynamicStyles();
         const removeIcon = dynamicstyles.getremoveicon.call(this);
         const dropIcon = dynamicstyles.getdropicon.call(this)
-        if (this.state.salecalender) {
+        if (this.state.equipmentcalender) {
             return (
-                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.setState({ salecalender: false }) }}>{removeIconSmall()} </button>
+                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.setState({ equipmentcalender: false }) }}>{removeIconSmall()} </button>
             )
         } else {
             return (
-                <button style={{ ...styles.generalButton, ...dropIcon }} onClick={() => { this.setState({ salecalender: true }) }}>{dropDateIcon()} </button>
+                <button style={{ ...styles.generalButton, ...dropIcon }} onClick={() => { this.setState({ equipmentcalender: true }) }}>{dropDateIcon()} </button>
             )
         }
 
@@ -35,10 +35,10 @@ class MaterialCalender {
         const dynamicstyles = new DynamicStyles();
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const styles = MyStylesheet();
-        if (this.state.salecalender) {
-            let day = this.state.saledateday;
-            let year = this.state.saledateyear;
-            let month = this.state.saledatemonth;
+        if (this.state.equipmentcalender) {
+            let day = this.state.equipmentdateday;
+            let year = this.state.equipmentdateyear;
+            let month = this.state.equipmentdatemonth;
             const datestring = `${year}/${month}/${day}`
             const newDate = new Date(datestring);
             month = monthstring(newDate.getMonth());
@@ -53,7 +53,7 @@ class MaterialCalender {
         }
     }
     activecell(num) {
-        if (Number(num) === Number(this.state.saledateday)) {
+        if (Number(num) === Number(this.state.equipmentdateday)) {
             return ({ backgroundColor: '#FED727', borderRadius: '5px' })
         } else {
             return;
@@ -66,9 +66,9 @@ class MaterialCalender {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const calendertimein = new MaterialCalender();
-        let day = this.state.saledateday;
-        let year = this.state.saledateyear;
-        let month = this.state.saledatemonth;
+        let day = this.state.equipmentdateday;
+        let year = this.state.equipmentdateyear;
+        let month = this.state.equipmentdatemonth;
         const datestring = `${year}/${month}/${day}`
         const newDate = new Date(datestring);
         const firstofmonth =  getFirstIsOnDate(newDate);
@@ -1104,7 +1104,7 @@ class MaterialCalender {
 
             }
         }
-        if (this.state.salecalender) {
+        if (this.state.equipmentcalender) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1 }}>
 

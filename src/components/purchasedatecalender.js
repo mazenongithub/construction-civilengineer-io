@@ -20,7 +20,7 @@ class MaterialCalender {
         const dynamicstyles = new DynamicStyles();
         const removeIcon = dynamicstyles.getremoveicon.call(this);
         const dropIcon = dynamicstyles.getdropicon.call(this)
-        if (this.state.purchasedatecalender) {
+        if (this.state.purchasecalender) {
             return (
                 <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.setState({ purchasecalender: false }) }}>{removeIconSmall()} </button>
             )
@@ -35,7 +35,7 @@ class MaterialCalender {
         const dynamicstyles = new DynamicStyles();
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const styles = MyStylesheet();
-        if (this.state.purchasedatecalender) {
+        if (this.state.purchasecalender) {
             let day = this.state.purchasedateday;
             let year = this.state.purchasedateyear;
             let month = this.state.purchasedatemonth;
@@ -1104,7 +1104,7 @@ class MaterialCalender {
 
             }
         }
-        if (this.state.purchasedatecalender) {
+        if (this.state.purchasecalender) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1 }}>
 

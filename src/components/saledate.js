@@ -14,12 +14,7 @@ class SaleDate {
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
-
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+     
                 if (year.length === 4) {
 
                     if(validateYear(year)) {
@@ -50,7 +45,7 @@ class SaleDate {
                   
                 }
 
-            }
+            
         }
     }
 
@@ -61,12 +56,6 @@ class SaleDate {
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
-
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
                 if (day.length === 2) {
 
             
@@ -76,7 +65,7 @@ class SaleDate {
                             const myequipment = dynamicstyles.getmyequipmentbyid.call(this,  this.state.activeequipmentid);
                             if (myequipment) {
 
-                                const i = dynamicstyles.getmyequipmentkeybyid.call(this,this.state.activeequipmentid)
+                                const i = dynamicstyles.getequipmentkeybyid.call(this,this.state.activeequipmentid)
                                 let year = this.state.saledateyear;
                                 let month = this.state.saledatemonth;
                                 const timein = `${year}-${month}-${day}`
@@ -97,7 +86,7 @@ class SaleDate {
 
             }
 
-            }
+            
         }
     }
 
@@ -107,12 +96,6 @@ class SaleDate {
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
-
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
                 if (month.length === 2) {
 
                     if(validateMonth(month)) {
@@ -125,7 +108,7 @@ class SaleDate {
                             const myequipment = dynamicstyles.getmyequipmentbyid.call(this,  this.state.activeequipmentid);
                             if (myequipment) {
 
-                                const i = dynamicstyles.getmyequipmentkeybyid.call(this,  this.state.activeequipmentid)
+                                const i = dynamicstyles.getequipmentkeybyid.call(this,  this.state.activeequipmentid)
                                 let day = this.state.saledateday;
                                 let year = this.state.saledateyear;
                                 const timein = `${year}-${month}-${day}`
@@ -146,7 +129,7 @@ class SaleDate {
 
                 }
 
-            }
+            
         }
     }
 

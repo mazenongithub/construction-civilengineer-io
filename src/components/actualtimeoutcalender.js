@@ -15,8 +15,7 @@ class CalenderTimeOut {
         timeout.handleday.call(this, day);
     }
 
-    showicon() {
-        const styles = MyStylesheet();
+    showicon() {  const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const removeIcon = dynamicstyles.getremoveicon.call(this);
         const dropIcon = dynamicstyles.getdropicon.call(this)
