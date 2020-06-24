@@ -478,7 +478,10 @@ class Equipment extends Component {
             } else {
 
                 let costid = makeID.costid.call(this);
-                let datein = DateStringFromDateObj(this.state.equipmentdate)
+                const year = this.state.equipmentdateyear;
+                const day = this.state.equipmentdateday;
+                const month = this.state.equipmentdatemonth;
+                const datein = `${year}-${month}-${day}`;
                 let detail = "";
                 let newcost = CreateCostID(costid, cost, detail, datein)
                 let equipment = this.getactiveequipment();
@@ -529,7 +532,10 @@ class Equipment extends Component {
             } else {
 
                 let costid = makeID.costid.call(this);
-                let datein = DateStringFromDateObj(this.state.equipmentdate)
+                const year = this.state.equipmentdateyear;
+                const day = this.state.equipmentdateday;
+                const month = this.state.equipmentdatemonth;
+                const datein = `${year}-${month}-${day}`;
                 let cost = 0;
                 let newcost = CreateCostID(costid, cost, detail, datein)
                 let equipment = this.getactiveequipment();

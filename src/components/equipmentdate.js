@@ -39,6 +39,8 @@ class EquipmentDate {
                                 }
 
 
+                               } else {
+                                   this.setState({equipmentdateyear:year})
                                }
 
 
@@ -90,6 +92,8 @@ class EquipmentDate {
                                 }
 
 
+                               } else {
+                                   this.setState({equipmentdateday:day})
                                }
 
 
@@ -140,6 +144,8 @@ class EquipmentDate {
                                 }
 
 
+                               } else {
+                                   this.setState({equipmentdatemonth:month})
                                }
 
 

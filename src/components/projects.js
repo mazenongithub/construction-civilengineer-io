@@ -85,12 +85,21 @@ class Projects extends Component {
         const regularFont = this.getRegularFont();
         const providerid = this.props.match.params.providerid;
         const projectid = myproject.projectid;
-        if (this.state.width > 800) {
+      
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={myproject.projectid}>
                 <div style={{ ...styles.flex1 }}>
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1 }}>
+
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                        /schedule
+                                    </Link>
+                                </div>
+                            
+                            </div>
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
@@ -100,25 +109,10 @@ class Projects extends Component {
                                 </div>
                             </div>
 
-                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/schedulelabor`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /schedulelabor
-                                    </Link>
-                                </div>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/scheduleequipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /scheduleequipment
-                                    </Link>
-                                </div>
-                            </div>
+                         
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/schedulematerials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /schedulematerials
-                                    </Link>
-                                </div>
+                            
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                                     <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                         /bidschedule
@@ -127,7 +121,17 @@ class Projects extends Component {
                             </div>
 
                         </div>
+                     
                         <div style={{ ...styles.flex1 }}>
+
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                        /actual
+                                    </Link>
+                                </div>
+                              
+                            </div>
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
@@ -137,25 +141,10 @@ class Projects extends Component {
                                 </div>
                             </div>
 
-                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actuallabor`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /actuallabor
-                                    </Link>
-                                </div>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actualequipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /actualequipment
-                                    </Link>
-                                </div>
-                            </div>
+                          
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actualmaterials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /actualmaterials
-                                    </Link>
-                                </div>
+                             
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                                     <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                         /bid
@@ -170,95 +159,6 @@ class Projects extends Component {
                 </div>
             </div>)
 
-        } else {
-            return (
-
-                <div style={{ ...styles.generalFlex }} key={myproject.projectid}>
-                    <div style={{ ...styles.flex1 }}>
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1 }}>
-
-                                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /schedule
-                                    </Link>
-                                </div>
-
-                                <div style={{ ...styles.generalFlex }}>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                        <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/schedulelabor`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                            /schedulelabor
-                                         </Link>
-                                    </div>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                        <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/scheduleequipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                            /scheduleequipment
-                                        </Link>
-                                    </div>
-                                </div>
-
-                                <div style={{ ...styles.generalFlex }}>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                        <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/schedulematerials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                            /schedulematerials
-                                        </Link>
-                                    </div>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                        <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                            /bidschedule
-                                        </Link>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1 }}>
-
-                                <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /invoices
-                                    </Link>
-                                </div>
-
-                                <div style={{ ...styles.generalFlex }}>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                        <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actuallabor`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                            /actuallabor
-                                        </Link>
-                                    </div>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                        <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actualequipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                            /actualequipment
-                                        </Link>
-                                    </div>
-                                </div>
-
-                                <div style={{ ...styles.generalFlex }}>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                        <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/actualmaterials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                            /actualmaterials
-                                        </Link>
-                                    </div>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                        <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                            /bid
-                                        </Link>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            )
-
-        }
     }
     showprojectid(myproject) {
         const styles = MyStylesheet();

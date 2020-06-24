@@ -46,7 +46,7 @@ class MaterialCalender {
             year = newDate.getFullYear();
             const daystring = getDayString(newDate.getDay())
 
-            return (<span style={{ ...styles.generalFont, ...headerFont }}>{daystring}, {month} {date}, {year}</span>
+            return (<span className="createlink" style={{ ...styles.generalFont, ...headerFont }}>{daystring}, {month} {date}, {year}</span>
             )
         } else {
             return;
@@ -1111,173 +1111,173 @@ class MaterialCalender {
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Sun</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>Sun</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Mon</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>Mon</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Tue</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>Tue</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Wed</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>Wed</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Thu</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>Thu</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Fri</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>Fri</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Sat</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>Sat</span>
                         </div>
                     </div>
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_1()) }} onClick={() => { calendertimein.handleday.call(this, cell_1()) }}>{cell_1()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_1()) }} onClick={() => { calendertimein.handleday.call(this, cell_1()) }}>{cell_1()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_2()) }} onClick={() => { calendertimein.handleday.call(this, cell_2()) }}>{cell_2()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_2()) }} onClick={() => { calendertimein.handleday.call(this, cell_2()) }}>{cell_2()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_3()) }} onClick={() => { calendertimein.handleday.call(this, cell_3()) }}>{cell_3()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_3()) }} onClick={() => { calendertimein.handleday.call(this, cell_3()) }}>{cell_3()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_4()) }} onClick={() => { calendertimein.handleday.call(this, cell_4()) }}>{cell_4()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_4()) }} onClick={() => { calendertimein.handleday.call(this, cell_4()) }}>{cell_4()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_5()) }} onClick={() => { calendertimein.handleday.call(this, cell_5()) }}>{cell_5()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_5()) }} onClick={() => { calendertimein.handleday.call(this, cell_5()) }}>{cell_5()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_6()) }} onClick={() => { calendertimein.handleday.call(this, cell_6()) }}>{cell_6()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_6()) }} onClick={() => { calendertimein.handleday.call(this, cell_6()) }}>{cell_6()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_7()) }} onClick={() => { calendertimein.handleday.call(this, cell_7()) }}>{cell_7()}</span>
-                        </div>
-                    </div>
-
-
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_8()) }} onClick={() => { calendertimein.handleday.call(this, cell_8()) }}>{cell_8()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_9()) }} onClick={() => { calendertimein.handleday.call(this, cell_9()) }}>{cell_9()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_10()) }} onClick={() => { calendertimein.handleday.call(this, cell_10()) }}>{cell_10()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_11()) }} onClick={() => { calendertimein.handleday.call(this, cell_11()) }}>{cell_11()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_12()) }} onClick={() => { calendertimein.handleday.call(this, cell_12()) }}>{cell_12()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_13()) }} onClick={() => { calendertimein.handleday.call(this, cell_13()) }}>{cell_13()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_14()) }} onClick={() => { calendertimein.handleday.call(this, cell_14()) }}>{cell_14()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_7()) }} onClick={() => { calendertimein.handleday.call(this, cell_7()) }}>{cell_7()}</span>
                         </div>
                     </div>
 
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_15()) }} onClick={() => { calendertimein.handleday.call(this, cell_15()) }}>{cell_15()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_8()) }} onClick={() => { calendertimein.handleday.call(this, cell_8()) }}>{cell_8()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_16()) }} onClick={() => { calendertimein.handleday.call(this, cell_16()) }}>{cell_16()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_9()) }} onClick={() => { calendertimein.handleday.call(this, cell_9()) }}>{cell_9()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_17()) }} onClick={() => { calendertimein.handleday.call(this, cell_17()) }}>{cell_17()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_10()) }} onClick={() => { calendertimein.handleday.call(this, cell_10()) }}>{cell_10()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_18()) }} onClick={() => { calendertimein.handleday.call(this, cell_18()) }}>{cell_18()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_11()) }} onClick={() => { calendertimein.handleday.call(this, cell_11()) }}>{cell_11()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_19()) }} onClick={() => { calendertimein.handleday.call(this, cell_19()) }}>{cell_19()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_12()) }} onClick={() => { calendertimein.handleday.call(this, cell_12()) }}>{cell_12()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_20()) }} onClick={() => { calendertimein.handleday.call(this, cell_20()) }}>{cell_20()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_13()) }} onClick={() => { calendertimein.handleday.call(this, cell_13()) }}>{cell_13()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_21()) }} onClick={() => { calendertimein.handleday.call(this, cell_21()) }}>{cell_21()}</span>
-                        </div>
-                    </div>
-
-
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_22()) }} onClick={() => { calendertimein.handleday.call(this, cell_22()) }}>{cell_22()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_23()) }} onClick={() => { calendertimein.handleday.call(this, cell_23()) }}>{cell_23()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_24()) }} onClick={() => { calendertimein.handleday.call(this, cell_24()) }}>{cell_24()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_25()) }} onClick={() => { calendertimein.handleday.call(this, cell_25()) }}>{cell_25()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_26()) }} onClick={() => { calendertimein.handleday.call(this, cell_26()) }}>{cell_26()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_27()) }} onClick={() => { calendertimein.handleday.call(this, cell_27()) }}>{cell_27()}</span>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_28()) }} onClick={() => { calendertimein.handleday.call(this, cell_28()) }}>{cell_28()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_14()) }} onClick={() => { calendertimein.handleday.call(this, cell_14()) }}>{cell_14()}</span>
                         </div>
                     </div>
 
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_29()) }} onClick={() => { calendertimein.handleday.call(this, cell_29()) }}>{cell_29()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_15()) }} onClick={() => { calendertimein.handleday.call(this, cell_15()) }}>{cell_15()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_30()) }} onClick={() => { calendertimein.handleday.call(this, cell_30()) }}>{cell_30()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_16()) }} onClick={() => { calendertimein.handleday.call(this, cell_16()) }}>{cell_16()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_31()) }} onClick={() => { calendertimein.handleday.call(this, cell_31()) }}>{cell_31()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_17()) }} onClick={() => { calendertimein.handleday.call(this, cell_17()) }}>{cell_17()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_32()) }} onClick={() => { calendertimein.handleday.call(this, cell_32()) }}>{cell_32()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_18()) }} onClick={() => { calendertimein.handleday.call(this, cell_18()) }}>{cell_18()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_33()) }} onClick={() => { calendertimein.handleday.call(this, cell_33()) }}>{cell_33()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_19()) }} onClick={() => { calendertimein.handleday.call(this, cell_19()) }}>{cell_19()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_34()) }} onClick={() => { calendertimein.handleday.call(this, cell_34()) }}>{cell_34()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_20()) }} onClick={() => { calendertimein.handleday.call(this, cell_20()) }}>{cell_20()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_35()) }} onClick={() => { calendertimein.handleday.call(this, cell_35()) }}>{cell_35()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_21()) }} onClick={() => { calendertimein.handleday.call(this, cell_21()) }}>{cell_21()}</span>
+                        </div>
+                    </div>
+
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_22()) }} onClick={() => { calendertimein.handleday.call(this, cell_22()) }}>{cell_22()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_23()) }} onClick={() => { calendertimein.handleday.call(this, cell_23()) }}>{cell_23()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_24()) }} onClick={() => { calendertimein.handleday.call(this, cell_24()) }}>{cell_24()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_25()) }} onClick={() => { calendertimein.handleday.call(this, cell_25()) }}>{cell_25()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_26()) }} onClick={() => { calendertimein.handleday.call(this, cell_26()) }}>{cell_26()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_27()) }} onClick={() => { calendertimein.handleday.call(this, cell_27()) }}>{cell_27()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_28()) }} onClick={() => { calendertimein.handleday.call(this, cell_28()) }}>{cell_28()}</span>
+                        </div>
+                    </div>
+
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_29()) }} onClick={() => { calendertimein.handleday.call(this, cell_29()) }}>{cell_29()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_30()) }} onClick={() => { calendertimein.handleday.call(this, cell_30()) }}>{cell_30()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_31()) }} onClick={() => { calendertimein.handleday.call(this, cell_31()) }}>{cell_31()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_32()) }} onClick={() => { calendertimein.handleday.call(this, cell_32()) }}>{cell_32()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_33()) }} onClick={() => { calendertimein.handleday.call(this, cell_33()) }}>{cell_33()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_34()) }} onClick={() => { calendertimein.handleday.call(this, cell_34()) }}>{cell_34()}</span>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_35()) }} onClick={() => { calendertimein.handleday.call(this, cell_35()) }}>{cell_35()}</span>
                         </div>
                     </div>
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_36()) }} onClick={() => { calendertimein.handleday.call(this, cell_36()) }}>{cell_36()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_36()) }} onClick={() => { calendertimein.handleday.call(this, cell_36()) }}>{cell_36()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_37()) }} onClick={() => { calendertimein.handleday.call(this, cell_37()) }}>{cell_37()}</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont, ...calendertimein.activecell.call(this, cell_37()) }} onClick={() => { calendertimein.handleday.call(this, cell_37()) }}>{cell_37()}</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>&nbsp;</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>&nbsp;</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>&nbsp;</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>&nbsp;</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>&nbsp;</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>&nbsp;</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>&nbsp;</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>&nbsp;</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.showBorder }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>&nbsp;</span>
+                            <span className="createlink" style={{ ...styles.generalFont, ...regularFont }}>&nbsp;</span>
                         </div>
                     </div>
 

@@ -295,28 +295,32 @@ class App extends Component {
                 <div style={{ ...styles.generalContainer }}>
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }} > /{projectid} </Link>
                 </div>
+                
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /bidschedule </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /schedule </Link>
                 </div>
                 <div style={{ ...styles.generalContainer }}>
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /proposals </Link>
                 </div>
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /schedule </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /bidschedule </Link>
                 </div>
+              
              
 
 
 
+                
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /bid </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /actual </Link>
                 </div>
                 <div style={{ ...styles.generalContainer }}>
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /invoices </Link>
                 </div>
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /actual </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /bid </Link>
                 </div>
+               
                
                 <div style={{ ...styles.generalContainer }}>
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}/estimate`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /costestimate </Link>
