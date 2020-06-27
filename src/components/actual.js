@@ -1250,6 +1250,7 @@ class Actual extends Component {
         const timein = new TimeIn();
         const timeout = new TimeOut();
         const milestoneid = new MilestoneID();
+
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const csi = new CSI();
         const materialdate = new MaterialDate();
@@ -1440,7 +1441,25 @@ class Actual extends Component {
 
         const showemployeeid = () => {
             if(this.state.active ==='labor') {
-                return(employeeid.showemployeeid.call(this))
+
+                if(this.state.activelaborid) {
+                    const validate = dynamicstyles.checkinvoicelaborid.call(this,this.state.activelaborid)
+                    if(validate) {
+                        return(employeeid.showemployeeid.call(this))
+                    } else {
+                        const mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid)
+                        if(mylabor) {
+                            const employee = dynamicstyles.getemployeebyproviderid.call(this,mylabor.providerid);
+                            if(employee) {
+                                return(<span style={{...styles.generalFont,...regularFont}}>{employee.firstname} {employee.lastname}</span>)
+                            }
+                        }
+                     
+                    }
+                } else {
+                    return(employeeid.showemployeeid.call(this))
+                }
+                
             } else {
                 return;
             }
