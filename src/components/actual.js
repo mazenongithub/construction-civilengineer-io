@@ -1379,8 +1379,24 @@ class Actual extends Component {
         }
         const showmaterialdate = () => {
             if (this.state.active === 'materials') {
-                return (materialdate.showmaterialdate.call(this))
-            }
+                if(this.state.activematerialid) {
+                    const validate = dynamicstyles.checkinvoicematerialid.call(this,this.state.activematerialid)
+                   if(validate) {
+                    return (materialdate.showmaterialdate.call(this))
+                   } else {
+                       const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid)
+                       if(mymaterial) {
+                       return(<div style={{...styles.generalContainer}}>
+                           <span style={{...styles.generalFont,...regularFont}}>Time In</span> <br/>
+                           <span style={{...styles.generalFont,...regularFont}}>{formatDateStringDisplay(mymaterial.timein)}</span> <br/>
+                       </div>)
+                       }
+                   }
+                 
+                } else {
+                    return (materialdate.showmaterialdate.call(this))
+                }
+            } 
         }
         const showtimes = () => {
             if (this.state.width > 1200 && menu === 'closed') {
