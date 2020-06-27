@@ -1494,6 +1494,21 @@ class Actual extends Component {
 
         const showmaterialid = () => {
             if(this.state.active ==='materials') {
+                if(this.state.activematerialid) {
+                    const validate = dynamicstyles.checkinvoicematerialid.call(this,this.state.activematerialid)
+                    if(validate) {
+                        return(materialid.showmaterialid.call(this))
+
+                    } else {
+                        const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid)
+                        if(mymaterial) {
+                            const material = dynamicstyles.getmymaterialfromid.call(this,mymaterial.mymaterialid)
+                            if(material) {
+                                return(<span style={{...styles.generalFont,...regularFont,...styles.bottomMargin15}}>{material.material}</span>)
+                            }
+                        }
+                    }
+                }
                 return(materialid.showmaterialid.call(this))
             } else {
                 return;
