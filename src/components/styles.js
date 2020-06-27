@@ -11,6 +11,10 @@ export function MyStylesheet() {
             border: '0px',
             backgroundColor: '#D7A22A',
         },
+        activeactualButton: {
+            border: '0px',
+            backgroundColor: '#FFC100',
+        },
         
         activebutton:{
             backgroundColor:'#043D1A'
@@ -20,6 +24,14 @@ export function MyStylesheet() {
         },
         notactivebutton:{
             backgroundColor:'#E5D5B0'
+
+        },
+
+        activeactualbutton:{
+            backgroundColor:'#FFC100'
+        },
+        notactiveactualbutton:{
+            backgroundColor:'#C9243F'
 
         },
         calenderContainer:{
@@ -115,6 +127,11 @@ export function MyStylesheet() {
         },
         boldFont:{
             fontWeight:'700'
+        },
+        specialActualButton:{
+            color:'#F37021',
+            WebkitTextStrokeWidth: '1px',
+            WebkitTextStrokeColor: 'black'
         },
         specialButton:{
             color:'#977F1A',

@@ -357,7 +357,6 @@ class DynamicStyles {
                     id:'construction',
                     url:'http://civilengineer.io/construction/slides/construction.png',
                     caption:`Construction by civilengineer.io. The Best construction management program online. Sign up and Create your company to Get Started! See the Slide Show `
-
                 },
               
                 {
@@ -365,7 +364,6 @@ class DynamicStyles {
                     id:'Schedule',
                     url:'http://civilengineer.io/construction/slides/schedule.png',
                     caption:`New Scheduling Cost Component, Includes Labor, Equipment, Materials, Milestones, Construction Spec, Timein, Timeout, Employee, Equipment, and Material subcomponents, handles scheduling and cost estimating`
-
                 },
                 {
                     title:'Project',
@@ -379,14 +377,12 @@ class DynamicStyles {
                     id:'proposals',
                     url:'http://civilengineer.io/construction/slides/proposals.png',
                     caption:`Proposal components adds direct cost items. Allows you to make adjustments and add profit factor. Profit is attached to each item. `
-
                 },
                 {
                     title:'Equipment',
                     id:'equipment',
                     url:'http://civilengineer.io/construction/slides/equipment.png',
                     caption:`Equipment component holds company equipment. Calculates equipment rate based on ownership. Optionally allows you to store rental rates. The cost of Equipment is a Direct Cost on the Project `
-
                 },
             
                 {
@@ -394,14 +390,12 @@ class DynamicStyles {
                     id:'invoice',
                     url:'http://civilengineer.io/construction/slides/viewinvoice.png',
                     caption:`Invoice after transfer has been completed to the contractor `
-
                 },
                 {
                     title:'Labor, Equipment, Materials',
                     id:'lem',
                     url:'http://civilengineer.io/construction/slides/lem.png',
                     caption:`Labor, Material, Equipment breakdown for each pay item used `
-
                 },
                 {
                     title:'Accounts',
@@ -415,21 +409,18 @@ class DynamicStyles {
                     id:'viewaccount',
                     url:'http://civilengineer.io/construction/slides/viewaccount.png',
                     caption:`View Balances for Each Account you create including all charges and transfers `
-
                 },
                 {
                     title:'Quantity Take Off Schedule',
                     id:'takeoffschedule',
                     url:'http://civilengineer.io/construction/slides/costestimate.png',
                     caption:`Engineers provide the Contractor quantity take off schedules for bid `
-
                 },
                 {
                     title:'Specification',
                     id:'specification',
                     url:'http://civilengineer.io/construction/slides/specification.png',
                     caption:`Engineers deliver the specifications to the contractor for each item in their pay schedule or to be included in other items  `
-
                 }
                 
         ])

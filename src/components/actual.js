@@ -586,7 +586,7 @@ class Actual extends Component {
 
             const getbutton = () => {
                 if (this.state.activelaborid === labor.laborid) {
-                    return (styles.activeButton);
+                    return (styles.activeactualButton);
                 } else {
                     return (styles.generalButton);
                 }
@@ -595,7 +595,7 @@ class Actual extends Component {
             
             const getactivelaborbackground = (laborid) => {
                 if (this.state.activelaborid === laborid) {
-                    return styles.activeBackground;
+                    return styles.activeactualButton
                 }
 
             }
@@ -681,7 +681,7 @@ class Actual extends Component {
         const material = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid)
         const getbutton = () => {
             if (this.state.activematerialid === mymaterial.materialid) {
-                return (styles.activeButton);
+                return (styles.activeactualButton);
             } else {
                 return (styles.generalButton);
             }
@@ -690,7 +690,7 @@ class Actual extends Component {
         }
         const activebackground = (materialid) => {
             if (this.state.activematerialid === materialid) {
-                return (styles.activeBackground)
+                return (styles.activeactualButton)
             }
 
         }
@@ -770,7 +770,7 @@ class Actual extends Component {
         const amount = (calculatetotalhours(equipment.timeout, equipment.timein) * Number(equipment.equipmentrate))
         const getbutton = () => {
             if (this.state.activeequipmentid === equipment.equipmentid) {
-                return (styles.activeButton);
+                return (styles.activeactualButton);
             } else {
                 return (styles.generalButton);
             }
@@ -778,7 +778,7 @@ class Actual extends Component {
         
         const activeequipment = (equipmentid) => {
             if (this.state.activeequipmentid === equipmentid) {
-                return (styles.activeBackground)
+                return (styles.activeactualButton)
             }
 
         }
@@ -1297,24 +1297,24 @@ class Actual extends Component {
         }
         const laborbackground = () => {
             if (this.state.active === 'labor') {
-                return (styles.activebutton)
+                return (styles.activeactualbutton)
             } else {
-                return (styles.notactivebutton)
+                return (styles.notactiveactualbutton)
             }
         }
         const equipmentbackground = () => {
             if (this.state.active === 'equipment') {
-                return (styles.activebutton)
+                return (styles.activeactualbutton)
             } else {
-                return (styles.notactivebutton)
+                return (styles.notactiveactualbutton)
             }
         }
 
         const materialbackground = () => {
             if (this.state.active === 'materials') {
-                return (styles.activebutton)
+                return (styles.activeactualbutton)
             } else {
-                return (styles.notactivebutton)
+                return (styles.notactiveactualbutton)
             }
         }
 
@@ -1478,13 +1478,13 @@ class Actual extends Component {
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...laborbackground() }} onClick={() => { this.setState({ active: 'labor' }) }}><span style={{ ...styles.specialButton }}>LABOR</span></button>
+                            <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...laborbackground() }} onClick={() => { this.setState({ active: 'labor' }) }}><span style={{ ...styles.specialActualButton }}>LABOR</span></button>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{  ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...equipmentbackground() }} onClick={() => { this.setState({ active: 'equipment' }) }}><span style={{ ...styles.specialButton }}>Equipment</span></button>
+                            <button style={{  ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...equipmentbackground() }} onClick={() => { this.setState({ active: 'equipment' }) }}><span style={{ ...styles.specialActualButton }}>Equipment</span></button>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{  ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...materialbackground() }} onClick={() => { this.setState({ active: 'materials' }) }}><span style={{ ...styles.specialButton }}>Materials</span></button>
+                            <button style={{  ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...materialbackground() }} onClick={() => { this.setState({ active: 'materials' }) }}><span style={{ ...styles.specialActualButton }}>Materials</span></button>
                         </div>
                     </div>
 
