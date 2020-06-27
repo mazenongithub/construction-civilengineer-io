@@ -15,35 +15,35 @@ export function MyStylesheet() {
             border: '0px',
             backgroundColor: '#FFC100',
         },
-        
-        activebutton:{
-            backgroundColor:'#043D1A'
+
+        activebutton: {
+            backgroundColor: '#043D1A'
         },
-        activeBackground:{
-            backgroundColor:'#D7A22A'
+        activeBackground: {
+            backgroundColor: '#D7A22A'
         },
-        notactivebutton:{
-            backgroundColor:'#E5D5B0'
+        notactivebutton: {
+            backgroundColor: '#E5D5B0'
 
         },
 
-        activeactualbutton:{
-            backgroundColor:'#FFC100'
+        activeactualbutton: {
+            backgroundColor: '#FFC100'
         },
-        notactiveactualbutton:{
-            backgroundColor:'#C9243F'
+        notactiveactualbutton: {
+            backgroundColor: '#C9243F'
 
         },
-        calenderContainer:{
-            maxWidth:'585px'
+        calenderContainer: {
+            maxWidth: '585px'
         },
-        csiContainer:{
-            maxWidth:'400px'
+        csiContainer: {
+            maxWidth: '400px'
         },
-       
-        addRadius:{
-            border:'1px solid',
-            borderRadius:'5px'
+
+        addRadius: {
+            border: '1px solid',
+            borderRadius: '5px'
         },
         addPadding: {
             padding: '5px'
@@ -86,15 +86,15 @@ export function MyStylesheet() {
         generalContainer: {
             fontFamily: "'Nunito Sans', sans-serif"
         },
-        generalGrid:{
-            display:'grid',
-            gridRowGap:'15px'
+        generalGrid: {
+            display: 'grid',
+            gridRowGap: '15px'
         },
-        doublegrid:{
-            gridTemplateColumns:'50% 50%'
+        doublegrid: {
+            gridTemplateColumns: '50% 50%'
         },
-        triplegrid:{
-            gridTemplateColumns:'33% 33% 33%'
+        triplegrid: {
+            gridTemplateColumns: '33% 33% 33%'
         },
         csiField: {
             maxWidth: '120px',
@@ -115,34 +115,34 @@ export function MyStylesheet() {
             minHeight: '60px',
             maxWidth: '77px'
         },
-        marginLeft60:{
-            marginLeft:'60px'
+        marginLeft60: {
+            marginLeft: '60px'
         },
-        marginLeft30:{
-            marginLeft:'30px'
+        marginLeft30: {
+            marginLeft: '30px'
         },
         dateContainer: {
             maxWidth: '64px',
             maxHeight: '64px'
         },
-        boldFont:{
-            fontWeight:'700'
+        boldFont: {
+            fontWeight: '700'
         },
-        specialActualButton:{
-            color:'#F37021',
+        specialActualButton: {
+            color: '#F37021',
             WebkitTextStrokeWidth: '1px',
             WebkitTextStrokeColor: 'black'
         },
-        specialButton:{
-            color:'#977F1A',
+        specialButton: {
+            color: '#977F1A',
             WebkitTextStrokeWidth: '1px',
             WebkitTextStrokeColor: 'black'
         },
-        width75:{
-            width:'75%'
+        width75: {
+            width: '75%'
         },
-        headerFamily:{
-            fontFamily:'Roboto, sans-serif'
+        headerFamily: {
+            fontFamily: 'Roboto, sans-serif'
         },
         dateGridContainer: {
             maxWidth: '540px'
@@ -251,11 +251,11 @@ export function MyStylesheet() {
         font72: {
             fontSize: '72px'
         },
-        blueLink:{
-            color:'#5F88C9'
+        blueLink: {
+            color: '#5F88C9'
         },
-        underline:{
-            textDecoration:'underline'
+        underline: {
+            textDecoration: 'underline'
         },
         font54: {
             fontSize: '54px'

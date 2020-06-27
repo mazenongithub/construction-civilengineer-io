@@ -74,7 +74,7 @@ class Actual extends Component {
         this.setState({ materialdateyear: materialdateyear(), materialdatemonth: materialdatemonth(), materialdateday: materialdateday() })
     }
 
- 
+
     timeoutdefault() {
         const timeoutmonth = () => {
             let month = new Date().getMonth() + 1;
@@ -169,34 +169,34 @@ class Actual extends Component {
         }
         this.setState({ timeinmonth: timeinmonth(), timeinday: timeinday(), timeinyear: timeinyear(), timeinhours: timeinhours(), timeinminutes: timeinminutes(), timeinampm: timeinampm() })
     }
-   
+
     getcsiid() {
         const dynamicstyles = new DynamicStyles();
         if (this.state.activelaborid && this.state.active === 'labor') {
-            const mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid)
-            if(mylabor) {
-            let csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid)
-           
-            return `${csi.csi}-${csi.title}`
+            const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid)
+            if (mylabor) {
+                let csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid)
+
+                return `${csi.csi}-${csi.title}`
 
             }
         } else if (this.state.activematerialid && this.state.active === 'materials') {
-            const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid)
-           if(mymaterial) {
-            let csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid);
-            return `${csi.csi}-${csi.title}`
-           }
+            const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
+            if (mymaterial) {
+                let csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid);
+                return `${csi.csi}-${csi.title}`
+            }
         } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
-            const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
-         
-            if(myequipment) {
-            let csi = dynamicstyles.getcsibyid.call(this, myequipment.csiid);
-            return `${csi.csi}-${csi.title}`
+            const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+
+            if (myequipment) {
+                let csi = dynamicstyles.getcsibyid.call(this, myequipment.csiid);
+                return `${csi.csi}-${csi.title}`
             }
 
-        } else if(this.state.csiid) {
-           let csi = dynamicstyles.getcsibyid.call(this, this.state.csiid);
-          return `${csi.csi}-${csi.title}`
+        } else if (this.state.csiid) {
+            let csi = dynamicstyles.getcsibyid.call(this, this.state.csiid);
+            return `${csi.csi}-${csi.title}`
         }
 
     }
@@ -206,7 +206,7 @@ class Actual extends Component {
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let milestoneid = this.state.milestoneid;
         if (project) {
-            
+
             if (this.state.active === 'labor') {
                 if (this.state.activelaborid) {
                     const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
@@ -224,7 +224,7 @@ class Actual extends Component {
             } else if (this.state.active === 'materials') {
 
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
                     milestoneid = mymaterial.milestoneid;
                 }
 
@@ -259,14 +259,14 @@ class Actual extends Component {
                         if (this.state.activelaborid) {
                             const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
                             if (mylabor) {
-                                const j = dynamicstyles.getactuallaborkeybyid.call(this,this.state.activelaborid)
+                                const j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid)
                                 myuser.company.projects.myproject[i].actuallabor.mylabor[j].csiid = csiid;
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
                             }
 
                         } else {
-                            this.setState({csiid})
+                            this.setState({ csiid })
                         }
 
                     } else if (this.state.active === 'materials') {
@@ -274,13 +274,13 @@ class Actual extends Component {
                         if (this.state.activematerialid) {
                             const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
                             if (mymaterial) {
-                                const j = dynamicstyles.getactualmaterialkeybyid.call(this,  this.state.activematerialid);
-                                 myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].csiid = csiid;
+                                const j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid);
+                                myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].csiid = csiid;
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
                             }
                         } else {
-                            this.setState({csiid})
+                            this.setState({ csiid })
                         }
 
                     } else if (this.state.active === 'equipment') {
@@ -288,17 +288,17 @@ class Actual extends Component {
                         if (this.state.activeequipmentid) {
                             const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid);
                             if (myequipment) {
-                                const j = dynamicstyles.getactualequipmentkeybyid.call(this,  this.state.activeequipmentid)
+                                const j = dynamicstyles.getactualequipmentkeybyid.call(this, this.state.activeequipmentid)
                                 myuser.company.projects.myproject[i].actualequipment.myequipment[j].csiid = csiid;
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
                             }
                         } else {
-                            this.setState({csiid})
-                        } 
+                            this.setState({ csiid })
+                        }
 
                     } else {
-                        this.setState({csiid})
+                        this.setState({ csiid })
                     }
 
                 }
@@ -323,13 +323,13 @@ class Actual extends Component {
                         const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
                         if (mylabor) {
                             const j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid)
-                             myuser.company.projects.myproject[i].actuallabor.mylabor[j].milestoneid = milestoneid;
+                            myuser.company.projects.myproject[i].actuallabor.mylabor[j].milestoneid = milestoneid;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
 
                     } else {
-                        this.setState({milestoneid})
+                        this.setState({ milestoneid })
                     }
 
                 } else if (this.state.active === 'materials') {
@@ -338,12 +338,12 @@ class Actual extends Component {
                         const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
                         if (mymaterial) {
                             const j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid);
-                             myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].milestoneid = milestoneid;
+                            myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].milestoneid = milestoneid;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
                     } else {
-                        this.setState({milestoneid})
+                        this.setState({ milestoneid })
                     }
 
                 } else if (this.state.active === 'equipment') {
@@ -357,11 +357,11 @@ class Actual extends Component {
                             this.setState({ render: 'render' })
                         }
                     } else {
-                        this.setState({milestoneid})
+                        this.setState({ milestoneid })
                     }
 
                 } else {
-                    this.setState({milestoneid})
+                    this.setState({ milestoneid })
                 }
 
             }
@@ -379,9 +379,9 @@ class Actual extends Component {
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let equipmentid = "";
         if (project) {
-            
+
             if (this.state.activeequipmentid) {
-                const myequipment = dynamicstyles.getactualequipmentbyid.call(this,  this.state.activeequipmentid)
+                const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
                 if (myequipment) {
                     equipmentid = myequipment.myequipmentid;
                 }
@@ -397,32 +397,32 @@ class Actual extends Component {
     removelaborid(labor) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
-        if(window.confirm(`Are you sure you want to delete labor for ${labor.providerid}`)) {
-        if (myuser) {
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
-                const projectid = project.projectid;
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
-                const mylabor = dynamicstyles.getactuallaborbyid.call(this, labor.laborid);
-                if (mylabor) {
-                    const j = dynamicstyles.getactuallaborkeybyid.call(this,  mylabor.laborid);
-                    myuser.company.projects.myproject[i].actuallabor.mylabor.splice(j, 1);
-                    this.props.reduxUser(myuser)
-                    this.reset();
+        if (window.confirm(`Are you sure you want to delete labor for ${labor.providerid}`)) {
+            if (myuser) {
+                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                if (project) {
+                    const projectid = project.projectid;
+                    const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, labor.laborid);
+                    if (mylabor) {
+                        const j = dynamicstyles.getactuallaborkeybyid.call(this, mylabor.laborid);
+                        myuser.company.projects.myproject[i].actuallabor.mylabor.splice(j, 1);
+                        this.props.reduxUser(myuser)
+                        this.reset();
+                    }
                 }
             }
-        }
 
-    }
+        }
 
     }
     getemployeeid() {
         const dynamicstyles = new DynamicStyles();
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         if (project) {
-            
+
             if (this.state.activelaborid) {
-                const mylabor = dynamicstyles.getactuallaborbyid.call(this,  this.state.activelaborid)
+                const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid)
                 if (mylabor) {
 
                     return mylabor.providerid;
@@ -445,13 +445,13 @@ class Actual extends Component {
                 this.reset()
 
             } else {
- 
+
                 const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid)
                 if (mymaterial) {
                     const materialdateyear = mymaterial.timein.substring(0, 4)
                     const materialdatemonth = mymaterial.timein.substring(5, 7);
                     const materialdateday = mymaterial.timein.substring(8, 10);
-                
+
                     const csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid);
                     const csi_1 = csi.csi.substring(0, 2)
                     const csi_2 = csi.csi.substring(2, 4);
@@ -478,11 +478,11 @@ class Actual extends Component {
         if (project) {
 
             if (this.state.activeequipmentid === equipmentid) {
-              
+
                 this.setState({ activeequipmentid: false })
                 this.reset();
             } else {
-            
+
                 const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid)
 
                 if (myequipment) {
@@ -500,21 +500,21 @@ class Actual extends Component {
                     const timeouthours = getHoursfromTimein(myequipment.timeout)
                     const timeoutminutes = getMinutesfromTimein(myequipment.timeout)
                     const timeoutampm = getAMPMfromTimeIn(myequipment.timeout);
-                 
+
                     const csi = dynamicstyles.getcsibyid.call(this, myequipment.csiid);
                     let csi_1 = "";
                     let csi_2 = "";
                     let csi_3 = "";
                     let csi_4 = "";
-                    if(csi) {
-                    csi_1 = csi.csi.substring(0, 2)
-                    csi_2 = csi.csi.substring(2, 4);
-                    csi_3 = csi.csi.substring(4, 6);
-              
-                    if (csi.csi.length > 6) {
-                        csi_4 = csi.csi.substring(7, 9);
+                    if (csi) {
+                        csi_1 = csi.csi.substring(0, 2)
+                        csi_2 = csi.csi.substring(2, 4);
+                        csi_3 = csi.csi.substring(4, 6);
+
+                        if (csi.csi.length > 6) {
+                            csi_4 = csi.csi.substring(7, 9);
+                        }
                     }
-                }
                     this.setState({ activeequipmentid: equipmentid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4 })
 
                 }
@@ -533,8 +533,8 @@ class Actual extends Component {
                 this.reset();
                 this.setState({ activelaborid: false })
             } else {
-             
-                const mylabor = dynamicstyles.getactuallaborbyid.call(this,  laborid)
+
+                const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid)
 
                 if (mylabor) {
 
@@ -551,7 +551,7 @@ class Actual extends Component {
                     const timeouthours = getHoursfromTimein(mylabor.timeout)
                     const timeoutminutes = getMinutesfromTimein(mylabor.timeout)
                     const timeoutampm = getAMPMfromTimeIn(mylabor.timeout);
-                
+
                     const csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid);
                     const csi_1 = csi.csi.substring(0, 2)
                     const csi_2 = csi.csi.substring(2, 4);
@@ -580,7 +580,7 @@ class Actual extends Component {
         let hourlyrate = labor.laborrate;
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         if (project) {
-            
+
             const milestone = dynamicstyles.getmilestonebyid.call(this, labor.milestoneid)
 
 
@@ -592,7 +592,7 @@ class Actual extends Component {
                 }
             }
             console.log(getbutton())
-            
+
             const getactivelaborbackground = (laborid) => {
                 if (this.state.activelaborid === laborid) {
                     return styles.activeactualButton
@@ -640,35 +640,35 @@ class Actual extends Component {
     removematerial(mymaterial) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
-        const material = dynamicstyles.getmymaterialfromid.call(this,mymaterial.mymaterialid)
-        if(window.confirm(`Are you sure you want to delete material for ${material.material}`)) {
-        if (myuser) {
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
-                const projectid = project.projectid;
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
-                const material = dynamicstyles.getactualmaterialbyid.call(this, mymaterial.materialid)
-                if (material) {
-                    const j = dynamicstyles.getactualmaterialkeybyid.call(this,  material.materialid)
-                     myuser.company.projects.myproject[i].actualmaterials.mymaterial.splice(j, 1)
-                    this.props.reduxUser(myuser)
-                    this.reset();
-                  
+        const material = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid)
+        if (window.confirm(`Are you sure you want to delete material for ${material.material}`)) {
+            if (myuser) {
+                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                if (project) {
+                    const projectid = project.projectid;
+                    const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                    const material = dynamicstyles.getactualmaterialbyid.call(this, mymaterial.materialid)
+                    if (material) {
+                        const j = dynamicstyles.getactualmaterialkeybyid.call(this, material.materialid)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial.splice(j, 1)
+                        this.props.reduxUser(myuser)
+                        this.reset();
+
+                    }
+
                 }
 
             }
 
         }
-
-    }
     }
 
     reset() {
         this.timeindefault()
         this.timeoutdefault();
         this.materialdatedefault();
-        this.setState({quantity:'', unit:'', unitcost:'', laborrate:'', equipmentrate:''})
-      
+        this.setState({ quantity: '', unit: '', unitcost: '', laborrate: '', equipmentrate: '' })
+
     }
 
     showmaterialid(mymaterial) {
@@ -696,8 +696,8 @@ class Actual extends Component {
         }
         if (this.state.active === 'materials') {
             if (project) {
-                
-                const milestone = dynamicstyles.getmilestonebyid.call(this,  mymaterial.milestoneid)
+
+                const milestone = dynamicstyles.getmilestonebyid.call(this, mymaterial.milestoneid)
 
                 return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...activebackground(mymaterial.materialid) }} key={mymaterial.materialid}>
                     <span onClick={() => { this.makematerialactive(mymaterial.materialid) }} key={mymaterial.materialid}>{formatDateStringDisplay(mymaterial.timein)} <br />
@@ -717,7 +717,7 @@ class Actual extends Component {
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let materialids = [];
         if (project) {
-            
+
             const materials = dynamicstyles.getactualmaterials.call(this)
             if (materials) {
                 // eslint-disable-next-line
@@ -733,27 +733,27 @@ class Actual extends Component {
     removeequipment(equipment) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
-        const myequipment = dynamicstyles.getmyequipmentbyid.call(this,equipment.myequipmentid)
-        if(window.confirm(`Are you sure you want to delete material for ${myequipment.equipment}`)) {
-        if (myuser) {
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
-                const projectid = project.projectid;
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
-                const myequipment = dynamicstyles.getactualmaterialbyid.call(this, equipment.equipmentid);
-                if (myequipment) {
-                    const j = dynamicstyles.getactualequipmentkeybyid.call(this, equipment.equipmentid);
-                     myuser.company.projects.myproject[i].actualequipment.myequipment.splice(j, 1)
-                    this.props.reduxUser(myuser)
-                    this.reset();
-                }
+        const myequipment = dynamicstyles.getmyequipmentbyid.call(this, equipment.myequipmentid)
+        if (window.confirm(`Are you sure you want to delete material for ${myequipment.equipment}`)) {
+            if (myuser) {
+                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                if (project) {
+                    const projectid = project.projectid;
+                    const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                    const myequipment = dynamicstyles.getactualmaterialbyid.call(this, equipment.equipmentid);
+                    if (myequipment) {
+                        const j = dynamicstyles.getactualequipmentkeybyid.call(this, equipment.equipmentid);
+                        myuser.company.projects.myproject[i].actualequipment.myequipment.splice(j, 1)
+                        this.props.reduxUser(myuser)
+                        this.reset();
+                    }
 
+
+                }
 
             }
 
         }
-
-    }
 
 
     }
@@ -775,7 +775,7 @@ class Actual extends Component {
                 return (styles.generalButton);
             }
         }
-        
+
         const activeequipment = (equipmentid) => {
             if (this.state.activeequipmentid === equipmentid) {
                 return (styles.activeactualButton)
@@ -783,14 +783,14 @@ class Actual extends Component {
 
         }
         if (project) {
-   
-            const milestone = dynamicstyles.getmilestonebyid.call(this,  equipment.milestoneid)
+
+            const milestone = dynamicstyles.getmilestonebyid.call(this, equipment.milestoneid)
             const myequipment = dynamicstyles.getequipmentfromid.call(this, equipment.myequipmentid);
 
             return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }} key={equipment.equipmentid}>
                 <span style={{ ...activeequipment(equipment.equipmentid) }} onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>
-                {myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
-                 CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone} 
+                    {myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
+                 CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone}
                 Total Hours: {totalhours} x  {equipmentrate} = ${amount.toFixed(2)}
                 </span>
                 <button style={{ ...getbutton(), ...removeIcon }}
@@ -807,7 +807,7 @@ class Actual extends Component {
         let equipmentids = [];
         if (this.state.active === 'equipment') {
             if (project) {
-                
+
                 const equipments = dynamicstyles.getactualequipment.call(this)
 
                 if (equipments) {
@@ -864,15 +864,15 @@ class Actual extends Component {
                     timeout = UTCTimeStringfromTime(timeout);
                     const equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout)
                     const engineerid = myuser.providerid;
-                
-                                      
+
+
                     const newEquipment = CreateActualEquipment(equipmentid, myequipmentid, engineerid, csiid, milestoneid, timein, timeout, equipmentrate, '', 0)
 
                     const equipments = dynamicstyles.getactualequipment.call(this)
                     if (equipments) {
-                         myuser.company.projects.myproject[i].actualequipment.myequipment.push(newEquipment)
+                        myuser.company.projects.myproject[i].actualequipment.myequipment.push(newEquipment)
                     } else {
-                         myuser.company.projects.myproject[i].actualequipment.myequipment = [newEquipment]
+                        myuser.company.projects.myproject[i].actualequipment.myequipment = [newEquipment]
                     }
                     this.props.reduxUser(myuser)
                     this.setState({ activeequipmentid: equipmentid })
@@ -893,10 +893,10 @@ class Actual extends Component {
                 const projectid = project.projectid;
                 const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
                 if (this.state.activelaborid) {
-                    const mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid)
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid)
                     if (mylabor) {
                         const j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid)
-                         myuser.company.projects.myproject[i].actuallabor.mylabor[j].providerid = providerid;
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].providerid = providerid;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
                     }
@@ -924,7 +924,7 @@ class Actual extends Component {
                     const profit = 0;
                     const engineerid = myuser.providerid;
 
-                    const newLabor = CreateActualLabor(laborid, engineerid, milestoneid, csiid, timein, timeout, laborrate, '','', profit)
+                    const newLabor = CreateActualLabor(laborid, engineerid, milestoneid, csiid, timein, timeout, laborrate, '', '', profit)
 
                     const labors = dynamicstyles.getactuallabor.call(this)
                     if (labors) {
@@ -944,9 +944,9 @@ class Actual extends Component {
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let equipmentrate = "";
         if (project) {
-            
+
             if (this.state.activeequipmentid) {
-                const myequipment = dynamicstyles.getactualequipmentbyid.call(this,  this.state.activeequipmentid);
+                const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid);
                 if (myequipment) {
                     equipmentrate = myequipment.equipmentrate;
                 }
@@ -968,7 +968,7 @@ class Actual extends Component {
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let laborrate = "";
         if (project) {
-            
+
             if (this.state.activelaborid) {
                 const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
                 if (mylabor) {
@@ -991,7 +991,7 @@ class Actual extends Component {
                     const projectid = project.projectid;
                     const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
                     if (this.state.activeequipmentid) {
-                        const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                        const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
                         if (myequipment) {
                             const j = dynamicstyles.getactualequipmentkeybyid.call(this, this.state.activeequipmentid)
                             myuser.company.projects.myproject[i].actualequipment.myequipment[j].equipmentrate = equipmentrate;
@@ -1000,12 +1000,12 @@ class Actual extends Component {
                         }
 
                     } else {
-                        this.setState({equipmentrate})
+                        this.setState({ equipmentrate })
                     }
                 }
             }
         } else {
-            this.setState({equipmentrate})
+            this.setState({ equipmentrate })
             alert(`Equipment rate ${equipmentrate} must be numeric `)
         }
     }
@@ -1020,16 +1020,16 @@ class Actual extends Component {
                     const projectid = project.projectid;
                     const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
                     if (this.state.activelaborid) {
-                        const mylabor = dynamicstyles.getactuallaborbyid.call(this,  this.state.activelaborid)
+                        const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid)
                         if (mylabor) {
-                            const j = dynamicstyles.getactuallaborkeybyid.call(this,  this.state.activelaborid)
-                             myuser.company.projects.myproject[i].actuallabor.mylabor[j].laborrate = laborrate;
+                            const j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid)
+                            myuser.company.projects.myproject[i].actuallabor.mylabor[j].laborrate = laborrate;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
 
                     } else {
-                        this.setState({laborrate})
+                        this.setState({ laborrate })
                     }
                 }
             }
@@ -1043,9 +1043,9 @@ class Actual extends Component {
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let quantity = this.state.quantity;
         if (project) {
-            
+
             if (this.state.activematerialid) {
-                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,  this.state.activematerialid);
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
                 quantity = mymaterial.quantity;
 
             }
@@ -1059,9 +1059,9 @@ class Actual extends Component {
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let unit = this.state.unit;
         if (project) {
-            
+
             if (this.state.activematerialid) {
-                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid);
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
                 unit = mymaterial.unit;
 
             }
@@ -1075,9 +1075,9 @@ class Actual extends Component {
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
         let unitcost = this.state.unitcost;
         if (project) {
-            
+
             if (this.state.activematerialid) {
-                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,  this.state.activematerialid);
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
                 unitcost = mymaterial.unitcost;
 
             }
@@ -1096,21 +1096,21 @@ class Actual extends Component {
                     const projectid = project.projectid;
                     const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
                     if (this.state.activematerialid) {
-                        const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,  this.state.activematerialid)
+                        const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
                         if (mymaterial) {
                             const j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid);
-                             myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].quantity = quantity;
+                            myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].quantity = quantity;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
                     } else {
-                        this.setState({quantity})
+                        this.setState({ quantity })
                     }
                 }
             }
 
         } else {
-            this.setState({quantity})
+            this.setState({ quantity })
             alert(`Quantity ${quantity} must be numeric`)
         }
 
@@ -1124,15 +1124,15 @@ class Actual extends Component {
                 const projectid = project.projectid;
                 const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid)
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
                     if (mymaterial) {
                         const j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid);
-                         myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unit = unit;
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unit = unit;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
                     }
                 } else {
-                    this.setState({unit})
+                    this.setState({ unit })
                 }
             }
         }
@@ -1151,18 +1151,18 @@ class Actual extends Component {
                         const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
                         if (mymaterial) {
                             const j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid);
-                             myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unitcost = unitcost;
+                            myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].unitcost = unitcost;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
                     } else {
-                        this.setState({unitcost})
+                        this.setState({ unitcost })
                     }
                 }
             }
 
         } else {
-            this.setState({unitcost})
+            this.setState({ unitcost })
             alert(`Unit cost ${unitcost} must be numeric`)
         }
 
@@ -1179,10 +1179,10 @@ class Actual extends Component {
                 const projectid = project.projectid;
                 const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,  this.state.activematerialid);
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
                     if (mymaterial) {
                         const j = dynamicstyles.getactualmaterialkeybyid.call(this, this.state.activematerialid)
-                         myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].mymaterialid = mymaterialid;
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].mymaterialid = mymaterialid;
                         this.reduxUser({ myuser })
                         this.setState({ render: 'render' })
                     }
@@ -1200,10 +1200,10 @@ class Actual extends Component {
                     const unitcost = mymaterial.unitcost;
                     const unit = mymaterial.unit;
                     const engineerid = myuser.providerid;
-                    const newMaterial = CreateActualMaterial(materialid, mymaterialid ,engineerid, milestoneid, csiid, timein, quantity, unit, unitcost, '', 0);
+                    const newMaterial = CreateActualMaterial(materialid, mymaterialid, engineerid, milestoneid, csiid, timein, quantity, unit, unitcost, '', 0);
                     const materials = dynamicstyles.getactualmaterials.call(this);
                     if (materials) {
-                         myuser.company.projects.myproject[i].actualmaterials.mymaterial.push(newMaterial)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial.push(newMaterial)
 
                     } else {
                         myuser.company.projects[i].materials = [newMaterial]
@@ -1225,10 +1225,10 @@ class Actual extends Component {
         if (myuser) {
             const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
             if (project) {
-                
+
 
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid)
+                    const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
                     if (mymaterial) {
                         materialid = mymaterial.mymaterialid;
                     }
@@ -1250,7 +1250,6 @@ class Actual extends Component {
         const timein = new TimeIn();
         const timeout = new TimeOut();
         const milestoneid = new MilestoneID();
-
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const csi = new CSI();
         const materialdate = new MaterialDate();
@@ -1410,28 +1409,98 @@ class Actual extends Component {
         }
 
         const milestonescsi = () => {
+            let validate = true;
+            let getmilestoneid = ""
+            let getcsiid = '';
+            let getmilestone = false;
+            let getcsi = false;
+            if (this.state.active === 'labor' && this.state.activelaborid) {
+                validate = dynamicstyles.checkinvoicelaborid.call(this, this.state.activelaborid)
+                const getmylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                if (getmylabor) {
+                    getmilestoneid = getmylabor.milestoneid;
+                    getcsiid = getmylabor.csiid;
+                }
+            } else if (this.state.active === 'materials' && this.state.activematerialid) {
+                validate = dynamicstyles.checkinvoicematerialid.call(this, this.state.activematerialid)
+                const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid);
+                if (mymaterial) {
+                    getmilestoneid = mymaterial.milestoneid;
+                    getcsiid = mymaterial.csiid;
+                }
+            } else if (this.state.active === 'equipment' && this.state.activeequipmentid) {
+                validate = dynamicstyles.checkinvoiceequipmentid.call(this, this.state.activeequipmentid);
+                const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                if (myequipment) {
+                    getmilestoneid = myequipment.csiid;
+                    getcsiid = myequipment.csiid;
+                }
+            }
+
+            if (getmilestoneid) {
+                getmilestone = dynamicstyles.getmilestonebyid.call(this, getmilestoneid)
+            }
+            if (getcsiid) {
+                getcsi = dynamicstyles.getcsibyid.call(this, getcsiid)
+            }
+
+
+
+
 
             if (this.state.width > 800) {
 
+                if (validate) {
+                    return (<div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1 }}>
+                            {milestoneid.showmilestoneid.call(this)}
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            {csi.showCSI.call(this)}
+                        </div>
+                    </div>)
 
-                return (<div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
-                        {milestoneid.showmilestoneid.call(this)}
-                    </div>
-                    <div style={{ ...styles.flex1 }}>
-                        {csi.showCSI.call(this)}
-                    </div>
-                </div>)
+                } else {
+                    return (<div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1 }}>
+                            <span style={{ ...styles.generalFont, ...regularFont }}>Milestone </span><br />
+                            <span style={{ ...styles.generalFont, ...regularFont }}>{getmilestone.milestone} </span>
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            <span style={{ ...styles.generalFont, ...regularFont }}>CSI </span><br />
+                            <span style={{ ...styles.generalFont, ...regularFont }}> {getcsi.csi} {getcsi.title} </span>
+                        </div>
+                    </div>)
+
+
+                }
 
 
 
             } else {
-                return (<div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
-                        {milestoneid.showmilestoneid.call(this)}
-                        {csi.showCSI.call(this)}
-                    </div>
-                </div>)
+                if (validate) {
+                    return (<div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1 }}>
+                            {milestoneid.showmilestoneid.call(this)}
+                            {csi.showCSI.call(this)}
+                        </div>
+                    </div>)
+
+                } else {
+                    return (
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <span style={{ ...styles.generalFont, ...regularFont }}>Milestone </span><br />
+                                    <span style={{ ...styles.generalFont, ...regularFont }}>{getmilestone.milestone} </span>
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <span style={{ ...styles.generalFont, ...regularFont }}>CSI </span><br />
+                                    <span style={{ ...styles.generalFont, ...regularFont }}>{getcsi.csi}  {getcsi.title} </span>
+                                </div>
+                            </div>
+                        </div>)
+                }
 
             }
 
@@ -1440,26 +1509,26 @@ class Actual extends Component {
         }
 
         const showemployeeid = () => {
-            if(this.state.active ==='labor') {
+            if (this.state.active === 'labor') {
 
-                if(this.state.activelaborid) {
-                    const validate = dynamicstyles.checkinvoicelaborid.call(this,this.state.activelaborid)
-                    if(validate) {
-                        return(employeeid.showemployeeid.call(this))
+                if (this.state.activelaborid) {
+                    const validate = dynamicstyles.checkinvoicelaborid.call(this, this.state.activelaborid)
+                    if (validate) {
+                        return (employeeid.showemployeeid.call(this))
                     } else {
-                        const mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid)
-                        if(mylabor) {
-                            const employee = dynamicstyles.getemployeebyproviderid.call(this,mylabor.providerid);
-                            if(employee) {
-                                return(<span style={{...styles.generalFont,...regularFont, ...styles.bottomMargin15}}>{employee.firstname} {employee.lastname}</span>)
+                        const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid)
+                        if (mylabor) {
+                            const employee = dynamicstyles.getemployeebyproviderid.call(this, mylabor.providerid);
+                            if (employee) {
+                                return (<span style={{ ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>{employee.firstname} {employee.lastname}</span>)
                             }
                         }
-                     
+
                     }
                 } else {
-                    return(employeeid.showemployeeid.call(this))
+                    return (employeeid.showemployeeid.call(this))
                 }
-                
+
             } else {
                 return;
             }
@@ -1467,25 +1536,25 @@ class Actual extends Component {
         }
 
         const showequipmentid = () => {
-            if(this.state.active ==='equipment') {
-                if(this.state.activeequipmentid) {
-                    const validate = dynamicstyles.checkinvoiceequipmentid.call(this,this.state.activeequipmentid)
-                    if(validate) {
-                        return(equipmentid.showEquipmentID.call(this))
+            if (this.state.active === 'equipment') {
+                if (this.state.activeequipmentid) {
+                    const validate = dynamicstyles.checkinvoiceequipmentid.call(this, this.state.activeequipmentid)
+                    if (validate) {
+                        return (equipmentid.showEquipmentID.call(this))
 
                     } else {
-                        const equipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid);
-                        if(equipment) {
-                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this,equipment.myequipmentid);
-                            if(myequipment) {
-                                return(<span style={{...styles.generalFont,...regularFont,...styles.bottomMargin15}}>{myequipment.equipment}</span>)
+                        const equipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid);
+                        if (equipment) {
+                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, equipment.myequipmentid);
+                            if (myequipment) {
+                                return (<span style={{ ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>{myequipment.equipment}</span>)
                             }
                         }
 
 
                     }
                 }
-                return(equipmentid.showEquipmentID.call(this))
+                return (equipmentid.showEquipmentID.call(this))
             } else {
                 return;
             }
@@ -1493,23 +1562,23 @@ class Actual extends Component {
         }
 
         const showmaterialid = () => {
-            if(this.state.active ==='materials') {
-                if(this.state.activematerialid) {
-                    const validate = dynamicstyles.checkinvoicematerialid.call(this,this.state.activematerialid)
-                    if(validate) {
-                        return(materialid.showmaterialid.call(this))
+            if (this.state.active === 'materials') {
+                if (this.state.activematerialid) {
+                    const validate = dynamicstyles.checkinvoicematerialid.call(this, this.state.activematerialid)
+                    if (validate) {
+                        return (materialid.showmaterialid.call(this))
 
                     } else {
-                        const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid)
-                        if(mymaterial) {
-                            const material = dynamicstyles.getmymaterialfromid.call(this,mymaterial.mymaterialid)
-                            if(material) {
-                                return(<span style={{...styles.generalFont,...regularFont,...styles.bottomMargin15}}>{material.material}</span>)
+                        const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
+                        if (mymaterial) {
+                            const material = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid)
+                            if (material) {
+                                return (<span style={{ ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>{material.material}</span>)
                             }
                         }
                     }
                 }
-                return(materialid.showmaterialid.call(this))
+                return (materialid.showmaterialid.call(this))
             } else {
                 return;
             }
@@ -1532,10 +1601,10 @@ class Actual extends Component {
                             <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...laborbackground() }} onClick={() => { this.setState({ active: 'labor' }) }}><span style={{ ...styles.specialActualButton }}>LABOR</span></button>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{  ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...equipmentbackground() }} onClick={() => { this.setState({ active: 'equipment' }) }}><span style={{ ...styles.specialActualButton }}>Equipment</span></button>
+                            <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...equipmentbackground() }} onClick={() => { this.setState({ active: 'equipment' }) }}><span style={{ ...styles.specialActualButton }}>Equipment</span></button>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{  ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...materialbackground() }} onClick={() => { this.setState({ active: 'materials' }) }}><span style={{ ...styles.specialActualButton }}>Materials</span></button>
+                            <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...materialbackground() }} onClick={() => { this.setState({ active: 'materials' }) }}><span style={{ ...styles.specialActualButton }}>Materials</span></button>
                         </div>
                     </div>
 
@@ -1555,7 +1624,7 @@ class Actual extends Component {
                     {equipmentrate()}
                     {showmaterialquantity()}
 
-                    
+
 
                     {this.showlaborids()}
                     {this.showmaterialids()}
@@ -1575,12 +1644,12 @@ class Actual extends Component {
 
 function mapStateToProps(state) {
     return {
-      myusermodel: state.myusermodel,
-      navigation: state.navigation,
-      project: state.project,
-      allusers: state.allusers,
-      allcompanys: state.allcompanys,
-      csis:state.csis
+        myusermodel: state.myusermodel,
+        navigation: state.navigation,
+        project: state.project,
+        allusers: state.allusers,
+        allcompanys: state.allcompanys,
+        csis: state.csis
     }
-  }
+}
 export default connect(mapStateToProps, actions)(Actual);
