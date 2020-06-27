@@ -1451,7 +1451,7 @@ class Actual extends Component {
                         if(mylabor) {
                             const employee = dynamicstyles.getemployeebyproviderid.call(this,mylabor.providerid);
                             if(employee) {
-                                return(<span style={{...styles.generalFont,...regularFont}}>{employee.firstname} {employee.lastname}</span>)
+                                return(<span style={{...styles.generalFont,...regularFont, ...styles.bottomMargin15}}>{employee.firstname} {employee.lastname}</span>)
                             }
                         }
                      
@@ -1468,6 +1468,23 @@ class Actual extends Component {
 
         const showequipmentid = () => {
             if(this.state.active ==='equipment') {
+                if(this.state.activeequipmentid) {
+                    const validate = dynamicstyles.checkinvoiceequipmentid.call(this,this.state.activeequipmentid)
+                    if(validate) {
+                        return(equipmentid.showEquipmentID.call(this))
+
+                    } else {
+                        const equipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid);
+                        if(equipment) {
+                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this,equipment.myequipmentid);
+                            if(myequipment) {
+                                return(<span style={{...styles.generalFont,...regularFont,...styles.bottomMargin15}}>{myequipment.equipment}</span>)
+                            }
+                        }
+
+
+                    }
+                }
                 return(equipmentid.showEquipmentID.call(this))
             } else {
                 return;
