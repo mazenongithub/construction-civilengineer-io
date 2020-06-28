@@ -1270,6 +1270,7 @@ class Actual extends Component {
         }
         const equipmentrate = () => {
             if (this.state.active === 'equipment' && this.state.activeequipmentid) {
+                if(validate()) {
                 return (
                     <div style={{ ...styles.generalContainer }}>
                         <div style={{ ...styles.generalContainer }}>
@@ -1285,6 +1286,17 @@ class Actual extends Component {
 
                     </div>
                 )
+
+                } else {
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid);
+                    if(myequipment) {
+                    return(<div style={{...styles.generalContainer}}>
+                        <span style={{...styles.generalFont,...regularFont}}>Equipment Rate: {myequipment.equipmentrate}</span>
+                    </div>)
+
+                    }
+
+                }
             }
         }
         const laborrate = () => {
