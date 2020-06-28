@@ -176,22 +176,29 @@ class Actual extends Component {
             const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid)
             if (mylabor) {
                 let csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid)
+                if(csi) {
 
                 return `${csi.csi}-${csi.title}`
+                }
 
             }
         } else if (this.state.activematerialid && this.state.active === 'materials') {
             const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
             if (mymaterial) {
                 let csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid);
+                if(csi) {
                 return `${csi.csi}-${csi.title}`
+                }
             }
         } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
             const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
 
             if (myequipment) {
+                
                 let csi = dynamicstyles.getcsibyid.call(this, myequipment.csiid);
+                if(csi) {
                 return `${csi.csi}-${csi.title}`
+                }
             }
 
         } else if (this.state.csiid) {
@@ -591,13 +598,19 @@ class Actual extends Component {
                     return (styles.generalButton);
                 }
             }
-            console.log(getbutton())
+   
 
             const getactivelaborbackground = (laborid) => {
                 if (this.state.activelaborid === laborid) {
                     return styles.activeactualButton
                 }
 
+            }
+            
+            const remove = () => {
+                if(!labor.settlementid) {
+                    return(<button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removelaborid(labor) }}>{removeIconSmall()} </button>)
+                }
             }
 
             if (this.state.active === 'labor') {
@@ -609,7 +622,7 @@ class Actual extends Component {
                 From {inputUTCStringForLaborID(labor.timein)} to {inputUTCStringForLaborID(labor.timeout)}
                 ${Number(hourlyrate).toFixed(2)}/Hr x {calculatetotalhours(labor.timeout, labor.timein)} Hrs = ${(Number(calculatetotalhours(labor.timeout, labor.timein)) * hourlyrate).toFixed(2)}
                         </span>
-                        <button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removelaborid(labor) }}>{removeIconSmall()} </button>
+                   {remove()}
                     </div>)
 
             }
@@ -694,6 +707,11 @@ class Actual extends Component {
             }
 
         }
+        const remove = () => {
+            if(!mymaterial.settlementid) {
+                return(<button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removematerial(mymaterial) }}>{removeIconSmall()} </button>)
+            }
+        }
         if (this.state.active === 'materials') {
             if (project) {
 
@@ -704,7 +722,7 @@ class Actual extends Component {
                         {material.material} CSI: {csi.csi}-{csi.title} Milestone: {milestone.milestone} <br />
                         {mymaterial.quantity}  x ${mymaterial.unitcost}/{mymaterial.unit} = ${(mymaterial.quantity * mymaterial.unitcost).toFixed(2)}
                     </span>
-                    <button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removematerial(mymaterial) }}>{removeIconSmall()} </button>
+                    {remove()}
                 </div>)
 
             }
@@ -782,6 +800,12 @@ class Actual extends Component {
             }
 
         }
+        const remove = () => {
+            if(!equipment.settlementid) {
+                return(<button style={{ ...getbutton(), ...removeIcon }}
+                onClick={() => { this.removeequipment(equipment) }}>{removeIconSmall()} </button>)
+            }
+        }
         if (project) {
 
             const milestone = dynamicstyles.getmilestonebyid.call(this, equipment.milestoneid)
@@ -793,8 +817,7 @@ class Actual extends Component {
                  CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone}
                 Total Hours: {totalhours} x  {equipmentrate} = ${amount.toFixed(2)}
                 </span>
-                <button style={{ ...getbutton(), ...removeIcon }}
-                    onClick={() => { this.removeequipment(equipment) }}>{removeIconSmall()} </button>
+                {remove()}
             </div>
             )
 
