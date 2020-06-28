@@ -1289,6 +1289,7 @@ class Actual extends Component {
         }
         const laborrate = () => {
             if (this.state.active === 'labor' && this.state.activelaborid) {
+                if(validate()) {
                 return (
                     <div style={{ ...styles.generalContainer }}>
                         <div style={{ ...styles.generalContainer }}>
@@ -1304,6 +1305,14 @@ class Actual extends Component {
 
                     </div>
                 )
+                } else {
+                    if(this.state.active === 'labor' && this.state.activelaborid) {
+                        const mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid);
+                        if(mylabor) {
+                            return(<span style={{...styles.generalFont, ...regularFont}}> Labor Rate: {mylabor.laborrate}</span>)
+                        }
+                    }
+                }
             }
         }
         const laborbackground = () => {
