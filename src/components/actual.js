@@ -1259,40 +1259,40 @@ class Actual extends Component {
         const materialid = new MaterialID();
         const validate = () => {
             let validation = true;
-            if(this.state.activelaborid && this.state.active === 'labor') {
-                validation = dynamicstyles.checkinvoicelaborid.call(this,this.state.activelaborid)
+            if (this.state.activelaborid && this.state.active === 'labor') {
+                validation = dynamicstyles.checkinvoicelaborid.call(this, this.state.activelaborid)
             } else if (this.state.activematerialid && this.state.active === 'materials') {
-                validation = dynamicstyles.checkinvoicematerialid.call(this,this.state.activematerialid)
-            } else if(this.state.activeequipmentid && this.state.active === 'equipment') {
-                validation = dynamicstyles.checkinvoiceequipmentid.call(this,this.state.activeequipmentid)
+                validation = dynamicstyles.checkinvoicematerialid.call(this, this.state.activematerialid)
+            } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
+                validation = dynamicstyles.checkinvoiceequipmentid.call(this, this.state.activeequipmentid)
             }
             return validation;
         }
         const equipmentrate = () => {
             if (this.state.active === 'equipment' && this.state.activeequipmentid) {
-                if(validate()) {
-                return (
-                    <div style={{ ...styles.generalContainer }}>
+                if (validate()) {
+                    return (
                         <div style={{ ...styles.generalContainer }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Equipment Rate</span>
-                        </div>
-                        <div style={{ ...styles.generalContainer }}>
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont }}
-                                value={this.getequipmentrate()}
-                                onChange={event => { this.handleequipmentrate(event.target.value) }}
+                            <div style={{ ...styles.generalContainer }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}>Equipment Rate</span>
+                            </div>
+                            <div style={{ ...styles.generalContainer }}>
+                                <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                    value={this.getequipmentrate()}
+                                    onChange={event => { this.handleequipmentrate(event.target.value) }}
 
-                            />
-                        </div>
+                                />
+                            </div>
 
-                    </div>
-                )
+                        </div>
+                    )
 
                 } else {
-                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid);
-                    if(myequipment) {
-                    return(<div style={{...styles.generalContainer}}>
-                        <span style={{...styles.generalFont,...regularFont}}>Equipment Rate: {myequipment.equipmentrate}</span>
-                    </div>)
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid);
+                    if (myequipment) {
+                        return (<div style={{ ...styles.generalContainer }}>
+                            <span style={{ ...styles.generalFont, ...regularFont }}>Equipment Rate: {myequipment.equipmentrate}</span>
+                        </div>)
 
                     }
 
@@ -1301,27 +1301,27 @@ class Actual extends Component {
         }
         const laborrate = () => {
             if (this.state.active === 'labor' && this.state.activelaborid) {
-                if(validate()) {
-                return (
-                    <div style={{ ...styles.generalContainer }}>
+                if (validate()) {
+                    return (
                         <div style={{ ...styles.generalContainer }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Labor Rate</span>
-                        </div>
-                        <div style={{ ...styles.generalContainer }}>
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont }}
-                                value={this.getlaborrate()}
-                                onChange={event => { this.handlelaborrate(event.target.value) }}
+                            <div style={{ ...styles.generalContainer }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}>Labor Rate</span>
+                            </div>
+                            <div style={{ ...styles.generalContainer }}>
+                                <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                    value={this.getlaborrate()}
+                                    onChange={event => { this.handlelaborrate(event.target.value) }}
 
-                            />
-                        </div>
+                                />
+                            </div>
 
-                    </div>
-                )
+                        </div>
+                    )
                 } else {
-                    if(this.state.active === 'labor' && this.state.activelaborid) {
-                        const mylabor = dynamicstyles.getactuallaborbyid.call(this,this.state.activelaborid);
-                        if(mylabor) {
-                            return(<span style={{...styles.generalFont, ...regularFont}}> Labor Rate: {mylabor.laborrate}</span>)
+                    if (this.state.active === 'labor' && this.state.activelaborid) {
+                        const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                        if (mylabor) {
+                            return (<span style={{ ...styles.generalFont, ...regularFont }}> Labor Rate: {mylabor.laborrate}</span>)
                         }
                     }
                 }
@@ -1352,123 +1352,145 @@ class Actual extends Component {
 
         const showmaterialquantity = () => {
             if (this.state.active === 'materials') {
-                return (
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                            <div style={{ ...styles.generalContainer }}>
-                                <span style={{ ...styles.generalFont, ...regularFont }}>Quantity</span>
+                if (validate()) {
+                    return (
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <span style={{ ...styles.generalFont, ...regularFont }}>Quantity</span>
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                        value={this.getquantity()}
+                                        onChange={event => { this.handlequantity(event.target.value) }}
+                                    />
+                                </div>
+
                             </div>
-                            <div style={{ ...styles.generalContainer }}>
-                                <input type="text" style={{ ...styles.generalFont, ...regularFont }}
-                                    value={this.getquantity()}
-                                    onChange={event => { this.handlequantity(event.target.value) }}
-                                />
+                            <div style={{ ...styles.flex1, ...styles.addMargin }}>
+
+                                <div style={{ ...styles.generalContainer }}>
+                                    <span style={{ ...styles.generalFont, ...regularFont }}>Unit</span>
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                        value={this.getunit()}
+                                        onChange={event => { this.handleunit(event.target.value) }}
+                                    />
+                                </div>
+
+                            </div>
+                            <div style={{ ...styles.flex1, ...styles.addMargin }}>
+
+                                <div style={{ ...styles.generalContainer }}>
+                                    <span style={{ ...styles.generalFont, ...regularFont }}>Unit Cost</span>
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                        value={this.getunitcost()}
+                                        onChange={event => { this.handleunitcost(event.target.value) }}
+                                    />
+                                </div>
+
                             </div>
 
                         </div>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                    )
 
-                            <div style={{ ...styles.generalContainer }}>
-                                <span style={{ ...styles.generalFont, ...regularFont }}>Unit</span>
-                            </div>
-                            <div style={{ ...styles.generalContainer }}>
-                                <input type="text" style={{ ...styles.generalFont, ...regularFont }}
-                                    value={this.getunit()}
-                                    onChange={event => { this.handleunit(event.target.value) }}
-                                />
-                            </div>
+                } else {
+                    if (this.state.activematerialid) {
+                        const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
+                        if (mymaterial) {
+                            return (<div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1 }}>
+                                    <span style={{ ...styles.generalFont, ...regularFont }}>Quantity: {mymaterial.quantity}</span>
+                                </div>
+                                <div style={{ ...styles.flex1 }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}>Unit: {mymaterial.unit}</span>
+                                </div>
+                                <div style={{ ...styles.flex1 }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}>Unit Cost: {mymaterial.unitcost}</span>
+                                </div>
+                            </div>)
 
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                        }
 
-                            <div style={{ ...styles.generalContainer }}>
-                                <span style={{ ...styles.generalFont, ...regularFont }}>Unit Cost</span>
-                            </div>
-                            <div style={{ ...styles.generalContainer }}>
-                                <input type="text" style={{ ...styles.generalFont, ...regularFont }}
-                                    value={this.getunitcost()}
-                                    onChange={event => { this.handleunitcost(event.target.value) }}
-                                />
-                            </div>
-
-                        </div>
-
-                    </div>
-                )
+                    }
+                }
 
             }
         }
 
         const showtimein = () => {
             if (this.state.active === 'labor' || this.state.active === 'equipment') {
-                if(validate()) {
-                return (timein.showtimein.call(this))
+                if (validate()) {
+                    return (timein.showtimein.call(this))
                 } else {
 
-                    if(this.state.activelaborid && this.state.active === 'labor') {
+                    if (this.state.activelaborid && this.state.active === 'labor') {
                         const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
-                        if(mylabor) {
-                            return(<div style={{...styles.generalContainer}}>
-                                <span style={{...styles.generalFont,...regularFont}}>TimeIn: {inputUTCStringForLaborID(mylabor.timein)}</span>
+                        if (mylabor) {
+                            return (<div style={{ ...styles.generalContainer }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}>TimeIn: {inputUTCStringForLaborID(mylabor.timein)}</span>
                             </div>)
                         }
                     } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
-                        const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
-                        if(myequipment) {
-                            return(<div style={{...styles.generalContainer}}>
-                                <span style={{...styles.generalFont,...regularFont}}>Time In {inputUTCStringForLaborID(myequipment.timein)}</span>
+                        const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                        if (myequipment) {
+                            return (<div style={{ ...styles.generalContainer }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}>Time In {inputUTCStringForLaborID(myequipment.timein)}</span>
                             </div>)
                         }
                     }
-                    
+
                 }
             }
         }
         const showtimeout = () => {
             if (this.state.active === 'labor' || this.state.active === 'equipment') {
-                if(validate()) {
-                return (timeout.showtimeout.call(this))
+                if (validate()) {
+                    return (timeout.showtimeout.call(this))
                 } else {
-        
-                    if(this.state.activelaborid && this.state.active === 'labor') {
+
+                    if (this.state.activelaborid && this.state.active === 'labor') {
                         const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
-                        if(mylabor) {
-                            return(<div style={{...styles.generalContainer}}>
-                                <span style={{...styles.generalFont,...regularFont}}>TimeOut: {inputUTCStringForLaborID(mylabor.timeout)}</span>
+                        if (mylabor) {
+                            return (<div style={{ ...styles.generalContainer }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}>TimeOut: {inputUTCStringForLaborID(mylabor.timeout)}</span>
                             </div>)
                         }
                     } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
-                        const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
-                        if(myequipment) {
-                            return(<div style={{...styles.generalContainer}}>
-                                <span style={{...styles.generalFont,...regularFont}}>Timeout {inputUTCStringForLaborID(myequipment.timeout)}</span>
+                        const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                        if (myequipment) {
+                            return (<div style={{ ...styles.generalContainer }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}>Timeout {inputUTCStringForLaborID(myequipment.timeout)}</span>
                             </div>)
                         }
                     }
-                    
+
                 }
             }
         }
         const showmaterialdate = () => {
             if (this.state.active === 'materials') {
-                if(this.state.activematerialid) {
-                    const validate = dynamicstyles.checkinvoicematerialid.call(this,this.state.activematerialid)
-                   if(validate) {
-                    return (materialdate.showmaterialdate.call(this))
-                   } else {
-                       const mymaterial = dynamicstyles.getactualmaterialbyid.call(this,this.state.activematerialid)
-                       if(mymaterial) {
-                       return(<div style={{...styles.generalContainer}}>
-                           <span style={{...styles.generalFont,...regularFont}}>Time In</span> <br/>
-                           <span style={{...styles.generalFont,...regularFont}}>{formatDateStringDisplay(mymaterial.timein)}</span> <br/>
-                       </div>)
-                       }
-                   }
-                 
+                if (this.state.activematerialid) {
+                    const validate = dynamicstyles.checkinvoicematerialid.call(this, this.state.activematerialid)
+                    if (validate) {
+                        return (materialdate.showmaterialdate.call(this))
+                    } else {
+                        const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
+                        if (mymaterial) {
+                            return (<div style={{ ...styles.generalContainer }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}>Time In</span> <br />
+                                <span style={{ ...styles.generalFont, ...regularFont }}>{formatDateStringDisplay(mymaterial.timein)}</span> <br />
+                            </div>)
+                        }
+                    }
+
                 } else {
                     return (materialdate.showmaterialdate.call(this))
                 }
-            } 
+            }
         }
         const showtimes = () => {
             if (this.state.width > 1200 && menu === 'closed') {
@@ -1555,7 +1577,7 @@ class Actual extends Component {
                             <span style={{ ...styles.generalFont, ...regularFont }}>Milestone: {getmilestone.milestone} </span>
                         </div>
                         <div style={{ ...styles.flex1 }}>
-                
+
                             <span style={{ ...styles.generalFont, ...regularFont }}> CSI: {getcsi.csi} {getcsi.title} </span>
                         </div>
                     </div>)
