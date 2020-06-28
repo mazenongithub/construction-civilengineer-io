@@ -1257,6 +1257,17 @@ class Actual extends Component {
         const employeeid = new EmployeeID();
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
+        const validate = () => {
+            let validation = true;
+            if(this.state.activelaborid && this.state.active === 'labor') {
+                validation = dynamicstyles.checkinvoicelaborid.call(this,this.state.activelaborid)
+            } else if (this.state.activematerialid && this.state.active === 'materials') {
+                validation = dynamicstyles.checkinvoicematerialid.call(this,this.state.activematerialid)
+            } else if(this.state.activeequipmentid && this.state.active === 'equipment') {
+                validation = dynamicstyles.checkinvoiceequipmentid.call(this,this.state.activeequipmentid)
+            }
+            return validation;
+        }
         const equipmentrate = () => {
             if (this.state.active === 'equipment' && this.state.activeequipmentid) {
                 return (
@@ -1369,12 +1380,52 @@ class Actual extends Component {
 
         const showtimein = () => {
             if (this.state.active === 'labor' || this.state.active === 'equipment') {
+                if(validate()) {
                 return (timein.showtimein.call(this))
+                } else {
+
+                    if(this.state.activelaborid && this.state.active === 'labor') {
+                        const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                        if(mylabor) {
+                            return(<div style={{...styles.generalContainer}}>
+                                <span style={{...styles.generalFont,...regularFont}}>TimeIn: {inputUTCStringForLaborID(mylabor.timein)}</span>
+                            </div>)
+                        }
+                    } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
+                        const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                        if(myequipment) {
+                            return(<div style={{...styles.generalContainer}}>
+                                <span style={{...styles.generalFont,...regularFont}}>Time In {inputUTCStringForLaborID(myequipment.timein)}</span>
+                            </div>)
+                        }
+                    }
+                    
+                }
             }
         }
         const showtimeout = () => {
             if (this.state.active === 'labor' || this.state.active === 'equipment') {
+                if(validate()) {
                 return (timeout.showtimeout.call(this))
+                } else {
+        
+                    if(this.state.activelaborid && this.state.active === 'labor') {
+                        const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                        if(mylabor) {
+                            return(<div style={{...styles.generalContainer}}>
+                                <span style={{...styles.generalFont,...regularFont}}>TimeOut: {inputUTCStringForLaborID(mylabor.timeout)}</span>
+                            </div>)
+                        }
+                    } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
+                        const myequipment = dynamicstyles.getactualequipmentbyid.call(this,this.state.activeequipmentid)
+                        if(myequipment) {
+                            return(<div style={{...styles.generalContainer}}>
+                                <span style={{...styles.generalFont,...regularFont}}>Timeout {inputUTCStringForLaborID(myequipment.timeout)}</span>
+                            </div>)
+                        }
+                    }
+                    
+                }
             }
         }
         const showmaterialdate = () => {
@@ -1448,7 +1499,7 @@ class Actual extends Component {
                 validate = dynamicstyles.checkinvoiceequipmentid.call(this, this.state.activeequipmentid);
                 const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
                 if (myequipment) {
-                    getmilestoneid = myequipment.csiid;
+                    getmilestoneid = myequipment.milestoneid;
                     getcsiid = myequipment.csiid;
                 }
             }
@@ -1479,12 +1530,12 @@ class Actual extends Component {
                 } else {
                     return (<div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Milestone </span><br />
-                            <span style={{ ...styles.generalFont, ...regularFont }}>{getmilestone.milestone} </span>
+
+                            <span style={{ ...styles.generalFont, ...regularFont }}>Milestone: {getmilestone.milestone} </span>
                         </div>
                         <div style={{ ...styles.flex1 }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>CSI </span><br />
-                            <span style={{ ...styles.generalFont, ...regularFont }}> {getcsi.csi} {getcsi.title} </span>
+                
+                            <span style={{ ...styles.generalFont, ...regularFont }}> CSI: {getcsi.csi} {getcsi.title} </span>
                         </div>
                     </div>)
 
