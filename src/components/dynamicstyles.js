@@ -358,45 +358,6 @@ class DynamicStyles {
                     url:'http://civilengineer.io/construction/slides/construction.png',
                     caption:`Construction by civilengineer.io. The Best construction management program online. Sign up and Create your company to Get Started! See the Slide Show `
                 },
-              
-                {
-                    title:'Schedule',
-                    id:'Schedule',
-                    url:'http://civilengineer.io/construction/slides/schedule.png',
-                    caption:`New Scheduling Cost Component, Includes Labor, Equipment, Materials, Milestones, Construction Spec, Timein, Timeout, Employee, Equipment, and Material subcomponents, handles scheduling and cost estimating`
-                },
-                {
-                    title:'Project',
-                    id:'project',
-                    url:'http://civilengineer.io/construction/slides/project.png',
-                    caption:`Project Component after the PM added your company to their project`
-
-                },
-                {
-                    title:'Proposal',
-                    id:'proposals',
-                    url:'http://civilengineer.io/construction/slides/proposals.png',
-                    caption:`Proposal components adds direct cost items. Allows you to make adjustments and add profit factor. Profit is attached to each item. `
-                },
-                {
-                    title:'Equipment',
-                    id:'equipment',
-                    url:'http://civilengineer.io/construction/slides/equipment.png',
-                    caption:`Equipment component holds company equipment. Calculates equipment rate based on ownership. Optionally allows you to store rental rates. The cost of Equipment is a Direct Cost on the Project `
-                },
-            
-                {
-                    title:'Invoice',
-                    id:'invoice',
-                    url:'http://civilengineer.io/construction/slides/viewinvoice.png',
-                    caption:`Invoice after transfer has been completed to the contractor `
-                },
-                {
-                    title:'Labor, Equipment, Materials',
-                    id:'lem',
-                    url:'http://civilengineer.io/construction/slides/lem.png',
-                    caption:`Labor, Material, Equipment breakdown for each pay item used `
-                },
                 {
                     title:'Accounts',
                     id:'accounts',
@@ -410,6 +371,66 @@ class DynamicStyles {
                     url:'http://civilengineer.io/construction/slides/viewaccount.png',
                     caption:`View Balances for Each Account you create including all charges and transfers `
                 },
+                {
+                    title:'Company',
+                    id:'company',
+                    url:'http://civilengineer.io/construction/slides/company.png',
+                    caption:`Once you create or add a company, you will have access to the company component.  `
+                },
+                {
+                    title:'Employees',
+                    id:'employees',
+                    url:'http://civilengineer.io/construction/slides/employees.png',
+                    caption:`Adding benefits inside employee components deteermines default labor rate  `
+                },
+                {
+                    title:'Equipment',
+                    id:'equipment',
+                    url:'http://civilengineer.io/construction/slides/equipment.png',
+                    caption:`Equipment component holds company equipment. Calculates equipment rate based on ownership. Optionally allows you to store rental rates. The cost of Equipment is a Direct Cost on the Project `
+                },
+                {
+                    title:'Materials',
+                    id:'materials',
+                    url:'http://civilengineer.io/construction/slides/materials.png',
+                    caption:`Enter company materials and set the default unit price and unit `
+                },
+                {
+                    title:'Project',
+                    id:'project',
+                    url:'http://civilengineer.io/construction/slides/project.png',
+                    caption:`Project Component after the PM added your company to their project`
+
+                },
+            
+              
+                {
+                    title:'Schedule',
+                    id:'Schedule',
+                    url:'http://civilengineer.io/construction/slides/schedule.png',
+                    caption:`New Scheduling Cost Component, Includes Labor, Equipment, Materials, Milestones, Construction Spec, Timein, Timeout, Employee, Equipment, and Material subcomponents, handles scheduling and cost estimating`
+                },
+              
+                {
+                    title:'Proposal',
+                    id:'proposals',
+                    url:'http://civilengineer.io/construction/slides/proposals.png',
+                    caption:`Proposal components adds direct cost items. Allows you to make adjustments and add profit factor. Profit is attached to each item. `
+                },
+  
+                {
+                    title:'Invoice',
+                    id:'invoice',
+                    url:'http://civilengineer.io/construction/slides/viewinvoice.png',
+                    caption:`Invoice after transfer has been completed to the contractor `
+                },
+                {
+                    title:'Labor, Equipment, Materials',
+                    id:'lem',
+                    url:'http://civilengineer.io/construction/slides/lem.png',
+                    caption:`Labor, Material, Equipment breakdown for each pay item used `
+                },
+              
                 {
                     title:'Quantity Take Off Schedule',
                     id:'takeoffschedule',
@@ -2306,10 +2327,13 @@ class DynamicStyles {
     }
     getRegularFont() {
         const styles = MyStylesheet();
-        if (this.state.width > 800) {
+        if(this.state.width>1200) {
             return (styles.font30)
-        } else {
+        }
+        if (this.state.width > 800) {
             return (styles.font24)
+        } else {
+            return (styles.font20)
         }
 
     }

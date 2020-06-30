@@ -5,7 +5,6 @@ import { MyStylesheet } from './styles';
 import { addIcon, removeIconSmall, CheckedBox, EmptyBox } from './svg';
 import { CreateBenefit, CreateEmployee } from './functions';
 import DynamicStyles from './dynamicstyles';
-import FindEmployee from './findemployee';
 import MakeID from './makeids';
 
 class Employees extends Component {
@@ -950,8 +949,10 @@ class Employees extends Component {
                                 Employee Benefits
                             </div>
                         </div>
-                        {this.showactivehourlyrate()}
+                     
                         {this.showactiveemployeebenefits()}
+
+                        {this.showactivehourlyrate()}
 
 
 
@@ -965,23 +966,25 @@ class Employees extends Component {
     render() {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const titleFont = dynamicstyles.gettitlefont.call(this);
         const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const findemployee = new FindEmployee();
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
         if(myuser) {
+            const getcompanyurl = () => {
+                if(myuser.hasOwnProperty("company")) {
+                    return(myuser.company.url)
+                }
+            }
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
 
                     <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                            /{this.props.match.params.companyid}/employees
+                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                           <span style={{...headerFont,...styles.boldFont}}> /{getcompanyurl()}</span> <br/>
+                           <span style={{...headerFont,...styles.boldFont}}> /employees</span> <br/>
                         </div>
                     </div>
-
-                    {findemployee.showEmployeeSearch.call(this)}
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.generalFont }}>

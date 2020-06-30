@@ -5,7 +5,7 @@ import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
 import { CreateMaterial } from './functions';
 import DynamicStyles from './dynamicstyles';
-import CSI from './csi';
+
 import AccountID from './accountid';
 import MakeID from './makeids';
 
@@ -93,7 +93,7 @@ class Materials extends Component {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
-        const csi = new CSI();
+    
         const accountid = new AccountID();
         if (this.state.width > 800) {
             return (
@@ -101,13 +101,10 @@ class Materials extends Component {
                     <div style={{ ...styles.flex1 }}>
 
                         <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
+                            <div style={{ ...styles.flex1, ...regularFont, ...styles.addMargin }}>
                                 {accountid.showaccountmenu.call(this)}
                             </div>
 
-                            <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
-                                {csi.showCSI.call(this)}
-                            </div>
 
                         </div>
 
@@ -126,11 +123,6 @@ class Materials extends Component {
                             </div>
                         </div>
 
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                {csi.showCSI.call(this)}
-                            </div>
-                        </div>
 
 
                     </div>
@@ -597,20 +589,26 @@ class Materials extends Component {
     }
 
     render() {
-        const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
-        const titleFont = this.gettitlefont();
         const dynamicstyles = new DynamicStyles();
+        const styles = MyStylesheet();
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
         const maxWidth = dynamicstyles.getMaxWidth.call(this)
         const myuser =dynamicstyles.getuser.call(this)
         if(myuser) {
+            const companyurl = () => {
+                if(myuser.hasOwnProperty("company")) {
+                    return(myuser.company.url)
+                }
+            }
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
 
                     <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                            /{this.props.match.params.companyid}/materials
+                        <div style={{ ...styles.flex1, ...styles.alignCenter}}>
+                           <span style={{ ...headerFont, ...styles.boldFont }}> /{companyurl()}</span><br/>
+                           <span style={{ ...headerFont, ...styles.boldFont }}>/materials</span>
                         </div>
                     </div>
 

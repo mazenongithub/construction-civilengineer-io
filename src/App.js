@@ -182,7 +182,7 @@ class App extends Component {
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link to={`/${profile}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /equipment
-                                </Link>
+               </Link>
             </div>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link to={`/${profile}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
@@ -235,21 +235,21 @@ class App extends Component {
         if (myuser.company.hasOwnProperty("projects")) {
           return (
             <div style={{ ...styles.generalContainer }}>
-              <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /projects </Link>
+              <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>
             </div>)
         } else {
           return (<div style={{ ...styles.generalContainer }}>
-            <Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> / </Link>
+            <Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> / </Link>
           </div>)
         }
       } else {
         return (<div style={{ ...styles.generalContainer }}>
-          <Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> / </Link>
+          <Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> / </Link>
         </div>)
       }
     } else {
       return (<div style={{ ...styles.generalContainer }}>
-        <Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> / </Link>
+        <Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> / </Link>
       </div>)
     }
   }
@@ -257,9 +257,10 @@ class App extends Component {
     const dynamicstyles = new DynamicStyles();
     const user = dynamicstyles.getuser.call(this)
     const styles = MyStylesheet();
+    const headerFont = dynamicstyles.getHeaderFont.call(this)
     if (user) {
       return (
-        <Link to={`/${user.profile}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...styles.font40, ...styles.fontBold }}> /company </Link>)
+        <Link to={`/${user.profile}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /company </Link>)
     } else {
       return;
     }
@@ -287,17 +288,17 @@ class App extends Component {
             return (
               <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15,...styles.addMargin }}>
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }} > /{projectid} </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }} > /{projectid} </Link>
                 </div>
                 
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /schedule </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /schedule </Link>
                 </div>
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /proposals </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /proposals </Link>
                 </div>
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /bidschedule </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
                 </div>
               
              
@@ -306,21 +307,21 @@ class App extends Component {
 
                 
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /actual </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /actual </Link>
                 </div>
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /invoices </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /invoices </Link>
                 </div>
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /bid </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
                 </div>
                
                
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/estimate`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /costestimate </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/estimate`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /costestimate </Link>
                 </div>
                 <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/specifications`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.fontBold }} > /specifications </Link>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/specifications`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /specifications </Link>
                 </div>
               </div>)
           }
@@ -399,9 +400,9 @@ class App extends Component {
     }
     const link_1 = () => {
       if (myuser) {
-        return (<Link to={`/${myuser.profile}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /{myuser.profile} </Link>)
+        return (<Link to={`/${myuser.profile}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{myuser.profile} </Link>)
       } else {
-        return (<Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> / </Link>)
+        return (<Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> / </Link>)
       }
 
     }
@@ -409,7 +410,7 @@ class App extends Component {
       if (myuser) {
         return (
           <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
-            <div className="createlink" style={{ ...styles.generalFont, ...headerFont, ...styles.fontBold }} onClick={() => { this.logoutuser() }}>  logout </div>
+            <div className="createlink" style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }} onClick={() => { this.logoutuser() }}>  logout </div>
           </div>)
       }
     }
@@ -418,7 +419,7 @@ class App extends Component {
       if (!myuser) {
         return (
           <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
-            <Link to={`/providers/login`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /login </Link>
+            <Link to={`/providers/login`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /login </Link>
           </div>)
       }
     }
@@ -428,7 +429,7 @@ class App extends Component {
         return (
           <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
 
-            <Link to={`/providers/register`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.fontBold }}>/register </Link>
+            <Link to={`/providers/register`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.boldFont }}>/register </Link>
           </div>
         )
       }
@@ -452,6 +453,11 @@ class App extends Component {
             <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
               {this.handlecompanylink()}
               {this.showcompanylinks()}
+            </div>)
+        } else {
+          return (
+            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
+              {this.handlecompanylink()}
             </div>)
         }
       }
@@ -481,32 +487,34 @@ class App extends Component {
       if (myuser && this.state.width > 800 && position === 'closed') {
         return (
           <div style={{ ...styles.flex1, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter }}>
-            <div className="createlink" style={{ ...styles.generalFont, ...headerFont, ...styles.fontBold }} onClick={() => { this.logoutuser() }}>  logout </div>
+            <div className="createlink" style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }} onClick={() => { this.logoutuser() }}>  logout </div>
           </div>)
       }
     }
 
     const submenulink_1 = () => {
       if (myuser) {
-        return (<Link to={`/${myuser.profile}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /{myuser.profile} </Link>)
+        return (<Link to={`/${myuser.profile}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{myuser.profile} </Link>)
       } else {
-        return (<Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> / </Link>)
+        return (<Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> / </Link>)
       }
     }
 
     const submenulink_2 = () => {
       if (myuser) {
-        return (<Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /projects </Link>)
+        if(myuser.hasOwnProperty("company")) {
+        return (<Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>)
+        }
       } else {
-        return (<Link to={`/providers/register`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.fontBold }}>/register </Link>)
+        return (<Link to={`/providers/register`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.boldFont }}>/register </Link>)
       }
     }
 
     const submenulink_3 = () => {
       if (myuser) {
-        return (<Link to={`/${myuser.profile}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.fontBold }}> /company </Link>)
+        return (<Link to={`/${myuser.profile}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /company </Link>)
       } else {
-        return (<Link to={`/providers/login`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.fontBold }}>/login </Link>)
+        return (<Link to={`/providers/login`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.boldFont }}>/login </Link>)
       }
     }
     const submenus = () => {

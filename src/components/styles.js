@@ -218,9 +218,6 @@ export function MyStylesheet() {
         alignRight: {
             float: 'right'
         },
-        fontBold: {
-            fontWeight: 600
-        },
         font48: {
             fontSize: '48px'
         },

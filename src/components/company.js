@@ -109,7 +109,7 @@ class Company extends Component {
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
                                 Company URL
-                    </div>
+                             </div>
                             <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont }}>
                                 <input type="text" style={{ ...styles.addLeftMargin, ...regularFont, ...styles.generalFont }}
                                     value={this.state.url}
@@ -302,8 +302,7 @@ class Company extends Component {
     showcompanymenus() {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const headerFont = this.getHeaderFont();
-        const regularFont = this.getRegularFont();
+        const regularFont = dynamicstyles.getRegularFont.call(this)
 
         const company = dynamicstyles.getcompany.call(this)
         const myuser = dynamicstyles.getuser.call(this);
@@ -314,13 +313,7 @@ class Company extends Component {
                     <div style={{ ...styles.generalFlex, ...styles.topMargin15 }}>
                         <div style={{ ...styles.flex1 }}>
 
-                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1, ...headerFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                    <Link to={`/${providerid}/company/${company.url}`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        {providerid}/company/{company.url}
-                                    </Link>
-                                </div>
-                            </div>
+
 
                             <div style={{ ...styles.generalFlex }}>
                                 <div style={{ ...styles.flex1, }}>
@@ -329,18 +322,10 @@ class Company extends Component {
                                             /equipment
                                 </Link>
                                     </div>
-                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                        <Link to={`/${providerid}/company/${company.url}/construction`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                            /construction
-                                </Link>
-                                    </div>
+
                                 </div>
                                 <div style={{ ...styles.flex1, }}>
-                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                        <Link to={`/${providerid}/company/${company.url}/office`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                            /office
-                                </Link>
-                                    </div>
+
                                     <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
                                         <Link to={`/${providerid}/company/${company.url}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                             /employees
@@ -377,11 +362,7 @@ class Company extends Component {
                 return (
                     <div style={styles.generalFlex}>
                         <div style={styles.flex1}>
-                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...headerFont, ...styles.alignCenter }}>
-                                <Link to={`/${providerid}/company`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                    {providerid}/company/{company.url}
-                                </Link>
-                            </div>
+
                             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
                                 <Link to={`/${providerid}/company/${company.url}/office`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
                                     /office
@@ -482,7 +463,7 @@ class Company extends Component {
             this.setState({ message })
         }
     }
-    
+
     async registernewcompany() {
 
         const dynamicstyles = new DynamicStyles();
@@ -706,9 +687,11 @@ class Company extends Component {
     }
     showmycompany() {
         const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
-        const myuser = this.getuser();
-        const arrowHeight = this.getArrowHeight();
+        const dynamicstyles = new DynamicStyles();
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const myuser = dynamicstyles.getuser.call(this)
+        const arrowHeight = dynamicstyles.getArrowHeight.call(this)
+
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 return (
@@ -780,7 +763,7 @@ class Company extends Component {
     handlesavecompany() {
         const dynamicstyles = new DynamicStyles();
         const mycompany = dynamicstyles.getcompany.call(this);
-       
+
         if (mycompany) {
             return (dynamicstyles.showsavecompany.call(this))
         }
@@ -789,34 +772,42 @@ class Company extends Component {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const styles = MyStylesheet();
-        const titleFont = this.gettitlefont();
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
-if(myuser) {
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.bottomMargin15, ...styles.alignCenter, ...styles.generalFont, ...titleFont, ...styles.fontBold }}>
-                            /company
+        if (myuser) {
+            const companyurl = () => {
+                if(myuser.hasOwnProperty("company")) {
+                    return(  
+                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{myuser.company.url} </span>)
+                }
+            }
+            return (
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...styles.bottomMargin15, ...styles.alignCenter }}>
+                                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/company </span> <br />
+                                {companyurl()}
+                            </div>
                         </div>
+
+                        {this.showaddnewcompany()}
+
+                        {this.showmycompany()}
+                        {this.handlesavecompany()}
                     </div>
-
-                    {this.showaddnewcompany()}
-
-                    {this.showmycompany()}
-                    {this.handlesavecompany()}
                 </div>
-            </div>
 
-        )
-    } else {
-        return(<div style={{...styles.generalContainer,...regularFont}}>
-            <span style={{...styles.generalFont,...regularFont}}>Please Login to View Company </span>
-        </div>)
+            )
+        } else {
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Company </span>
+            </div>)
+        }
+
     }
-
-}
 
 
 }
