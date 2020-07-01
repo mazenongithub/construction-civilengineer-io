@@ -363,11 +363,7 @@ class Company extends Component {
                     <div style={styles.generalFlex}>
                         <div style={styles.flex1}>
 
-                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                <Link to={`/${providerid}/company/${company.url}/office`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                    /office
-                                </Link>
-                            </div>
+                       
                             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
                                 <Link to={`/${providerid}/company/${company.url}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
                                     /employees
@@ -378,23 +374,19 @@ class Company extends Component {
                                     /accounts
                                 </Link>
                             </div>
-                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                <Link to={`/${providerid}/company/${company.url}/construction`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                    /construction
-                                </Link>
-                            </div>
+                         
                             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
                                 <Link to={`/${providerid}/company/${company.url}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
                                     /equipment
                                 </Link>
                             </div>
                             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                <Link to={`/${providerid}/company/${company.url}materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                <Link to={`/${providerid}/company/${company.url}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
                                     /materials
                                 </Link>
                             </div>
                             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                <Link to={`/${providerid}/company/${company.url}projects`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                <Link to={`/${providerid}/company/${company.url}/projects`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
                                     /projects
                                 </Link>
                             </div>
@@ -427,6 +419,9 @@ class Company extends Component {
                     if (response.hasOwnProperty("myuser")) {
                         console.log(response.myuser)
                         this.props.reduxUser(response.myuser)
+                    }
+                    if(response.hasOwnProperty("message")) {
+                        this.setState({message:response.message})
                     }
 
 

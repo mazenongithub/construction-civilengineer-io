@@ -162,8 +162,8 @@ class Projects extends Component {
     }
     showprojectid(myproject) {
         const styles = MyStylesheet();
-        const headerFont = this.getHeaderFont();
-
+        const dynamicstyles = new DynamicStyles();
+        const headerFont =dynamicstyles.getHeaderFont.call(this)
         //const projectid = myproject.projectid;
         const providerid = this.props.match.params.providerid;
         const companyid = this.props.match.params.companyid;
@@ -174,8 +174,8 @@ class Projects extends Component {
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...headerFont, ...styles.generalFont, ...styles.alignCenter }}>
-                            <Link to={`/${providerid}/company/${companyid}/projects/${myproject.projectid}`} style={{ ...styles.generalLink, ...headerFont, ...styles.fontBold, ...styles.generalFont }}>
-                                {myproject.projectid} {myproject.title}
+                            <Link to={`/${providerid}/company/${companyid}/projects/${myproject.title}`} style={{ ...styles.generalLink, ...headerFont, ...styles.boldFont, ...styles.generalFont }}>
+                              {myproject.title}
                             </Link>
                         </div>
                     </div>
@@ -190,19 +190,27 @@ class Projects extends Component {
     }
     render() {
         const styles = MyStylesheet();
-        const titleFont = this.gettitlefont();
-        //const headerFont = this.getHeaderFont();
+
+        
         const dynamicstyles = new DynamicStyles();
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
+        const company = () => {
+            if(myuser.hasOwnProperty("company")) {
+                return(myuser.company.url)
+            }
+        }
         if(myuser) {
+
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...titleFont, ...styles.generalFont, ...styles.alignCenter, ...styles.fontBold }}>
-                            /:providerid/projects
+                        <div style={{ ...styles.flex1,  ...styles.alignCenter }}>
+                        <span style={{ ...styles.flex1, ...headerFont, ...styles.generalFont, ...styles.boldFont }}> /{company()}</span> <br/>
+                        <span style={{ ...styles.flex1, ...headerFont, ...styles.generalFont, ...styles.boldFont }}> projects</span> <br/>
                          </div>
                     </div>
 
