@@ -285,6 +285,55 @@ class DynamicStyles {
         }
         return myaccount;
     }
+
+    validateremovemanager(providerid) {
+        // checks to see if there is one manager
+        let validate = true;
+        const dynamicstyles = new DynamicStyles();
+        let obj= dynamicstyles.getuser.call(this);
+      
+        const validatemyuser = (obj) => {
+            let validateuser = false;
+            // eslint-disable-next-line
+            obj.company.office.employees.employee.map(employee=> {
+                if(employee.manager === 'manager' && employee.providerid !== providerid) {
+                    validateuser = true;
+                }
+            })
+
+            return validateuser;
+          
+        }
+
+        if(obj) {
+            const employee = dynamicstyles.getemployeebyid.call(this,providerid);
+            if(employee) {
+            validate = validatemyuser(obj)
+
+            }
+        }
+        
+        return validate;
+
+    }
+
+    checkmanager() {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        let check = false;
+        if(myuser) {
+        const employee =dynamicstyles.getemployeebyid.call(this,myuser.providerid);
+        if(employee) {
+            if(employee.manager === 'manager') {
+                check = true;
+            }
+        }
+
+        }
+        return check;
+        
+
+    }
     getemployeeaccountsbyid(providerid) {
         const dynamicstyles = new DynamicStyles();
         const accountratio = (benefits, accountid) => {
@@ -704,6 +753,17 @@ class DynamicStyles {
 
         return key;
     }
+    checkemployeeactive(employeeid) {
+        const dynamicstyles = new DynamicStyles();
+        const employee = dynamicstyles.getemployeebyid.call(this,employeeid);
+        let check = true;
+        if(employee) {
+            if(employee.active === 'not-active') {
+                check = false;
+            }
+        }
+        return check;
+    }
     getbenefitkeybyid(benefitid) {
         const dynamicstyles = new DynamicStyles();
         let key = false;
@@ -858,7 +918,10 @@ class DynamicStyles {
     }
     async saveCompany() {
         const dynamicstyles = new DynamicStyles()
-
+        const myuser = dynamicstyles.getuser.call(this);
+        if(myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this,myuser.getemployeebyproviderid);
+            if(checkmanager) {
         let params = dynamicstyles.getCompanyParams.call(this)
 
         const validate = dynamicstyles.validateCompany(params);
@@ -882,6 +945,12 @@ class DynamicStyles {
         } else {
             this.setState({ message: validate.message })
         }
+
+    } else {
+        alert(`Only Managers have access to this function `)
+    }
+
+    }
     }
     async savemyprofile() {
         let dynamicstyles = new DynamicStyles();

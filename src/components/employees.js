@@ -38,14 +38,23 @@ class Employees extends Component {
     handleworkinghours(workinghours) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-        if (myuser) {
-            let employee = this.getactiveemployee();
-            if (employee) {
-                let i = this.getactiveemployeekey();
-                myuser.company.office.employees.employee[i].workinghours = workinghours;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+        const checkmanager = dynamicstyles.checkmanager.call(this)
+        if (checkmanager) {
+            if (myuser) {
+                if (this.state.activeemployeeid) {
+                    let employee = dynamicstyles.getemployeebyid.call(this, this.state.activeemployeeid)
+                    if (employee) {
+                        let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid)
+                        myuser.company.office.employees.employee[i].workinghours = workinghours;
+                        this.props.reduxUser(myuser)
+                        this.setState({ render: 'render' })
+                    }
+                }
+
             }
+
+        } else {
+            alert(`Only Managers have access to this function `)
         }
 
     }
@@ -165,31 +174,39 @@ class Employees extends Component {
         let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
-            if (this.state.activeemployeeid) {
-                let i = this.getactiveemployeekey()
-                if (this.state.activebenefitid) {
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if (checkmanager) {
 
-                    let j = this.getactivebenefitkey();
+                if (this.state.activeemployeeid) {
+                    let employee = dynamicstyles.getemployeebyid.call(this, this.state.activeemployeeid)
+                    if (employee) {
+                        let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid)
+                        if (this.state.activebenefitid) {
+                            let j = dynamicstyles.getbenefitkeybyid.call(this, this.state.activebenefitid)
 
-                    myuser.company.office.employees.employee[i].benefits.benefit[j].amount = amount;
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
-                } else {
-                    let benefitid = makeID.benefitid.call(this)
-                    let benefit = this.state.benefit;
-                    let accountid = this.state.accountid;
-                    let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount);
-                    let employee = this.getactiveemployee();
-                    if (employee.hasOwnProperty("benefits")) {
-                        myuser.company.office.employees.employee[i].benefits.benefit.push(newBenefit)
-                    } else {
-                        let benefits = { benefit: [newBenefit] }
-                        myuser.company.office.employees.employee[i].benefits = benefits;
+                            myuser.company.office.employees.employee[i].benefits.benefit[j].amount = amount;
+                            this.props.reduxUser(myuser)
+                            this.setState({ render: 'render' })
+                        } else {
+                            let benefitid = makeID.benefitid.call(this)
+                            let benefit = this.state.benefit;
+                            let accountid = this.state.accountid;
+                            let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount);
+                            let employee = this.getactiveemployee();
+                            if (employee.hasOwnProperty("benefits")) {
+                                myuser.company.office.employees.employee[i].benefits.benefit.push(newBenefit)
+                            } else {
+                                let benefits = { benefit: [newBenefit] }
+                                myuser.company.office.employees.employee[i].benefits = benefits;
 
+                            }
+                            this.props.reduxUser(myuser)
+                            this.setState({ activebenefitid: benefitid })
+                        }
                     }
-                    this.props.reduxUser(myuser)
-                    this.setState({ activebenefitid: benefitid })
                 }
+            } else {
+                alert(` Only Managers have access to this function `)
             }
 
         }
@@ -210,33 +227,39 @@ class Employees extends Component {
         let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
-            if (this.state.activeemployeeid) {
-                let i = this.getactiveemployeekey()
-                if (this.state.activebenefitid) {
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if (checkmanager) {
 
-                    let j = this.getactivebenefitkey();
+                if (this.state.activeemployeeid) {
+                    let employee = dynamicstyles.getemployeebyid.call(this, this.state.activeemployeeid)
+                    if (employee) {
+                        let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid)
+                        if (this.state.activebenefitid) {
+                            let j = dynamicstyles.getbenefitkeybyid.call(this, this.state.activebenefitid)
+                            myuser.company.office.employees.employee[i].benefits.benefit[j].benefit = benefit;
+                            this.props.reduxUser(myuser)
+                            this.setState({ render: 'render' })
+                        } else {
+                            let benefitid = makeID.benefitid.call(this)
+                            let amount = this.state.amount;
+                            let accountid = this.state.accountid;
+                            let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount);
+                            let employee = this.getactiveemployee();
+                            if (employee.hasOwnProperty("benefits")) {
+                                myuser.company.office.employees.employee[i].benefits.benefit.push(newBenefit)
+                            } else {
+                                let benefits = { benefit: [newBenefit] }
+                                myuser.company.office.employees.employee[i].benefits = benefits;
 
-                    myuser.company.office.employees.employee[i].benefits.benefit[j].benefit = benefit;
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
-                } else {
-                    let benefitid = makeID.benefitid.call(this)
-                    let amount = this.state.amount;
-                    let accountid = this.state.accountid;
-                    let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount);
-                    let employee = this.getactiveemployee();
-                    if (employee.hasOwnProperty("benefits")) {
-                        myuser.company.office.employees.employee[i].benefits.benefit.push(newBenefit)
-                    } else {
-                        let benefits = { benefit: [newBenefit] }
-                        myuser.company.office.employees.employee[i].benefits = benefits;
-
+                            }
+                            this.props.reduxUser(myuser)
+                            this.setState({ activebenefitid: benefitid })
+                        }
                     }
-                    this.props.reduxUser(myuser)
-                    this.setState({ activebenefitid: benefitid })
                 }
+            } else {
+                alert(`Only managers can access this function `)
             }
-
         }
 
     }
@@ -254,33 +277,39 @@ class Employees extends Component {
         let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
-            if (this.state.activeemployeeid) {
-                let i = this.getactiveemployeekey()
-                if (this.state.activebenefitid) {
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if (checkmanager) {
+                if (this.state.activeemployeeid) {
+                    let employee = dynamicstyles.getemployeebyid.call(this, this.state.activeemployeeid)
+                    if (employee) {
+                        let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid)
+                        if (this.state.activebenefitid) {
+                            let j = dynamicstyles.getbenefitkeybyid.call(this, this.state.activebenefitid)
+                            myuser.company.office.employees.employee[i].benefits.benefit[j].accountid = accountid;
+                            this.props.reduxUser(myuser)
+                            this.setState({ render: 'render' })
+                        } else {
+                            let benefitid = makeID.benefitid.call(this)
+                            let amount = this.state.amount;
+                            let benefit = this.state.benefit;
+                            let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount);
+                            let employee = this.getactiveemployee();
+                            if (employee.hasOwnProperty("benefits")) {
+                                myuser.company.office.employees.employee[i].benefits.benefit.push(newBenefit)
+                            } else {
+                                let benefits = { benefit: [newBenefit] }
+                                myuser.company.office.employees.employee[i].benefits = benefits;
 
-                    let j = this.getactivebenefitkey();
-
-                    myuser.company.office.employees.employee[i].benefits.benefit[j].accountid = accountid;
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
-                } else {
-                    let benefitid = makeID.benefitid.call(this)
-                    let amount = this.state.amount;
-                    let benefit = this.state.benefit;
-                    let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount);
-                    let employee = this.getactiveemployee();
-                    if (employee.hasOwnProperty("benefits")) {
-                        myuser.company.office.employees.employee[i].benefits.benefit.push(newBenefit)
-                    } else {
-                        let benefits = { benefit: [newBenefit] }
-                        myuser.company.office.employees.employee[i].benefits = benefits;
-
+                            }
+                            this.props.reduxUser(myuser)
+                            this.setState({ activebenefitid: benefitid })
+                        }
                     }
-                    this.props.reduxUser(myuser)
-                    this.setState({ activebenefitid: benefitid })
-                }
-            }
 
+                }
+            } else {
+                alert(`Only Managers have access to this function`)
+            }
         }
 
     }
@@ -347,28 +376,103 @@ class Employees extends Component {
         }
 
     }
+    handleactive(type) {
+
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+        const checkmanager = dynamicstyles.checkmanager.call(this)
+        if (checkmanager) {
+            if (myuser) {
+                if (this.state.activeemployeeid) {
+                    const employee = dynamicstyles.getemployeebyid.call(this, this.state.activeemployeeid)
+                    if (employee) {
+                        const i = dynamicstyles.getemployeekeybyid.call(this, this.state.activeemployeeid);
+                        switch (type) {
+                            case "not-active":
+                                if (employee.manager) {
+                                    const validate = dynamicstyles.validateremovemanager.call(this, this.state.activeemployeeid)
+                                    if (validate) {
+                                        if (myuser.providerid !== this.state.activeemployeeid) {
+                                            myuser.company.office.employees.employee[i].active = 'not-active';
+                                            this.props.reduxUser(myuser);
+                                            this.setState({ render: 'render' })
+                                        } else {
+                                            alert(`You cannot make yourself unactive, you won't be able to undo this `)
+                                        }
+                                    } else {
+                                        alert(`There needs to be atleast one active manager in the company `)
+                                    }
+
+                                }
+                                else {
+                                    myuser.company.office.employees.employee[i].active = 'not-active';
+                                    this.props.reduxUser(myuser);
+                                    this.setState({ render: 'render' })
+                                }
+                                break;
+                            case "active":
+                                myuser.company.office.employees.employee[i].active = 'active';
+                                this.props.reduxUser(myuser);
+                                this.setState({ render: 'render' })
+                                break;
+                            default:
+                                break;
+                        }
+
+                    }
+
+                }
+            }
+
+        } else {
+            alert(`Only managers can access this function `)
+        }
+    }
     handlemanager(type) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
-        if (myuser) {
-            if (this.state.activeemployeeid) {
-                const i = dynamicstyles.getemployeekeybyid.call(this, this.state.activeemployeeid);
-                switch (type) {
-                    case "check":
-                        myuser.company.office.employees.employee[i].manager = '';
-                        this.props.reduxUser(myuser);
-                        this.setState({ render: 'render' })
-                        break;
-                    case "empty":
-                        myuser.company.office.employees.employee[i].manager = 'manager';
-                        this.props.reduxUser(myuser);
-                        this.setState({ render: 'render' })
-                        break;
-                    default:
-                        break;
-                }
+        const checkmanager = dynamicstyles.checkmanager.call(this);
+        if (checkmanager) {
+            if (myuser) {
+                if (this.state.activeemployeeid) {
+                    const i = dynamicstyles.getemployeekeybyid.call(this, this.state.activeemployeeid);
+                    switch (type) {
+                        case "check":
+                            if (dynamicstyles.validateremovemanager.call(this, this.state.activeemployeeid)) {
 
+                                if (myuser.providerid !== this.state.activeemployeeid) {
+
+
+                                    myuser.company.office.employees.employee[i].manager = '';
+                                    myuser.company.office.employees.employee[i].active = 'not-active';
+                                    this.props.reduxUser(myuser);
+                                    this.setState({ render: 'render' })
+
+
+                                } else {
+
+                                    alert(`You cannot unset youself as Manager, you won't be able to undo this `)
+
+                                }
+                            } else {
+                                alert(`There needs to be atleast one manager in your company `)
+                            }
+                            break;
+                        case "empty":
+                            myuser.company.office.employees.employee[i].manager = 'manager';
+                            myuser.company.office.employees.employee[i].active = 'active';
+                            this.props.reduxUser(myuser);
+                            this.setState({ render: 'render' })
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
             }
+
+        } else {
+            alert(`Only Managers can access this function `)
         }
     }
     showworkinghours() {
@@ -383,6 +487,26 @@ class Employees extends Component {
             } else {
                 return ({ width: '77px', height: '55px' })
             }
+
+        }
+
+        const getActivebox = () => {
+
+            if (this.state.activeemployeeid) {
+                let employeeid = this.state.activeemployeeid;
+                const employee = dynamicstyles.getemployeebyid.call(this, employeeid);
+                if (employee) {
+                    if (employee.active === 'active') {
+                        return (
+                            <div style={{ ...styles.generalContainer }}> Active <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handleactive("not-active") }}>{CheckedBox()}</button></div>)
+                    } else {
+                        return (<div style={{ ...styles.generalContainer }}> Active <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handleactive("active") }}>{EmptyBox()}</button></div>)
+
+
+                    }
+                }
+            }
+
 
         }
         const getCheckbox = () => {
@@ -400,169 +524,96 @@ class Employees extends Component {
                 }
             }
         }
-        if (this.state.width > 800) {
-            return (
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
 
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                                Annual Working Hours <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                    value={this.getworkinghours()}
-                                    onChange={event => { this.handleworkinghours(event.target.value) }}
-                                />
-                            </div>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                {getCheckbox()}
-                            </div>
+        return (
+            <div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex1 }}>
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
+                            {getCheckbox()}
                         </div>
-
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                                Per Month <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={this.getpermonth()}
-                                />
-                            </div>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                                Per Week  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={this.getperweek()}
-                                />
-                            </div>
-
-
+                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
+                            {getActivebox()}
                         </div>
+                    </div>
 
-                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
-                            Account   <select
-                                value={this.getaccountid()}
-                                onChange={event => { this.handleaccountid(event.target.value) }}
-                                style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}> <option value={false}> Select An Account  </option>
-                                {this.loadaccounts()}</select>
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
-                            Benefit <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                value={this.getbenefit()}
-                                onChange={event => { this.handlebenefit(event.target.value) }} />
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
-                            Amount Per Year <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                value={this.getamount()}
-                                onChange={event => { this.handleAmount(event.target.value) }}
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
+                            Annual Working Hours <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                                value={this.getworkinghours()}
+                                onChange={event => { this.handleworkinghours(event.target.value) }}
                             />
                         </div>
 
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                                Per Month <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={this.getbenefitmonth()}
-                                />
-                            </div>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                                Per Week  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={this.getbenefitweek()} />
-                            </div>
+                    </div>
 
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
+                            Per Month <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
+                                value={this.getpermonth()}
+                            />
                         </div>
-
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                                Per Day  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={this.getbenefitday()}
-                                />
-                            </div>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                                Per Hour  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={this.getbenefithour()}
-                                />
-                            </div>
+                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
+                            Per Week  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
+                                value={this.getperweek()}
+                            />
                         </div>
 
 
                     </div>
+
+                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
+                        Account   <select
+                            value={this.getaccountid()}
+                            onChange={event => { this.handleaccountid(event.target.value) }}
+                            style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}> <option value={false}> Select An Account  </option>
+                            {this.loadaccounts()}</select>
+                    </div>
+                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
+                        Benefit <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
+                            value={this.getbenefit()}
+                            onChange={event => { this.handlebenefit(event.target.value) }} />
+                    </div>
+                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
+                        Amount Per Year <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
+                            value={this.getamount()}
+                            onChange={event => { this.handleAmount(event.target.value) }}
+                        />
+                    </div>
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
+                            Per Month <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
+                                value={this.getbenefitmonth()}
+                            />
+                        </div>
+                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
+                            Per Week  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
+                                value={this.getbenefitweek()} />
+                        </div>
+
+                    </div>
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+
+                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
+                            Per Day  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
+                                value={this.getbenefitday()}
+                            />
+                        </div>
+                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
+                            Per Hour  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
+                                value={this.getbenefithour()}
+                            />
+                        </div>
+                    </div>
+
+
                 </div>
-            )
-
-        } else {
-            return (
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                                Annual Working Hours
-                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.getworkinghours()}
-                                    onChange={event => { this.handleworkinghours(event.target.value) }}
-                                />
-                            </div>
-                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                {getCheckbox()}
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                                Per Month <br /><input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.getpermonth()} />
-                            </div>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                                Per Week <br />  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    value={this.getperweek()}
-                                />
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
-                            Account <br />
-                            <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                value={this.getaccountid()}
-                                onChange={event => { this.handleaccountid(event.target.value) }}>
-                                <option value={false}> Select An Account  </option>
-                                {this.loadaccounts()}
-                            </select>
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
-                            Benefit<br />  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                value={this.getbenefit()}
-                                onChange={event => { this.handlebenefit(event.target.value) }}
-                            />
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
-                            Amount Per Year<br />  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                value={this.getamount()}
-                                onChange={event => { this.handleAmount(event.target.value) }}
-                            />
-                        </div>
-
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                                Per Month <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={this.getbenefitmonth()}
-                                />
-                            </div>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                                Per Week  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={this.getbenefitweek()} />
-                            </div>
-
-                        </div>
-
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                                Per Day  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={this.getbenefitday()}
-                                />
-                            </div>
-                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
-                                Per Hour  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={this.getbenefithour()} />
-                            </div>
-                        </div>
-
-                    </div>
-                </div>)
-        }
+            </div>
+        )
 
     }
     showbenefits() {
@@ -697,10 +748,21 @@ class Employees extends Component {
         return user;
     }
     makeemployeeactive(employeeid) {
-        if (this.state.activeemployeeid === employeeid) {
-            this.setState({ activeemployeeid: false })
-        } else {
-            this.setState({ activeemployeeid: employeeid })
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            const active = dynamicstyles.checkemployeeactive.call(this, myuser.providerid);
+            if (active) {
+                if (this.state.activeemployeeid === employeeid) {
+                    this.setState({ activeemployeeid: false })
+                } else {
+                    this.setState({ activeemployeeid: employeeid })
+                }
+
+            } else {
+                alert(`You must be active to access this function `)
+            }
+
         }
     }
     getprofileimage() {
@@ -713,29 +775,49 @@ class Employees extends Component {
             return;
         }
     }
+
     removeemployee(employee) {
         const dynamicstyles = new DynamicStyles();
+        const checkmanager = dynamicstyles.checkmanager.call(this)
         const myuser = dynamicstyles.getuser.call(this);
+
         let myemployee = dynamicstyles.getemployeebyid.call(this, employee.providerid);
-        if (window.confirm(`Are you sure you want to delete ${employee.firstname} ${employee.lastname} from the company?`)) {
-            if (myuser.hasOwnProperty("company")) {
-                if (myuser.company.office.hasOwnProperty("employees")) {
 
-                    if (myemployee.hasOwnProperty("benefits")) {
-                        this.setState({ message: `${employee.firstname} ${employee.lastname} has benefits to remove prior to removing from the company` })
-                    } else {
-                        let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid);
-                        myuser.company.office.employees.employee.splice(i, 1)
-                        if (myuser.company.office.employees.employee.length === 0) {
-                            delete myuser.company.office.employees.employee
-                            delete myuser.company.office.employees
-                        }
-                        this.setState({ activeemployeeid: false })
-                    }
+        if (checkmanager) {
 
-                }
-
+            let validate = true;
+            if (myemployee.manager === 'manager') {
+                validate = dynamicstyles.validateremovemanager.call(this, myemployee.providerid)
             }
+
+            if (validate) {
+
+                if (window.confirm(`Are you sure you want to delete ${employee.firstname} ${employee.lastname} from the company?`)) {
+                    if (myuser.hasOwnProperty("company")) {
+                        if (myuser.company.office.hasOwnProperty("employees")) {
+
+                            if (myemployee.hasOwnProperty("benefits")) {
+                                this.setState({ message: `${employee.firstname} ${employee.lastname} has benefits to remove prior to removing from the company` })
+                            } else {
+                                let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid);
+                                myuser.company.office.employees.employee.splice(i, 1)
+                                if (myuser.company.office.employees.employee.length === 0) {
+                                    delete myuser.company.office.employees.employee
+                                    delete myuser.company.office.employees
+                                }
+                                this.setState({ activeemployeeid: false })
+                            }
+
+                        }
+
+                    }
+                }
+            } else {
+                alert(`There needs to be atleast one manager in the company  `)
+            }
+
+        } else {
+            alert(`Only Managers can access this function `)
         }
     }
     showmyemployee(providerid) {
@@ -949,7 +1031,7 @@ class Employees extends Component {
                                 Employee Benefits
                             </div>
                         </div>
-                     
+
                         {this.showactiveemployeebenefits()}
 
                         {this.showactivehourlyrate()}
@@ -969,40 +1051,40 @@ class Employees extends Component {
         const headerFont = dynamicstyles.getHeaderFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        if(myuser) {
+        if (myuser) {
             const getcompanyurl = () => {
-                if(myuser.hasOwnProperty("company")) {
-                    return(myuser.company.url)
+                if (myuser.hasOwnProperty("company")) {
+                    return (myuser.company.url)
                 }
             }
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
+            return (
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                           <span style={{...headerFont,...styles.boldFont}}> /{getcompanyurl()}</span> <br/>
-                           <span style={{...headerFont,...styles.boldFont}}> /employees</span> <br/>
-                        </div>
-                    </div>
-
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.generalFont }}>
-                            My Employees
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                <span style={{ ...headerFont, ...styles.boldFont }}> /{getcompanyurl()}</span> <br />
+                                <span style={{ ...headerFont, ...styles.boldFont }}> /employees</span> <br />
                             </div>
+                        </div>
+
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.generalFont }}>
+                                My Employees
+                            </div>
+                        </div>
+                        {this.showmyemployees()}
+
+                        {this.handleemployeebenefits()}
+
+                        {dynamicstyles.showsavecompany.call(this)}
+
                     </div>
-                    {this.showmyemployees()}
-
-                    {this.handleemployeebenefits()}
-
-                    {dynamicstyles.showsavecompany.call(this)}
-
                 </div>
-            </div>
-        )
+            )
         } else {
-            return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Employees </span>
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Employees </span>
             </div>)
         }
     }
