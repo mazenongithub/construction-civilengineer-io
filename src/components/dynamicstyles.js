@@ -3148,7 +3148,7 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const smallFont = dynamicstyles.getSmallFont.call(this)
         const amount = (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.laborrate))
-        const employee = dynamicstyles.getemployeebyproviderid.call(this, item.providerid);
+        const employee = dynamicstyles.getemployeebyid.call(this, item.providerid);
         const csi = dynamicstyles.getcsibyid.call(this, item.csiid)
         const totalhours = Number(calculatetotalhours(item.timeout, item.timein))
         const profitField = dynamicstyles.getprofitfield.call(this)

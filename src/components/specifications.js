@@ -48,7 +48,7 @@ class Estimate extends Component {
         let specids = [];
         if (myproject) {
             const specs = dynamicstyles.getspecficationsbyprojectid.call(this, myproject.projectid)
-            console.log(specs)
+     
             if (specs) {
                 // eslint-disable-next-line
                 specs.map(spec => {

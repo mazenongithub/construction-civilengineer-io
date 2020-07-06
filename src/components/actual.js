@@ -583,7 +583,7 @@ class Actual extends Component {
         const removeIcon = dynamicstyles.getremoveicon.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const csi = dynamicstyles.getcsibyid.call(this, labor.csiid);
-        let employee = dynamicstyles.getemployeebyproviderid.call(this, labor.providerid)
+        let employee = dynamicstyles.getemployeebyid.call(this, labor.providerid)
         let hourlyrate = labor.laborrate;
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         if (project) {

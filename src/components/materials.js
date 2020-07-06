@@ -655,6 +655,8 @@ class Materials extends Component {
                     return (myuser.company.url)
                 }
             }
+            const checkmanager = dynamicstyles.checkmanager.call(this);
+            if(checkmanager) {
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
@@ -695,6 +697,12 @@ class Materials extends Component {
                     </div>
                 </div>
             )
+
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>You need to be a Manager to view this component </span>
+                </div>)  
+            }
 
         } else {
             return (<div style={{ ...styles.generalContainer, ...regularFont }}>

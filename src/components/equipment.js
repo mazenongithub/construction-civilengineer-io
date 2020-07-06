@@ -1444,14 +1444,21 @@ class Equipment extends Component {
             }
         }
         if (myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this);
+            const companyurl = () => {
+                if (myuser.hasOwnProperty("company")) {
+                    return (myuser.company.url)
+                }
+            }
+            if(checkmanager) {
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
 
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <span style={{ ...titleFont, ...styles.fontBold }}>/{this.props.match.params.companyid}</span><br />
-                                <span style={{ ...titleFont, ...styles.fontBold }}>/equipment</span>
+                                <span style={{ ...titleFont, ...styles.boldFont }}>/{companyurl()}</span><br />
+                                <span style={{ ...titleFont, ...styles.boldFont }}>/equipment</span>
                             </div>
                         </div>
 
@@ -1469,6 +1476,12 @@ class Equipment extends Component {
                     </div>
                 </div>
             )
+
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>You have to be a Manager to view this component  </span>
+                </div>)
+            }
 
         } else {
             return (<div style={{ ...styles.generalContainer, ...regularFont }}>

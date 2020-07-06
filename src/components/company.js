@@ -30,8 +30,6 @@ class Company extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
     async loadallusers() {
-        console.log("loadallusers")
-
         try {
             let response = await LoadAllUsers();
             console.log(response)

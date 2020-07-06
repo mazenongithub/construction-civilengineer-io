@@ -163,9 +163,45 @@ class App extends Component {
     const styles = MyStylesheet();
     const regularFont = dynamicstyles.getRegularFont.call(this)
     if (myuser) {
+      const checkmanager = dynamicstyles.checkmanager.call(this)
       if (myuser.hasOwnProperty("company")) {
         const profile = myuser.profile;
         const companyid = myuser.company.url;
+        const equipment = () => {
+          if (checkmanager) {
+            return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+              <Link to={`/${profile}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                /equipment
+               </Link>
+            </div>)
+          }
+
+        }
+
+        const materials = () => {
+          if (checkmanager) {
+            return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+              <Link to={`/${profile}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                /materials
+               </Link>
+            </div>)
+          }
+
+        }
+
+        const accounts = () => {
+          if (checkmanager) {
+            return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+              <Link to={`/${profile}/company/${companyid}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                /accounts
+              </Link>
+            </div>)
+          }
+
+        }
+
+
+
         return (
           <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
 
@@ -174,22 +210,11 @@ class App extends Component {
                 /employees
                             </Link>
             </div>
-            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link to={`/${profile}/company/${companyid}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                /accounts
-                </Link>
-            </div>
 
-            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link to={`/${profile}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                /equipment
-               </Link>
-            </div>
-            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link to={`/${profile}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                /materials
-                                </Link>
-            </div>
+
+            {accounts()}
+            {equipment()}
+            {materials()}
           </div>
         )
       } else {
@@ -259,9 +284,19 @@ class App extends Component {
     const user = dynamicstyles.getuser.call(this)
     const styles = MyStylesheet();
     const headerFont = dynamicstyles.getHeaderFont.call(this)
+
     if (user) {
+      const company = () => {
+        let mycompany = "";
+        if (user.hasOwnProperty("company")) {
+          mycompany = user.company.url;
+        } else {
+          mycompany = 'company'
+        }
+        return mycompany;
+      }
       return (
-        <Link to={`/${user.profile}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /company </Link>)
+        <Link to={`/${user.profile}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{company()} </Link>)
     } else {
       return;
     }
@@ -276,87 +311,87 @@ class App extends Component {
     const styles = MyStylesheet();
     const checkmanager = dynamicstyles.checkmanager.call(this)
     const checkactive = dynamicstyles.checkactive.call(this)
-    if(checkactive) {
-    if (myuser) {
-      const profile = myuser.profile;
-      let companyid = false;
-      if (myuser.hasOwnProperty("company")) {
-        companyid = myuser.company.companyid;
-      }
-      if (this.props.project) {
-        if (this.props.project.hasOwnProperty("activeprojectid")) {
-          if (this.props.project.activeprojectid) {
-            let project = dynamicstyles.getprojectbytitle.call(this, this.props.project.activeprojectid);
-            const projectid = project.title;
+    if (checkactive) {
+      if (myuser) {
+        const profile = myuser.profile;
+        let companyid = false;
+        if (myuser.hasOwnProperty("company")) {
+          companyid = myuser.company.companyid;
+        }
+        if (this.props.project) {
+          if (this.props.project.hasOwnProperty("activeprojectid")) {
+            if (this.props.project.activeprojectid) {
+              let project = dynamicstyles.getprojectbytitle.call(this, this.props.project.activeprojectid);
+              const projectid = project.title;
 
-            const invoices = () => {
-              if (checkmanager) {
-                return (<div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /invoices </Link>
-                </div>)
-              }
-            }
-
-            const proposals = () => {
-              if (checkmanager) {
-                return (<div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /proposals </Link>
-                </div>)
+              const invoices = () => {
+                if (checkmanager) {
+                  return (<div style={{ ...styles.generalContainer }}>
+                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /invoices </Link>
+                  </div>)
+                }
               }
 
-            }
+              const proposals = () => {
+                if (checkmanager) {
+                  return (<div style={{ ...styles.generalContainer }}>
+                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /proposals </Link>
+                  </div>)
+                }
 
-            const bid = () => {
-              if (checkmanager) {
-                return ( <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
-                </div>)
-              }
-            }
-
-            const bidschedule = () => {
-              if (checkmanager) {
-                return (<div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
-                </div>)
               }
 
+              const bid = () => {
+                if (checkmanager) {
+                  return (<div style={{ ...styles.generalContainer }}>
+                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
+                  </div>)
+                }
+              }
+
+              const bidschedule = () => {
+                if (checkmanager) {
+                  return (<div style={{ ...styles.generalContainer }}>
+                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
+                  </div>)
+                }
+
+              }
+
+
+
+
+              return (
+                <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
+                  <div style={{ ...styles.generalContainer }}>
+                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }} > /{projectid} </Link>
+                  </div>
+
+                  <div style={{ ...styles.generalContainer }}>
+                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /schedule </Link>
+                  </div>
+                  {proposals()}
+                  {bidschedule()}
+
+                  <div style={{ ...styles.generalContainer }}>
+                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /actual </Link>
+                  </div>
+                  {invoices()}
+                  {bid()}
+
+
+                  <div style={{ ...styles.generalContainer }}>
+                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/estimate`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /costestimate </Link>
+                  </div>
+                  <div style={{ ...styles.generalContainer }}>
+                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/specifications`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /specifications </Link>
+                  </div>
+                </div>)
             }
-
-
-
-
-            return (
-              <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }} > /{projectid} </Link>
-                </div>
-
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /schedule </Link>
-                </div>
-                {proposals()}
-                {bidschedule()}
-
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /actual </Link>
-                </div>
-                {invoices()}
-               {bid()}
-
-
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/estimate`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /costestimate </Link>
-                </div>
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/specifications`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /specifications </Link>
-                </div>
-              </div>)
           }
         }
       }
     }
-  }
   }
 
 
@@ -467,21 +502,21 @@ class App extends Component {
       }
     }
     const projectlinks = () => {
-      if(checkactive) {
-      if (myuser) {
-        if (myuser.hasOwnProperty("company")) {
-          if (myuser.company.hasOwnProperty("projects")) {
-            return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
-              {this.handleprojectlink()}
-              {this.projectidlinks()}
-            </div>)
+      if (checkactive) {
+        if (myuser) {
+          if (myuser.hasOwnProperty("company")) {
+            if (myuser.company.hasOwnProperty("projects")) {
+              return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
+                {this.handleprojectlink()}
+                {this.projectidlinks()}
+              </div>)
+            }
           }
         }
       }
     }
-    }
     const companylinks = () => {
-      
+
       if (myuser) {
         if (myuser.hasOwnProperty("company")) {
           return (
@@ -496,7 +531,7 @@ class App extends Component {
             </div>)
         }
       }
-    
+
     }
     const navmenu = () => {
       if (position === 'open') {

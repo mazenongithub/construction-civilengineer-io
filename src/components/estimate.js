@@ -112,7 +112,7 @@ class Estimate extends Component {
 
                                 <div style={{ ...styles.generalFlex }}>
                                     <div style={{ ...styles.flex2, ...styles.showBorder, ...styles.alignCenter }}>
-                                        <span style={{ ...styles.generalFont, ...regularFont }}>>{csi.csi}-{csi.title}</span>
+                                        <span style={{ ...styles.generalFont, ...regularFont }}>{csi.csi}-{csi.title}</span>
                                     </div>
                                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter }}>
                                         <span style={{ ...styles.generalFont, ...regularFont, ...quantityfield, ...styles.alignCenter }}>

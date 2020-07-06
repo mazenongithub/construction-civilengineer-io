@@ -97,9 +97,7 @@ class Specification extends Component {
             const projectid = myproject.projectid;
             const csiid = this.props.match.params.csiid;
             const spec = dynamicstyles.getspecficationbycsi.call(this, projectid, csiid)
-            console.log(spec)
-
-
+          
             if (spec) {
 
 
