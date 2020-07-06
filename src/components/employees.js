@@ -479,6 +479,7 @@ class Employees extends Component {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const regularFont = dynamicstyles.getRegularFont.call(this);
+        const checkmanager = dynamicstyles.checkmanager.call(this)
         const generalCheck = () => {
             if (this.state.width > 1200) {
                 return ({ width: '178px', height: '88px' })
@@ -491,36 +492,42 @@ class Employees extends Component {
         }
 
         const getActivebox = () => {
+            if (checkmanager) {
 
-            if (this.state.activeemployeeid) {
-                let employeeid = this.state.activeemployeeid;
-                const employee = dynamicstyles.getemployeebyid.call(this, employeeid);
-                if (employee) {
-                    if (employee.active === 'active') {
-                        return (
-                            <div style={{ ...styles.generalContainer }}> Active <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handleactive("not-active") }}>{CheckedBox()}</button></div>)
-                    } else {
-                        return (<div style={{ ...styles.generalContainer }}> Active <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handleactive("active") }}>{EmptyBox()}</button></div>)
+                if (this.state.activeemployeeid) {
+                    let employeeid = this.state.activeemployeeid;
+                    const employee = dynamicstyles.getemployeebyid.call(this, employeeid);
+                    if (employee) {
+                        if (employee.active === 'active') {
+                            return (
+                                <div style={{ ...styles.generalContainer }}> Active <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handleactive("not-active") }}>{CheckedBox()}</button></div>)
+                        } else {
+                            return (<div style={{ ...styles.generalContainer }}> Active <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handleactive("active") }}>{EmptyBox()}</button></div>)
 
 
+                        }
                     }
                 }
+
             }
 
 
         }
         const getCheckbox = () => {
-            if (this.state.activeemployeeid) {
-                let employeeid = this.state.activeemployeeid;
-                const employee = dynamicstyles.getemployeebyid.call(this, employeeid);
-                if (employee) {
-                    if (employee.manager === 'manager') {
-                        return (
-                            <div style={{ ...styles.generalContainer }}> Manager <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handlemanager("check") }}>{CheckedBox()}</button></div>)
-                    } else {
-                        return (<div style={{ ...styles.generalContainer }}> Manager <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handlemanager("empty") }}>{EmptyBox()}</button></div>)
-                    }
+            if (checkmanager) {
 
+                if (this.state.activeemployeeid) {
+                    let employeeid = this.state.activeemployeeid;
+                    const employee = dynamicstyles.getemployeebyid.call(this, employeeid);
+                    if (employee) {
+                        if (employee.manager === 'manager') {
+                            return (
+                                <div style={{ ...styles.generalContainer }}> Manager <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handlemanager("check") }}>{CheckedBox()}</button></div>)
+                        } else {
+                            return (<div style={{ ...styles.generalContainer }}> Manager <button style={{ ...styles.generalButton, ...generalCheck() }} onClick={() => { this.handlemanager("empty") }}>{EmptyBox()}</button></div>)
+                        }
+
+                    }
                 }
             }
         }
@@ -702,15 +709,25 @@ class Employees extends Component {
     }
 
     showmyemployees() {
-        let employees = this.getemployees();
+        const dynamicstyles = new DynamicStyles()
+        const myuser = dynamicstyles.getuser.call(this)
         let myemployees = [];
-        if (employees) {
-            // eslint-disable-next-line
-            employees.map(employee => {
-                myemployees.push(this.showmyemployee(employee.providerid))
+        if (myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            let employees = dynamicstyles.getmyemployees.call(this)
 
-            })
+            if (employees) {
+                // eslint-disable-next-line
+                employees.map(employee => {
+                    if (checkmanager || employee.providerid === myuser.providerid) {
+                        myemployees.push(this.showmyemployee(employee.providerid))
+                    }
+
+                })
+            }
+
         }
+
         return (myemployees)
     }
 
@@ -827,6 +844,12 @@ class Employees extends Component {
         const removeIcon = this.getremoveicon();
         const employee = this.getemployeebyproviderid(providerid);
         const regularFont = dynamicstyles.getRegularFont.call(this);
+        const checkmanager = dynamicstyles.checkmanager.call(this)
+        const remove = () => {
+            if (checkmanager) {
+                return (<button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeemployee(employee) }}>{removeIconSmall()} </button>)
+            }
+        }
         if (this.state.width > 800) {
             return (
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }} key={`myemployee${employee.providerid}`} >
@@ -845,7 +868,7 @@ class Employees extends Component {
                                 {employee.firstname}  {employee.lastname}
                             </div>
                             <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeemployee(employee) }}>{removeIconSmall()} </button>
+                                {remove()}
                             </div>
 
                         </div>
@@ -874,7 +897,7 @@ class Employees extends Component {
                                 {employee.firstname} {employee.lastname}
                             </div>
                             <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeemployee(employee) }}>{removeIconSmall()} </button>
+                                {remove()}
                             </div>
 
                         </div>
@@ -957,11 +980,20 @@ class Employees extends Component {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const removeIcon = this.getremoveicon();
-        const account = this.getaccountbyid(benefit.accountid)
+        const account = this.getaccountbyid(benefit.accountid);
+        const checkmanager = dynamicstyles.checkmanager.call(this);
+        
+        const remove = () => {
+            if (checkmanager) {
+                return (<button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removebenefitbyid(benefit) }}>{removeIconSmall()} </button>)
+            }
+        }
 
         return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...this.getactiveebenefitbackground(benefit.benefitid) }} onClick={() => { this.makebenefitidactive(benefit.benefitid) }}>
-            {benefit.benefit}  Account:  {account.account} {account.accountname} Amount: {benefit.amount}<button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removebenefitbyid(benefit) }}>{removeIconSmall()} </button>
+            {benefit.benefit}  Account:  {account.account} {account.accountname} Amount: {benefit.amount} {remove()}
         </div>)
+
+
 
     }
     getactiveeemployeebackground(employeeid) {

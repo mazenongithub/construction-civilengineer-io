@@ -385,7 +385,7 @@ export function getOffsetDate(timein) {
 export function makeDatefromTimein(timein) {
     const offset = getOffsetDate(timein);
     let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
-    console.log(timein,datein)
+
     let year = datein.getFullYear();
     let month = datein.getMonth() + 1;
     if (month < 10) {
@@ -588,7 +588,7 @@ export function sortpart(b, a) {
 
 }
 export function toggleAMTimeString(timein) {
-    console.log(timein)
+
     //let timein = '2020-04-08 15:00:00'
     let datein = new Date(`${timein.replace(/-/g, '/')} UTC`)
     let offset = datein.getTimezoneOffset() / 60;
@@ -1376,7 +1376,7 @@ export function formatDateStringDisplay(timein) {
     return (`${month}/${day}/${year}`)
 }
 export function inputSecOutDateString(dateencoded) {
-    console.log(dateencoded)
+
     const newDate = new Date(dateencoded)
     let year = newDate.getFullYear();
     let month = newDate.getMonth() + 1;
@@ -1948,7 +1948,6 @@ export function validateEmail(value) {
 
 export function sortcode(codeb, codea) {
 
-    //console.log(codea, codeb)
     if (Number(codea.csi) < Number(codeb.csi)) {
 
         return 1;
@@ -2007,10 +2006,11 @@ export function makeTimeString(year,month,day,hours,minutes,time) {
 }
 
 export function UTCTimeStringfromTime(timein) {
+
     //let timein = '2020-06-02 04:01 pm'
     const time = timein.substring(17,19)
     let hours = timein.substring(11,13);
-    if(time === 'pm') {
+    if(time === 'pm' && hours <12){
      hours = Number(hours) + 12
     }
     const sym = () => {
@@ -2098,7 +2098,7 @@ export function getDayfromTimein(timein) {
  }
 
 export function getMonthfromTimein(timein) {
-    console.log(timein)
+
     timein = timein.replace(/-/g, '/');
     const newDate = new Date(`${timein} UTC`)
      let month = newDate.getMonth() + 1;
@@ -2106,7 +2106,7 @@ export function getMonthfromTimein(timein) {
         month = `0${month}`
 
     }
-    console.log(timein, month)
+
     return month;
 }
 

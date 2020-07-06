@@ -43,7 +43,9 @@ class CalenderTimeIn {
             let time = this.state.timeinampm;
             let minutes = this.state.timeinminutes;
             let timein = makeTimeString(year, month, day, hours, minutes, time);
+            
             timein = UTCTimeStringfromTime(timein)
+            console.log(timein)
             const newDate = new Date(`${timein.replace(/-/g, '/')} UTC`)
             month = monthstring(newDate.getMonth());
             const date = newDate.getDate();

@@ -176,27 +176,36 @@ class Schedule extends Component {
             const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
             if (mylabor) {
                 let csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid)
+                if (csi) {
 
-                return `${csi.csi}-${csi.title}`
+                    return `${csi.csi}-${csi.title}`
+                }
 
             }
         } else if (this.state.activematerialid && this.state.active === 'materials') {
             const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
             if (mymaterial) {
                 let csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid);
-                return `${csi.csi}-${csi.title}`
+                if (csi) {
+                    return `${csi.csi}-${csi.title}`
+                }
             }
         } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
             const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
 
             if (myequipment) {
                 let csi = dynamicstyles.getcsibyid.call(this, myequipment.csiid);
-                return `${csi.csi}-${csi.title}`
+                if (csi) {
+                    return `${csi.csi}-${csi.title}`
+                }
             }
 
         } else if (this.state.csiid) {
+
             let csi = dynamicstyles.getcsibyid.call(this, this.state.csiid);
-            return `${csi.csi}-${csi.title}`
+            if (csi) {
+                return `${csi.csi}-${csi.title}`
+            }
         }
 
     }
@@ -591,7 +600,7 @@ class Schedule extends Component {
                     return (styles.generalButton);
                 }
             }
-            console.log(getbutton())
+         
 
             const getactivelaborbackground = (laborid) => {
                 if (this.state.activelaborid === laborid) {
@@ -927,7 +936,7 @@ class Schedule extends Component {
                     const timetimeout = this.state.timeoutampm;
                     let timeout = makeTimeString(yearout, monthout, dayout, hoursout, minutesout, timetimeout);
                     timeout = UTCTimeStringfromTime(timeout);
-                    const laborrate = dynamicstyles.gethourlyrate.call(this, providerid)
+                    const laborrate = dynamicstyles.gethourlyrate.call(this, providerid).toFixed(2)
                     const profit = 0;
                     const engineerid = myuser.providerid;
 
