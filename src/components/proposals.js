@@ -500,6 +500,8 @@ class Proposals extends Component {
         const regularFont  = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         if(myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this);
+            if(checkmanager) {
             const project = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid);
             if(project) {
         return (
@@ -544,6 +546,12 @@ class Proposals extends Component {
             } else {
                 return(<span>&nbsp;</span>)
             }
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Only Managers can view Proposals</span>
+            </div>)
+        }
 
 
         } else {

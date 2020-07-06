@@ -9,22 +9,26 @@ class SaleDate {
 
 
     handleyear(year) {
-        this.setState({ saledateyear: year })
+      
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
 
-     
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if (checkmanager) {
+                this.setState({ saledateyear: year })
                 if (year.length === 4) {
 
-                    if(validateYear(year)) {
+                    if (validateYear(year)) {
 
 
                         if (this.state.activeequipmentid) {
-                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this,  this.state.activeequipmentid);
+                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
                             if (myequipment) {
 
-                                const i = dynamicstyles.getmyequipmentbyid.call(this,  this.state.activeequipmentid)
+
+
+                                const i = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
                                 let day = this.state.saledateday;
                                 let month = this.state.saledatemonth;
                                 const timein = `${year}-${month}-${day}`
@@ -32,6 +36,8 @@ class SaleDate {
                                 myuser.company.equipment.myequipment[i].ownership.saledate = timein;
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
+
+
 
 
                             }
@@ -42,77 +48,87 @@ class SaleDate {
                         alert(`Invalid Year format ${year}`)
                     }
 
-                  
+
                 }
 
-            
+            } else {
+                alert(`Only Manager can change sale date year `)
+            }
         }
     }
 
     handleday(day) {
         day = day.toString();
-        this.setState({ saledateday: day })
+      
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
 
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if (checkmanager) {
+                this.setState({ saledateday: day })
                 if (day.length === 2) {
 
-            
-                        if(validateDate(day)) {
+
+                    if (validateDate(day)) {
 
                         if (this.state.activeequipmentid) {
-                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this,  this.state.activeequipmentid);
+                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
                             if (myequipment) {
 
-                                const i = dynamicstyles.getequipmentkeybyid.call(this,this.state.activeequipmentid)
+
+
+                                const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
                                 let year = this.state.saledateyear;
                                 let month = this.state.saledatemonth;
                                 const timein = `${year}-${month}-${day}`
-                                 myuser.company.equipment.myequipment[i].ownership.saledate = timein;
+                                myuser.company.equipment.myequipment[i].ownership.saledate = timein;
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
+
+
 
 
                             }
 
                         }
 
-                
 
-                } else {
-                    alert(`Invalid day format ${day}`)
+
+                    } else {
+                        alert(`Invalid day format ${day}`)
+                    }
+
                 }
 
+            } else {
+                alert(` Only Manager can modify equipment dates `)
             }
-
-            
         }
     }
 
     handlemonth(month) {
-        this.setState({ saledatemonth: month })
+      
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if (checkmanager) {
+                this.setState({ saledatemonth: month })
                 if (month.length === 2) {
 
-                    if(validateMonth(month)) {
-
-                
-
-
+                    if (validateMonth(month)) {
 
                         if (this.state.activeequipmentid) {
-                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this,  this.state.activeequipmentid);
+                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
                             if (myequipment) {
 
-                                const i = dynamicstyles.getequipmentkeybyid.call(this,  this.state.activeequipmentid)
+
+                                const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
                                 let day = this.state.saledateday;
                                 let year = this.state.saledateyear;
                                 const timein = `${year}-${month}-${day}`
-                                 myuser.company.equipment.myequipment[i].ownership.saledate = timein;
+                                myuser.company.equipment.myequipment[i].ownership.saledate = timein;
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
 
@@ -121,15 +137,17 @@ class SaleDate {
 
                         }
 
-                    
 
-                } else {
-                    alert(`Invalid month format ${month}`)
+
+                    } else {
+                        alert(`Invalid month format ${month}`)
+                    }
+
                 }
 
-                }
-
-            
+            } else {
+                alert(` Only Manager can change equipment month`)
+            }
         }
     }
 
@@ -172,8 +190,8 @@ class SaleDate {
                                 value={this.state.saledateyear}
                                 onChange={event => { saledate.handleyear.call(this, event.target.value) }} />
                         </div>
-                        
-                       
+
+
                     </div>
                     {calender.showMaterialCalender.call(this)}
 

@@ -571,31 +571,46 @@ class Bid extends Component {
         const styles = MyStylesheet();
         const titleFont = dynamicstyles.gettitlefont.call(this);
         const headerFont = dynamicstyles.getHeaderFont.call(this);
-
-
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
-
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                            /bids
-                        </div>
-                    </div>
-
+        const myuser = dynamicstyles.getuser.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        if (myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if (checkmanager) {
+                return (
                     <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.fontBold }}>
-                            Actual Bid
+                        <div style={{ ...styles.flex1 }}>
+
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
+                                    /bids
+                        </div>
+                            </div>
+
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.fontBold }}>
+                                    Actual Bid
+                        </div>
+                            </div>
+
+                            {dynamicstyles.showbidtable.call(this)}
+
+
+
                         </div>
                     </div>
+                )
 
-                    {dynamicstyles.showbidtable.call(this)}
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Only Managers can view Bid </span>
+                </div>)
+            }
 
-
-
-                </div>
-            </div>
-        )
+        } else {
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>You must be logged in to view Bid </span>
+            </div>)
+        }
     }
 }
 
@@ -603,7 +618,7 @@ function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
         navigation: state.navigation,
-        csis:state.csis
+        csis: state.csis
     }
 }
 

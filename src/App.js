@@ -40,6 +40,7 @@ import 'firebase/auth';
 import { firebaseConfig } from './firebaseconfig';
 import Schedule from './components/schedule';
 import Actual from './components/actual'
+
 //import { TestUser } from './components/functions/testuser'
 
 
@@ -70,16 +71,16 @@ class App extends Component {
 
   async loadcsis() {
     try {
-        let response = await LoadCSIs();
-        if (response.hasOwnProperty("csis")) {
-            this.props.reduxCSIs(response.csis);
+      let response = await LoadCSIs();
+      if (response.hasOwnProperty("csis")) {
+        this.props.reduxCSIs(response.csis);
 
-        }
+      }
 
     } catch (err) {
-        alert(err)
+      alert(err)
     }
-}
+  }
   async checkuser() {
     try {
       //let response = TestUser();
@@ -178,7 +179,7 @@ class App extends Component {
                 /accounts
                 </Link>
             </div>
-            
+
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link to={`/${profile}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /equipment
@@ -198,7 +199,7 @@ class App extends Component {
       return;
     }
   }
- 
+
   projectidlinks() {
     const dynamicstyles = new DynamicStyles()
     const regularFont = dynamicstyles.getRegularFont.call(this)
@@ -265,7 +266,7 @@ class App extends Component {
       return;
     }
   }
- 
+
 
   showactiveprojectlinks() {
     const dynamicstyles = new DynamicStyles();
@@ -273,6 +274,9 @@ class App extends Component {
     const headerFont = dynamicstyles.getHeaderFont.call(this);
     const regularFont = dynamicstyles.getRegularFont.call(this);
     const styles = MyStylesheet();
+    const checkmanager = dynamicstyles.checkmanager.call(this)
+    const checkactive = dynamicstyles.checkactive.call(this)
+    if(checkactive) {
     if (myuser) {
       const profile = myuser.profile;
       let companyid = false;
@@ -285,38 +289,62 @@ class App extends Component {
             let project = dynamicstyles.getprojectbytitle.call(this, this.props.project.activeprojectid);
             const projectid = project.title;
 
+            const invoices = () => {
+              if (checkmanager) {
+                return (<div style={{ ...styles.generalContainer }}>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /invoices </Link>
+                </div>)
+              }
+            }
+
+            const proposals = () => {
+              if (checkmanager) {
+                return (<div style={{ ...styles.generalContainer }}>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /proposals </Link>
+                </div>)
+              }
+
+            }
+
+            const bid = () => {
+              if (checkmanager) {
+                return ( <div style={{ ...styles.generalContainer }}>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
+                </div>)
+              }
+            }
+
+            const bidschedule = () => {
+              if (checkmanager) {
+                return (<div style={{ ...styles.generalContainer }}>
+                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
+                </div>)
+              }
+
+            }
+
+
+
+
             return (
-              <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15,...styles.addMargin }}>
+              <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
                 <div style={{ ...styles.generalContainer }}>
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }} > /{projectid} </Link>
                 </div>
-                
+
                 <div style={{ ...styles.generalContainer }}>
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /schedule </Link>
                 </div>
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /proposals </Link>
-                </div>
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
-                </div>
-              
-             
+                {proposals()}
+                {bidschedule()}
 
-
-
-                
                 <div style={{ ...styles.generalContainer }}>
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /actual </Link>
                 </div>
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /invoices </Link>
-                </div>
-                <div style={{ ...styles.generalContainer }}>
-                  <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
-                </div>
-               
-               
+                {invoices()}
+               {bid()}
+
+
                 <div style={{ ...styles.generalContainer }}>
                   <Link to={`/${profile}/company/${companyid}/projects/${projectid}/estimate`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /costestimate </Link>
                 </div>
@@ -328,6 +356,7 @@ class App extends Component {
         }
       }
     }
+  }
   }
 
 
@@ -347,8 +376,9 @@ class App extends Component {
 
     }
 
+
   }
- 
+
   toogleappmenu() {
 
     if (this.props.navigation) {
@@ -364,6 +394,7 @@ class App extends Component {
 
       }
     }
+
   }
   render() {
     const styles = MyStylesheet();
@@ -372,6 +403,7 @@ class App extends Component {
     const iconwidth = dynamicstyles.getlogoicon.call(this)
     const myuser = dynamicstyles.getuser.call(this)
     const headerFont = dynamicstyles.getHeaderFont.call(this)
+    const checkactive = dynamicstyles.checkactive.call(this)
     const getflex = () => {
       if (this.state.width > 800) {
         return (styles.flex3)
@@ -383,7 +415,7 @@ class App extends Component {
 
       if (this.state.width > 1200) {
         return ({ ...styles.flex6 })
-      } else if (this.state.width>800) {
+      } else if (this.state.width > 800) {
         return ({ ...styles.flex4 })
       } else {
         return ({ ...styles.flex2 })
@@ -418,7 +450,7 @@ class App extends Component {
     const loginlink = () => {
       if (!myuser) {
         return (
-          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
             <Link to={`/providers/login`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /login </Link>
           </div>)
       }
@@ -427,7 +459,7 @@ class App extends Component {
     const registerlink = () => {
       if (!myuser) {
         return (
-          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
 
             <Link to={`/providers/register`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.boldFont }}>/register </Link>
           </div>
@@ -435,10 +467,11 @@ class App extends Component {
       }
     }
     const projectlinks = () => {
+      if(checkactive) {
       if (myuser) {
         if (myuser.hasOwnProperty("company")) {
           if (myuser.company.hasOwnProperty("projects")) {
-            return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15,...styles.addMargin }}>
+            return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
               {this.handleprojectlink()}
               {this.projectidlinks()}
             </div>)
@@ -446,28 +479,31 @@ class App extends Component {
         }
       }
     }
+    }
     const companylinks = () => {
+      
       if (myuser) {
         if (myuser.hasOwnProperty("company")) {
           return (
-            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
+            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
               {this.handlecompanylink()}
               {this.showcompanylinks()}
             </div>)
         } else {
           return (
-            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
+            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
               {this.handlecompanylink()}
             </div>)
         }
       }
+    
     }
     const navmenu = () => {
       if (position === 'open') {
 
         return (
           <div style={{ ...getflex_2(), ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius, ...styles.addMargin, ...styles.addPadding }}>
-            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter,...styles.bottomMargin15 }}>
+            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
               {link_1()}
             </div>
             {loginlink()}
@@ -502,8 +538,8 @@ class App extends Component {
 
     const submenulink_2 = () => {
       if (myuser) {
-        if(myuser.hasOwnProperty("company")) {
-        return (<Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>)
+        if (myuser.hasOwnProperty("company")) {
+          return (<Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>)
         }
       } else {
         return (<Link to={`/providers/register`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.boldFont }}>/register </Link>)
@@ -537,21 +573,21 @@ class App extends Component {
       }
     }
     const getmainlogo = dynamicstyles.getmainlogo.call(this)
-  
+
     return (
       <BrowserRouter>
         <div style={{ ...styles.generalFlex }}>
           <div style={{ ...styles.flex1 }}>
 
-            <div style={{ ...styles.generalFlex,...styles.bottomMargin15 }}>
-              <div style={{ ...styles.flex1, ...styles.alignCenter,  ...styles.addMargin}}>
-                <div className="createlink" style={{...styles.generalContainer,...iconwidth, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius}}>
-                    <button className="createlink" style={{ ...iconwidth, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
+            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+              <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.addMargin }}>
+                <div className="createlink" style={{ ...styles.generalContainer, ...iconwidth, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius }}>
+                  <button className="createlink" style={{ ...iconwidth, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
                 </div>
               </div>
 
               <div style={{ ...getflex(), ...styles.addMarginTop, ...styles.addBottomMargin, ...styles.addRightMargin }}>
-                <div style={{...styles.generalContainer, ...getmainlogo}}>{Logo()} </div>
+                <div style={{ ...styles.generalContainer, ...getmainlogo }}>{Logo()} </div>
               </div>
 
             </div>
@@ -587,7 +623,7 @@ function mapStateToProps(state) {
     project: state.project,
     allusers: state.allusers,
     allcompanys: state.allcompanys,
-    csis:state.csis
+    csis: state.csis
   }
 }
 

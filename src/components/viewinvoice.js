@@ -750,6 +750,9 @@ class ViewInvoice extends Component {
         }
 
 if(myuser) {
+
+    const checkmanager = dynamicstyles.checkmanager.call(this)
+    if (checkmanager) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -769,6 +772,12 @@ if(myuser) {
                 </div>
             </div>
         )
+
+    } else {
+        return(<div style={{...styles.generalContainer,...regularFont}}>
+            <span style={{...styles.generalFont,...regularFont}}>Only Manager can view Invoice </span>
+        </div>)
+    }
 } else {
     return(<div style={{...styles.generalContainer,...regularFont}}>
         <span style={{...styles.generalFont,...regularFont}}>Please Login to View Invoice </span>

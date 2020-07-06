@@ -237,28 +237,36 @@ class ProposalLineItem extends Component {
         const titleFont = dynamicstyles.gettitlefont.call(this)
         const csiid = this.props.match.params.csiid;
         const csi = dynamicstyles.getcsibyid.call(this, csiid)
-        const myuser =dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        if(myuser) {
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
-
+        if (myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if (checkmanager) {
+                return (
                     <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...titleFont }}>
-                            {csi.csi} - {csi.title}
+                        <div style={{ ...styles.flex1 }}>
+
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1, ...styles.generalFont, ...titleFont }}>
+                                    {csi.csi} - {csi.title}
+                                </div>
+                            </div>
+
+                            {dynamicstyles.showlinedetail.call(this)}
+
+
                         </div>
-                    </div>
+                    </div>)
 
-                    {dynamicstyles.showlinedetail.call(this)}
-
-
-                </div>
-            </div>)
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Only Managers can View Proposal Line Item </span>
+                </div>)
+            }
 
         } else {
-            return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Proposal Line Item </span>
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Proposal Line Item </span>
             </div>)
         }
 
@@ -272,7 +280,7 @@ function mapStateToProps(state) {
         projectid: state.projectid,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
-        csis:state.csis
+        csis: state.csis
     }
 }
 

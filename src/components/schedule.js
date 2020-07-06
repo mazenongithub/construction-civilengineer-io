@@ -621,18 +621,25 @@ class Schedule extends Component {
         const dynamicstyles = new DynamicStyles();
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let laborids = [];
+        const myuser = dynamicstyles.getuser.call(this);
+        if(myuser) {
         if (project) {
             const labors = dynamicstyles.getschedulelabor.call(this)
             if (labors) {
                 // eslint-disable-next-line
                 labors.map(labor => {
+                    const checkmanager = dynamicstyles.checkmanager.call(this)
+                    if(checkmanager || labor.providerid === myuser.providerid) {
                     laborids.push(this.showlaborid(labor))
+                    }
 
 
                 })
             }
 
         }
+
+    }
         return laborids;
 
     }
@@ -1464,6 +1471,10 @@ class Schedule extends Component {
             }
 
         }
+        const myuser = dynamicstyles.getuser.call(this)
+        if(myuser) {
+            const active = dynamicstyles.checkactive.call(this)
+            if(active) {
         return (
 
             <div style={{ ...styles.generalFlex }}>
@@ -1518,6 +1529,18 @@ class Schedule extends Component {
 
                 </div>
             </div>)
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>You have to be active to view Schedule </span>
+            </div>)
+        }
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Schedule </span>
+            </div>)
+        }
     }
 
 }

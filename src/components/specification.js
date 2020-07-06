@@ -71,7 +71,7 @@ class Specification extends Component {
         const projectid = project.projectid;
         const csiid = this.props.match.params.csiid;
         const sectionnumber = dynamicstyles.getsectionnumberbyid.call(this, projectid, csiid, section.sectionid);
-     
+
 
         return (<div style={{ ...styles.generalContainer }} key={`${section.sectionid}section`} ><span style={{ ...styles.generalFont, ...headerFont }}>{section.part}.{sectionnumber} {section.title} </span></div>)
     }
@@ -160,32 +160,48 @@ class Specification extends Component {
         const dynamicstyles = new DynamicStyles();
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const csi = dynamicstyles.getcsibyid.call(this, this.props.match.params.csiid)
-
-        return (<div style={{ ...styles.generalFlex }}>
-            <div style={{ ...styles.flex1 }}>
-
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...headerFont, ...styles.alignCenter }}>
-                        /{this.props.match.params.projectid} <br />
-                            Specifications <br />
-                            CSI {this.props.match.params.csiid} <br />
-                        {csi.title}
-
-                    </div>
-                </div>
-
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+        const myuser = dynamicstyles.getuser.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        if (myuser) {
+            const active = dynamicstyles.checkactive.call(this)
+            if (active) {
+                return (<div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
 
-                        {this.showspecification()}
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1, ...headerFont, ...styles.alignCenter }}>
+                                /{this.props.match.params.projectid} <br />
+                            Specifications <br />
+                            CSI {this.props.match.params.csiid} <br />
+                                {csi.title}
+
+                            </div>
+                        </div>
+
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1 }}>
+
+                                {this.showspecification()}
+
+                            </div>
+                        </div>
+
 
                     </div>
                 </div>
+                )
 
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>You have to be active to view Specification </span>
+                </div>)
+            }
 
-            </div>
-        </div>
-        )
+        } else {
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Specification </span>
+            </div>)
+        }
 
 
 
@@ -202,7 +218,7 @@ function mapStateToProps(state) {
         project: state.project,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
-        csis:state.csis
+        csis: state.csis
     }
 }
 

@@ -12,7 +12,7 @@ import MakeID from './makeids';
 class Materials extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activematerialid: '', materialid: '', material: '', accountid: '', csiid: '', unit: '', unitcost: '', csi_1: '', csi_2: '', csi_3: '', csi_4:'',message: '' }
+        this.state = { render: '', width: 0, height: 0, activematerialid: '', materialid: '', material: '', accountid: '', csiid: '', unit: '', unitcost: '', csi_1: '', csi_2: '', csi_3: '', csi_4: '', message: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -93,7 +93,7 @@ class Materials extends Component {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
-    
+
         const accountid = new AccountID();
         if (this.state.width > 800) {
             return (
@@ -297,19 +297,28 @@ class Materials extends Component {
     }
     removematerial(material) {
         const dynamicstyles = new DynamicStyles();
+        const checkmanager =dynamicstyles.checkmanager.call(this);
+        if(checkmanager) {
         if (window.confirm(`Are you sure you want to delete ${material.material}?`)) {
             const validate = this.validatematerial(material);
             if (validate.validate) {
                 let myuser = dynamicstyles.getuser.call(this);
+                const mymaterial = dynamicstyles.getmymaterialfromid.call(this,material.materialid)
+                if(mymaterial) {
                 const i = dynamicstyles.getmaterialkeybyid.call(this, material.materialid);
                 myuser.company.materials.mymaterial.splice(i, 1);
                 this.props.reduxUser(myuser);
                 this.setState({ activematerialid: false, message: '' })
+
+                }
             } else {
                 this.setState({ message: validate.validatemessage })
             }
 
         }
+    } else {
+        alert(`Only Managers can remove company materials `)
+    }
     }
     showmymaterial(mymaterial) {
         const styles = MyStylesheet();
@@ -449,39 +458,58 @@ class Materials extends Component {
     }
 
     handlematerial(material) {
+        const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
-        let myuser = this.getuser();
+        const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            if (this.state.activematerialid) {
-                let i = this.getactivematerialkey();
-                myuser.company.materials.mymaterial[i].material = material;
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render', material: '' })
+            const checkmanager = dynamicstyles.checkmanager.call(this);
+            if (checkmanager) {
+                if (this.state.activematerialid) {
+                    const mymaterial = dynamicstyles.getmymaterialfromid.call(this, this.state.activematerialid)
+                    if (mymaterial) {
+                        let i = dynamicstyles.getmaterialkeybyid.call(this, this.state.activematerialid)
+                        myuser.company.materials.mymaterial[i].material = material;
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render', material: '' })
 
+                    }
+
+
+                } else {
+                    let materialid = makeID.materialid.call(this)
+                    let accountid = this.state.accountid;
+                    let csiid = this.state.csiid;
+                    let unit = this.state.unit;
+                    let unitcost = this.state.unitcost;
+                    let providerid = myuser.providerid;
+                    let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
+                    this.createnewmaterial(newMaterial)
+                }
 
             } else {
-                let materialid = makeID.materialid.call(this)
-                let accountid = this.state.accountid;
-                let csiid = this.state.csiid;
-                let unit = this.state.unit;
-                let unitcost = this.state.unitcost;
-                let providerid = myuser.providerid;
-                let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
-                this.createnewmaterial(newMaterial)
+                alert(` Only Managers can update company materials `)
             }
         }
     }
+
     handleunitcost(unitcost) {
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
+        const myuser = dynamicstyles.getuser.call(this)
+    
         if (myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this);
+            if(checkmanager) {
             if (this.state.activematerialid) {
-                let i = this.getactivematerialkey();
+                const mymaterial = dynamicstyles.getmymaterialfromid.call(this,this.state.activematerialid)
+                if(mymaterial) {
+                let i = dynamicstyles.getmaterialkeybyid.call(this,this.state.activematerialid)
                 myuser.company.materials.mymaterial[i].unitcost = unitcost;
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
-
-
+    
+                }
+            
             } else {
                 let materialid = makeID.materialid.call(this)
                 let accountid = this.state.accountid;
@@ -491,57 +519,83 @@ class Materials extends Component {
                 let providerid = myuser.providerid;
                 let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
                 this.createnewmaterial(newMaterial)
+            }
+    
+        } else {
+            alert(`Only Managers can update unit cost `)
+        }
+        }
+    }
+
+    handleunit(unit) {
+        const dynamicstyles = new DynamicStyles();
+        const makeID = new MakeID();
+        const myuser = dynamicstyles.getuser.call(this)
+
+        if (myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this);
+            if (checkmanager) {
+                if (this.state.activematerialid) {
+                    const mymaterial = dynamicstyles.getmymaterialfromid.call(this, this.state.activematerialid)
+                    if (mymaterial) {
+                        let i = dynamicstyles.getmaterialkeybyid.call(this, this.state.activematerialid)
+                        myuser.company.materials.mymaterial[i].unit = unit;
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+
+                    }
+
+                } else {
+                    let materialid = makeID.materialid.call(this)
+                    let accountid = this.state.accountid;
+                    let csiid = this.state.csiid;
+                    let unitcost = this.state.unitcost;
+                    let material = this.state.material;
+                    let providerid = myuser.providerid;
+                    let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
+                    this.createnewmaterial(newMaterial)
+                }
+
+            } else {
+                alert(`Only Managers can update material unit  `)
             }
         }
     }
 
     handleaccountid(accountid) {
-
-        let myuser = this.getuser();
+        const dynamicstyles = new DynamicStyles();
         const makeID = new MakeID();
-        if (myuser) {
-            if (this.state.activematerialid) {
-                let i = this.getactivematerialkey();
-                myuser.company.materials.mymaterial[i].accountid = accountid;
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+        const myuser = dynamicstyles.getuser.call(this)
 
+        if (myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this);
+            if (checkmanager) {
+                if (this.state.activematerialid) {
+                    const mymaterial = dynamicstyles.getmymaterialfromid.call(this, this.state.activematerialid)
+                    if (mymaterial) {
+                        const i = dynamicstyles.getmaterialkeybyid.call(this, this.state.activematerialid)
+                        myuser.company.materials.mymaterial[i].accountid = accountid;
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    }
+
+                } else {
+                    let materialid = makeID.materialid.call(this);
+                    let unitcost = this.state.unitcost;
+                    let csiid = this.state.csiid;
+                    let unit = this.state.unit;
+                    let material = this.state.material;
+                    let providerid = myuser.providerid;
+                    let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
+                    this.createnewmaterial(newMaterial)
+                }
 
             } else {
-                let materialid = makeID.materialid.call(this);
-                let unitcost = this.state.unitcost;
-                let csiid = this.state.csiid;
-                let unit = this.state.unit;
-                let material = this.state.material;
-                let providerid = myuser.providerid;
-                let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
-                this.createnewmaterial(newMaterial)
+                alert(`Only Mangers can update material accounts `)
             }
         }
     }
-    handleunit(unit) {
-        let myuser = this.getuser();
-        const makeID = new MakeID();
-        if (myuser) {
-            if (this.state.activematerialid) {
-                let i = this.getactivematerialkey();
-                myuser.company.materials.mymaterial[i].unit = unit;
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
 
-
-            } else {
-                let materialid = makeID.materialid.call(this);
-                let unitcost = this.state.unitcost;
-                let csiid = this.state.csiid;
-                let accountid = this.state.accountid;
-                let material = this.state.material;
-                let providerid = myuser.providerid;
-                let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
-                this.createnewmaterial(newMaterial)
-            }
-        }
-    }
     handlecsiid(csiid) {
         let dynamicstyles = new DynamicStyles();
         let myuser = this.getuser();
@@ -594,57 +648,57 @@ class Materials extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const headerFont = dynamicstyles.getHeaderFont.call(this)
         const maxWidth = dynamicstyles.getMaxWidth.call(this)
-        const myuser =dynamicstyles.getuser.call(this)
-        if(myuser) {
+        const myuser = dynamicstyles.getuser.call(this)
+        if (myuser) {
             const companyurl = () => {
-                if(myuser.hasOwnProperty("company")) {
-                    return(myuser.company.url)
+                if (myuser.hasOwnProperty("company")) {
+                    return (myuser.company.url)
                 }
             }
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
+            return (
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter}}>
-                           <span style={{ ...headerFont, ...styles.boldFont }}> /{companyurl()}</span><br/>
-                           <span style={{ ...headerFont, ...styles.boldFont }}>/materials</span>
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                <span style={{ ...headerFont, ...styles.boldFont }}> /{companyurl()}</span><br />
+                                <span style={{ ...headerFont, ...styles.boldFont }}>/materials</span>
+                            </div>
                         </div>
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
+                                Create A Material <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField, ...maxWidth }}
+                                    value={this.getmaterial()}
+                                    onChange={event => { this.handlematerial(event.target.value) }}
+                                />
+                            </div>
+                        </div>
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
+                                Unit <br /><input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
+                                    onChange={event => { this.handleunit(event.target.value) }}
+                                    value={this.getunit()} />
+                            </div>
+
+                            <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
+                                Unit Cost <br /><input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
+                                    onChange={event => { this.handleunitcost(event.target.value) }}
+                                    value={this.getunitcost()}
+                                />
+                            </div>
+                        </div>
+                        {this.handleselectmenus()}
+                        {dynamicstyles.showsavecompany.call(this)}
+                        {this.showmaterialids()}
                     </div>
-
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                            Create A Material <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField, ...maxWidth }}
-                                value={this.getmaterial()}
-                                onChange={event => { this.handlematerial(event.target.value) }}
-                            />
-                        </div>
-                    </div>
-
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
-                            Unit <br /><input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                onChange={event => { this.handleunit(event.target.value) }}
-                                value={this.getunit()} />
-                        </div>
-
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
-                            Unit Cost <br /><input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                onChange={event => { this.handleunitcost(event.target.value) }}
-                                value={this.getunitcost()}
-                            />
-                        </div>
-                    </div>
-                    {this.handleselectmenus()}
-                    {dynamicstyles.showsavecompany.call(this)}
-                    {this.showmaterialids()}
                 </div>
-            </div>
-        )
+            )
 
         } else {
-            return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Materials </span>
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Materials </span>
             </div>)
         }
     }

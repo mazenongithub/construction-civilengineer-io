@@ -35,27 +35,27 @@ class Estimate extends Component {
         const projectid = this.props.match.params.projectid;
         const companyid = this.props.match.params.companyid;
         return (
-        <div style={{ ...styles.generalContainer }}>
-        <Link style={{...styles.generalFont, ...regularFont,...styles.generalLink}} to={`/${profile}/company/${companyid}/projects/${projectid}/specifications/${csi.csiid}`}>{csi.csi} - {csi.title}</Link>
-        </div>
+            <div style={{ ...styles.generalContainer }}>
+                <Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }} to={`/${profile}/company/${companyid}/projects/${projectid}/specifications/${csi.csiid}`}>{csi.csi} - {csi.title}</Link>
+            </div>
         )
 
     }
 
     showspecifications() {
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
+        const myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let specids = [];
-        if(myproject) {
-        const specs = dynamicstyles.getspecficationsbyprojectid.call(this, myproject.projectid)
-        console.log(specs)
-        if (specs) {
-            // eslint-disable-next-line
-            specs.map(spec => {
-                specids.push(this.showspecification(spec))
-            })
+        if (myproject) {
+            const specs = dynamicstyles.getspecficationsbyprojectid.call(this, myproject.projectid)
+            console.log(specs)
+            if (specs) {
+                // eslint-disable-next-line
+                specs.map(spec => {
+                    specids.push(this.showspecification(spec))
+                })
+            }
         }
-    }
         return specids;
     }
 
@@ -63,22 +63,38 @@ class Estimate extends Component {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const headerFont = dynamicstyles.getHeaderFont.call(this)
-
-        return (
-            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.flex1 }}>
-                    
+        const myuser = dynamicstyles.getuser.call(this);
+        const regularFont = dynamicstyles.getRegularFont.call(this)
+        if (myuser) {
+            const active = dynamicstyles.checkactive.call(this)
+            if (active) {
+                return (
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...headerFont, ...styles.alignCenter }}>
-                            /{this.props.match.params.projectid} <br />
+                        <div style={{ ...styles.flex1 }}>
+
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.flex1, ...headerFont, ...styles.alignCenter }}>
+                                    /{this.props.match.params.projectid} <br />
                             Specifications
                         </div>
-                    </div>
+                            </div>
 
-                    {this.showspecifications()}
-               
-                </div>
+                            {this.showspecifications()}
+
+                        </div>
+                    </div>)
+
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>You have to be active to view Specifications </span>
+                </div>)
+            }
+
+        } else {
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Specifications </span>
             </div>)
+        }
     }
 
 }
@@ -90,7 +106,7 @@ function mapStateToProps(state) {
         project: state.project,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
-        csis:state.csis
+        csis: state.csis
     }
 }
 

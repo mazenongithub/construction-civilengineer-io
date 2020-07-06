@@ -176,9 +176,9 @@ class Actual extends Component {
             const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid)
             if (mylabor) {
                 let csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid)
-                if(csi) {
+                if (csi) {
 
-                return `${csi.csi}-${csi.title}`
+                    return `${csi.csi}-${csi.title}`
                 }
 
             }
@@ -186,18 +186,18 @@ class Actual extends Component {
             const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, this.state.activematerialid)
             if (mymaterial) {
                 let csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid);
-                if(csi) {
-                return `${csi.csi}-${csi.title}`
+                if (csi) {
+                    return `${csi.csi}-${csi.title}`
                 }
             }
         } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
             const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
 
             if (myequipment) {
-                
+
                 let csi = dynamicstyles.getcsibyid.call(this, myequipment.csiid);
-                if(csi) {
-                return `${csi.csi}-${csi.title}`
+                if (csi) {
+                    return `${csi.csi}-${csi.title}`
                 }
             }
 
@@ -598,7 +598,7 @@ class Actual extends Component {
                     return (styles.generalButton);
                 }
             }
-   
+
 
             const getactivelaborbackground = (laborid) => {
                 if (this.state.activelaborid === laborid) {
@@ -606,10 +606,10 @@ class Actual extends Component {
                 }
 
             }
-            
+
             const remove = () => {
-                if(!labor.settlementid) {
-                    return(<button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removelaborid(labor) }}>{removeIconSmall()} </button>)
+                if (!labor.settlementid) {
+                    return (<button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removelaborid(labor) }}>{removeIconSmall()} </button>)
                 }
             }
 
@@ -622,7 +622,7 @@ class Actual extends Component {
                 From {inputUTCStringForLaborID(labor.timein)} to {inputUTCStringForLaborID(labor.timeout)}
                 ${Number(hourlyrate).toFixed(2)}/Hr x {calculatetotalhours(labor.timeout, labor.timein)} Hrs = ${(Number(calculatetotalhours(labor.timeout, labor.timein)) * hourlyrate).toFixed(2)}
                         </span>
-                   {remove()}
+                        {remove()}
                     </div>)
 
             }
@@ -634,15 +634,22 @@ class Actual extends Component {
         const dynamicstyles = new DynamicStyles();
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
         let laborids = [];
-        if (project) {
-            const labors = dynamicstyles.getactuallabor.call(this)
-            if (labors) {
-                // eslint-disable-next-line
-                labors.map(labor => {
-                    laborids.push(this.showlaborid(labor))
+        const myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (project) {
+                const labors = dynamicstyles.getactuallabor.call(this)
+                if (labors) {
+                    // eslint-disable-next-line
+                    labors.map(labor => {
+                        const checkmanager = dynamicstyles.checkmanager.call(this)
+                        if (checkmanager || labor.providerid === myuser.providerid) {
+                            laborids.push(this.showlaborid(labor))
+                        }
 
 
-                })
+                    })
+                }
+
             }
 
         }
@@ -708,8 +715,8 @@ class Actual extends Component {
 
         }
         const remove = () => {
-            if(!mymaterial.settlementid) {
-                return(<button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removematerial(mymaterial) }}>{removeIconSmall()} </button>)
+            if (!mymaterial.settlementid) {
+                return (<button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removematerial(mymaterial) }}>{removeIconSmall()} </button>)
             }
         }
         if (this.state.active === 'materials') {
@@ -801,9 +808,9 @@ class Actual extends Component {
 
         }
         const remove = () => {
-            if(!equipment.settlementid) {
-                return(<button style={{ ...getbutton(), ...removeIcon }}
-                onClick={() => { this.removeequipment(equipment) }}>{removeIconSmall()} </button>)
+            if (!equipment.settlementid) {
+                return (<button style={{ ...getbutton(), ...removeIcon }}
+                    onClick={() => { this.removeequipment(equipment) }}>{removeIconSmall()} </button>)
             }
         }
         if (project) {
@@ -1429,10 +1436,10 @@ class Actual extends Component {
                                     <span style={{ ...styles.generalFont, ...regularFont }}>Quantity: {mymaterial.quantity}</span>
                                 </div>
                                 <div style={{ ...styles.flex1 }}>
-                                <span style={{ ...styles.generalFont, ...regularFont }}>Unit: {mymaterial.unit}</span>
+                                    <span style={{ ...styles.generalFont, ...regularFont }}>Unit: {mymaterial.unit}</span>
                                 </div>
                                 <div style={{ ...styles.flex1 }}>
-                                <span style={{ ...styles.generalFont, ...regularFont }}>Unit Cost: {mymaterial.unitcost}</span>
+                                    <span style={{ ...styles.generalFont, ...regularFont }}>Unit Cost: {mymaterial.unitcost}</span>
                                 </div>
                             </div>)
 
@@ -1717,60 +1724,73 @@ class Actual extends Component {
             }
 
         }
-        return (
 
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
+        const myuser = dynamicstyles.getuser.call(this)
+        if (myuser) {
+            const active = dynamicstyles.checkactive.call(this)
+            if (active) {
+                return (
 
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>Actual </span></div>
-                            <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>/{this.props.match.params.projectid} </span></div>
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1 }}>
+
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                    <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>Actual </span></div>
+                                    <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>/{this.props.match.params.projectid} </span></div>
+                                </div>
+                            </div>
+
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                    <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...laborbackground() }} onClick={() => { this.setState({ active: 'labor' }) }}><span style={{ ...styles.specialActualButton }}>LABOR</span></button>
+                                </div>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                    <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...equipmentbackground() }} onClick={() => { this.setState({ active: 'equipment' }) }}><span style={{ ...styles.specialActualButton }}>Equipment</span></button>
+                                </div>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                    <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...materialbackground() }} onClick={() => { this.setState({ active: 'materials' }) }}><span style={{ ...styles.specialActualButton }}>Materials</span></button>
+                                </div>
+                            </div>
+
+                            {showemployeeid()}
+                            {showequipmentid()}
+                            {showmaterialid()}
+
+
+
+
+                            {milestonescsi()}
+                            {showmaterialdate()}
+
+                            {showtimes()}
+
+                            {laborrate()}
+                            {equipmentrate()}
+                            {showmaterialquantity()}
+
+
+
+                            {this.showlaborids()}
+                            {this.showmaterialids()}
+                            {this.showequipmentids()}
+
+                            {dynamicstyles.showsaveproject.call(this)}
+
                         </div>
-                    </div>
+                    </div>)
 
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...laborbackground() }} onClick={() => { this.setState({ active: 'labor' }) }}><span style={{ ...styles.specialActualButton }}>LABOR</span></button>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...equipmentbackground() }} onClick={() => { this.setState({ active: 'equipment' }) }}><span style={{ ...styles.specialActualButton }}>Equipment</span></button>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...materialbackground() }} onClick={() => { this.setState({ active: 'materials' }) }}><span style={{ ...styles.specialActualButton }}>Materials</span></button>
-                        </div>
-                    </div>
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>You have to be active to view Actual </span>
+                </div>)
+            }
 
-                    {showemployeeid()}
-                    {showequipmentid()}
-                    {showmaterialid()}
-
-
-
-
-                    {milestonescsi()}
-                    {showmaterialdate()}
-
-                    {showtimes()}
-
-                    {laborrate()}
-                    {equipmentrate()}
-                    {showmaterialquantity()}
-
-
-
-                    {this.showlaborids()}
-                    {this.showmaterialids()}
-                    {this.showequipmentids()}
-
-                    {dynamicstyles.showsaveproject.call(this)}
-
-
-
-
-
-                </div>
+        } else {
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Actual </span>
             </div>)
+        }
     }
 
 }

@@ -317,6 +317,24 @@ class DynamicStyles {
 
     }
 
+    checkactive() {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        let check = false;
+        if(myuser) {
+        const employee =dynamicstyles.getemployeebyid.call(this,myuser.providerid);
+        if(employee) {
+            if(employee.active === 'active') {
+                check = true;
+            }
+        }
+
+        }
+        return check;
+        
+
+    }
+
     checkmanager() {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);

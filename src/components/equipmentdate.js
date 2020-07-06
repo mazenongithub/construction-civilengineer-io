@@ -14,6 +14,9 @@ class EquipmentDate {
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
 
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if(checkmanager) {
+
                 if (year.length === 4) {
 
                     if(validateYear(year)) {
@@ -55,7 +58,9 @@ class EquipmentDate {
                   
                 }
 
-            
+            } else {
+                alert(`Only Managers can modify equipment year `)
+            }
         }
     }
 
@@ -66,6 +71,8 @@ class EquipmentDate {
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
 
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if(checkmanager) {
         
                 if (day.length === 2) {
 
@@ -109,6 +116,9 @@ class EquipmentDate {
 
             }
 
+        } else {
+            alert(`Only managers can modify equipment day `)
+        }
             
         }
     }
@@ -118,6 +128,9 @@ class EquipmentDate {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
+
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if(checkmanager) {
 
                 if (month.length === 2) {
 
@@ -132,6 +145,7 @@ class EquipmentDate {
                                if(this.state.activecostid) {
                                 const cost = dynamicstyles.getcostbyid.call(this,myequipment.equipmentid,this.state.activecostid)
                                 if(cost) {
+                                
                                     const j = dynamicstyles.getequipmentcostskeybyid.call(this,myequipment.equipmentid, cost.costid)
                                 let day = this.state.equipmentdateday;
                                 let year = this.state.equipmentdateyear;
@@ -140,6 +154,7 @@ class EquipmentDate {
                                 myuser.company.equipment.myequipment[i].ownership.cost[j].timein = timein;
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
+                                    }
 
                                 }
 
@@ -159,6 +174,8 @@ class EquipmentDate {
                     alert(`Invalid month format ${month}`)
                 }
 
+                } else {
+                    alert(`Only managers can update equipment month `)
                 }
 
             

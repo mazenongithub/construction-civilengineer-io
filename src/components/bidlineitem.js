@@ -238,6 +238,8 @@ class InvoiceLineItem extends Component {
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
         if(myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this)
+            if (checkmanager) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -253,6 +255,12 @@ class InvoiceLineItem extends Component {
 
                 </div>
             </div>)
+
+        } else {
+            return(<div style={{...styles.generalContainer,...regularFont}}>
+                <span style={{...styles.generalFont,...regularFont}}>Only Managers can view Bid Item </span>
+            </div>) 
+        }
 
         } else {
             return(<div style={{...styles.generalContainer,...regularFont}}>

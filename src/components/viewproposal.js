@@ -597,6 +597,8 @@ class ViewProposal extends Component {
             }
         }
         if(myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this);
+            if(checkmanager) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -621,12 +623,17 @@ class ViewProposal extends Component {
             </div>
         )
 
-        } else {
+        }  else {
             return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Proposal </span>
+                <span style={{...styles.generalFont,...regularFont}}>Only Managers can view Proposal </span>
             </div>)
         }
 
+    }  else {
+        return(<div style={{...styles.generalContainer,...regularFont}}>
+            <span style={{...styles.generalFont,...regularFont}}>Please Login to View Proposal </span>
+        </div>)
+    }
     }
 }
 
