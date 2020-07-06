@@ -16,7 +16,12 @@ class Company extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-
+   
+         
+            if(!this.props.allusers.hasOwnProperty("length")) {
+            this.loadallusers();
+            }
+        
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);

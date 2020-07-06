@@ -641,6 +641,7 @@ class Employees extends Component {
 
     showemployees() {
         let employees = [];
+        
         if (this.props.allusers) {
             if (this.props.allusers.hasOwnProperty("myuser")) {
                 // eslint-disable-next-line
@@ -842,7 +843,7 @@ class Employees extends Component {
         const styles = MyStylesheet();
         const profilephoto = this.getprofilephoto();
         const removeIcon = this.getremoveicon();
-        const employee = this.getemployeebyproviderid(providerid);
+        const employee = dynamicstyles.getemployeebyid.call(this,providerid)
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const checkmanager = dynamicstyles.checkmanager.call(this)
         const remove = () => {
