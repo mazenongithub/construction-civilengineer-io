@@ -28,12 +28,14 @@
 .actualdatearrowdown-1 {  fill: #570b17;  stroke: #000;  stroke-miterlimit: 10;}
 .actualdatearrowup-1 {  fill: #570b17;  stroke: #000;  stroke-miterlimit: 10;}
 .calendarIcon-2{fill:#fff;stroke:#A62152;stroke-miterlimit:10;stroke-width:0.5px;}
+.redicon-1{fill:#A62152;}
 .createproposal-1{fill:#75c5c6;stroke:#156876;}.createproposal-2{font-size:24px;fill:#13254b;font-family:'Nunito Sans', sans-serif}.createproposal-3{letter-spacing:-0.01em;}
 .activecheck-1{fill:#df6108;stroke:#005e6a;stroke-miterlimit:10;stroke-width:0.25px;}
 .opendetail-1{fill:none;stroke-width:9px;}.opendetail-1,.opendetail-2{stroke:#000;stroke-miterlimit:10;}.opendetail-2{stroke-width:4px;}
 .closedetail-1{fill:none;stroke-width:9px;}.closedetail-1,.closedetail-2{stroke:#000;stroke-miterlimit:10;}.closedetail-2{stroke-width:4px;}
 .createinvoice-1{fill:#f39b6e;stroke:#ea692b;}.createinvoice-2{font-size:55.29px;fill:#0d0d0d;font-family:NunitoSans-Regular, Nunito Sans;}.createinvoice-3{letter-spacing:-0.01em;}.createinvoice-4{letter-spacing:-0.01em;}
 .blueplus-1{fill:#13059b;stroke:#000;stroke-miterlimit:10;}
+.redplus-1{fill:#570b17;stroke:#000;stroke-miterlimit:10;}
 .registernow-1{fill:#61dafb;}.registernow-1,.registernow-2{stroke:#202122;stroke-miterlimit:10;}.registernow-2{font-size:40px;fill:#61666b;stroke-width:2px;font-family:NunitoSans-Regular, Nunito Sans;letter-spacing:0.05em;}.registernow-3{letter-spacing:0.05em;}.registernow-4{letter-spacing:0.04em;}.registernow-5{letter-spacing:0.05em;}
 .removeicon-1{fill:#E55151;}.removeicon-1,.removeicon-2{stroke:#000;stroke-miterlimit:10;}.removeicon-2{fill:#830026;stroke-width:0.5px;}
 .saveprofileicon-1{fill:#db9f19;}.saveprofileicon-1,.saveprofileicon-2{stroke:#000;stroke-miterlimit:10;}.saveprofileicon-2{font-size:72px;fill:#f9f7f7;stroke-width:0.25px;font-family:NunitoSans-SemiBold, Nunito Sans;font-weight:600;}.saveprofileicon-3{letter-spacing:-0.01em;}.saveprofileicon-4{letter-spacing:0em;}.saveprofileicon-5{letter-spacing:-0.01em;}.saveprofileicon-6{letter-spacing:0em;}

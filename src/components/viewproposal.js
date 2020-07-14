@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidScheduleItem, CreateBidItem,UTCStringFormatDateforProposal,UTCTimefromCurrentDate} from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidScheduleItem, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, isNumeric } from './functions';
 import { Link } from 'react-router-dom';
 class ViewProposal extends Component {
     constructor(props) {
@@ -340,36 +340,41 @@ class ViewProposal extends Component {
 
     }
     handlechangequantity(quantity, csiid) {
+
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-       
+        if (isNumeric(quantity)) {
 
-        if (myuser) {
-           
-            const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid)
-            if(myproject) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            const myproposal = dynamicstyles.getproposalbyid.call(this,this.props.match.params.proposalid)
-            if(myproposal) {
-            let j = dynamicstyles.getproposalkeybyid.call(this, this.props.match.params.proposalid)
-            const lineitem = dynamicstyles.getproposalitem.call(this, csiid)
-            if (lineitem) {
-                let k = dynamicstyles.getproposalitemkey.call(this, csiid)
-                myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].quantity = quantity;
-                myuser.company.projects.myproject[i].proposals.myproposal[j].updated = UTCTimefromCurrentDate();
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
-            } else {
-                let unit = "";
-                let newItem = CreateBidItem(csiid, unit, quantity)
-                myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+            if (myuser) {
+
+                const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+                if (myproject) {
+                    let i = dynamicstyles.getprojectkey.call(this);
+                    const myproposal = dynamicstyles.getproposalbyid.call(this, this.props.match.params.proposalid)
+                    if (myproposal) {
+                        let j = dynamicstyles.getproposalkeybyid.call(this, this.props.match.params.proposalid)
+                        const lineitem = dynamicstyles.getproposalitem.call(this, csiid)
+                        if (lineitem) {
+                            let k = dynamicstyles.getproposalitemkey.call(this, csiid)
+                            myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].quantity = quantity;
+                            myuser.company.projects.myproject[i].proposals.myproposal[j].updated = UTCTimefromCurrentDate();
+                            this.props.reduxUser(myuser);
+                            this.setState({ render: 'render' })
+                        } else {
+                            let unit = "";
+                            let newItem = CreateBidItem(csiid, unit, quantity)
+                            myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
+                            this.props.reduxUser(myuser);
+                            this.setState({ render: 'render' })
+                        }
+
+                    }
+
+                }
             }
 
-        }
-
-        }
+        } else {
+            alert(`Quantity should be numeric `)
         }
 
     }
@@ -377,32 +382,32 @@ class ViewProposal extends Component {
     handlechangeunit(unit, csiid) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-        if(myuser) {
-        const myproject = dynamicstyles.getprojectbyid.call(this,this.props.match.params.projectid)
-        if(myproject) {
-        let i = dynamicstyles.getprojectkey.call(this);
-        const myproposal = dynamicstyles.getproposalbyid.call(this,this.props.match.params.proposalid)
-        if(myproposal) {
-        let j = dynamicstyles.getproposalkeybyid.call(this, this.props.match.params.proposalid)
-        const lineitem = dynamicstyles.getproposalitem.call(this, csiid)
-        if (lineitem) {
-                let k = dynamicstyles.getproposalitemkey.call(this, csiid)
-                myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].unit = unit;
-                myuser.company.projects.myproject[i].proposals.myproposal[j].updated = UTCTimefromCurrentDate();
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
-            } else {
-                let quantity = "";
-                let newItem = CreateBidItem(csiid, unit, quantity)
-                myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
+        if (myuser) {
+            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            if (myproject) {
+                let i = dynamicstyles.getprojectkey.call(this);
+                const myproposal = dynamicstyles.getproposalbyid.call(this, this.props.match.params.proposalid)
+                if (myproposal) {
+                    let j = dynamicstyles.getproposalkeybyid.call(this, this.props.match.params.proposalid)
+                    const lineitem = dynamicstyles.getproposalitem.call(this, csiid)
+                    if (lineitem) {
+                        let k = dynamicstyles.getproposalitemkey.call(this, csiid)
+                        myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].unit = unit;
+                        myuser.company.projects.myproject[i].proposals.myproposal[j].updated = UTCTimefromCurrentDate();
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    } else {
+                        let quantity = "";
+                        let newItem = CreateBidItem(csiid, unit, quantity)
+                        myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    }
+                }
+
             }
+
         }
-
-    }
-
-    }
 
 
     }
@@ -443,14 +448,16 @@ class ViewProposal extends Component {
                 </div>)
         }
         const quantity = () => {
+
             return (<div style={{ ...styles.generalContainer }}>
                 Quantity <br />
                 <input type="text"
-                    value={this.getquantity()}
+                    value={this.getquantity(item.csiid)}
                     onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
             </div>)
         }
+
 
         if (this.state.width > 1200) {
             return (
@@ -526,114 +533,117 @@ class ViewProposal extends Component {
         let proposalid = this.props.match.params.proposalid;
         if (myuser) {
             let myproject = dynamicstyles.getproject.call(this);
-            if(myproject) {
-                const  i = dynamicstyles.getprojectkeybyid.call(this,this.props.match.params.projectid)
-            if (myproject.hasOwnProperty("schedulelabor")) {
-                // eslint-disable-next-line
-                myproject.schedulelabor.mylabor.map((mylabor, j) => {
-                    if (mylabor.proposalid === proposalid && (mylabor.csiid === csiid)) {
-                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].profit = profit;
-                        let k = dynamicstyles.getproposalkeybyid.call(this,proposalid)
-                        myuser.company.projects.myproject[i].proposals.myproposal[k].updated = UTCTimefromCurrentDate()
-                    }
+            if (myproject) {
+                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
+                if (myproject.hasOwnProperty("schedulelabor")) {
+                    // eslint-disable-next-line
+                    myproject.schedulelabor.mylabor.map((mylabor, j) => {
+                        if (mylabor.proposalid === proposalid && (mylabor.csiid === csiid)) {
+                            myuser.company.projects.myproject[i].schedulelabor.mylabor[j].profit = profit;
+                            let k = dynamicstyles.getproposalkeybyid.call(this, proposalid)
+                            myuser.company.projects.myproject[i].proposals.myproposal[k].updated = UTCTimefromCurrentDate()
+                        }
 
-                })
+                    })
+
+                }
+                if (myproject.hasOwnProperty("schedulematerials")) {
+                    // eslint-disable-next-line
+                    myproject.schedulematerials.mymaterial.map((mymaterial, j) => {
+                        if (mymaterial.proposalid === proposalid && (mymaterial.csiid === csiid)) {
+                            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].profit = profit;
+                            let k = dynamicstyles.getproposalkeybyid.call(this, proposalid)
+                            myuser.company.projects.myproject[i].proposals.myproposal[k].updated = UTCTimefromCurrentDate()
+                        }
+
+                    })
+                }
+                if (myproject.hasOwnProperty("scheduleequipment")) {
+                    // eslint-disable-next-line
+                    myproject.scheduleequipment.myequipment.map((myequipment, j) => {
+                        if (myequipment.proposalid === proposalid && (myequipment.csiid === csiid)) {
+                            myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].profit = profit;
+                            let k = dynamicstyles.getproposalkeybyid.call(this, proposalid)
+                            myuser.company.projects.myproject[i].proposals.myproposal[k].updated = UTCTimefromCurrentDate()
+                        }
+
+                    })
+                }
+                this.props.reduxUser(myuser)
+                this.setState({ render: 'render' })
 
             }
-            if (myproject.hasOwnProperty("schedulematerials")) {
-                // eslint-disable-next-line
-                myproject.schedulematerials.mymaterial.map((mymaterial, j) => {
-                    if (mymaterial.proposalid === proposalid && (mymaterial.csiid === csiid)) {
-                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].profit = profit;
-                        let k = dynamicstyles.getproposalkeybyid.call(this,proposalid)
-                        myuser.company.projects.myproject[i].proposals.myproposal[k].updated = UTCTimefromCurrentDate()
-                    }
-
-                })
-            }
-            if (myproject.hasOwnProperty("scheduleequipment")) {
-                // eslint-disable-next-line
-                myproject.scheduleequipment.myequipment.map((myequipment, j) => {
-                    if (myequipment.proposalid === proposalid && (myequipment.csiid === csiid)) {
-                        myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].profit = profit;
-                        let k = dynamicstyles.getproposalkeybyid.call(this,proposalid)
-                        myuser.company.projects.myproject[i].proposals.myproposal[k].updated = UTCTimefromCurrentDate()
-                    }
-
-                })
-            }
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
-
-        }
 
         }
     }
     render() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles()
-        const titleFont = dynamicstyles.gettitlefont.call(this);
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        const proposal = dynamicstyles.getproposalbyid.call(this,this.props.match.params.proposalid)
-        const myuser =dynamicstyles.getuser.call(this)
-        console.log(proposal)
+        const proposal = dynamicstyles.getproposalbyid.call(this, this.props.match.params.proposalid)
+        const myuser = dynamicstyles.getuser.call(this)
+      
         const getupdated = () => {
-            if(proposal.updated) {
-                return(<div style={{...styles.generalFlex, ...styles.bottomMargin10}}>
-                    <div style={{...styles.flex1,...regularFont,...styles.generalFont}}>
-                       Proposal Last Updated on {UTCStringFormatDateforProposal(proposal.updated)}
+            if (proposal.updated) {
+                return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin10 }}>
+                    <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
+                        Proposal Last Updated on {UTCStringFormatDateforProposal(proposal.updated)}
                     </div>
-                    </div>)
+                </div>)
             }
         }
         const getapproved = () => {
-            if(proposal.approved) {
-          
-                return(<div style={{...styles.generalFlex, ...styles.bottomMargin10}}>
-                    <div style={{...styles.flex1,...regularFont,...styles.generalFont}}>
+            if (proposal.approved) {
+
+                return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin10 }}>
+                    <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
                         Proposal Approved on {UTCStringFormatDateforProposal(proposal.approved)}
                     </div>
-                    </div>)
+                </div>)
             }
         }
-        if(myuser) {
+        if (myuser) {
             const checkmanager = dynamicstyles.checkmanager.call(this);
-            if(checkmanager) {
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
-
+            if (checkmanager) {
+                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                return (
                     <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...titleFont, ...styles.alignCenter }}>
-                            /viewproposal/{this.props.match.params.proposalid}
+                        <div style={{ ...styles.flex1 }}>
+
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>{project.title}</span> <br />
+                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/viewproposal</span> <br />
+                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{this.props.match.params.proposalid}</span>
+                                </div>
+                            </div>
+
+                            {dynamicstyles.showbidtable.call(this)}
+
+                            {getupdated()}
+
+                            {getapproved()}
+
+                            {dynamicstyles.showsaveproject.call(this)}
+
+
+
                         </div>
                     </div>
+                )
 
-                    {dynamicstyles.showbidtable.call(this)}
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Only Managers can view Proposal </span>
+                </div>)
+            }
 
-                    {getupdated()}
-
-                    {getapproved()}
-
-                    {dynamicstyles.showsaveproject.call(this)}
-
-                    
-
-                </div>
-            </div>
-        )
-
-        }  else {
-            return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Only Managers can view Proposal </span>
+        } else {
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Proposal </span>
             </div>)
         }
-
-    }  else {
-        return(<div style={{...styles.generalContainer,...regularFont}}>
-            <span style={{...styles.generalFont,...regularFont}}>Please Login to View Proposal </span>
-        </div>)
-    }
     }
 }
 
@@ -644,7 +654,7 @@ function mapStateToProps(state) {
         projectid: state.projectid,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
-        csis:state.csis
+        csis: state.csis
     }
 }
 

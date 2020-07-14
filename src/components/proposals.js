@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { CreateProposal, activeCheckIcon } from './svg'
+import { minusIcon, BluePlus, CheckedBox, EmptyBox } from './svg'
 import { UTCStringFormatDateforProposal, CreateMyProposal, inputDateObjOutputAdjString } from './functions'
 import { Link } from 'react-router-dom';
 import MakeID from './makeids';
@@ -11,7 +11,7 @@ import MakeID from './makeids';
 class Proposals extends Component {
     constructor(props) {
         super(props)
-        this.state = { width: 0, height: 0, activeproposalid: false, updated: new Date(), approved: '' }
+        this.state = { width: 0, height: 0, activeproposalid: false, updated: new Date(), approved: '', showlabor:true,showmaterials:true,showequipment:true }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -109,20 +109,20 @@ class Proposals extends Component {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
-                const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this,equipmentid)
-                if(myequipment) {
-                    let j = dynamicstyles.getscheduleequipmentkeybyid.call(this,equipmentid)
+                const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, equipmentid)
+                if (myequipment) {
+                    let j = dynamicstyles.getscheduleequipmentkeybyid.call(this, equipmentid)
                     myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].profit = profit;
                     this.props.reduxUser(myuser);
-                    if(myequipment.proposalid) {
-                        dynamicstyles.updateproposal.call(this,myequipment.proposalid)
+                    if (myequipment.proposalid) {
+                        dynamicstyles.updateproposal.call(this, myequipment.proposalid)
                     } else {
                         this.setState({ render: 'render' })
                     }
-                    
+
 
                 }
-             
+
             }
         }
     }
@@ -134,20 +134,20 @@ class Proposals extends Component {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
-                const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,materialid)
-                if(mymaterial) {
-                let j = dynamicstyles.getactivematerialkeybyid.call(this, materialid);
-                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].profit = profit;
-                this.props.reduxUser(myuser);
-                if(mymaterial.proposalid) {
-                    dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
+                const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, materialid)
+                if (mymaterial) {
+                    let j = dynamicstyles.getactivematerialkeybyid.call(this, materialid);
+                    myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].profit = profit;
+                    this.props.reduxUser(myuser);
+                    if (mymaterial.proposalid) {
+                        dynamicstyles.updateproposal.call(this, mymaterial.proposalid)
 
-                } else {
-                    this.setState({ render: 'render' })
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+
                 }
 
-                }
-              
             }
         }
     }
@@ -159,17 +159,17 @@ class Proposals extends Component {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
-                const mylabor = dynamicstyles.getschedulelaborbyid.call(this,laborid)
-                if(mylabor) {
-                let j = dynamicstyles.getschedulelaborkeybyid.call(this, laborid);
-                myuser.company.projects.myproject[i].schedulelabor.mylabor[j].profit = profit;
-                this.props.reduxUser(myuser);
-                if(mylabor.proposalid) {
-                    dynamicstyles.updateproposal.call(this,mylabor.proposalid)
-                } else {
-                    this.setState({ render: 'render' })
-                }
-                
+                const mylabor = dynamicstyles.getschedulelaborbyid.call(this, laborid)
+                if (mylabor) {
+                    let j = dynamicstyles.getschedulelaborkeybyid.call(this, laborid);
+                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].profit = profit;
+                    this.props.reduxUser(myuser);
+                    if (mylabor.proposalid) {
+                        dynamicstyles.updateproposal.call(this, mylabor.proposalid)
+                    } else {
+                        this.setState({ render: 'render' })
+                    }
+
                 }
             }
         }
@@ -270,11 +270,11 @@ class Proposals extends Component {
     handlecheckicon(proposalid) {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
-        const checkButton = dynamicstyles.getCheckButton.call(this)
+        const checkButton = dynamicstyles.getcreateproposal.call(this)
         if (this.state.activeproposalid === proposalid) {
-            return (<button style={{ ...styles.generalButton, ...checkButton }}>{activeCheckIcon()}</button>)
+            return (<button style={{ ...styles.generalButton, ...checkButton, ...styles.addRightMargin }} onClick={() => { this.makeproposalactive(proposalid) }}>{minusIcon()}</button>)
         } else {
-            return;
+            return (<button style={{ ...styles.generalButton, ...checkButton, ...styles.addRightMargin }} onClick={() => { this.makeproposalactive(proposalid) }}>{BluePlus()}</button>)
         }
     }
     makeproposalactive(proposalid) {
@@ -293,36 +293,15 @@ class Proposals extends Component {
         if (myproposal.updated) {
             updateinfo = `Updated ${UTCStringFormatDateforProposal(myproposal.updated)}`
         }
-        if (this.state.width > 1200) {
-            return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont }}>
-                <div style={{ ...styles.flex1 }}>
+     
+            return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont, ...styles.marginLeft60 }}>
+                <div style={{ ...styles.flex1 }} onClick={() => { this.makeproposalactive(proposalid) }}>
                     {this.handlecheckicon(myproposal.proposalid)}
-                </div>
-                <div style={{ ...styles.flex5 }} onClick={() => { this.makeproposalactive(proposalid) }}>
-                    Proposal ID {myproposal.proposalid} {updateinfo}
+                    <span style={{ ...regularFont, ...styles.generalFont }}>Proposal ID {myproposal.proposalid} {updateinfo}</span>
                 </div>
             </div>)
 
-        } else if (this.state.width > 800) {
-            return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont }}>
-                <div style={{ ...styles.flex1 }}>
-                    {this.handlecheckicon(myproposal.proposalid)}
-                </div>
-                <div style={{ ...styles.flex3 }} onClick={() => { this.makeproposalactive(proposalid) }}>
-                    Proposal ID {myproposal.proposalid} {updateinfo}
-                </div>
-            </div>)
-
-        } else {
-            return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont }}>
-                <div style={{ ...styles.flex1 }}>
-                    {this.handlecheckicon(myproposal.proposalid)}
-                </div>
-                <div style={{ ...styles.flex2 }} onClick={() => { this.makeproposalactive(proposalid) }}>
-                    Proposal ID {myproposal.proposalid} {updateinfo}
-                </div>
-            </div>)
-        }
+      
     }
 
 
@@ -331,16 +310,16 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            const mylabor = dynamicstyles.getschedulelaborbyid.call(this,laborid)
-            if(mylabor) {
-            let j = dynamicstyles.getschedulelaborkeybyid.call(this, laborid)
-            myuser.company.projects.myproject[i].schedulelabor.mylabor[j].laborrate = laborrate;
-            this.props.reduxUser(myuser);
-            if(mylabor.proposalid) {
-                dynamicstyles.updateproposal.call(this,mylabor.proposalid)
-            } else {
-                this.setState({ render: 'render' })
-            }
+            const mylabor = dynamicstyles.getschedulelaborbyid.call(this, laborid)
+            if (mylabor) {
+                let j = dynamicstyles.getschedulelaborkeybyid.call(this, laborid)
+                myuser.company.projects.myproject[i].schedulelabor.mylabor[j].laborrate = laborrate;
+                this.props.reduxUser(myuser);
+                if (mylabor.proposalid) {
+                    dynamicstyles.updateproposal.call(this, mylabor.proposalid)
+                } else {
+                    this.setState({ render: 'render' })
+                }
 
             }
         }
@@ -350,16 +329,16 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this,equipmentid)
-            if(myequipment) {
-            let j = dynamicstyles.getactiveequipmentkeybyid.call(this, equipmentid);
-            myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate;
-            this.props.reduxUser(myuser);
-            if(myequipment.proposalid) {
-                dynamicstyles.updateproposal.call(this,myequipment.proposalid)
-            } else {
-                this.setState({ render: 'render' })
-            }
+            const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, equipmentid)
+            if (myequipment) {
+                let j = dynamicstyles.getactiveequipmentkeybyid.call(this, equipmentid);
+                myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate;
+                this.props.reduxUser(myuser);
+                if (myequipment.proposalid) {
+                    dynamicstyles.updateproposal.call(this, myequipment.proposalid)
+                } else {
+                    this.setState({ render: 'render' })
+                }
 
             }
         }
@@ -369,16 +348,16 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,materialid)
-            if(mymaterial) {
-            let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
-            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unit = unit;
-            this.props.reduxUser(myuser)
-            if(mymaterial.proposalid) {
-                dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
-            } else {
-                this.setState({ render: 'render' })
-            }
+            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, materialid)
+            if (mymaterial) {
+                let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
+                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unit = unit;
+                this.props.reduxUser(myuser)
+                if (mymaterial.proposalid) {
+                    dynamicstyles.updateproposal.call(this, mymaterial.proposalid)
+                } else {
+                    this.setState({ render: 'render' })
+                }
 
             }
         }
@@ -388,16 +367,16 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,materialid)
-            if(mymaterial) {
-            let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
-            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unitcost = unitcost;
-            this.props.reduxUser(myuser)
-            if(mymaterial.proposalid) {
-                dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
-            } else {
-                this.setState({ render: 'render' })
-            }
+            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, materialid)
+            if (mymaterial) {
+                let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
+                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unitcost = unitcost;
+                this.props.reduxUser(myuser)
+                if (mymaterial.proposalid) {
+                    dynamicstyles.updateproposal.call(this, mymaterial.proposalid)
+                } else {
+                    this.setState({ render: 'render' })
+                }
 
             }
         }
@@ -407,19 +386,19 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
             let i = dynamicstyles.getprojectkey.call(this);
-            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,materialid)
-            if(mymaterial) {
-            let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
-            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].quantity = quantity;
-            this.props.reduxUser(myuser)
-            if(mymaterial.proposalid) {
-                dynamicstyles.updateproposal.call(this,mymaterial.proposalid)
-            } else {
-                this.setState({ render: 'render' })
-            }
-            
-
+            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, materialid)
+            if (mymaterial) {
+                let j = dynamicstyles.getschedulematerialkeybyid.call(this, materialid)
+                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].quantity = quantity;
+                this.props.reduxUser(myuser)
+                if (mymaterial.proposalid) {
+                    dynamicstyles.updateproposal.call(this, mymaterial.proposalid)
+                } else {
+                    this.setState({ render: 'render' })
                 }
+
+
+            }
         }
     }
     showallpayitems() {
@@ -430,14 +409,20 @@ class Proposals extends Component {
             // eslint-disable-next-line
             payitems.map(item => {
                 if (item.hasOwnProperty("laborid")) {
+                    if(this.state.showlabor) {
                     items.push(dynamicstyles.showlaboritem.call(this, item))
+                    }
                 }
                 if (item.hasOwnProperty("materialid")) {
+                    if(this.state.showmaterials) {
                     items.push(dynamicstyles.showmaterialitem.call(this, item))
+                    }
 
                 }
                 if (item.hasOwnProperty("equipmentid")) {
+                    if(this.state.showequipment) {
                     items.push(dynamicstyles.showequipmentitem.call(this, item))
+                    }
 
                 }
 
@@ -494,69 +479,117 @@ class Proposals extends Component {
     render() {
         let dynamicstyles = new DynamicStyles();
         let styles = MyStylesheet();
-        let titleFont = dynamicstyles.gettitlefont.call(this)
-        let proposalButton = dynamicstyles.getcreateproposal.call(this)
         let headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFont  = dynamicstyles.getRegularFont.call(this)
+        let proposalButton = dynamicstyles.getcreateproposal.call(this)
+        const regularFont = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
-        if(myuser) {
-            const checkmanager = dynamicstyles.checkmanager.call(this);
-            if(checkmanager) {
-            const project = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid);
-            if(project) {
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1,  ...styles.alignCenter }}>
-                            <span style={{ ...styles.generalFont, ...titleFont}}>/proposals</span><br/>
-                            <span style={{ ...styles.generalFont, ...titleFont}}>{project.title}</span>
-                        </div>
-
-                    </div>
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...proposalButton }} onClick={() => { this.createnewproposal() }}>{CreateProposal()}</button>
-                        </div>
-
-                    </div>
-
-                    {this.showproposalids()}
-
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter, ...headerFont, ...styles.showBorder }}>
-                            Labor
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter, ...headerFont, ...styles.showBorder }}>
-                            Equipment
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter, ...headerFont, ...styles.showBorder }}>
-                            Materials
-                        </div>
-
-                    </div>
-
-                    {this.showallpayitems()}
-                    {this.showproposallink()}
-                    {dynamicstyles.showsaveproject.call(this)}
-                </div>
-            </div>
-        )
+        const checkfield = dynamicstyles.getcheckfield.call(this)
+        const laboricon = () => {
+            if (this.state.showlabor) {
+                return (<div style={{ ...styles.generalContainer }}>
+                    <button style={{ ...styles.generalButton, ...checkfield }} onClick={()=>{this.setState({showlabor:false})}}>{CheckedBox()}</button>
+                </div>)
 
             } else {
-                return(<span>&nbsp;</span>)
+                return (<div style={{ ...styles.generalContainer }}>
+                    <button style={{ ...styles.generalButton, ...checkfield }} onClick={()=>{this.setState({showlabor:true})}}>{EmptyBox()}</button>
+                </div>)
             }
 
-        } else {
-            return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Only Managers can view Proposals</span>
-            </div>)
+        }
+        const materialicon = () => {
+            if (this.state.showmaterials) {
+                return (<div style={{ ...styles.generalContainer }}>
+                    <button style={{ ...styles.generalButton, ...checkfield }} onClick={()=>{this.setState({showmaterials:false})}}>{CheckedBox()}</button>
+                </div>)
+            } else {
+                return (<div style={{ ...styles.generalContainer }}>
+                    <button style={{ ...styles.generalButton, ...checkfield }} onClick={()=>{this.setState({showmaterials:true})}}>{EmptyBox()}</button>
+                </div>)
+            }
+
+
         }
 
+        const equipmenticon = () => {
+            if (this.state.showequipment) {
+                return (<div style={{ ...styles.generalContainer }} onClick={()=>{this.setState({showequipment:false})}}>
+                    <button style={{ ...styles.generalButton, ...checkfield }}>{CheckedBox()}</button>
+                </div>)
+
+            } else {
+                return (<div style={{ ...styles.generalContainer }}>
+                    <button style={{ ...styles.generalButton, ...checkfield }} onClick={()=>{this.setState({showequipment:true})}}>{EmptyBox()}</button>
+                </div>)
+            }
+
+        }
+
+        if (myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this);
+            if (checkmanager) {
+                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+                if (project) {
+                    return (
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+                                <div style={{ ...styles.generalFlex }}>
+                                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                        <span style={{ ...styles.generalFont, ...headerFont,...styles.boldFont }}>/proposals</span><br />
+                                        <span style={{ ...styles.generalFont, ...headerFont,...styles.boldFont }}>{project.title}</span>
+                                    </div>
+
+                                </div>
+
+                                <div style={{ ...styles.generalFlex }}>
+                                    <div style={{ ...styles.flex1, ...styles.generalFont }}>
+                                        <button style={{ ...styles.generalButton, ...proposalButton }} onClick={() => { this.createnewproposal() }}>{BluePlus()}</button><span style={{ ...styles.generalFont, ...regularFont }}>Create New Proposal</span>
+                                    </div>
+
+                                </div>
+
+                                <div style={{ ...styles.generalFlex, ...styles.marginLeft30 }}>
+                                    <div style={{ ...styles.flex1, ...styles.generalFont }}>
+                                        <button style={{ ...styles.generalButton, ...proposalButton }}>{minusIcon()}</button><span style={{ ...styles.generalFont, ...regularFont }}>My Proposals</span>
+                                    </div>
+                                </div>
+
+                                {this.showproposalids()}
+
+                                <div style={{ ...styles.generalFlex }}>
+                                    <div style={{ ...styles.flex1 }}>
+                                        <span style={{ ...regularFont, ...styles.generalFont }}>Labor</span>  {laboricon()}
+                                    </div>
+                                    <div style={{ ...styles.flex1 }}>
+                                        <span style={{ ...regularFont, ...styles.generalFont }}>Equipment</span>  {equipmenticon()}
+                                    </div>
+                                    <div style={{ ...styles.flex1 }}>
+                                        <span style={{ ...regularFont, ...styles.generalFont }}>Materials</span> {materialicon()}
+                                    </div>
+
+                                </div>
+
+                                {this.showallpayitems()}
+                                {this.showproposallink()}
+                                {dynamicstyles.showsaveproject.call(this)}
+                            </div>
+                        </div>
+                    )
+
+                } else {
+                    return (<span>&nbsp;</span>)
+                }
+
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Only Managers can view Proposals</span>
+                </div>)
+            }
+
 
         } else {
-            return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Proposals </span>
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Proposals </span>
             </div>)
         }
 
@@ -574,7 +607,7 @@ function mapStateToProps(state) {
         projectid: state.projectid,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
-        csis:state.csis
+        csis: state.csis
     }
 }
 

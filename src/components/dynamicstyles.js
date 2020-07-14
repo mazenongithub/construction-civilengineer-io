@@ -34,6 +34,16 @@ class DynamicStyles {
 
     }
 
+    getcheckfield() {
+        if(this.state.width>1200) {
+            return({width:'77px'})
+        } else if (this.state.width>800) {
+            return({width:'55px'})
+        } else {
+            return({width:'33px'})
+        }
+    }
+
     getdropicon() {
         if (this.state.width > 1200) {
             return (
@@ -475,21 +485,42 @@ class DynamicStyles {
                     title:'Schedule',
                     id:'Schedule',
                     url:'http://civilengineer.io/construction/slides/schedule.png',
-                    caption:`New Scheduling Cost Component, Includes Labor, Equipment, Materials, Milestones, Construction Spec, Timein, Timeout, Employee, Equipment, and Material subcomponents, handles scheduling and cost estimating`
+                    caption:`Schedule cost component adds construction schedule and does cost estimating. Enter the labor, materials, and equipment required to complete the job`
+                },
+
+                {
+                    title:'Actual',
+                    id:'actual',
+                    url:'http://civilengineer.io/construction/slides/actual.png',
+                    caption:`Actual Cost component records cost separately than schedule. These are the charges that appear in the invoice for payment. You cannot update an invoice item if it has already been settled`
                 },
               
                 {
                     title:'Proposal',
                     id:'proposals',
                     url:'http://civilengineer.io/construction/slides/proposals.png',
-                    caption:`Proposal components adds direct cost items. Allows you to make adjustments and add profit factor. Profit is attached to each item. `
+                    caption:`Proposal Component allows you to easily add your schedule items and send it to the PM in a proposal. You can see the proposal in the view proposal component  `
+                },
+                {
+                    title:'View Proposal',
+                    id:'viewinvoice',
+                    url:'http://civilengineer.io/construction/slides/viewproposal.png',
+                    caption:`View Proposal components allows you to add the quantity and the unit to produce the Unit Price. When you adjust profit, it changes the profit factor for all of the items `
+                },
+
+                {
+                    title:'Invoices',
+                    id:'invoices',
+                    url:'http://civilengineer.io/construction/slides/invoices.png',
+                    caption:`Invoice Component allows you to easily add items to the invoice, add profit, and make any adjustments to payitems. When you save it will notify the PM you have updated the invoice. You cannot update an item after it has been settled `
                 },
   
+  
                 {
-                    title:'Invoice',
-                    id:'invoice',
+                    title:'View Invoice',
+                    id:'viewinvoice',
                     url:'http://civilengineer.io/construction/slides/viewinvoice.png',
-                    caption:`Invoice after transfer has been completed to the contractor `
+                    caption:`ViewInvoice component after transfers has been completed to the contractor through PM `
                 },
                 {
                     title:'Labor, Equipment, Materials',
@@ -2427,19 +2458,16 @@ class DynamicStyles {
     getsavecompanyicon() {
         if (this.state.width > 1200) {
             return ({
-                width: '413px',
-                height: '79px'
+                width: '273px'
             })
 
         } else if (this.state.width > 800) {
             return ({
-                width: '309px',
-                height: '67px'
+                width: '235px'
             })
         } else {
             return ({
-                width: '222px',
-                height: '46px'
+                width: '197px'
             })
         }
 
@@ -2447,19 +2475,16 @@ class DynamicStyles {
     getsaveprojecticon() {
         if (this.state.width > 1200) {
             return ({
-                width: '452px',
-                height: '87px'
+                width: '273px'
             })
 
         } else if (this.state.width > 800) {
             return ({
-                width: '342px',
-                height: '72px'
+                width: '235px'
             })
         } else {
             return ({
-                width: '234px',
-                height: '51px'
+                width: '197px'
             })
         }
 
@@ -2501,23 +2526,12 @@ class DynamicStyles {
 
 
     getcreateproposal() {
-        if (this.state.width > 1200) {
+       
             return ({
-                width: '419px',
-                height: '82px'
+                width: '32px',
+                height: '32px'
             })
-
-        } else if (this.state.width > 800) {
-            return ({
-                width: '308px',
-                height: '64px'
-            })
-        } else {
-            return ({
-                width: '197px',
-                height: '57px'
-            })
-        }
+        
 
     }
     getallusers() {
@@ -3079,13 +3093,13 @@ class DynamicStyles {
 
         return (
 
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
                     {myequipment.equipment} CSI: {csi.csi} - {csi.title}   TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)}
                     Total Hours:{totalhours.toFixed(2)} x $<input type="text" style={{ ...styles.generalFont, ...smallFont, ...largeField }}
                         onChange={event => { this.handleequipmentrate(event.target.value, item.equipmentid) }}
-                        value={equipmentrate} /> = {amount} x {`${Number(1 + profit).toFixed(2)}`} = ${Number(amount * (1 + profit)).toFixed(2)}
+                        value={equipmentrate} /> = {amount} x {+Number(1+profit).toFixed(4)}= ${Number(amount * (1 + profit)).toFixed(2)}
                 </div>
                 <div style={{ ...styles.flex1 }}>
 
@@ -3119,7 +3133,7 @@ class DynamicStyles {
         const proposalFieldLarge = dynamicstyles.getitemfieldlarge.call(this)
         const proposalFieldSmall = dynamicstyles.getitemfieldsmall.call(this)
         return (
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
                     {inputUTCStringForMaterialIDWithTime(item.timein)} {material.material} CSI: {csi.csi}-{csi.title}
@@ -3129,7 +3143,7 @@ class DynamicStyles {
                         style={{ ...styles.generalFont, ...smallFont, ...proposalFieldLarge }} />   x $
                      <input type="text" value={item.unitcost}
                         onChange={event => { this.handlematerialunitcost(event.target.value, item.materialid) }}
-                        style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} /> / <input type="text" value={item.unit} onChange={event => { this.handlematerialunit(event.target.value, item.materialid) }} style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} />  = ${amount.toFixed(2)} x {profit} = ${Number(amount * profit).toFixed(2)}
+                        style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} /> / <input type="text" value={item.unit} onChange={event => { this.handlematerialunit(event.target.value, item.materialid) }} style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} />  = ${amount.toFixed(2)} x {+Number(profit).toFixed(4)} = ${Number(amount * profit).toFixed(2)}
                 </div>
                 <div style={{ ...styles.flex1 }}>
 
@@ -3167,7 +3181,7 @@ class DynamicStyles {
             <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
-                    {employee.firstname} {employee.lastname} TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)} CSI {csi.csi}-{csi.title}  Total Hours {totalhours.toFixed(2)} Hrs at  $<input type="text" value={item.laborrate} style={{ ...styles.generalFont, ...largeField, ...smallFont }} onChange={event => { this.handlelaborrate(event.target.value, item.laborid) }} />=  ${amount.toFixed(2)}  x {profit} = ${Number(amount * profit).toFixed(2)}
+                    {employee.firstname} {employee.lastname} TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)} CSI {csi.csi}-{csi.title}  Total Hours {totalhours.toFixed(2)} Hrs at  $<input type="text" value={item.laborrate} style={{ ...styles.generalFont, ...largeField, ...smallFont }} onChange={event => { this.handlelaborrate(event.target.value, item.laborid) }} />=  ${amount.toFixed(2)}  x {+Number(profit).toFixed(4)} = ${Number(amount * profit).toFixed(2)}
                 </div>
                 <div style={{ ...styles.flex1 }}>
 
@@ -3194,7 +3208,7 @@ class DynamicStyles {
         const equipmentrate = `$${+Number(equipment.equipmentrate).toFixed(2)}/hr`
         const removeIcon = dynamicstyles.getremoveicon.call(this)
         const amount = (calculatetotalhours(equipment.timeout, equipment.timein) * Number(equipment.equipmentrate))
-        return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }} key={equipment.equipmentid}>
+        return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }} key={equipment.equipmentid}>
             <span style={{ ...this.getactivematerialbackground(equipment.equipmentid) }} onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>{myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
                 CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone} <br />
                 Total Hours: {totalhours} x  {equipmentrate} = ${amount.toFixed(2)}

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, inputUTCStringForLaborID } from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, inputUTCStringForLaborID, isNumeric } from './functions';
 import { Link } from 'react-router-dom'
 class ViewInvoice extends Component {
     constructor(props) {
@@ -402,7 +402,7 @@ class ViewInvoice extends Component {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
 
-
+        if(isNumeric(quantity)) {
         if (myuser) {
             const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
             if (myproject) {
@@ -429,6 +429,10 @@ class ViewInvoice extends Component {
 
             }
         }
+
+    } else {
+        alert(`Quantity has to be numeric `)
+    }
 
     }
 
@@ -734,7 +738,8 @@ class ViewInvoice extends Component {
         const titleFont = dynamicstyles.gettitlefont.call(this)
         const invoice = dynamicstyles.getinvoicebyid.call(this, this.props.match.params.invoiceid)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = dynamicstyles.getuser.call(this);
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
         const updated = () => {
             if (invoice.updated) {
                 return (<div style={{ ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.topMargin15 }}>Invoice Updated On {UTCStringFormatDateforProposal(invoice.updated)}</div>)
@@ -751,15 +756,21 @@ class ViewInvoice extends Component {
 
 if(myuser) {
 
+   
     const checkmanager = dynamicstyles.checkmanager.call(this)
     if (checkmanager) {
+
+        const project = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
+        if(project) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
 
                     <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...titleFont, ...styles.alignCenter }}>
-                            /viewinvoice/{this.props.match.params.invoiceid}
+                        <div style={{ ...styles.flex1,  ...styles.alignCenter }}>
+                           <span style={{...styles.generalFont, ...headerFont,...styles.boldFont}}>{project.title}</span> <br/>
+                           <span style={{...styles.generalFont, ...headerFont,...styles.boldFont}}>/viewinvoice</span> <br/>
+                           <span style={{...styles.generalFont, ...headerFont,...styles.boldFont}}>/{this.props.match.params.invoiceid}</span>
                         </div>
                     </div>
 
@@ -772,6 +783,8 @@ if(myuser) {
                 </div>
             </div>
         )
+
+    }
 
     } else {
         return(<div style={{...styles.generalContainer,...regularFont}}>

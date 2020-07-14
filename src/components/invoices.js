@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { activeCheckIcon, CreateInvoiceIcon } from './svg'
+import { redMinus, RedPlus, CheckedBox, EmptyBox } from './svg'
 import { UTCStringFormatDateforProposal, CreateInvoice, inputDateObjOutputAdjString, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime } from './functions'
 import { Link } from 'react-router-dom';
 import MakeID from './makeids';
@@ -11,7 +11,7 @@ import MakeID from './makeids';
 class Invoices extends Component {
     constructor(props) {
         super(props)
-        this.state = { width: 0, height: 0, activeinvoiceid: false, updated: new Date(), approved: '' }
+        this.state = { width: 0, height: 0, activeinvoiceid: false, updated: new Date(), approved: '', showlabor:true,showmaterials:true,showequipment:true }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -142,55 +142,55 @@ class Invoices extends Component {
             if (this.state.activeinvoiceid) {
 
                 let invoiceid = this.state.activeinvoiceid;
-          
-                    let i = dynamicstyles.getprojectkey.call(this)
 
-                    let result = this.checkinvoiceitem(item);
-                    let j = false;
-                    if (result === 'add') {
+                let i = dynamicstyles.getprojectkey.call(this)
 
-                        if (item.hasOwnProperty("laborid")) {
-                            j = dynamicstyles.getactuallaborkeybyid.call(this, item.laborid)
-                            myuser.company.projects.myproject[i].actuallabor.mylabor[j].invoiceid = invoiceid;
-                            this.props.reduxUser(myuser);
-                            this.setState({ render: 'render' })
-                        } else if (item.hasOwnProperty("materialid")) {
-                            j = dynamicstyles.getactualmaterialkeybyid.call(this, item.materialid)
-                            myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].invoiceid = invoiceid;
-                            this.props.reduxUser(myuser);
-                            this.setState({ render: 'render' })
-                        } else if (item.hasOwnProperty("equipmentid")) {
-                            j = dynamicstyles.getactualequipmentkeybyid.call(this, item.equipmentid);
+                let result = this.checkinvoiceitem(item);
+                let j = false;
+                if (result === 'add') {
 
-                            myuser.company.projects.myproject[i].actualequipment.myequipment[j].invoiceid = invoiceid;
-                            this.props.reduxUser(myuser);
-                            this.setState({ render: 'render' })
-                        }
+                    if (item.hasOwnProperty("laborid")) {
+                        j = dynamicstyles.getactuallaborkeybyid.call(this, item.laborid)
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].invoiceid = invoiceid;
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    } else if (item.hasOwnProperty("materialid")) {
+                        j = dynamicstyles.getactualmaterialkeybyid.call(this, item.materialid)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].invoiceid = invoiceid;
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    } else if (item.hasOwnProperty("equipmentid")) {
+                        j = dynamicstyles.getactualequipmentkeybyid.call(this, item.equipmentid);
 
-                    } else if (result === 'remove') {
-
-                        if (item.hasOwnProperty("laborid")) {
-                            j = dynamicstyles.getactuallaborkeybyid.call(this, item.laborid)
-                            myuser.company.projects.myproject[i].actuallabor.mylabor[j].invoiceid = ""
-                            this.props.reduxUser(myuser);
-                            this.setState({ render: 'render' })
-                        } else if (item.hasOwnProperty("materialid")) {
-                            j = dynamicstyles.getactualmaterialkeybyid.call(this, item.materialid)
-                            myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].invoiceid = ""
-                            this.props.reduxUser(myuser);
-                            this.setState({ render: 'render' })
-                        } else if (item.hasOwnProperty("equipmentid")) {
-                            j = dynamicstyles.getactualequipmentkeybyid.call(this, item.equipmentid);
-
-                            myuser.company.projects.myproject[i].actualequipment.myequipment[j].invoiceid = ""
-                            this.props.reduxUser(myuser);
-                            this.setState({ render: 'render' })
-                        }
-
-
+                        myuser.company.projects.myproject[i].actualequipment.myequipment[j].invoiceid = invoiceid;
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
                     }
 
-                
+                } else if (result === 'remove') {
+
+                    if (item.hasOwnProperty("laborid")) {
+                        j = dynamicstyles.getactuallaborkeybyid.call(this, item.laborid)
+                        myuser.company.projects.myproject[i].actuallabor.mylabor[j].invoiceid = ""
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    } else if (item.hasOwnProperty("materialid")) {
+                        j = dynamicstyles.getactualmaterialkeybyid.call(this, item.materialid)
+                        myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].invoiceid = ""
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    } else if (item.hasOwnProperty("equipmentid")) {
+                        j = dynamicstyles.getactualequipmentkeybyid.call(this, item.equipmentid);
+
+                        myuser.company.projects.myproject[i].actualequipment.myequipment[j].invoiceid = ""
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    }
+
+
+                }
+
+
 
             }
         }
@@ -220,11 +220,11 @@ class Invoices extends Component {
     handlecheckicon(invoiceid) {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
-        const checkButton = dynamicstyles.getCheckButton.call(this)
+        const checkButton = dynamicstyles.getcreateproposal.call(this)
         if (this.state.activeinvoiceid === invoiceid) {
-            return (<button style={{ ...styles.generalButton, ...checkButton }}>{activeCheckIcon()}</button>)
+            return (<button style={{ ...styles.generalButton, ...checkButton, ...styles.addRightMargin }} onClick={() => { this.makeinvoiceactive(invoiceid) }}>{redMinus()}</button>)
         } else {
-            return;
+            return (<button style={{ ...styles.generalButton, ...checkButton, ...styles.addRightMargin }} onClick={() => { this.makeinvoiceactive(invoiceid) }}>{RedPlus()}</button>)
         }
     }
     makeinvoiceactive(invoiceid) {
@@ -275,36 +275,15 @@ class Invoices extends Component {
         if (myinvoice.updated) {
             updateinfo = `Updated ${UTCStringFormatDateforProposal(myinvoice.updated)}`
         }
-        if (this.state.width > 1200) {
-            return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont }}>
-                <div style={{ ...styles.flex1 }}>
+      
+            return(<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont, ...styles.marginLeft60 }}>
+                <div style={{ ...styles.flex1 }} onClick={() => { this.makeinvoiceactive(invoiceid) }}>
                     {this.handlecheckicon(myinvoice.invoiceid)}
-                </div>
-                <div style={{ ...styles.flex5 }} onClick={() => { this.makeinvoiceactive(invoiceid) }}>
-                    Invoice ID {myinvoice.invoiceid} {updateinfo}
+                    <span style={{ ...regularFont, ...styles.generalFont }}> Invoice ID {myinvoice.invoiceid} {updateinfo}</span>
                 </div>
             </div>)
+           
 
-        } else if (this.state.width > 800) {
-            return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont }}>
-                <div style={{ ...styles.flex1 }}>
-                    {this.handlecheckicon(myinvoice.invoiceid)}
-                </div>
-                <div style={{ ...styles.flex3 }} onClick={() => { this.makeinvoiceactive(invoiceid) }}>
-                    Invoice ID {myinvoice.invoiceid} {updateinfo}
-                </div>
-            </div>)
-
-        } else {
-            return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont }}>
-                <div style={{ ...styles.flex1 }}>
-                    {this.handlecheckicon(myinvoice.invoiceid)}
-                </div>
-                <div style={{ ...styles.flex2 }} onClick={() => { this.makeinvoiceactive(invoiceid) }}>
-                    Invoice ID {myinvoice.invoiceid} {updateinfo}
-                </div>
-            </div>)
-        }
     }
     getequipmentprofitbyid(equipmentid) {
         let dynamicstyles = new DynamicStyles();
@@ -337,7 +316,7 @@ class Invoices extends Component {
         const profit = Number(item.profit) / 100;
         const checkequipment = () => {
             let check = true;
-            if(item.settlementid) {
+            if (item.settlementid) {
                 check = false;
             }
             return check;
@@ -364,7 +343,7 @@ class Invoices extends Component {
         }
         return (
 
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
                     {myequipment.equipment} CSI: {csi.csi} - {csi.title}   TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)}
@@ -403,7 +382,7 @@ class Invoices extends Component {
         const proposalFieldSmall = dynamicstyles.getitemfieldsmall.call(this)
         const checkmaterial = () => {
             let check = true;
-            if(item.settlementid) {
+            if (item.settlementid) {
                 check = false;
             }
             return check;
@@ -444,7 +423,7 @@ class Invoices extends Component {
             }
         }
         return (
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
                     {inputUTCStringForMaterialIDWithTime(item.timein)} {material.material} CSI: {csi.csi}-{csi.title}
@@ -479,7 +458,7 @@ class Invoices extends Component {
         }
         const checklabor = () => {
             let check = true;
-            if(item.settlementid) {
+            if (item.settlementid) {
                 check = false;
             }
             return check;
@@ -506,7 +485,7 @@ class Invoices extends Component {
             }
         }
         return (
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }}>
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
                     {employee.firstname} {employee.lastname} TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)} CSI {csi.csi}-{csi.title}  Total Hours {totalhours.toFixed(2)} Hrs at  $
@@ -531,14 +510,21 @@ class Invoices extends Component {
             // eslint-disable-next-line
             payitems.map(item => {
                 if (item.hasOwnProperty("laborid")) {
+                    if(this.state.showlabor) {
                     items.push(this.showlaboritem(item))
+                    }
                 }
                 if (item.hasOwnProperty("materialid")) {
+                    if(this.state.showmaterials) {
                     items.push(this.showmaterialitem(item))
+                    }
 
                 }
+
                 if (item.hasOwnProperty("equipmentid")) {
+                    if(this.state.showequipment) {
                     items.push(this.showequipmentitem(item))
+                    }
 
                 }
 
@@ -705,61 +691,112 @@ class Invoices extends Component {
     render() {
         let dynamicstyles = new DynamicStyles();
         let styles = MyStylesheet();
-        let titleFont = dynamicstyles.gettitlefont.call(this)
-        let proposalButton = dynamicstyles.getcreateproposal.call(this)
         let headerFont = dynamicstyles.getHeaderFont.call(this)
+        let proposalButton = dynamicstyles.getcreateproposal.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        const myuser =dynamicstyles.getuser.call(this)
-        if(myuser) {
+        const myuser = dynamicstyles.getuser.call(this)
+        const checkfield = dynamicstyles.getcheckfield.call(this)
+        const laboricon = () => {
+            if (this.state.showlabor) {
+                return (<div style={{ ...styles.generalContainer }}>
+                    <button style={{ ...styles.generalButton, ...checkfield }} onClick={()=>{this.setState({showlabor:false})}}>{CheckedBox()}</button>
+                </div>)
+
+            } else {
+                return (<div style={{ ...styles.generalContainer }}>
+                    <button style={{ ...styles.generalButton, ...checkfield }} onClick={()=>{this.setState({showlabor:true})}}>{EmptyBox()}</button>
+                </div>)
+            }
+
+        }
+        const materialicon = () => {
+            if (this.state.showmaterials) {
+                return (<div style={{ ...styles.generalContainer }}>
+                    <button style={{ ...styles.generalButton, ...checkfield }} onClick={()=>{this.setState({showmaterials:false})}}>{CheckedBox()}</button>
+                </div>)
+            } else {
+                return (<div style={{ ...styles.generalContainer }}>
+                    <button style={{ ...styles.generalButton, ...checkfield }} onClick={()=>{this.setState({showmaterials:true})}}>{EmptyBox()}</button>
+                </div>)
+            }
+
+
+        }
+
+        const equipmenticon = () => {
+            if (this.state.showequipment) {
+                return (<div style={{ ...styles.generalContainer }} onClick={()=>{this.setState({showequipment:false})}}>
+                    <button style={{ ...styles.generalButton, ...checkfield }}>{CheckedBox()}</button>
+                </div>)
+
+            } else {
+                return (<div style={{ ...styles.generalContainer }}>
+                    <button style={{ ...styles.generalButton, ...checkfield }} onClick={()=>{this.setState({showequipment:true})}}>{EmptyBox()}</button>
+                </div>)
+            }
+
+        }
+        if (myuser) {
             const checkmanager = dynamicstyles.checkmanager.call(this)
             if (checkmanager) {
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
+                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+                if (project) {
+                return (
                     <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...titleFont, ...styles.alignCenter }}>
-                            /invoices
-                </div>
+                        <div style={{ ...styles.flex1 }}>
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/invoices</span><br />
+                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>{project.title}</span>
+                                </div>
 
+                            </div>
+                            <div style={{ ...styles.generalFlex }}>
+                                    <div style={{ ...styles.flex1, ...styles.generalFont }}>
+                                        <button style={{ ...styles.generalButton, ...proposalButton }} onClick={() => { this.createnewinvoice() }}>{RedPlus()}</button><span style={{ ...styles.generalFont, ...regularFont }}>Create New Invoice</span>
+                                    </div>
+
+                                </div>
+
+                                <div style={{ ...styles.generalFlex, ...styles.marginLeft30 }}>
+                                    <div style={{ ...styles.flex1, ...styles.generalFont }}>
+                                        <button style={{ ...styles.generalButton, ...proposalButton }}>{redMinus()}</button><span style={{ ...styles.generalFont, ...regularFont }}>My Invoices</span>
+                                    </div>
+                                </div>
+
+                            {this.showinvoiceids()}
+
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                    <div style={{ ...styles.flex1 }}>
+                                        <span style={{ ...regularFont, ...styles.generalFont }}>Labor</span>  {laboricon()}
+                                    </div>
+                                    <div style={{ ...styles.flex1 }}>
+                                        <span style={{ ...regularFont, ...styles.generalFont }}>Equipment</span>  {equipmenticon()}
+                                    </div>
+                                    <div style={{ ...styles.flex1 }}>
+                                        <span style={{ ...regularFont, ...styles.generalFont }}>Materials</span> {materialicon()}
+                                    </div>
+
+                                </div>
+
+                            {this.showallpayitems()}
+                            {this.showinvoicelink()}
+                            {dynamicstyles.showsaveproject.call(this)}
+                        </div>
                     </div>
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...proposalButton }} onClick={() => { this.createnewinvoice() }}>{CreateInvoiceIcon()}</button>
-                        </div>
+                )
 
-                    </div>
+                }
 
-                    {this.showinvoiceids()}
-
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter, ...headerFont, ...styles.showBorder }}>
-                            Labor
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter, ...headerFont, ...styles.showBorder }}>
-                            Equipment
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter, ...headerFont, ...styles.showBorder }}>
-                            Materials
-                        </div>
-
-                    </div>
-
-                    {this.showallpayitems()}
-                    {this.showinvoicelink()}
-                    {dynamicstyles.showsaveproject.call(this)}
-                </div>
-            </div>
-        )
-
-    } else {
-        return(<div style={{...styles.generalContainer,...regularFont}}>
-            <span style={{...styles.generalFont,...regularFont}}>Only Managers can view Invoices </span>
-        </div>)
-    }
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Only Managers can view Invoices </span>
+                </div>)
+            }
 
         } else {
-            return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Please Login to Invoices </span>
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to Invoices </span>
             </div>)
         }
 
@@ -777,7 +814,7 @@ function mapStateToProps(state) {
         projectid: state.projectid,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
-        csis:state.csis
+        csis: state.csis
     }
 }
 

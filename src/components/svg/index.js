@@ -46,6 +46,9 @@ export function StripeConnectIcon() {
 export function saveProfileIcon() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 453.31 94.31"><defs><style></style></defs><title>saveprofile</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="saveprofileicon-1" x="0.5" y="0.5" width="452.31" height="87.31" rx="16.03" /><text className="saveprofileicon-2" transform="translate(33.67 69.92)">Sa<tspan className="saveprofileicon-3" x="83.66" y="0">v</tspan><tspan className="saveprofileicon-4" x="120.6" y="0">e </tspan><tspan className="saveprofileicon-5" x="177.69" y="0">Pr</tspan><tspan className="saveprofileicon-6" x="249.55" y="0">o</tspan><tspan x="290.01" y="0">file</tspan></text></g></g></svg>)
 }
+export function RedPlus() {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.64 26.64"><defs><style></style></defs><title>redplus</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><polygon className="redplus-1" points="26.14 9.34 26.14 17.3 17.3 17.3 17.3 26.14 9.34 26.14 9.34 17.3 0.5 17.3 0.5 9.34 9.34 9.34 9.34 0.5 17.3 0.5 17.3 9.34 26.14 9.34" /></g></g></svg>)
+}
 export function BluePlus() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.64 26.64"><defs><style></style></defs><title>blueplus</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><polygon className="blueplus-1" points="26.14 9.34 26.14 17.3 17.3 17.3 17.3 26.14 9.34 26.14 9.34 17.3 0.5 17.3 0.5 9.34 9.34 9.34 9.34 0.5 17.3 0.5 17.3 9.34 26.14 9.34" /></g></g></svg>)
 }
@@ -90,6 +93,9 @@ export function addIcon() {
 }
 export function updatePasswordIcon() {
     return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256.42 63.44"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><rect className="updatepassword-1" x="0.5" y="0.5" width="255.42" height="62.44" rx="6.46"/><path d="M249.46,1a6,6,0,0,1,6,6V56.49a6,6,0,0,1-6,5.95H7a6,6,0,0,1-6-5.95V7A6,6,0,0,1,7,1h242.5m0-1H7A7,7,0,0,0,0,7V56.49a7,7,0,0,0,7,6.95h242.5a7,7,0,0,0,7-6.95V7a7,7,0,0,0-7-7Z"/><text className="updatepassword-2" transform="translate(8.73 40.39) scale(0.82 1)">Update <tspan className="updatepassword-3" x="129.27" y="0">P</tspan><tspan x="152.31" y="0">as</tspan><tspan className="updatepassword-4" x="188.92" y="0">s</tspan><tspan className="updatepassword-5" x="205.99" y="0">w</tspan><tspan x="236.26" y="0">o</tspan><tspan className="updatepassword-6" x="256.57" y="0">r</tspan><tspan x="269.39" y="0">d</tspan></text></g></g></svg>)
+}
+export function redMinus() {
+    return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62.29 17.48"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="image"><rect className="redicon-1" x="0.5" y="0.5" width="61.29" height="16.48"/><path d="M61.29,1V16.48H1V1H61.29m1-1H0V17.48H62.29V0Z"/></g></g></svg>)
 }
 export function minusIcon() {
     return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62.29 17.48"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="image"><rect className="minusicon-1" x="0.5" y="0.5" width="61.29" height="16.48"/><path d="M61.29,1V16.48H1V1H61.29m1-1H0V17.48H62.29V0Z"/></g></g></svg>)
