@@ -433,86 +433,84 @@ class DynamicStyles {
                     title:'Construction by civilengineer.io',
                     id:'construction',
                     url:'http://civilengineer.io/construction/slides/construction.png',
-                    caption:`Construction by civilengineer.io. The Best construction management program online. Sign up and Create your company to Get Started! See the Slide Show `
+                    caption:`This is Construction Management by Civil Engineer.io. Please take a look at the slideshow. What an Amazing Program for Companys and Construction. Project Management. Connects your accounts on Stripe to Transfer Payments. Up to 1,000,000 payment with zero fees. Employee Benefits, Equipment expenses, material costs, adds you profit. Construction Cost Estimating, business accounting, labor rates, material prices, equipment ownership costs, this program does it all  `
+                },
+                {
+                    title:'Company',
+                    id:'company',
+                    url:'http://civilengineer.io/construction/slides/company.png',
+                    caption:`Successfully create your new Company with a new CompanyID. Now your employees create accounts, add your company. You will receive an email notification when someone adds your company and you have to make them active.  `
+                },
+                {
+                    title:'Employees',
+                    id:'employees',
+                    url:'http://civilengineer.io/construction/slides/employees.png',
+                    caption:`Your employees can add your company and then you can add their annaul benefit amount and projected annual working hours. This will set their default labor rate. Connect multiple accounts to employees.   `
                 },
                 {
                     title:'Accounts',
                     id:'accounts',
                     url:'http://civilengineer.io/construction/slides/accounts.png',
-                    caption:`Create accounts for employee benefits, equipment, and materials. These accounts are reimbersed when an invoice is settled by the PM. `
+                    caption:`After Creating a Company and adding your employees, you can create accounts for their benefits to connect to. This will determine how much money transfers into each account from the invoice. Create accounts for your materials and equipment. You need one account per equipment and one account per material. You can connect multiple accounts to each employee.   `
 
                 },
                 {
                     title:'View Account',
                     id:'viewaccount',
                     url:'http://civilengineer.io/construction/slides/viewaccount.png',
-                    caption:`View Balances for Each Account you create including all charges and transfers `
+                    caption:`After creating the account, view the account home page. Here is where you should visit the Stripe Dashboard and connect your account once. This allows you to receive transfers from CivilEngineer.io. After successfully connecting all of your accounts, your invoice may be settled `
                 },
-                {
-                    title:'Company',
-                    id:'company',
-                    url:'http://civilengineer.io/construction/slides/company.png',
-                    caption:`Once you create or add a company, you will have access to the company component.  `
-                },
-                {
-                    title:'Employees',
-                    id:'employees',
-                    url:'http://civilengineer.io/construction/slides/employees.png',
-                    caption:`Adding benefits inside employee components deteermines default labor rate  `
-                },
+                
                 {
                     title:'Equipment',
                     id:'equipment',
                     url:'http://civilengineer.io/construction/slides/equipment.png',
-                    caption:`Equipment component holds company equipment. Calculates equipment rate based on ownership. Optionally allows you to store rental rates. The cost of Equipment is a Direct Cost on the Project `
+                    caption:`Add your Equipment. Enter the Ownership values, and costs of ownership, and the annual working hours. This program determines what the equipment rates should be based on the costs of ownership. Alternatively you may select rental rates and store your equipment as rentals. Connect one account per equipment`
                 },
                 {
                     title:'Materials',
                     id:'materials',
                     url:'http://civilengineer.io/construction/slides/materials.png',
-                    caption:`Enter company materials and set the default unit price and unit `
+                    caption:`Add Materials to your company. This sets the default unit price and unit. Connect one account per material `
                 },
                 {
                     title:'Project',
                     id:'project',
                     url:'http://civilengineer.io/construction/slides/project.png',
-                    caption:`Project Component after the PM added your company to their project`
+                    caption:`Project Components appear when someone adds somebody from your company to their project. You have access to the project components to begin to enter your schedule of costs. `
 
-                },
-            
-              
+                }, 
                 {
                     title:'Schedule',
                     id:'Schedule',
                     url:'http://civilengineer.io/construction/slides/schedule.png',
-                    caption:`Schedule cost component adds construction schedule and does cost estimating. Enter the labor, materials, and equipment required to complete the job`
+                    caption:`Project scheduling component allows you to schedule your labor, equipment, and materials to complete the job. Review the specifcations for the job. Enter the corresponding spec number as you enter your costs. This will keep track of what pay item to send your cost to. This is the scheduling and cost estimating component `
                 },
 
                 {
                     title:'Actual',
                     id:'actual',
                     url:'http://civilengineer.io/construction/slides/actual.png',
-                    caption:`Actual Cost component records cost separately than schedule. These are the charges that appear in the invoice for payment. You cannot update an invoice item if it has already been settled`
-                },
-              
+                    caption:`Record your actual costs separate from your schedule costs. Your employees can record their actual labor in the field using this component. Make sure to enter the correct spec number corresponding to the work you are completing.  `
+                },  
                 {
                     title:'Proposal',
                     id:'proposals',
                     url:'http://civilengineer.io/construction/slides/proposals.png',
-                    caption:`Proposal Component allows you to easily add your schedule items and send it to the PM in a proposal. You can see the proposal in the view proposal component  `
+                    caption:`Use the Proposal component to create a proposal and add items to the proposals. You add the item by clicking on it when a proposal is active. You can modify the payitems inside this component.   `
                 },
                 {
                     title:'View Proposal',
                     id:'viewinvoice',
                     url:'http://civilengineer.io/construction/slides/viewproposal.png',
-                    caption:`View Proposal components allows you to add the quantity and the unit to produce the Unit Price. When you adjust profit, it changes the profit factor for all of the items `
+                    caption:`View Proposal is the proposal. You can see your itemized construction proposal breakdown. You should add the quantites and unit of work perform to produce the unit price. You can modify the profit for each item when you change the profit factor.  `
                 },
 
                 {
                     title:'Invoices',
                     id:'invoices',
                     url:'http://civilengineer.io/construction/slides/invoices.png',
-                    caption:`Invoice Component allows you to easily add items to the invoice, add profit, and make any adjustments to payitems. When you save it will notify the PM you have updated the invoice. You cannot update an item after it has been settled `
+                    caption:`Create an Invoice after recording your actuals. Add the items to the invoice by clicking on the item when the Invoice is active. You can modify the actual pay items inside this component.  `
                 },
   
   
@@ -520,26 +518,26 @@ class DynamicStyles {
                     title:'View Invoice',
                     id:'viewinvoice',
                     url:'http://civilengineer.io/construction/slides/viewinvoice.png',
-                    caption:`ViewInvoice component after transfers has been completed to the contractor through PM `
+                    caption:`View Invoice shows the invoice. It shows the Transfer Summary after settlement takes place. Settlement takes place inside of PM. This program equates the transfer summary on completes the transfer for your invoice.  `
                 },
                 {
                     title:'Labor, Equipment, Materials',
                     id:'lem',
                     url:'http://civilengineer.io/construction/slides/lem.png',
-                    caption:`Labor, Material, Equipment breakdown for each pay item used `
+                    caption:`Proposals, Invoices, Bid Schedules, and Bids always include full labor, equipment, and materials breakdown for each pay item.  `
                 },
               
                 {
                     title:'Quantity Take Off Schedule',
                     id:'takeoffschedule',
                     url:'http://civilengineer.io/construction/slides/costestimate.png',
-                    caption:`Engineers provide the Contractor quantity take off schedules for bid `
+                    caption:`Use the Engineers Estimate to format your bid. You should understand the payitems and read the specifications provided. Understand how payments are specified before you estimate the job. These are the quantity take-offs given by the Design. You must independently furnish the owner an estimate based on these quantities in the Design Schedule.  `
                 },
                 {
                     title:'Specification',
                     id:'specification',
                     url:'http://civilengineer.io/construction/slides/specification.png',
-                    caption:`Engineers deliver the specifications to the contractor for each item in their pay schedule or to be included in other items  `
+                    caption:`Engineers must deliver project specifications and specify payments in Design, before the construction.   `
                 }
                 
         ])

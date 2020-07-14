@@ -1432,7 +1432,7 @@ class Equipment extends Component {
     render() {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const titleFont = dynamicstyles.gettitlefont.call(this);
+        const headerFont = dynamicstyles.getHeaderFont.call(this);
         const accountid = new AccountID();
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
@@ -1457,8 +1457,8 @@ class Equipment extends Component {
 
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <span style={{ ...titleFont, ...styles.boldFont }}>/{companyurl()}</span><br />
-                                <span style={{ ...titleFont, ...styles.boldFont }}>/equipment</span>
+                                <span style={{ ...headerFont, ...styles.boldFont }}>/{companyurl()}</span><br />
+                                <span style={{ ...headerFont, ...styles.boldFont }}>/equipment</span>
                             </div>
                         </div>
 

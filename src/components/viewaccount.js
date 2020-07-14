@@ -313,7 +313,12 @@ render() {
     const account = dynamicstyles.getaccountbyid.call(this, this.props.match.params.accountid);
     const headerFont = dynamicstyles.gettitlefont.call(this);
     const regularFont = dynamicstyles.getRegularFont.call(this);
-    const myuser = dynamicstyles.getuser.call(this)
+    const myuser = dynamicstyles.getuser.call(this);
+    const company = () => {
+        if(myuser.hasOwnProperty("company")) {
+            return myuser.company.url;
+        }
+    }
     this.getstripedashboard();
     let accountbalance = Number(this.state.amount) - Number(this.state.transferamount)
     accountbalance = Number(accountbalance).toFixed(2)
@@ -330,6 +335,7 @@ render() {
 
     }
     if(myuser) {
+
     return (
 
         <div style={{ ...styles.generalFlex }}>
@@ -337,10 +343,11 @@ render() {
 
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
-                        <div style={{ ...styles.generalContainer, ...headerFont, ...styles.alignCenter, ...styles.fontBold, ...styles.bottomMargin15 }}>
-                            {`/${this.props.match.params.providerid}/company/${this.props.match.params.companyid}/accounts/${this.props.match.params.accountid}`}
+                        <div style={{ ...styles.generalContainer, ...headerFont, ...styles.alignCenter, ...styles.boldFont, ...styles.bottomMargin15 }}>
+                            {`/${company()}`} <br/>
+                            /accounts
                         </div>
-                        <div style={{ ...styles.generalContainer, ...headerFont, ...styles.alignCenter, ...styles.fontBold, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.generalContainer, ...headerFont, ...styles.alignCenter, ...styles.boldFont, ...styles.bottomMargin15 }}>
                             Account Name: {`${account.accountname}`}
                         </div>
 

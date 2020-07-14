@@ -68,13 +68,15 @@ class Estimate extends Component {
         if (myuser) {
             const active = dynamicstyles.checkactive.call(this)
             if (active) {
+                const project = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
+                if(project) {
                 return (
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1 }}>
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1, ...headerFont, ...styles.alignCenter }}>
-                                    /{this.props.match.params.projectid} <br />
+                                <div style={{ ...styles.flex1, ...headerFont, ...styles.alignCenter,...styles.boldFont}}>
+                                    /{project.title} <br />
                             Specifications
                         </div>
                             </div>
@@ -83,6 +85,8 @@ class Estimate extends Component {
 
                         </div>
                     </div>)
+
+                }
 
             } else {
                 return (<div style={{ ...styles.generalContainer, ...regularFont }}>
