@@ -735,7 +735,6 @@ class ViewInvoice extends Component {
     render() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles()
-        const titleFont = dynamicstyles.gettitlefont.call(this)
         const invoice = dynamicstyles.getinvoicebyid.call(this, this.props.match.params.invoiceid)
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this);
