@@ -18,8 +18,8 @@ class EmployeeID {
                     if (company.office.hasOwnProperty("employees")) {
                         // eslint-disable-next-line
                         company.office.employees.employee.map(employee => {
-                            let myemployee = dynamicstyles.getemployeebyproviderid.call(this, employee.providerid)
-
+                            let myemployee = dynamicstyles.getemployeebyid.call(this, employee.providerid)
+                            console.log(myemployee)
                             options.push(<option value={myemployee.providerid}>{myemployee.firstname} {myemployee.lastname}</option>)
                         })
 

@@ -245,6 +245,29 @@ class DynamicStyles {
 
         }
     }
+    getmyschedule() {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        let labor = [];
+        if(myuser) {
+            if(myuser.hasOwnProperty("company")) {
+                if(myuser.company.hasOwnProperty("projects")) {
+                    // eslint-disable-next-line
+                    myuser.company.projects.myproject.map(project=> {
+                       if(project.hasOwnProperty("schedulelabor"))  {
+                           // eslint-disable-next-line
+                           project.schedulelabor.mylabor.map(mylabor=> {
+                               if(mylabor.providerid === myuser.providerid) {
+                                   labor.push(mylabor)
+                               }
+                           })
+                       }
+                    })
+                }
+            }
+        }
+        return labor;
+    }
     getnavigation() {
         let navigation = false;
         
@@ -3247,6 +3270,7 @@ class DynamicStyles {
         return rentalrate;
 
     }
+    
     calculateequipmentratebyid(equipmentid, timein, timeout) {
 
         const dynamicstyles = new DynamicStyles();

@@ -61,6 +61,9 @@ export function MyStylesheet() {
         topMargin15: {
             marginTop: '15px'
         },
+        schedulebackground:{
+            backgroundColor:'#F21616'
+        },
         alignBottom: {
             verticalAlign: 'bottom'
         },
@@ -208,6 +211,9 @@ export function MyStylesheet() {
         },
         flex6: {
             flex: 6
+        },
+        flex7: {
+            flex: 7
         },
         alignCenter: {
             textAlign: 'center'
