@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { getDayfromDateString, dateStringFromUTCTime, scheduleBox, initfromtimeout } from './functions'
+import { getDayfromDateString, dateStringFromUTCTime, scheduleBox, initfromtimeout, getOffsetDate, inputUTCStringForLaborID } from './functions'
 
 
 class ShowSchedule extends Component {
     schedule_1() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const smallFont = dynamicstyles.getSmallFont.call(this)
 
         const myschedule = this.getschedule();
         let schedule_1jsx = [];
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
-                console.log(dateStringFromUTCTime(schedule.timeout), this.state.day_2)
+                const csi = dynamicstyles.getcsibyid.call(this,schedule.csiid)
+                const project = dynamicstyles.getprojectbymilestoneid.call(this,schedule.milestoneid) 
+                console.log(project)
 
                 if (
                     (dateStringFromUTCTime(schedule.timein) === this.state.day_1)
@@ -24,7 +29,13 @@ class ShowSchedule extends Component {
 
                         let height = params.height;
                         schedule_1jsx.push(<g transform={`translate(81,${61.5 + init})`}>
-                            <rect className="scheduleview-8" width="149.95" height={height} />
+                          <rect className="scheduleview-8" width="149.95" height={height} />
+                            <foreignObject x="0" y="0" width="150px" height={height}>
+                                <div style={{...styles.generalContainer, ...styles.zIndex}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
+                          
                         </g>)
 
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_2) {
@@ -126,6 +137,28 @@ class ShowSchedule extends Component {
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
 
+                    } else {
+                        schedule_1jsx.push(<g transform={`translate(81,${61.5 + init})`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                        </g>)
+                        schedule_1jsx.push(<g transform={`translate(230.93, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_1jsx.push(<g transform={`translate(381.29, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_1jsx.push(<g transform={`translate(531.22, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_1jsx.push(<g transform={`translate(681.09, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_1jsx.push(<g transform={`translate(831.02, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_1jsx.push(<g transform={`translate(980.98, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
                     }
 
 
@@ -147,22 +180,22 @@ class ShowSchedule extends Component {
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
-              
-    
+
+
                 if (
                     (dateStringFromUTCTime(schedule.timein) === this.state.day_2)
                 ) {
-    
+
                     let params = scheduleBox(schedule.timein, schedule.timeout)
                     let init = params.init;
                     if (dateStringFromUTCTime(schedule.timeout) === this.state.day_2) {
-    
+
                         let height = params.height;
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
                         </g>)
-    
-                    }  else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_3) {
+
+                    } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_3) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
@@ -170,26 +203,26 @@ class ShowSchedule extends Component {
                         schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_4) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
-                        <rect className="scheduleview-8" width="149.95" height={2400 - init} />
-                    </g>)
-                   
+                            <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                        </g>)
+
                         schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
                         </g>)
                         schedule_2jsx.push(<g transform={`translate(531.22, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_5) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
-                        <rect className="scheduleview-8" width="149.95" height={2400 - init} />
-                    </g>)
-                    
+                            <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                        </g>)
+
                         schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
                         </g>)
@@ -199,13 +232,13 @@ class ShowSchedule extends Component {
                         schedule_2jsx.push(<g transform={`translate(681.09, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_6) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-                      
+
                         schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
                         </g>)
@@ -218,13 +251,13 @@ class ShowSchedule extends Component {
                         schedule_2jsx.push(<g transform={`translate(831.02, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_7) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-                     
+
                         schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
                         </g>)
@@ -240,19 +273,40 @@ class ShowSchedule extends Component {
                         schedule_2jsx.push(<g transform={`translate(980.98, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
+                    } else {
+                        schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                        </g>)
+
+                        schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_2jsx.push(<g transform={`translate(531.22, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_2jsx.push(<g transform={`translate(681.09, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_2jsx.push(<g transform={`translate(831.02, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_2jsx.push(<g transform={`translate(980.98, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+
                     }
-    
-    
+
+
                 }
-    
+
             })
         }
-    
+
         return schedule_2jsx;
-    
-    
-    
+
+
+
     }
 
     schedule_3() {
@@ -262,54 +316,54 @@ class ShowSchedule extends Component {
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
-    
-    
+
+
                 if (
                     (dateStringFromUTCTime(schedule.timein) === this.state.day_3)
                 ) {
-    
+
                     let params = scheduleBox(schedule.timein, schedule.timeout)
                     let init = params.init;
                     if (dateStringFromUTCTime(schedule.timeout) === this.state.day_3) {
-    
+
                         let height = params.height;
                         schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_4) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-    
-    
+
+
                         schedule_3jsx.push(<g transform={`translate(531.22, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_5) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-    
-    
+
+
                         schedule_3jsx.push(<g transform={`translate(531.22, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
                         </g>)
                         schedule_3jsx.push(<g transform={`translate(681.09, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_6) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-    
-    
-    
+
+
+
                         schedule_3jsx.push(<g transform={`translate(531.22, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
                         </g>)
@@ -319,15 +373,15 @@ class ShowSchedule extends Component {
                         schedule_3jsx.push(<g transform={`translate(831.02, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_7) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-    
-    
-    
+
+
+
                         schedule_3jsx.push(<g transform={`translate(531.22, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
                         </g>)
@@ -340,19 +394,39 @@ class ShowSchedule extends Component {
                         schedule_3jsx.push(<g transform={`translate(980.98, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
+                    } else {
+                        schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                        </g>)
+
+
+
+                        schedule_3jsx.push(<g transform={`translate(531.22, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_3jsx.push(<g transform={`translate(681.09, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_3jsx.push(<g transform={`translate(831.02, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_3jsx.push(<g transform={`translate(980.98, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+
                     }
-    
-    
+
+
                 }
-    
+
             })
         }
-    
+
         return schedule_3jsx;
-    
-    
-    
+
+
+
     }
 
     schedule_4() {
@@ -362,51 +436,51 @@ class ShowSchedule extends Component {
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
-    
-    
+
+
                 if (
                     (dateStringFromUTCTime(schedule.timein) === this.state.day_4)
                 ) {
-    
+
                     let params = scheduleBox(schedule.timein, schedule.timeout)
                     let init = params.init;
                     if (dateStringFromUTCTime(schedule.timeout) === this.state.day_4) {
-    
+
                         let height = params.height;
                         schedule_4jsx.push(<g transform={`translate(531.22,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_5) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_4jsx.push(<g transform={`translate(531.22,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-    
+
                         schedule_4jsx.push(<g transform={`translate(681.09, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_6) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_4jsx.push(<g transform={`translate(531.22,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-    
-    
+
+
                         schedule_4jsx.push(<g transform={`translate(681.09, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
                         </g>)
                         schedule_4jsx.push(<g transform={`translate(831.02, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_7) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_4jsx.push(<g transform={`translate(531.22,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-    
+
                         schedule_4jsx.push(<g transform={`translate(681.09, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
                         </g>)
@@ -416,74 +490,103 @@ class ShowSchedule extends Component {
                         schedule_4jsx.push(<g transform={`translate(980.98, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
+                    } else {
+                        schedule_4jsx.push(<g transform={`translate(531.22,${61.5 + init})`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                        </g>)
+
+                        schedule_4jsx.push(<g transform={`translate(681.09, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_4jsx.push(<g transform={`translate(831.02, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_4jsx.push(<g transform={`translate(980.98, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+
                     }
-    
-    
+
+
                 }
-    
+
             })
         }
-    
+
         return schedule_4jsx;
-    
+
     }
 
     schedule_5() {
-        
+
         const myschedule = this.getschedule();
         let schedule_5jsx = [];
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
-    
-    
+
+
                 if (
                     (dateStringFromUTCTime(schedule.timein) === this.state.day_5)
                 ) {
-    
+
                     let params = scheduleBox(schedule.timein, schedule.timeout)
                     let init = params.init;
                     if (dateStringFromUTCTime(schedule.timeout) === this.state.day_5) {
-    
+
                         let height = params.height;
                         schedule_5jsx.push(<g transform={`translate(681.09,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_6) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_5jsx.push(<g transform={`translate(681.09,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-    
-    
+
+
                         schedule_5jsx.push(<g transform={`translate(831.02, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_7) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_5jsx.push(<g transform={`translate(681.09,${61.5 + init})`}>
-                        <rect className="scheduleview-8" width="149.95" height={2400 - init} />
-                    </g>)
-    
-                       
+                            <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                        </g>)
+
+
+                        schedule_5jsx.push(<g transform={`translate(831.02, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+                        schedule_5jsx.push(<g transform={`translate(531.22, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={initout} />
+                        </g>)
+
+                    } else {
+
+                        schedule_5jsx.push(<g transform={`translate(681.09,${61.5 + init})`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                        </g>)
+
+
                         schedule_5jsx.push(<g transform={`translate(831.02, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
                         </g>)
                         schedule_5jsx.push(<g transform={`translate(980.98, 61.5)`}>
-                            <rect className="scheduleview-8" width="149.95" height={initout} />
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
                         </g>)
-    
+
                     }
-    
-    
+
+
                 }
-    
+
             })
         }
-    
+
         return schedule_5jsx;
 
     }
@@ -495,41 +598,50 @@ class ShowSchedule extends Component {
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
-    
-    
+
+
                 if (
                     (dateStringFromUTCTime(schedule.timein) === this.state.day_6)
                 ) {
-    
+
                     let params = scheduleBox(schedule.timein, schedule.timeout)
                     let init = params.init;
                     if (dateStringFromUTCTime(schedule.timeout) === this.state.day_6) {
-    
+
                         let height = params.height;
                         schedule_6jsx.push(<g transform={`translate(831.02,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
                         </g>)
-    
+
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_7) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_6jsx.push(<g transform={`translate(831.02,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-    
+
                         schedule_6jsx.push(<g transform={`translate(980.98, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
                         </g>)
-    
+
+                    } else {
+                        schedule_6jsx.push(<g transform={`translate(831.02,${61.5 + init})`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                        </g>)
+
+                        schedule_6jsx.push(<g transform={`translate(980.98, 61.5)`}>
+                            <rect className="scheduleview-8" width="149.95" height={2400} />
+                        </g>)
+
                     }
-    
-    
+
+
                 }
-    
+
             })
         }
-    
+
         return schedule_6jsx;
-    
+
     }
 
     schedule_7() {
@@ -539,45 +651,104 @@ class ShowSchedule extends Component {
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
-    
-    
+
+
                 if (
                     (dateStringFromUTCTime(schedule.timein) === this.state.day_7)
                 ) {
-    
+
                     let params = scheduleBox(schedule.timein, schedule.timeout)
                     let init = params.init;
                     if (dateStringFromUTCTime(schedule.timeout) === this.state.day_7) {
-    
+
                         let height = params.height;
                         schedule_7jsx.push(<g transform={`translate(980.98,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
                         </g>)
-    
-    
+
+
                     } else {
-    
+
                         schedule_7jsx.push(<g transform={`translate(980.98,${61.5 + init})`}>
-                            <rect className="scheduleview-8" width="149.95" height={2400-init} />
+                            <rect className="scheduleview-8" width="149.95" height={2400 - init} />
                         </g>)
-    
-    
+
+
                     }
-    
-    
+
+
                 }
-    
+
             })
         }
-    
+
         return schedule_7jsx;
-    
+
+    }
+
+    checkblackout() {
+        const myschedule = this.getschedule();
+        let schedule_7jsx = [];
+        let blackout = false
+        if (myschedule) {
+            // eslint-disable-next-line
+            myschedule.map(schedule => {
+
+                // let timein = '2020-07-24 20:00:00'
+                // let timeout = '2020-08-09 19:00:00'
+
+                let datein = new Date(`${schedule.timein.replace(/-/g, '/')}`)
+                let dateout = new Date(`${schedule.timeout.replace(/-/g, '/')}`)
+                let offset_date_1 = getOffsetDate(this.state.day_1)
+                let offset_date_2 = getOffsetDate(this.state.day_2)
+                let date_1 = new Date(`${this.state.day_1.replace(/-/g, '/')} 00:00:00${offset_date_1}`)
+                let date_2 = new Date(`${this.state.day_2.replace(/-/g, '/')} 00:00:00${offset_date_2}`)
+
+                if (datein.getTime() <= date_1.getTime() && dateout.getTime() >= date_2.getTime()) {
+                    blackout = true
+                }
+            })
+
+        }
+        if (blackout) {
+
+            schedule_7jsx.push(<g transform={`translate(81,${61.5})`}>
+                <rect className="scheduleview-8" width="149.95" height={2400} />
+            </g>)
+
+            schedule_7jsx.push(<g transform={`translate(230.93,${61.5})`}>
+                <rect className="scheduleview-8" width="149.95" height={2400} />
+            </g>)
+
+            schedule_7jsx.push(<g transform={`translate(381.29,${61.5})`}>
+                <rect className="scheduleview-8" width="149.95" height={2400} />
+            </g>)
+            schedule_7jsx.push(<g transform={`translate(531.22,${61.5})`}>
+                <rect className="scheduleview-8" width="149.95" height={2400} />
+            </g>)
+
+            schedule_7jsx.push(<g transform={`translate(681.09,${61.5})`}>
+                <rect className="scheduleview-8" width="149.95" height={2400} />
+            </g>)
+
+            schedule_7jsx.push(<g transform={`translate(831.02,${61.5})`}>
+                <rect className="scheduleview-8" width="149.95" height={2400} />
+            </g>)
+
+            schedule_7jsx.push(<g transform={`translate(980.98,${61.5})`}>
+                <rect className="scheduleview-8" width="149.95" height={2400} />
+            </g>)
+
+        }
+
+        return schedule_7jsx;
+
+
     }
 
 
     showschedule() {
         const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this);
         const styles = MyStylesheet();
         const myuser = dynamicstyles.getuser.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this);
@@ -598,7 +769,7 @@ class ShowSchedule extends Component {
                             <rect className="scheduleview-2" x="680.91" y="1" width="150" height="60" />
                             <rect className="scheduleview-2" x="830.91" y="1" width="150" height="60" />
                             <rect className="scheduleview-2" x="980.91" y="1" width="150" height="60" />
-
+                            {showschedule.checkblackout.call(this)}
                             {showschedule.schedule_1.call(this)}
                             {showschedule.schedule_2.call(this)}
                             {showschedule.schedule_3.call(this)}
@@ -606,6 +777,7 @@ class ShowSchedule extends Component {
                             {showschedule.schedule_5.call(this)}
                             {showschedule.schedule_6.call(this)}
                             {showschedule.schedule_7.call(this)}
+
 
                         </g></g></g></svg>
             )

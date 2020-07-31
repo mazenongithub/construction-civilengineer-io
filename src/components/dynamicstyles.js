@@ -509,6 +509,13 @@ class DynamicStyles {
                     caption:`Add Materials to your company. This sets the default unit price and unit. Connect one account per material `
                 },
                 {
+                    title:'View Schedule',
+                    id:'viewschedule',
+                    url:'http://civilengineer.io/construction/slides/viewschedule.png',
+                    caption:`View Schedule keeps track of the employees schedule for the week that they choose `
+                },
+
+                {
                     title:'Project',
                     id:'project',
                     url:'http://civilengineer.io/construction/slides/project.png',
@@ -2677,6 +2684,29 @@ class DynamicStyles {
             })
         }
         return material;
+    }
+
+    getprojectbymilestoneid(milestoneid) {
+        console.log(milestoneid)
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        let myproject = false;
+        if(myuser.hasOwnProperty("company")) {
+           if(myuser.company.hasOwnProperty("projects")) {
+                // eslint-disable-next-line
+                myuser.company.projects.myproject.map(project=> {
+                    if(project.hasOwnProperty("projectmilestones")) {
+                        // eslint-disable-next-line
+                        project.projectmilestones.mymilestone.map(milestone=> {
+                            if(milestone.milestoneid === milestoneid) {
+                                myproject = project;
+                            }
+                        })
+                    }
+                })
+            }
+        }
+        return myproject;
     }
     getemployeebyproviderid(providerid) {
         let dynamicstyles = new DynamicStyles();

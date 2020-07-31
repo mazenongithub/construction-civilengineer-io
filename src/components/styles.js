@@ -58,6 +58,9 @@ export function MyStylesheet() {
         addLeftMargin: {
             marginLeft: '1%'
         },
+        zIndex:{
+            zIndex:2,
+        },
         topMargin15: {
             marginTop: '15px'
         },
