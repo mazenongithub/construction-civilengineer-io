@@ -42,6 +42,12 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_1jsx.push(<g transform={`translate(81,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
+
                         </g>)
                         schedule_1jsx.push(<g transform={`translate(230.93, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
@@ -51,9 +57,15 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_1jsx.push(<g transform={`translate(81,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
                         schedule_1jsx.push(<g transform={`translate(230.93, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
+                            
                         </g>)
                         schedule_1jsx.push(<g transform={`translate(381.29, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
@@ -62,7 +74,13 @@ class ShowSchedule extends Component {
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_4) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_1jsx.push(<g transform={`translate(81,${61.5 + init})`}>
+                        
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
                         schedule_1jsx.push(<g transform={`translate(230.93, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
@@ -78,6 +96,11 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_1jsx.push(<g transform={`translate(81,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
                         schedule_1jsx.push(<g transform={`translate(230.93, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
@@ -96,6 +119,11 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_1jsx.push(<g transform={`translate(81,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
                         schedule_1jsx.push(<g transform={`translate(230.93, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
@@ -140,6 +168,11 @@ class ShowSchedule extends Component {
                     } else {
                         schedule_1jsx.push(<g transform={`translate(81,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
                         schedule_1jsx.push(<g transform={`translate(230.93, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
@@ -174,12 +207,17 @@ class ShowSchedule extends Component {
     }
 
     schedule_2() {
-
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const smallFont = dynamicstyles.getSmallFont.call(this)
         const myschedule = this.getschedule();
         let schedule_2jsx = [];
         if (myschedule) {
+  
             // eslint-disable-next-line
             myschedule.map(schedule => {
+                const csi = dynamicstyles.getcsibyid.call(this,schedule.csiid)
+                const project = dynamicstyles.getprojectbymilestoneid.call(this,schedule.milestoneid) 
 
 
                 if (
@@ -193,12 +231,22 @@ class ShowSchedule extends Component {
                         let height = params.height;
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
+                            <foreignObject x="0" y="0" width="150px" height={height}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_3) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
                         schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
@@ -208,6 +256,11 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                         schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
@@ -221,6 +274,11 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                         schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
@@ -237,6 +295,11 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                         schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
@@ -256,6 +319,11 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                         schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
@@ -277,6 +345,12 @@ class ShowSchedule extends Component {
                     } else {
                         schedule_2jsx.push(<g transform={`translate(230.93,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
+                            
                         </g>)
 
                         schedule_2jsx.push(<g transform={`translate(381.29, 61.5)`}>
@@ -310,12 +384,17 @@ class ShowSchedule extends Component {
     }
 
     schedule_3() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const smallFont = dynamicstyles.getSmallFont.call(this)
 
         const myschedule = this.getschedule();
         let schedule_3jsx = [];
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
+                const csi = dynamicstyles.getcsibyid.call(this,schedule.csiid)
+                const project = dynamicstyles.getprojectbymilestoneid.call(this,schedule.milestoneid) 
 
 
                 if (
@@ -329,12 +408,22 @@ class ShowSchedule extends Component {
                         let height = params.height;
                         schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
+                            <foreignObject x="0" y="0" width="150px" height={height}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_4) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
 
@@ -346,6 +435,11 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
 
@@ -360,6 +454,11 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
 
@@ -378,6 +477,11 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
 
@@ -398,6 +502,11 @@ class ShowSchedule extends Component {
                     } else {
                         schedule_3jsx.push(<g transform={`translate(381.29,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
 
@@ -430,12 +539,17 @@ class ShowSchedule extends Component {
     }
 
     schedule_4() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const smallFont = dynamicstyles.getSmallFont.call(this)
 
         const myschedule = this.getschedule();
         let schedule_4jsx = [];
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
+                const csi = dynamicstyles.getcsibyid.call(this,schedule.csiid)
+                const project = dynamicstyles.getprojectbymilestoneid.call(this,schedule.milestoneid) 
 
 
                 if (
@@ -449,12 +563,22 @@ class ShowSchedule extends Component {
                         let height = params.height;
                         schedule_4jsx.push(<g transform={`translate(531.22,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
+                            <foreignObject x="0" y="0" width="150px" height={height}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_5) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_4jsx.push(<g transform={`translate(531.22,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                         schedule_4jsx.push(<g transform={`translate(681.09, 61.5)`}>
@@ -465,6 +589,11 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_4jsx.push(<g transform={`translate(531.22,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
 
@@ -479,6 +608,11 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_4jsx.push(<g transform={`translate(531.22,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                         schedule_4jsx.push(<g transform={`translate(681.09, 61.5)`}>
@@ -494,6 +628,11 @@ class ShowSchedule extends Component {
                     } else {
                         schedule_4jsx.push(<g transform={`translate(531.22,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                         schedule_4jsx.push(<g transform={`translate(681.09, 61.5)`}>
@@ -519,12 +658,17 @@ class ShowSchedule extends Component {
     }
 
     schedule_5() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const smallFont = dynamicstyles.getSmallFont.call(this)
 
         const myschedule = this.getschedule();
         let schedule_5jsx = [];
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
+                const csi = dynamicstyles.getcsibyid.call(this,schedule.csiid)
+                const project = dynamicstyles.getprojectbymilestoneid.call(this,schedule.milestoneid) 
 
 
                 if (
@@ -538,12 +682,22 @@ class ShowSchedule extends Component {
                         let height = params.height;
                         schedule_5jsx.push(<g transform={`translate(681.09,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
+                            <foreignObject x="0" y="0" width="150px" height={height}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_6) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_5jsx.push(<g transform={`translate(681.09,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
 
@@ -555,11 +709,17 @@ class ShowSchedule extends Component {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_5jsx.push(<g transform={`translate(681.09,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
 
                         schedule_5jsx.push(<g transform={`translate(831.02, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={2400} />
+                            
                         </g>)
                         schedule_5jsx.push(<g transform={`translate(531.22, 61.5)`}>
                             <rect className="scheduleview-8" width="149.95" height={initout} />
@@ -569,6 +729,11 @@ class ShowSchedule extends Component {
 
                         schedule_5jsx.push(<g transform={`translate(681.09,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400 - init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
 
@@ -592,12 +757,17 @@ class ShowSchedule extends Component {
     }
 
     schedule_6() {
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const smallFont = dynamicstyles.getSmallFont.call(this)
 
         const myschedule = this.getschedule();
         let schedule_6jsx = [];
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
+                const csi = dynamicstyles.getcsibyid.call(this,schedule.csiid)
+                const project = dynamicstyles.getprojectbymilestoneid.call(this,schedule.milestoneid) 
 
 
                 if (
@@ -611,12 +781,22 @@ class ShowSchedule extends Component {
                         let height = params.height;
                         schedule_6jsx.push(<g transform={`translate(831.02,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
+                            <foreignObject x="0" y="0" width="150px" height={height}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                     } else if (dateStringFromUTCTime(schedule.timeout) === this.state.day_7) {
                         let initout = initfromtimeout(schedule.timeout)
                         schedule_6jsx.push(<g transform={`translate(831.02,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400-init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                         schedule_6jsx.push(<g transform={`translate(980.98, 61.5)`}>
@@ -626,6 +806,11 @@ class ShowSchedule extends Component {
                     } else {
                         schedule_6jsx.push(<g transform={`translate(831.02,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400-init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
                         schedule_6jsx.push(<g transform={`translate(980.98, 61.5)`}>
@@ -646,11 +831,16 @@ class ShowSchedule extends Component {
 
     schedule_7() {
 
+        const styles = MyStylesheet();
+        const dynamicstyles = new DynamicStyles();
+        const smallFont = dynamicstyles.getSmallFont.call(this)
         const myschedule = this.getschedule();
         let schedule_7jsx = [];
         if (myschedule) {
             // eslint-disable-next-line
             myschedule.map(schedule => {
+                const csi = dynamicstyles.getcsibyid.call(this,schedule.csiid)
+                const project = dynamicstyles.getprojectbymilestoneid.call(this,schedule.milestoneid) 
 
 
                 if (
@@ -664,6 +854,11 @@ class ShowSchedule extends Component {
                         let height = params.height;
                         schedule_7jsx.push(<g transform={`translate(980.98,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={height} />
+                            <foreignObject x="0" y="0" width="150px" height={height}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
 
@@ -671,6 +866,11 @@ class ShowSchedule extends Component {
 
                         schedule_7jsx.push(<g transform={`translate(980.98,${61.5 + init})`}>
                             <rect className="scheduleview-8" width="149.95" height={2400 - init} />
+                            <foreignObject x="0" y="0" width="150px" height={2400-init}>
+                                <div style={{...styles.generalContainer}}>
+                                    <span style={{...styles.generalFont,...smallFont,...styles.zIndex}}> {inputUTCStringForLaborID(schedule.timein)} - {inputUTCStringForLaborID(schedule.timeout)} {project.title} {csi.csi} {csi.title}</span>
+                                </div>
+                            </foreignObject>
                         </g>)
 
 
