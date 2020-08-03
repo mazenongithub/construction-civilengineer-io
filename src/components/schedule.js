@@ -30,6 +30,7 @@ import MakeID from './makeids';
 import EmployeeID from './employeeid'
 import EquipmentID from './equipmentid';
 import MaterialID from './materialid';
+import ScheduleView from './scheduleview'
 
 class Schedule extends Component {
     constructor(props) {
@@ -562,13 +563,19 @@ class Schedule extends Component {
                     const timeoutampm = getAMPMfromTimeIn(mylabor.timeout);
 
                     const csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid);
-                    const csi_1 = csi.csi.substring(0, 2)
-                    const csi_2 = csi.csi.substring(2, 4);
-                    const csi_3 = csi.csi.substring(4, 6);
+                    let csi_1 = "";
+                    let csi_2= "";
+                    let csi_3 = "";
                     let csi_4 = "";
+                    if(csi) {
+                     csi_1 = csi.csi.substring(0, 2)
+                     csi_2 = csi.csi.substring(2, 4);
+                     csi_3 = csi.csi.substring(4, 6);
+              
                     if (csi.csi.length > 6) {
                         csi_4 = csi.csi.substring(7, 9);
                     }
+                }
 
 
                     this.setState({ activelaborid: laborid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4 })
@@ -1273,6 +1280,7 @@ class Schedule extends Component {
         const employeeid = new EmployeeID();
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
+        const scheduleview = new ScheduleView();
         const equipmentrate = () => {
             if (this.state.active === 'equipment' && this.state.activeequipmentid) {
                 return (
@@ -1524,11 +1532,13 @@ class Schedule extends Component {
                             {equipmentrate()}
                             {showmaterialquantity()}
 
-
+                            {scheduleview.showschedule.call(this)}
 
                             {this.showlaborids()}
                             {this.showmaterialids()}
                             {this.showequipmentids()}
+
+                           
 
                             {dynamicstyles.showsaveproject.call(this)}
 
