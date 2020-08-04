@@ -6,6 +6,7 @@ import { addIcon, removeIconSmall, CheckedBox, EmptyBox } from './svg';
 import { CreateBenefit, CreateEmployee } from './functions';
 import DynamicStyles from './dynamicstyles';
 import MakeID from './makeids';
+import { Link } from 'react-router-dom';
 
 class Employees extends Component {
     constructor(props) {
@@ -845,7 +846,9 @@ class Employees extends Component {
         const removeIcon = this.getremoveicon();
         const employee = dynamicstyles.getemployeebyid.call(this,providerid)
         const regularFont = dynamicstyles.getRegularFont.call(this);
-        const checkmanager = dynamicstyles.checkmanager.call(this)
+        const checkmanager = dynamicstyles.checkmanager.call(this);
+        const myuser = dynamicstyles.getuser.call(this)
+        if(myuser) {
         const remove = () => {
             if (checkmanager) {
                 return (<button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeemployee(employee) }}>{removeIconSmall()} </button>)
@@ -853,7 +856,7 @@ class Employees extends Component {
         }
         if (this.state.width > 800) {
             return (
-                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }} key={`myemployee${employee.providerid}`} >
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={`myemployee${employee.providerid}`} >
                     <div style={{ ...styles.flex1 }}>
 
 
@@ -873,6 +876,17 @@ class Employees extends Component {
                             </div>
 
                         </div>
+
+                        <div style={{ ...styles.generalFlex,...styles.topMargin15}}>
+                            <div style={{...styles.flex1}}>
+                                <Link style={{...styles.generalLink, ...regularFont}} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/schedule`}>View Schedule </Link>
+                            </div>
+                            <div style={{...styles.flex1}}>
+                                <Link style={{...styles.generalLink, ...regularFont}} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/actual`}>View Actual </Link>
+                            </div>
+                        </div>
+
+
                     </div>
 
                 </div>
@@ -903,10 +917,21 @@ class Employees extends Component {
 
                         </div>
 
+                        <div style={{ ...styles.generalFlex,...styles.topMargin15}}>
+                            <div style={{...styles.flex1}}>
+                                <Link style={{...styles.generalLink, ...regularFont}} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/schedule`}>View Schedule </Link>
+                            </div>
+                            <div style={{...styles.flex1}}>
+                                <Link style={{...styles.generalLink, ...regularFont}} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/actual`}>View Actual </Link>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             )
         }
+
+    }
     }
     showactiveemployeebenefits() {
         let employee = this.getactiveemployee();

@@ -245,6 +245,54 @@ class DynamicStyles {
 
         }
     }
+
+    getactuallaborbyproviderid(providerid) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        let labor = [];
+        if(myuser) {
+            if(myuser.hasOwnProperty("company")) {
+                if(myuser.company.hasOwnProperty("projects")) {
+                    // eslint-disable-next-line
+                    myuser.company.projects.myproject.map(project=> {
+                       if(project.hasOwnProperty("actuallabor"))  {
+                           // eslint-disable-next-line
+                           project.actuallabor.mylabor.map(mylabor=> {
+                               if(mylabor.providerid === providerid) {
+                                   labor.push(mylabor)
+                               }
+                           })
+                       }
+                    })
+                }
+            }
+        }
+        return labor;
+    }
+
+    getschedulebyproviderid(providerid) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        let labor = [];
+        if(myuser) {
+            if(myuser.hasOwnProperty("company")) {
+                if(myuser.company.hasOwnProperty("projects")) {
+                    // eslint-disable-next-line
+                    myuser.company.projects.myproject.map(project=> {
+                       if(project.hasOwnProperty("schedulelabor"))  {
+                           // eslint-disable-next-line
+                           project.schedulelabor.mylabor.map(mylabor=> {
+                               if(mylabor.providerid === providerid) {
+                                   labor.push(mylabor)
+                               }
+                           })
+                       }
+                    })
+                }
+            }
+        }
+        return labor;
+    }
     getmyschedule() {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
@@ -456,7 +504,7 @@ class DynamicStyles {
                     title:'Construction by civilengineer.io',
                     id:'construction',
                     url:'http://civilengineer.io/construction/slides/construction.png',
-                    caption:`This is Construction Management by Civil Engineer.io. Please see my Slideshow and then join  `
+                    caption:`This is Construction Management by Civil Engineer.io. See the Slideshow all of these programs are included. Go ahead and Join. This is construction management done right.  `
                 },
                 {
                     title:'Company',
@@ -512,14 +560,9 @@ class DynamicStyles {
                     title:'View Schedule',
                     id:'viewschedule',
                     url:'http://civilengineer.io/construction/slides/viewschedule.png',
-                    caption:`View Schedule keeps track of your schedule so you will always be on time for work `
+                    caption:`View Schedule loads your schedule for view. Includes the Project, Time, and Spec included for your schedule.  `
                 },
-                {
-                    title:'Schedule View',
-                    id:'scheduleview',
-                    url:'http://civilengineer.io/construction/slides/scheduleview.png',
-                    caption:`Schedule View shows the weekly schedules together and makes scheduling easier `
-                },
+              
 
                 {
                     title:'Project',
@@ -2265,6 +2308,22 @@ class DynamicStyles {
         }
         return key;
     }
+
+    getemployeebyprofile(profile) {
+        const dynamicstyles = new DynamicStyles()
+        let myemployees = dynamicstyles.getmyemployees.call(this)
+        let employees = false;
+        if (myemployees) {
+            // eslint-disable-next-line
+            myemployees.map(employee => {
+                if (employee.profile === profile) {
+                    employees = employee;
+                }
+            })
+        }
+        return employees;
+    }
+
     getemployeebyid(providerid) {
         const dynamicstyles = new DynamicStyles()
         let myemployees = dynamicstyles.getmyemployees.call(this)

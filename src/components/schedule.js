@@ -952,7 +952,7 @@ class Schedule extends Component {
                     timeout = UTCTimeStringfromTime(timeout);
                     const laborrate = dynamicstyles.gethourlyrate.call(this, providerid).toFixed(2)
                     const profit = 0;
-                    const engineerid = myuser.providerid;
+                    const engineerid = providerid;
 
                     const newLabor = CreateScheduleLabor(laborid, engineerid, milestoneid, csiid, timein, timeout, laborrate, '', '', profit)
 

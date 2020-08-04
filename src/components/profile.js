@@ -6,7 +6,7 @@ import { folderIcon, scrollImageDown } from './svg';
 import DynamicStyles from './dynamicstyles';
 import { UploadProfileImage, CheckProviderID } from './actions/api';
 import { returnCompanyList, inputUTCStringForLaborID, validateProviderID } from './functions';
-import { Link } from 'react-router-dom';
+
 
 class Profile extends Component {
     constructor(props) {
@@ -455,9 +455,7 @@ class Profile extends Component {
 
                 {this.showadditional()}
 
-                <div style={{...styles.generalContainer}}>
-                    <Link to={`/${myuser.profile}/viewschedule`} style={{...styles.generalLink, ...regularFont, ...styles.generalFont}}>/{myuser.profile}/viewschedule</Link>
-                </div>
+            
 
                 {dynamicstyles.showsaveprofile.call(this)}
 

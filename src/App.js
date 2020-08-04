@@ -41,6 +41,8 @@ import { firebaseConfig } from './firebaseconfig';
 import Schedule from './components/schedule';
 import Actual from './components/actual';
 import ViewSchedule from './components/viewschedule'
+import MySchedule from './components/myschedule'
+import MyActual from './components/myactual'
 //import { TestUser } from './components/functions/testuser'
 
 
@@ -135,6 +137,8 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/accounts/:accountid" component={ViewAccount} />
           <Route exact path="/:providerid/company/:companyid/equipment" component={Equipment} />
           <Route exact path="/:providerid/company/:companyid/employees" component={Employees} />
+          <Route exact path="/:providerid/company/:companyid/employees/:profile/actual" component={MyActual} />
+          <Route exact path="/:providerid/company/:companyid/employees/:profile/schedule" component={MySchedule} />
           <Route exact path="/:providerid/company/:companyid/materials" component={Materials} />
           <Route exact path="/:providerid/company/:companyid/projects" component={Projects} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
@@ -209,14 +213,30 @@ class App extends Component {
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link to={`/${profile}/company/${companyid}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /employees
-                            </Link>
+              </Link>
             </div>
 
 
             {accounts()}
             {equipment()}
             {materials()}
+
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+              <Link to={`/${profile}/company/${companyid}/employees/${profile}/schedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                /viewschedule
+              </Link>
+            </div>
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+              <Link 
+                to={`/${profile}/company/${companyid}/employees/${profile}/actual`} 
+                style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                /viewactual
+              </Link>
+            </div>
+         
           </div>
+
+          
         )
       } else {
         return;
@@ -534,13 +554,16 @@ class App extends Component {
       }
 
     }
+ 
     const navmenu = () => {
       if (position === 'open') {
 
         return (
           <div style={{ ...getflex_2(), ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius, ...styles.addMargin, ...styles.addPadding }}>
+            
             <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
               {link_1()}
+            
             </div>
             {loginlink()}
             {registerlink()}

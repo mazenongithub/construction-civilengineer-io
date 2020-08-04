@@ -9,7 +9,7 @@ import MaterialDate from './viewscheduledate'
 
 
 
-class ViewSchedule extends Component {
+class MyActual extends Component {
     constructor(props) {
         super(props);
         this.state = { render: '', width: 0, height: 0, message: '', year: '', month: '', day: '', day_1: '', day_2: '', day_3: '', day_4: '', day_5: '', day_6: '', day_7: '', showcalender: true }
@@ -63,7 +63,8 @@ class ViewSchedule extends Component {
 
     getschedule() {
         const dynamicstyles = new DynamicStyles();
-        const myschedule = dynamicstyles.getmyschedule.call(this);
+        const employee = dynamicstyles.getemployeebyprofile.call(this, this.props.match.params.profile)
+        const myschedule = dynamicstyles.getactuallaborbyproviderid.call(this, employee.providerid);
         return myschedule;
     }
     render() {
@@ -83,13 +84,13 @@ class ViewSchedule extends Component {
 
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{myuser.profile}</span><br />
-                                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>View My Schedule</span>
+                                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{this.props.match.params.profile}</span><br />
+                                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>View Actual</span>
                             </div>
 
                         </div>
                         {materialdate.showmaterialdate.call(this)}
-                        {showschedule.showschedule.call(this,"schedule")}
+                        {showschedule.showschedule.call(this, "actual")}
                     </div>
                 </div>)
 
@@ -119,4 +120,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, actions)(ViewSchedule);
+export default connect(mapStateToProps, actions)(MyActual);
