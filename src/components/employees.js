@@ -642,7 +642,7 @@ class Employees extends Component {
 
     showemployees() {
         let employees = [];
-        
+
         if (this.props.allusers) {
             if (this.props.allusers.hasOwnProperty("myuser")) {
                 // eslint-disable-next-line
@@ -844,94 +844,99 @@ class Employees extends Component {
         const styles = MyStylesheet();
         const profilephoto = this.getprofilephoto();
         const removeIcon = this.getremoveicon();
-        const employee = dynamicstyles.getemployeebyid.call(this,providerid)
+        const employee = dynamicstyles.getemployeebyid.call(this, providerid)
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const checkmanager = dynamicstyles.checkmanager.call(this);
         const myuser = dynamicstyles.getuser.call(this)
-        if(myuser) {
-        const remove = () => {
-            if (checkmanager) {
-                return (<button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeemployee(employee) }}>{removeIconSmall()} </button>)
+        const profileimage = () => {
+            if (employee.profileurl) {
+                return (<img src={myuser.profileurl} style={{ ...profilephoto }} alt={`${myuser.firstname} ${myuser.lastname}}`} />)
             }
         }
-        if (this.state.width > 800) {
-            return (
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={`myemployee${employee.providerid}`} >
-                    <div style={{ ...styles.flex1 }}>
+        if (myuser) {
+            const remove = () => {
+                if (checkmanager) {
+                    return (<button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removeemployee(employee) }}>{removeIconSmall()} </button>)
+                }
+            }
+            if (this.state.width > 800) {
+                return (
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={`myemployee${employee.providerid}`} >
+                        <div style={{ ...styles.flex1 }}>
 
 
-                        <div style={{ ...styles.generalFlex, ...this.getactiveeemployeebackground(employee.providerid) }} key={`myemployee${employee.providerid}`}>
-                            <div style={{ ...styles.flex1 }}>
-                                <div style={{ ...styles.generalContainer, ...profilephoto, ...styles.showBorder, ...styles.marginAuto }}
-                                    onClick={() => { this.makeemployeeactive(employee.providerid) }}
-                                >
-                                    {this.getprofileimage()}
+                            <div style={{ ...styles.generalFlex, ...this.getactiveeemployeebackground(employee.providerid) }} key={`myemployee${employee.providerid}`}>
+                                <div style={{ ...styles.flex1 }}>
+                                    <div style={{ ...styles.generalContainer, ...profilephoto, ...styles.showBorder, ...styles.marginAuto }}
+                                        onClick={() => { this.makeemployeeactive(employee.providerid) }}
+                                    >
+                                        {profileimage()}
+                                    </div>
+                                </div>
+                                <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont }}>
+                                    {employee.firstname}  {employee.lastname}
+                                </div>
+                                <div style={{ ...styles.flex1 }}>
+                                    {remove()}
+                                </div>
+
+                            </div>
+
+                            <div style={{ ...styles.generalFlex, ...styles.topMargin15 }}>
+                                <div style={{ ...styles.flex1 }}>
+                                    <Link style={{ ...styles.generalLink, ...regularFont }} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/schedule`}>View Schedule </Link>
+                                </div>
+                                <div style={{ ...styles.flex1 }}>
+                                    <Link style={{ ...styles.generalLink, ...regularFont }} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/actual`}>View Actual </Link>
                                 </div>
                             </div>
-                            <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont }}>
-                                {employee.firstname}  {employee.lastname}
-                            </div>
-                            <div style={{ ...styles.flex1 }}>
-                                {remove()}
-                            </div>
-
-                        </div>
-
-                        <div style={{ ...styles.generalFlex,...styles.topMargin15}}>
-                            <div style={{...styles.flex1}}>
-                                <Link style={{...styles.generalLink, ...regularFont}} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/schedule`}>View Schedule </Link>
-                            </div>
-                            <div style={{...styles.flex1}}>
-                                <Link style={{...styles.generalLink, ...regularFont}} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/actual`}>View Actual </Link>
-                            </div>
-                        </div>
 
 
-                    </div>
-
-                </div>
-            )
-        } else {
-            return (
-                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...this.getactiveeemployeebackground(employee.providerid) }} key={`myemployee${employee.providerid}`} >
-                    <div style={{ ...styles.flex1 }}>
-
-
-
-                        <div style={{ ...styles.generalContainer }}>
-                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <div style={{ ...styles.generalContainer, ...profilephoto, ...styles.showBorder, ...styles.marginAuto }} onClick={() => { this.makeemployeeactive(employee.providerid) }}>
-                                    {this.getprofileimage()}
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
-                                {employee.firstname} {employee.lastname}
-                            </div>
-                            <div style={{ ...styles.flex1 }}>
-                                {remove()}
-                            </div>
-
-                        </div>
-
-                        <div style={{ ...styles.generalFlex,...styles.topMargin15}}>
-                            <div style={{...styles.flex1}}>
-                                <Link style={{...styles.generalLink, ...regularFont}} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/schedule`}>View Schedule </Link>
-                            </div>
-                            <div style={{...styles.flex1}}>
-                                <Link style={{...styles.generalLink, ...regularFont}} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/actual`}>View Actual </Link>
-                            </div>
                         </div>
 
                     </div>
-                </div>
-            )
+                )
+            } else {
+                return (
+                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...this.getactiveeemployeebackground(employee.providerid) }} key={`myemployee${employee.providerid}`} >
+                        <div style={{ ...styles.flex1 }}>
+
+
+
+                            <div style={{ ...styles.generalContainer }}>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                    <div style={{ ...styles.generalContainer, ...profilephoto, ...styles.showBorder, ...styles.marginAuto }} onClick={() => { this.makeemployeeactive(employee.providerid) }}>
+                                        {this.getprofileimage()}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
+                                    {employee.firstname} {employee.lastname}
+                                </div>
+                                <div style={{ ...styles.flex1 }}>
+                                    {remove()}
+                                </div>
+
+                            </div>
+
+                            <div style={{ ...styles.generalFlex, ...styles.topMargin15 }}>
+                                <div style={{ ...styles.flex1 }}>
+                                    <Link style={{ ...styles.generalLink, ...regularFont }} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/schedule`}>View Schedule </Link>
+                                </div>
+                                <div style={{ ...styles.flex1 }}>
+                                    <Link style={{ ...styles.generalLink, ...regularFont }} to={`/${myuser.profile}/company/${myuser.company.companyid}/employees/${employee.profile}/actual`}>View Actual </Link>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                )
+            }
+
         }
-
-    }
     }
     showactiveemployeebenefits() {
         let employee = this.getactiveemployee();
@@ -1008,7 +1013,7 @@ class Employees extends Component {
         const removeIcon = this.getremoveicon();
         const account = this.getaccountbyid(benefit.accountid);
         const checkmanager = dynamicstyles.checkmanager.call(this);
-        
+
         const remove = () => {
             if (checkmanager) {
                 return (<button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removebenefitbyid(benefit) }}>{removeIconSmall()} </button>)
