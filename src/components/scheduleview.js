@@ -5,12 +5,21 @@ import { getScheduleDates, getWeekSchedule,formatDateStringDisplay } from './fun
 
 class ScheduleView {
 
-    getschedule() {
+    getschedule(type) {
         const dynamicstyles = new DynamicStyles();
-        const schedules = dynamicstyles.getAllSchedule.call(this)
+        const schedules = this.getSchedule();
         let showschedule = [];
         let employees = [];
         let equipment =[];
+
+        const getColorClass = (type) => {
+            if(type === "schedule") {
+                return("timegraph-6")
+            } else if (type==="actual") {
+                return("timegraph-6a")
+
+            }
+        }
 
         const getemployeekey = (employees, providerid) => {
             let key = false;
@@ -61,7 +70,6 @@ class ScheduleView {
                         employees.push(me)
                     } else {
                         let i = getemployeekey(employees, schedule.providerid)
-                     
                         employees[i][schedule.providerid].schedule.push({ timein: schedule.timein, timeout: schedule.timeout })
 
                     }
@@ -120,7 +128,7 @@ class ScheduleView {
                             let params = getWeekSchedule(dates.day_1, dates.day_7, myschedule.timein, myschedule.timeout)
          
                             if(params.init > 0 && params.init <=840) {
-                            showschedule.push(<rect className="timegraph-6" x={365.42 + params.init} y={ypos - 25} width={params.length} height="25" />)
+                            showschedule.push(<rect className={getColorClass(type)} x={365.42 + params.init} y={ypos - 25} width={params.length} height="25" />)
                             }
 
                         })
@@ -148,7 +156,7 @@ class ScheduleView {
                        
                             let params = getWeekSchedule(dates.day_1, dates.day_7, myschedule.timein, myschedule.timeout)
                             if(params.init > 0 && params.init <=840) {
-                            showschedule.push(<rect className="timegraph-6" x={365.42 + params.init} y={ypos - 25} width={params.length} height="25" />)
+                            showschedule.push(<rect className={getColorClass(type)} x={365.42 + params.init} y={ypos - 25} width={params.length} height="25" />)
                             }
             
                         })
@@ -172,7 +180,7 @@ class ScheduleView {
 
     }
 
-    showschedule() {
+    showschedule(type) {
         const scheduleview = new ScheduleView();
         const styles = MyStylesheet();
         const dates = getScheduleDates(`${this.state.timeinyear}-${this.state.timeinmonth}-${this.state.timeinday}`)
@@ -193,7 +201,7 @@ class ScheduleView {
 
 
 
-                                {scheduleview.getschedule.call(this)}
+                                {scheduleview.getschedule.call(this,type)}
 
 
                                 <rect className="timegraph-7" x="365.42" y="1" width="120" height="50" />

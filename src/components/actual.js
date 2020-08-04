@@ -30,6 +30,7 @@ import MakeID from './makeids';
 import EmployeeID from './employeeid'
 import EquipmentID from './equipmentid';
 import MaterialID from './materialid';
+import ScheduleView from './scheduleview';
 
 class Actual extends Component {
     constructor(props) {
@@ -575,6 +576,13 @@ class Actual extends Component {
             }
 
         }
+    }
+
+    getSchedule() {
+        const dynamicstyles = new DynamicStyles();
+        const schedule = dynamicstyles.getAllActual.call(this);
+        return schedule;
+
     }
 
     showlaborid(labor) {
@@ -1287,6 +1295,7 @@ class Actual extends Component {
         const employeeid = new EmployeeID();
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
+        const scheduleview = new ScheduleView();
         const validate = () => {
             let validation = true;
             if (this.state.activelaborid && this.state.active === 'labor') {
@@ -1769,7 +1778,7 @@ class Actual extends Component {
                             {equipmentrate()}
                             {showmaterialquantity()}
 
-
+                            {scheduleview.showschedule.call(this, "actual")}
 
                             {this.showlaborids()}
                             {this.showmaterialids()}

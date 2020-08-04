@@ -586,6 +586,13 @@ class Schedule extends Component {
         }
     }
 
+    getSchedule() {
+        const dynamicstyles = new DynamicStyles();
+        const schedule = dynamicstyles.getAllSchedule.call(this);
+        return schedule;
+
+    }
+
     showlaborid(labor) {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
@@ -1532,7 +1539,7 @@ class Schedule extends Component {
                             {equipmentrate()}
                             {showmaterialquantity()}
 
-                            {scheduleview.showschedule.call(this)}
+                            {scheduleview.showschedule.call(this, "schedule")}
 
                             {this.showlaborids()}
                             {this.showmaterialids()}
