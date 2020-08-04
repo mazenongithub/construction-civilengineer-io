@@ -539,17 +539,12 @@ class DynamicStyles {
                     caption:`Add your Equipment. Enter the Ownership values, and costs of ownership, and the annual working hours. This program determines what the equipment rates should be based on the costs of ownership. Alternatively you may select rental rates and store your equipment as rentals. Connect one account per equipment`
                 },
                 {
-                    title:'Ownership costs',
+                    title:'Equipment Ownership',
                     id:'ownershipcosts',
                     url:'http://civilengineer.io/construction/slides/equipment_1.png',
                     caption:`Add Equipment ownwership costs to determine default equipment rate based on cost of ownership`
                 },
-                {
-                    title:'Ownership Equipment',
-                    id:'ownershipequipment',
-                    url:'http://civilengineer.io/construction/slides/equipment_2.png',
-                    caption:`Equipment Ownership Variables used to determine default equipment rate`
-                },
+
                 {
                     title:'Materials',
                     id:'materials',
