@@ -1807,15 +1807,13 @@ export function calculatetotalhours(timeout, timein) {
 
 export function inputUTCStringForLaborID(timein) {
 
-    let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`)
+    let datein = new Date(`${timein.replace(/-/g, '/')} UTC`)
     let hours = datein.getHours();
+    console.log("hours" , hours, timein)
     let ampm
     if (hours > 12) {
         hours = hours - 12;
         ampm = "PM"
-    }
-    else if (hours < 12) {
-        ampm = "AM"
     }
     else if (hours === 0) {
         hours = 12;
@@ -1823,6 +1821,9 @@ export function inputUTCStringForLaborID(timein) {
     }
     else if (hours === 12) {
         ampm = "PM"
+    }
+    else if (hours < 12) {
+        ampm = "AM"
     }
     let minutes = datein.getMinutes();
     if (minutes < 10) {
@@ -2231,12 +2232,13 @@ export function makeTimeString(year, month, day, hours, minutes, time) {
 }
 
 export function UTCTimeStringfromTime(timein) {
-
     //let timein = '2020-06-02 04:01 pm'
     const time = timein.substring(17, 19)
     let hours = timein.substring(11, 13);
-    if (time === 'pm' && hours < 12) {
+    if (time === 'pm' && hours !== '12') {
         hours = Number(hours) + 12
+    } else if (time === 'am' && hours === '12') {
+        hours = '00'
     }
     const sym = () => {
         let myoffset = new Date().getTimezoneOffset() / 60
