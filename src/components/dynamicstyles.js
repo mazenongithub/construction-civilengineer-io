@@ -778,7 +778,7 @@ class DynamicStyles {
             }
             let profile = this.state.profile;
             this.setState({ client, clientid, firstname, lastname, profileurl, phonenumber, emailaddress, emailaddresscheck })
-            if (emailaddress && clientid && client && (this.state.login || this.state.profile)) {
+            if (emailaddress && clientid && client) {
                 try {
 
                     let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, profile }

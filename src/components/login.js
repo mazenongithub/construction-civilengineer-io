@@ -1,146 +1,47 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { loginNowIcon } from './svg';
-import * as actions from './actions';
-import Profile from './profile';
-import DynamicStyles from './dynamicstyles'
+import React from 'react';
 import { MyStylesheet } from './styles';
+import DynamicStyles from './dynamicstyles';
 import ClientID from './clientid';
 import EmailAddress from './emailaddress';
+import Profile from './profile';
 
+class Login {
 
-class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            message: "",
-            windowWidth: 0,
-            client: '',
-            clientid: '',
-            firstname: '',
-            lastname: '',
-            emailaddress: '',
-            profileurl: '',
-            phonenumber: '',
-            password: '',
-            width: '',
-            height: '',
-            login: true,
-            register: false
-        }
-        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-    }
-    componentDidMount() {
-        window.addEventListener('resize', this.updateWindowDimensions);
-        this.updateWindowDimensions();
-    }
-
-
-    updateWindowDimensions() {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
-    }
-    handleSubmit(event) {
-        if (this.props.emailaddress.hasOwnProperty("errmsg") || this.props.password.hasOwnProperty("errmsg")) {
-            event.preventDefault();
-            let message = "";
-            if (this.props.emailaddress.hasOwnProperty("errmsg")) {
-                message += this.props.emailaddress.errmsg
-            }
-            if (this.props.password.hasOwnProperty("errmsg")) {
-                message += ` ${this.props.password.errmsg}`
-            }
-            this.setState({ message })
-        }
-        return
-
-    }
-
-
-
-
-    render() {
-        let dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+ 
+    showlogin() {
+        const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
+        const headerFont = dynamicstyles.getHeaderFont.call(this);
         const clientid = new ClientID();
         const emailaddress = new EmailAddress();
-        const headerFont = dynamicstyles.getHeaderFont.call(this);
-        const regularFont = dynamicstyles.getRegularFont.call(this);
-  
-        const loginNow = () => {
-
-            const dynamicstyles = new DynamicStyles();
-            const styles = MyStylesheet();
-            const projectIcon = dynamicstyles.getsaveprojecticon.call(this)
-            if (this.state.client && this.state.clientid && this.state.emailaddress) {
-                return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...projectIcon }} onClick={() => { dynamicstyles.clientlogin.call(this) }}>
-                            {loginNowIcon()}
-                        </button>
-                    </div>
-                </div>)
-            } else if (this.state.emailaddress && this.state.password) {
-                return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...projectIcon }} onClick={() => { dynamicstyles.clientlogin.call(this) }}>
-                            {loginNowIcon()}
-                        </button>
-                    </div>
-                </div>)
-            } else {
-                return (<span>&nbsp;</span>)
-            }
-        }
-
-        const Login = () => {
-
-            return (
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont }}>
-                                Login
-                    </div>
-                        </div>
-
-                        {clientid.showclientid.call(this)}
-
-                        {emailaddress.showemailaddress.call(this)}
-
-                        {loginNow()}
-
-
-                        <div style={{ ...styles.generalFlex,...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont }}>
-                                {this.state.message}
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            )
-        }
-        if (myuser) {
-            return (<Profile />)
+        const profile = new Profile();
+        const myuser= dynamicstyles.getuser.call(this)
+        if(myuser) {
+     
+            return(profile.showprofile.call(this))
         } else {
-            return (Login())
+            return(<div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex1 }}>
+    
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont }}>
+                            Login
+                        </div>
+                    </div>
+    
+                    {clientid.showclientid.call(this)}
+    
+                    {emailaddress.showemailaddress.call(this)}
+    
+    
+                </div>
+            </div>)
+
         }
-
-
+        
 
     }
+
 }
 
-function mapStateToProps(state) {
-    return {
-        myusermodel: state.myusermodel,
-        navigation: state.navigation,
-        project: state.project,
-        allusers: state.allusers,
-        allcompanys: state.allcompanys
-    }
-}
-
-export default connect(mapStateToProps, actions)(Login);
+export default Login
