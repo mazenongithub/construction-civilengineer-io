@@ -2087,7 +2087,7 @@ export function validateCompanyID(value) {
     const reg_ex = /^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,34}(?:[A-Za-z0-9_]))?)$/
     const test = reg_ex.test(value);
     value = value.trim();
-    let errmsg = false;
+    let errmsg = "";
     if (!value) {
         errmsg = " Company URL is required ";
 
@@ -2105,7 +2105,7 @@ export function validateProviderID(value) {
     const reg_ex = /^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,34}(?:[A-Za-z0-9_]))?)$/
     const test = reg_ex.test(value);
     value = value.trim();
-    let errmsg = false;
+    let errmsg = "";
     if (!value) {
         errmsg = " ProviderID is required ";
 
@@ -2157,7 +2157,7 @@ export function FutureCostPresent(i, n, F) {
 export function validateEmail(value) {
     var reg_ex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
     var test = reg_ex.test(value)
-    let errmsg = false;
+    let errmsg = ""
     if (!value) {
         errmsg += `Email Address is required `
 

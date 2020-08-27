@@ -34,7 +34,7 @@ class EmailAddress {
                         this.setState({ emailaddresscheck: true });
                     }
                     else {
-                        this.setState({ emailaddresscheck: false, message: response.message });
+                        this.setState({ emailaddresscheck: false, message: response.invalid });
                     }
 
                 } catch (err) {

@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { folderIcon, scrollImageDown } from './svg';
+import { folderIcon, scrollImageDown, goCheckIcon } from './svg';
 import DynamicStyles from './dynamicstyles';
-import { UploadProfileImage, CheckProviderID } from './actions/api';
-import { returnCompanyList, inputUTCStringForLaborID, validateProviderID } from './functions';
+import { UploadProfileImage, CheckProviderID, CheckEmailAddress } from './actions/api';
+import { returnCompanyList, inputUTCStringForLaborID, validateProviderID, validateEmail } from './functions';
 
 
 class Profile extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, message: '', showpassword:false, password:'', passwordcheck:false }
+        this.state = { render: '', width: 0, height: 0, message: '', showpassword: false, password: '', passwordcheck: false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -39,11 +39,54 @@ class Profile extends Component {
 
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
-
         if (myuser) {
+            let errmsg = "";
+            errmsg = validateProviderID(profileurl);
+
+            if (errmsg) {
+
+                myuser.invalid = errmsg;
+            } else {
+                if (myuser.hasOwnProperty("invalid")) {
+                    delete myuser.invalid;
+                }
+
+            }
+
             myuser.profileurl = profileurl;
             this.props.reduxUser(myuser)
             this.setState({ render: 'render' })
+
+
+        }
+    }
+
+    async checkprofile(profile) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+
+        if (myuser) {
+            let validate = validateProviderID(profile)
+            if (profile && !validate) {
+                try {
+                    let response = await CheckProviderID(profile);
+                    console.log(response)
+                    if (response.hasOwnProperty("invalid")) {
+                        myuser.invalid = response.invalid;
+                        this.props.reduxUser(myuser);
+                        this.setState({ message: response.invalid })
+                    } else if (response.hasOwnProperty("valid")) {
+
+                        if (myuser.hasOwnProperty("invalid")) {
+                            delete myuser.invalid;
+                            this.setState({ message: '' })
+                        }
+                    }
+                } catch (err) {
+                    alert(err)
+                }
+            }
+
         }
     }
     showprofileurl() {
@@ -56,6 +99,7 @@ class Profile extends Component {
                     Profile URL <input type="text" style={{ ...styles.addLeftMargin, ...styles.regularFont, ...regularFont, ...styles.generalField }}
                         value={this.getprofileurl()}
                         onChange={event => { this.handleprofileurl(event.target.value) }}
+                        onBlur={event => { this.checkprofile(event.target.value) }}
 
                     />
 
@@ -110,7 +154,21 @@ class Profile extends Component {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
+
+            let errmsg = "";
+            errmsg = validateEmail(emailaddress)
+           
+            if (errmsg) {
+                myuser.invalidemail = errmsg;
+            } else {
+
+                if (myuser.hasOwnProperty("invalidemail")) {
+                    delete myuser.invalidemail
+                }
+
+            }
             myuser.emailaddress = emailaddress;
+            console.log(myuser)
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' })
         }
@@ -206,26 +264,64 @@ class Profile extends Component {
         }
 
     }
+
+    async checkemailaddress() {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this);
+        const errmsg = validateEmail(myuser.emailaddress);
+
+        if (!errmsg) {
+            const response = await CheckEmailAddress(myuser.emailaddress)
+            if (response.hasOwnProperty("invalid")) {
+                myuser.invalidemail = `${response.message} ${response.invalid}`
+                this.props.reduxUser(myuser)
+                this.setState({ message: response.message })
+            } else {
+                delete myuser.invalidemail;
+                this.props.reduxUser(myuser)
+                this.setState({ render: 'render' })
+            }
+
+
+
+
+        } else {
+            myuser.invalidemail = myuser.emailaddress;
+            this.props.reduxUser(myuser)
+            this.setState({ render: 'render' })
+        }
+
+    }
     showlogininfo() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
+        const goIcon = dynamicstyles.getgocheckheight.call(this)
+        const myuser = dynamicstyles.getuser.call(this)
+        const showemailicon = () => {
+            if(myuser) {
+            if (!myuser.hasOwnProperty("invalidemail")) {
+                return (<button style={{ ...styles.generalButton, ...goIcon }}>{goCheckIcon()}</button>)
+            } else {
+                return;
+            }
+        }
+        }
+
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
 
                 <div style={{ ...styles.generalFlex, ...styles.addPadding }}>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont }}>
-                        {this.getclientmessage()}
-                    </div>
-                </div>
-
-                <div style={{ ...styles.generalFlex, ...styles.addPadding }}>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
+                    <div style={{ ...styles.flex5, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
                         Email <br />
                         <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
                             value={this.getemailaddress()}
                             onChange={event => { this.handleemailaddress(event.target.value) }}
+                            onBlur={() => { this.checkemailaddress() }}
                         />
+                    </div>
+                    <div style={{ ...styles.flex1 }}>
+                        {showemailicon()}
                     </div>
                 </div>
 
@@ -315,7 +411,7 @@ class Profile extends Component {
             formData.append("profilephoto", myfile.files[0]);
             formData.append("myuser", JSON.stringify(params.myuser))
             try {
-                let response = await UploadProfileImage(params.myuser.providerid,formData);
+                let response = await UploadProfileImage(params.myuser.providerid, formData);
                 console.log(response)
                 if (response.hasOwnProperty("allusers")) {
                     let companys = returnCompanyList(response.allusers);
@@ -342,57 +438,24 @@ class Profile extends Component {
     }
     handleprofile(profile) {
         const dynamicstyles = new DynamicStyles();
-        const validate = validateProviderID(profile);
+        let errmsg = "";
+        errmsg = validateProviderID(profile);
         let myuser = dynamicstyles.getuser.call(this);
-        if (!validate) {
-
-            if (myuser.hasOwnProperty("invalid")) {
-                delete myuser.invalid;
-            }
-            if (myuser) {
-                myuser.profile = profile;
-                this.props.reduxUser(myuser);
-                this.setState({ message: '' })
-            }
-
+        if (errmsg) {
+            myuser.invalid = errmsg;
+           
         } else {
-            myuser.profile = profile;
-            myuser.invalid = validate;
-            this.props.reduxUser(myuser);
-            this.setState({ message: validate })
-
+         if(myuser.hasOwnProperty("invalid")) {
+             delete myuser.invalid;
+         }
         }
+
+        myuser.profile = profile;
+        this.props.reduxUser(myuser);
+        this.setState({ message: errmsg })
 
     }
 
-    async checkprofile(profile) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
-
-        if (myuser) {
-            let validate = validateProviderID(profile)
-            if (profile && !validate) {
-                try {
-                    let response = await CheckProviderID(profile);
-                    console.log(response)
-                    if (response.hasOwnProperty("invalid")) {
-                        myuser.invalid = response.invalid;
-                        this.props.reduxUser(myuser);
-                        this.setState({ message: response.message })
-                    } else if (response.hasOwnProperty("valid")) {
-
-                        if (myuser.hasOwnProperty("invalid")) {
-                            delete myuser.invalid;
-                            this.setState({ message: '' })
-                        }
-                    }
-                } catch (err) {
-                    alert(err)
-                }
-            }
-
-        }
-    }
 
 
     render() {
@@ -404,68 +467,80 @@ class Profile extends Component {
         const profileDimensions = dynamicstyles.getprofiledimensions.call(this);
         const folderSize = dynamicstyles.getFolderSize.call(this);
         const arrowHeight = dynamicstyles.getArrowHeight.call(this);
-        
-        if(myuser) {
-        return (<div style={{ ...styles.generalFlex }}>
-            <div style={{ ...styles.flex1 }}>
+        const goIcon = dynamicstyles.getgocheckheight.call(this);
+        const showButton = () => {
 
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...headerFont, ...styles.fontBold, ...styles.alignCenter }}>
-                        /<input type="text" value={myuser.profile}
-                            onChange={event => { this.handleprofile(event.target.value) }}
-                            style={{ ...styles.generalFont, ...headerFont, ...styles.fontBold }}
-                            onBlur={event => { this.checkprofile(event.target.value) }}
-                        />
-                    </div>
-                </div>
+            if (!myuser.hasOwnProperty("invalid")) {
+                return (<button style={{ ...styles.generalButton, ...goIcon }}>{goCheckIcon()}</button>)
+            } else {
+                return;
+            }
+        }
 
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex2 }}>
-                        <div style={{ ...styles.generalContainer, ...profileDimensions, ...styles.showBorder, ...styles.margin10, ...styles.alignRight }}>
-                            {this.showprofileimage()}
+        if (myuser) {
+            return (<div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex1 }}>
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex5, ...regularFont, ...headerFont, ...styles.fontBold, ...styles.alignCenter }}>
+                            /<input type="text" value={myuser.profile}
+                                onChange={event => { this.handleprofile(event.target.value) }}
+                                style={{ ...styles.generalFont, ...headerFont, ...styles.fontBold }}
+                                onBlur={event => { this.checkprofile(event.target.value) }}
+                            />
+                        </div>
+                        <div style={{ ...styles.flex1 }}>
+                            {showButton()}
                         </div>
                     </div>
-                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignBottom, ...styles.margin10 }}>
-                        <input type="file" id="profile-image" />
-                        <button style={{ ...styles.generalButton, ...folderSize }} onClick={() => { this.uploadprofileimage() }}>
-                            {folderIcon()}
-                        </button>
+
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex2 }}>
+                            <div style={{ ...styles.generalContainer, ...profileDimensions, ...styles.showBorder, ...styles.margin10, ...styles.alignRight }}>
+                                {this.showprofileimage()}
+                            </div>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignBottom, ...styles.margin10 }}>
+                            <input type="file" id="profile-image" />
+                            <button style={{ ...styles.generalButton, ...folderSize }} onClick={() => { this.uploadprofileimage() }}>
+                                {folderIcon()}
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                {this.showprofileurl()}
+                    {this.showprofileurl()}
 
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont }}>
-                        Login Info <button style={{ ...styles.generalButton, ...styles.addLeftMargin, ...arrowHeight }}>
-                            {scrollImageDown()}
-                        </button>
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont }}>
+                            Login Info <button style={{ ...styles.generalButton, ...styles.addLeftMargin, ...arrowHeight }}>
+                                {scrollImageDown()}
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                {this.showlogininfo()}
+                    {this.showlogininfo()}
 
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont }}>
-                        Additional Info <button style={{ ...styles.generalButton, ...styles.addLeftMargin, ...arrowHeight }}>
-                            {scrollImageDown()}
-                        </button>
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont }}>
+                            Additional Info <button style={{ ...styles.generalButton, ...styles.addLeftMargin, ...arrowHeight }}>
+                                {scrollImageDown()}
+                            </button>
+                        </div>
                     </div>
+
+                    {this.showadditional()}
+
+
+
+                    {dynamicstyles.showsaveprofile.call(this)}
+
+
                 </div>
-
-                {this.showadditional()}
-
-            
-
-                {dynamicstyles.showsaveprofile.call(this)}
-
-
-            </div>
-        </div>)
+            </div>)
 
         } else {
-            return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Profile </span>
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Profile </span>
             </div>)
         }
     }
