@@ -67,6 +67,7 @@ class App extends Component {
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
   }
   componentDidMount() {
+    
     window.addEventListener('resize', this.updateWindowDimensions);
     this.props.reduxNavigation({ position: 'open' })
     firebase.initializeApp(firebaseConfig());
@@ -128,23 +129,11 @@ class App extends Component {
     const myuser = dynamicstyles.getuser.call(this)
     const landing = new Landing();
     const styles = MyStylesheet();
-    const profile = new Profile();
-    const login = new Login();
-    const showprofile = () => {
-      return(profile.showprofile.call(this))
-    }
-     
  
-    
-    const showlogin = () => {
-
-      return(login.showlogin.call(this))
-    }
-   
     
     const showlanding = () => {
       if (myuser) {
-        return (showprofile())
+        return (<Profile/>)
       } else {
         return (landing.showlanding.call(this))
       }
@@ -156,9 +145,9 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={showlanding} />
           <Route exact path="/providers/register" component={Register} />
-          <Route exact path="/providers/login" component={showlogin} />
+          <Route exact path="/providers/login" component={Login} />
           <Route exact path="/providers/privacy_policy" component={PrivacyPolicy} />
-          <Route exact path="/:providerid/profile" component={showprofile} />
+          <Route exact path="/:providerid/profile" component={Profile} />
           <Route exact path="/:providerid/viewschedule" component={ViewSchedule} />
           <Route exact path="/:providerid/company" component={Company} />
           <Route exact path="/:providerid/company/:companyid/accounts" component={Accounts} />
