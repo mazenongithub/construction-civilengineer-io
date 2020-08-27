@@ -53,7 +53,7 @@ class Register extends Component {
         const clientid = new ClientID();
         const providerid = new ProviderID();
         const emailaddress = new EmailAddress();
-        const profile = new Profile();
+
         const RegisterNow = () => {
             if(this.state.clientid && this.state.client && this.state.profile && this.state.profilecheck && this.state.emailaddress && this.state.emailaddresscheck) {
                 return (<div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
@@ -93,7 +93,7 @@ class Register extends Component {
         }
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            return (profile.showprofile.call(this))
+            return (<Profile/>)
         } else {
             return (Register())
         }
