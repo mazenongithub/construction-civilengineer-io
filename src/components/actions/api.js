@@ -257,13 +257,18 @@ export async function CheckEmailAddress(emailaddress) {
             return resp.json();
         })
 }
-export async function ValidateCompanyID(url) {
+export async function ValidateCompanyID(values) {
 
-    var APIURL = `https://civilengineer.io/construction/api/checkcompanyid.php?url=${url}`
+    var APIURL = `${process.env.REACT_APP_SERVER_API}/construction/checknewcompanyid`
 
     return fetch(APIURL, {
-        method: 'get',
-        credentials: 'include'
+        method: 'post',
+        credentials: 'include',
+        headers: new Headers({
+            'Content-Type': 'application/json',
+        }),
+
+        body: JSON.stringify(values)
     })
         .then(resp => {
 

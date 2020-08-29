@@ -2,26 +2,27 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { registerCompanyIcon, scrollImageDown, addIcon } from './svg';
+import { registerCompanyIcon, scrollImageDown, addIcon, goCheckIcon } from './svg';
 import { Link } from 'react-router-dom';
 import { LoadAllUsers, RegisterNewCompany, AddExistingCompany, ValidateCompanyID } from './actions/api';
 import { returnCompanyList, CreateCompany, validateCompanyID } from './functions';
 import DynamicStyles from './dynamicstyles';
+
 class Company extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, url: '', company: '', urlcheck: true, message: '' }
+        this.state = { render: '', width: 0, height: 0, url: '', company: '', urlcheck: false, message: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-   
-         
-            if(!this.props.allusers.hasOwnProperty("length")) {
+
+
+        if (!this.props.allusers.hasOwnProperty("length")) {
             this.loadallusers();
-            }
-        
+        }
+
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -88,16 +89,41 @@ class Company extends Component {
         }
     }
     async validatecompanyid(url) {
+      
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let response = await ValidateCompanyID(url);
+            let values = {};
+            if (myuser.hasOwnProperty("company")) {
+                values = { oldcompanyid: myuser.company.companyid, newcompanyid: url }
+
+            } else {
+                values = { oldcompanyid: "", newcompanyid: url }
+            }
+        
+            let response = await ValidateCompanyID(values);
             console.log(response)
             if (response.hasOwnProperty("invalid")) {
-                this.setState({ urlcheck: false, message: response.message })
+                if (myuser.hasOwnProperty("company")) {
+                    myuser.company.invalid = response.invalid;
+                }
+                this.props.reduxUser(myuser)
+                this.setState({ urlcheck: false, message: response.invalid })
+
             } else if (response.hasOwnProperty("valid")) {
-                let message = `Your Company Will be Hosted at ${process.env.REACT_APP_CLIENT_API}/company/${url}`
-                this.setState({ urlcheck: true, message })
+
+                if (myuser.hasOwnProperty("company")) {
+                    if (myuser.company.hasOwnProperty("invalid")) {
+                        delete myuser.company.invalid;
+                        this.props.reduxUser(myuser);
+                        let message = `Your Company Will be Hosted at ${process.env.REACT_APP_CLIENT_API}/company/${url}`
+                        this.setState({ urlcheck: true, message })
+
+                    }
+
+                }
+
+
             }
 
         }
@@ -105,6 +131,14 @@ class Company extends Component {
     showcompanyid() {
         const styles = MyStylesheet();
         const regularFont = this.getRegularFont();
+        const dynamicstyles = new DynamicStyles();
+        const goIcon = dynamicstyles.getgocheckheight.call(this)
+
+        const urlicon = () => {
+            if (this.state.urlcheck) {
+                return (<button style={{ ...styles.generalButton, ...goIcon }}>{goCheckIcon()}</button>)
+            }
+        }
         if (this.state.width > 800) {
             return (
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
@@ -119,7 +153,10 @@ class Company extends Component {
                                     onChange={event => { this.handleurl(event.target.value) }}
                                     onBlur={event => { this.validatecompanyid(event.target.value) }}
                                 />
+                                {urlicon()}
                             </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -130,11 +167,12 @@ class Company extends Component {
                 <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
                     Company URL <br /> <input type="text"
                         value={this.state.url}
-                        onChange={event => { this.setState({ url: event.target.value }) }}
+                        onChange={event => { this.handleurl(event.target.value) }}
                         onBlur={event => { this.validatecompanyid(event.target.value) }}
                         style={{ ...styles.addLeftMargin, ...regularFont, ...styles.generalFont, ...styles.generalField }} />
-
+                    {urlicon()}
                 </div>
+
             </div>)
         }
     }
@@ -366,7 +404,7 @@ class Company extends Component {
                     <div style={styles.generalFlex}>
                         <div style={styles.flex1}>
 
-                       
+
                             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
                                 <Link to={`/${providerid}/company/${company.url}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
                                     /employees
@@ -377,7 +415,7 @@ class Company extends Component {
                                     /accounts
                                 </Link>
                             </div>
-                         
+
                             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
                                 <Link to={`/${providerid}/company/${company.url}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont, ...styles.alignCenter }}>
                                     /equipment
@@ -413,18 +451,13 @@ class Company extends Component {
                 try {
                     let response = await AddExistingCompany(values)
                     console.log(response)
-                    if (response.hasOwnProperty("allusers")) {
-                        let companys = returnCompanyList(response.allusers);
-                        this.props.reduxAllCompanys(companys)
-                        this.props.reduxAllUsers(response.allusers);
-
-                    }
+                  
                     if (response.hasOwnProperty("myuser")) {
-                        console.log(response.myuser)
+            
                         this.props.reduxUser(response.myuser)
                     }
-                    if(response.hasOwnProperty("message")) {
-                        this.setState({message:response.message})
+                    if (response.hasOwnProperty("message")) {
+                        this.setState({ message: response.message })
                     }
 
 
@@ -458,7 +491,7 @@ class Company extends Component {
             this.setState({ urlcheck: false, message: validate })
         } else {
             let message = `Your Company Will be Hosted at ${process.env.REACT_APP_CLIENT_API}/company/${url}`
-            this.setState({ message })
+            this.setState({ urlcheck: true, message })
         }
     }
 
@@ -484,15 +517,11 @@ class Company extends Component {
 
                             let response = await RegisterNewCompany(newCompany);
                             console.log(response)
-                            if (response.hasOwnProperty("allusers")) {
-                                let companys = returnCompanyList(response.allusers);
-                                this.props.reduxAllCompanys(companys)
-                                this.props.reduxAllUsers(response.allusers);
-
-                            }
+                           
                             if (response.hasOwnProperty("myuser")) {
 
-                                this.props.reduxUser(response.myuser)
+                                this.props.reduxUser(response.myuser);
+                                this.setState({message:''})
                             }
 
                         } catch (err) {
@@ -689,9 +718,15 @@ class Company extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         const arrowHeight = dynamicstyles.getArrowHeight.call(this)
-
+        const goIcon = dynamicstyles.getgocheckheight.call(this)
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
+
+                const urlicon = () => {
+                    if (!myuser.company.hasOwnProperty("invalid")) {
+                        return (<button style={{ ...styles.generalButton, ...goIcon }}>{goCheckIcon()}</button>)
+                    }
+                }
                 return (
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
@@ -717,7 +752,10 @@ class Company extends Component {
                                     URL <br />
                                     <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
                                         value={this.getmyurl()}
-                                        onChange={event => { this.handlemyurl(event.target.value) }} />
+                                        onChange={event => { this.handlemyurl(event.target.value) }}
+                                        onBlur={event => { this.validatecompanyid(event.target.value) }} />
+
+                                    {urlicon()}
                                 </div>
                             </div>
 
@@ -775,9 +813,9 @@ class Company extends Component {
 
         if (myuser) {
             const companyurl = () => {
-                if(myuser.hasOwnProperty("company")) {
-                    return(  
-                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{myuser.company.url} </span>)
+                if (myuser.hasOwnProperty("company")) {
+                    return (
+                        <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{myuser.company.url} </span>)
                 }
             }
             return (
