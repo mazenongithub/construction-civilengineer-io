@@ -4,7 +4,7 @@ import { GoogleSignIcon, AppleSignIcon } from './svg';
 import DynamicStyles from './dynamicstyles';
 class ClientID {
 
-    showclientid() {
+    showclientid(type) {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const loginButton = dynamicstyles.getLoginButton.call(this);
@@ -19,7 +19,7 @@ class ClientID {
         const apple = () => {
             if(!this.state.client || !this.state.clientid) {
                 return( <div style={{...styles.flex1}}>
-                    <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.appleSignIn.call(this) }}>
+                    <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.appleSignIn.call(this, type) }}>
                         {AppleSignIcon()}
                     </button>
                 </div>
@@ -29,27 +29,13 @@ class ClientID {
         const google = () => {
             if(!this.state.client || !this.state.clientid) {
                 return( <div style={{...styles.flex1}}>
-                    <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.googleSignIn.call(this) }}>
+                    <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.googleSignIn.call(this, type) }}>
                         {GoogleSignIcon()}
                     </button>
                 </div>)
             }
         }
-        if (this.state.width > 800) {
 
-            return (
-                <div style={{ ...styles.generalFlex,...styles.bottomMargin15 }}>
-
-                    <div style={{...styles.flex1, ...regularFont, ...styles.generalFont}}>
-                        {signinmessage()}
-                    </div>
-
-                   {google()}
-
-                   {apple()}
-                </div>)
-
-        }
         return (
             <div style={{ ...styles.generalFlex,...styles.bottomMargin15 }}>
                 <div style={{...styles.flex1}}>
@@ -63,14 +49,10 @@ class ClientID {
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
 
-                            <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.googleSignIn.call(this) }}>
-                                {GoogleSignIcon()}
-                            </button>
+                            {apple()}
                         </div>
                         <div style={{ ...styles.flex1 }}>
-                            <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.appleSignIn.call(this) }}>
-                                {AppleSignIcon()}
-                            </button>
+                            {google()}
                         </div>
                     </div>
 

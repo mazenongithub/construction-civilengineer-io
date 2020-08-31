@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import ClientID from './clientid';
-import EmailAddress from './emailaddress';
 import Profile from './profile';
 import * as actions from './actions';
 import { connect } from 'react-redux';
@@ -32,8 +31,7 @@ class Login extends Component {
         const styles = MyStylesheet();
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const clientid = new ClientID();
-        const emailaddress = new EmailAddress();
- 
+
         const myuser= dynamicstyles.getuser.call(this)
         if(myuser) {
      
@@ -48,9 +46,8 @@ class Login extends Component {
                         </div>
                     </div>
     
-                    {clientid.showclientid.call(this)}
+                    {clientid.showclientid.call(this, "login")}
     
-                    {emailaddress.showemailaddress.call(this)}
     
     
                 </div>

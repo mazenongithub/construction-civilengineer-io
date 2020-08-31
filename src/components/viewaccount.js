@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { StripeConnect, ClientLoginNode, LogoutUserNode } from './actions/api'
+import { StripeConnect } from './actions/api'
 import {inputUTCStringForLaborID, calculatetotalhours,formatDateStringDisplay} from './functions'
-import firebase from 'firebase/app';
-import 'firebase/auth';
+
 class ViewAccount extends Component {
 
     constructor(props) {
@@ -53,103 +52,8 @@ class ViewAccount extends Component {
     }
 
 
-    async appleSignIn() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        let provider = new firebase.auth.OAuthProvider('apple.com');
-        provider.addScope('email');
-        provider.addScope('name');
-        try {
-            let result = await firebase.auth().signInWithPopup(provider)
-            // The signed-in user info.
-            var user = result.user;
-            let client = 'apple';
-            let clientid = user.providerData[0].uid;
-            let emailaddress = user.providerData[0].email;
-            if (emailaddress && clientid && client) {
-                try {
-
-                    let values = { client, clientid, emailaddress }
-                    console.log(values)
-                    const response = await ClientLoginNode(values);
-                    if (response.hasOwnProperty("myuser")) {
-                        myuser.payments = true;
-                        this.props.reduxUser(myuser);
-                        this.setState({ render: 'render' })
-                        this.getstripedashboard();
-                    }
-                } catch (err) {
-                    alert(err)
-                }
-
-            }
-
-        } catch (err) {
-            alert(err)
-        }
-
-    }
-
-    async googleSignIn() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-
-        try {
-
-
-            let provider = new firebase.auth.GoogleAuthProvider();
-            provider.addScope('email');
-            provider.addScope('profile');
-            let result = await firebase.auth().signInWithPopup(provider)
-            var user = result.user;
-            let client = 'google';
-            let clientid = user.providerData[0].uid;
-            let emailaddress = user.providerData[0].email;
-
-            if (emailaddress && clientid && client) {
-                try {
-
-
-                    let values = { client, clientid, emailaddress }
-                    const response = await ClientLoginNode(values);
-                    if (response.hasOwnProperty("myuser")) {
-                        myuser.payments = true;
-                        this.props.reduxUser(myuser);
-                        this.getstripedashboard();
-                        this.setState({ render: 'render' })
-                    }
-
-                } catch (err) {
-                    alert(err)
-                }
-
-            }
-
-        } catch (error) {
-            alert(error)
-        }
-
-
-    }
-    async logoutusernode() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
-            try {
-                let response = await LogoutUserNode();
-                if (response.hasOwnProperty("response")) {
-                    myuser.payments = false;
-                    this.props.reduxUser(myuser)
-                    this.setState({ render: 'render' })
-                }
-
-
-            } catch (err) {
-                alert(err)
-            }
-        }
-    }
-    showlaborid(laborid) {
+    
+aborid(laborid) {
        
         const dynamicstyles = new DynamicStyles();
         const mylabor = dynamicstyles.findactuallaborbyid.call(this,laborid)

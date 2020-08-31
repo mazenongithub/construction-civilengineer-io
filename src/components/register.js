@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import * as actions from './actions';
-import {RegisterNowIcon } from './svg'
 import { connect } from 'react-redux';
 import 'firebase/auth';
 import Profile from './profile';
 import ProviderID from './providerid';
-import EmailAddress from './emailaddress';
 import ClientID from './clientid';
 import DynamicStyles from './dynamicstyles';
 import { MyStylesheet } from './styles'
@@ -49,24 +47,16 @@ class Register extends Component {
         const styles = MyStylesheet();
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this);
-        const registerIcon =dynamicstyles.getsaveprojecticon.call(this);
         const clientid = new ClientID();
         const providerid = new ProviderID();
-        const emailaddress = new EmailAddress();
 
-        const RegisterNow = () => {
-            if(this.state.clientid && this.state.client && this.state.profile && this.state.profilecheck && this.state.emailaddress && this.state.emailaddresscheck) {
-                return (<div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                    <button style={{ ...styles.generalButton, ...registerIcon }} onClick={() => { dynamicstyles.clientlogin.call(this) }}>{RegisterNowIcon()}</button>
-                </div>)
-            } else if(this.state.profile && this.state.profilecheck && this.state.emailaddress && this.state.emailaddresscheck && this.state.password && this.state.passwordcheck) {
-                return (<div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                    <button style={{ ...styles.generalButton, ...registerIcon }} onClick={() => { dynamicstyles.clientlogin.call(this)  }}>{RegisterNowIcon()}</button>
-                </div>) 
-            } else {
-                return(<span>&nbsp;</span>)
-            }
+        const showclientid = () => {
+
+        if(this.state.profilecheck && this.state.profile) {
+            return(clientid.showclientid.call(this, 'register'))
         }
+
+    }
      
         const Register = () => {
             return (<div style={{ ...styles.generalFlex }}>
@@ -77,11 +67,12 @@ class Register extends Component {
                             Register
                         </div>
                     </div>
-
-                    {clientid.showclientid.call(this)}
                     {providerid.showproviderid.call(this)}
-                    {emailaddress.showemailaddress.call(this)}
-                    {RegisterNow()}
+                    {showclientid()}
+                   
+                 
+             
+             
 
                     <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.alignCenter }}>
                         {this.state.message}

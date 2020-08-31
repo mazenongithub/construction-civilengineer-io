@@ -157,21 +157,22 @@ class Profile extends Component {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-
+            myuser.emailaddress = emailaddress;
             let errmsg = "";
             errmsg = validateEmail(emailaddress)
 
             if (errmsg) {
                 myuser.invalidemail = errmsg;
+                this.setState({message:errmsg})
             } else {
 
                 if (myuser.hasOwnProperty("invalidemail")) {
                     delete myuser.invalidemail
+                    this.setState({message:''})
                 }
 
             }
-            myuser.emailaddress = emailaddress;
-            console.log(myuser)
+
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' })
         }
@@ -276,13 +277,13 @@ class Profile extends Component {
         if (!errmsg) {
             const response = await CheckEmailAddress(myuser.emailaddress)
             if (response.hasOwnProperty("invalid")) {
-                myuser.invalidemail = `${response.message} ${response.invalid}`
+                myuser.invalidemail = `${response.invalid}`
                 this.props.reduxUser(myuser)
-                this.setState({ message: response.message })
+                this.setState({ message: response.invalid })
             } else {
                 delete myuser.invalidemail;
                 this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+                this.setState({ message:'' })
             }
 
 
