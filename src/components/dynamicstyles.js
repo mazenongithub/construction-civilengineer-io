@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart} from './functions'
+import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart,getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject} from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin } from './actions/api';
 
@@ -566,6 +566,14 @@ class DynamicStyles {
                     caption:`Project Component organizes your project. This allows you to enter schedule and cost. Make proposals and send invoices. `
 
                 }, 
+
+                {
+                    title:'Milestones/Critical Path',
+                    id:'milestones',
+                    url:'http://civilengineer.io/construction/slides/criticalpath.png',
+                    caption:`Project Milestones with Critical Path component provided by the PM for construction. This sets the project duration and determines crtical path days for each milestone. This helps the Service Provider during Construction`
+
+                }, 
                 {
                     title:'Schedule',
                     id:'Schedule',
@@ -732,6 +740,251 @@ class DynamicStyles {
         } else {
             return (styles.font18)
         }
+
+    }
+
+    getmilestonekeybyid(milestoneid) {
+        const dynamicstyles = new DynamicStyles();
+        let key = false;
+        const myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+        if (myproject.hasOwnProperty("projectmilestones")) {
+            // eslint-disable-next-line
+            myproject.projectmilestones.mymilestone.map((mymilestone, i) => {
+                if (mymilestone.milestoneid === milestoneid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    }
+
+    getpaths() {
+        const dynamicstyles = new DynamicStyles();
+        const milestones = dynamicstyles.getmilestones.call(this)
+        const projectinterval = dynamicstyles.getprojectinterval.call(this);
+        let paths = {}
+    
+    
+        const getmilestonebyid = (paths, milestoneid) => {
+            let mymilestone = false;
+            if (paths.hasOwnProperty(milestoneid)) {
+    
+                mymilestone = paths[milestoneid]
+            }
+    
+            return mymilestone;
+    
+        }
+    
+        const getPathsbyMilestoneID = (milestones, milestoneid) => {
+    
+            let path = {};
+            // eslint-disable-next-line
+            milestones.map(milestone => {
+                if (milestone.hasOwnProperty("predessors")) {
+                    // eslint-disable-next-line
+                    milestone.predessors.map(predessor => {
+                        if (predessor.predessor === milestoneid) {
+                            path[`${milestone.milestoneid}`] = {};
+                            path[`${milestone.milestoneid}`]['type'] = predessor.type
+    
+    
+    
+                        }
+    
+    
+                    })
+    
+    
+    
+                }
+    
+    
+            })
+    
+            return path;
+        }
+        if (milestones) {
+            // eslint-disable-next-line
+            milestones.map(milestone => {
+                paths[`${milestone.milestoneid}`] = {};
+                paths[`${milestone.milestoneid}`]['milestone'] = milestone.milestone
+                paths[`${milestone.milestoneid}`]['start'] = milestone.start
+                paths[`${milestone.milestoneid}`]['completion'] = milestone.completion;
+                paths[`${milestone.milestoneid}`]['paths'] = getPathsbyMilestoneID(milestones, milestone.milestoneid)
+    
+            })
+    
+    
+    
+    
+            let interval = getDateInterval(projectinterval.start, projectinterval.completion)
+            let scale = getScale(interval)
+            let mymilestones = [];
+    
+            // eslint-disable-next-line
+            Object.getOwnPropertyNames(paths).map(path => {
+                mymilestones.push(path)
+            })
+    
+            // eslint-disable-next-line
+            mymilestones.map((milestoneid, i) => {
+    
+                if ((paths[milestoneid]).hasOwnProperty("paths")) {
+    
+    
+    
+                    if (Object.getOwnPropertyNames(paths[milestoneid].paths).length > 0) {
+    
+                        // eslint-disable-next-line
+                        Object.getOwnPropertyNames(paths[milestoneid].paths).map(prop => {
+    
+                            const milestone_2 = getmilestonebyid(paths, prop)
+                            let params = {};
+                            let params_2 = {};
+                            if (milestone_2) {
+    
+                                if (scale === 'month') {
+                                    params = calculatemonth(projectinterval.start, projectinterval.completion, paths[milestoneid]['start'], paths[milestoneid]['completion'])
+                                    params_2 = calculatemonth(projectinterval.start, projectinterval.completion, milestone_2['start'], milestone_2['completion'])
+                                } else if (scale === 'year') {
+                                    params = calculateyear(projectinterval.start, projectinterval.completion, paths[milestoneid]['start'], paths[milestoneid]['completion'])
+                                    params_2 = calculateyear(projectinterval.start, projectinterval.completion, milestone_2['start'], milestone_2['completion'])
+                                } else if (scale === 'day') {
+                                    params = calculateday(projectinterval.start, projectinterval.completion, paths[milestoneid]['start'], paths[milestoneid]['completion'])
+                                    params_2 = calculateday(projectinterval.start, projectinterval.completion, milestone_2['start'], milestone_2['completion'])
+                                }
+                            }
+                            const y1 = 80 + 100 * (dynamicstyles.getmilestonekeybyid.call(this, milestoneid));
+                            const y2 = 80 + 100 * (dynamicstyles.getmilestonekeybyid.call(this, prop));
+                            let x1 = "";
+                            if (paths[milestoneid].paths[prop].type === 'start-to-finish') {
+                                x1 = params.xo + params.width;
+                            } else if (paths[milestoneid].paths[prop].type === 'start-to-start') {
+                                x1 = params.xo;
+                            }
+                            paths[milestoneid].paths[prop]['x1'] = x1;
+                            paths[milestoneid].paths[prop]['y1'] = y1
+                            paths[milestoneid].paths[prop]['y2'] = y2
+                            paths[milestoneid].paths[prop]['x2'] = params_2.xo
+                            paths[milestoneid].paths[prop]['float'] = 'float';
+    
+    
+                        })
+    
+                    }
+    
+    
+                }
+    
+    
+            })
+        }
+    
+    
+        let milestone_1 = "";
+        let milestone_2 = "";
+        for (let myprop in paths) {
+            milestone_1 = getmilestonebyid(paths, myprop)
+    
+    
+    
+            for (let mypath in paths[myprop]['paths']) {
+                milestone_2 = getmilestonebyid(paths, mypath)
+                let float = calculateFloat(milestone_1.completion, milestone_2.start)
+                paths[myprop]['paths'][mypath]['float'] = float
+            }
+    
+        }
+    
+        return paths;
+    }
+    
+    checkemptypathsbymilestoneid(milestoneid) {
+        const dynamicstyles = new DynamicStyles();
+        const paths = dynamicstyles.getpaths.call(this)
+        const path = paths[milestoneid];
+        let empty = false;
+        if(checkemptyobject(path.paths)) {
+           empty  = true;
+        }
+        return empty; 
+        }
+        
+    
+    calcTotalProjectFloat(milestoneid) {
+        const dynamicstyles = new DynamicStyles();
+        const paths = dynamicstyles.getpaths.call(this)
+        let checkcalc = true
+        let i =0;
+        let activemilestoneid = milestoneid;
+        while(checkcalc) {
+       
+       
+          window[`checkfloat_${i.toString()}`] = 0;
+              
+              
+              let j = 0;
+               checkcalc = false;
+               for (window[`mypath_${i.toString()}`] in paths[activemilestoneid]['paths']) {
+                   
+                if(!dynamicstyles.checkemptypathsbymilestoneid.call(this,window[`mypath_${i.toString()}`])) {
+                  checkcalc = true 
+                 }
+                    
+                
+                    if (j === 0 || window[`checkfloat_${i.toString()}`] > dynamicstyles.getfloatbymilestoneid.call(this, window[`mypath_${i.toString()}`])) {
+                       window[`checkfloat_${i.toString()}`] = dynamicstyles.getfloatbymilestoneid.call(this, window[`mypath_${i.toString()}`])
+                       activemilestoneid = window[`mypath_${i.toString()}`]
+                   }
+                j+=1
+              }
+          
+               i+=1;
+        
+        }
+       let float = dynamicstyles.getfloatbymilestoneid.call(this, milestoneid)
+       let projectfloat = 0;
+       for(let k=0;k<i;k++) {
+         projectfloat+= Number(window[`checkfloat_${k.toString()}`])
+       }
+       return float + projectfloat
+       }
+
+    getfloatbymilestoneid(milestoneid) {
+        const dynamicstyles = new DynamicStyles();
+        const paths = dynamicstyles.getpaths.call(this)
+        let float = 0;
+        let i = 0;
+        for (let mypath in paths[milestoneid]['paths']) {
+
+            let floatcheck = paths[milestoneid]['paths'][mypath]['float']
+
+            if (floatcheck < float || i === 0) {
+                float = floatcheck
+
+            }
+
+            i += 1;
+        }
+        return float;
+
+    }
+
+    getprojectinterval() {
+        const dynamicstyles = new DynamicStyles();
+        const milestones = dynamicstyles.getmilestones.call(this)
+        let interval = false;
+        if (milestones) {
+            milestones.sort((a, b) => {
+                return sorttimes(a.start, b.start)
+            }
+            )
+            const start = milestones[0].start;
+            const completion = milestones[milestones.length - 1].completion;
+            interval = { start, completion }
+        }
+        return interval;
 
     }
     getmyproposals() {
@@ -3606,6 +3859,8 @@ class DynamicStyles {
         }
         return material;
     }
+
+    
     getmilestonebyid(milestoneid) {
         let dynamicstyles = new DynamicStyles();
         let milestones = dynamicstyles.getmilestones.call(this)
@@ -3700,6 +3955,8 @@ class DynamicStyles {
         }
         return key;
     }
+
+    
     getmyequipment() {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);

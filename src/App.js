@@ -42,7 +42,8 @@ import Schedule from './components/schedule';
 import Actual from './components/actual';
 import ViewSchedule from './components/viewschedule'
 import MySchedule from './components/myschedule'
-import MyActual from './components/myactual'
+import MyActual from './components/myactual';
+import Milestones from './components/milestones'
 //import { TestUser } from './components/functions/testuser'
 
 
@@ -159,6 +160,7 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/materials" component={Materials} />
           <Route exact path="/:providerid/company/:companyid/projects" component={Projects} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/milestones" component={Milestones} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedule" component={Schedule} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/actual" component={Actual} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule" component={BidSchedule} />
@@ -423,6 +425,9 @@ class App extends Component {
                   </div>
                   <div style={{ ...styles.generalContainer }}>
                     <Link to={`/${profile}/company/${companyid}/projects/${projectid}/specifications`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /specifications </Link>
+                  </div>
+                  <div style={{ ...styles.generalContainer }}>
+                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/milestones`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /milestones </Link>
                   </div>
                 </div>)
             }
