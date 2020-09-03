@@ -68,7 +68,7 @@ class App extends Component {
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
   }
   componentDidMount() {
-    
+    document.title ='construction.civilengineer.io'
     window.addEventListener('resize', this.updateWindowDimensions);
     this.props.reduxNavigation({ position: 'open' })
     firebase.initializeApp(firebaseConfig());
