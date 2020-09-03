@@ -504,58 +504,58 @@ class DynamicStyles {
                     title:'Construction by civilengineer.io',
                     id:'construction',
                     url:'http://civilengineer.io/construction/slides/construction.png',
-                    caption:`This is Construction Management by Civil Engineer.io. See the Slideshow all of these programs are included. Go ahead and Join. This is construction management done right.  `
+                    caption:`This is Construction Management by Civil Engineer.io. Full Construction Management Program from A to Z. Ready for companies to use. `
                 },
                 {
                     title:'Company',
                     id:'company',
                     url:'http://civilengineer.io/construction/slides/company.png',
-                    caption:`Create a Company after Registration  `
+                    caption:`Company allows you to add your basic company info. It has links to other company components. This makes managing your company easier. `
                 },
                 {
-                    title:'Employees',
+                    title:'Employees/Benefits',
                     id:'employees',
                     url:'http://civilengineer.io/construction/slides/employees.png',
-                    caption:`Have your employees add your company. They can login and add your company and you can activate them. This makes employee management easier.   `
+                    caption:`Have your employees add your company. You can make them active and give them manager access. You can enter annual their benefits and working hours to determine their default Labor Rates    `
                 },
                 {
                     title:'Accounts',
                     id:'accounts',
                     url:'http://civilengineer.io/construction/slides/accounts.png',
-                    caption:`Create Accounts for your Employees, Equipment, and Materials   `
+                    caption:`Accounts are created for your company to receive payment. Connect an account to a Employee Benefit, equipment, or material. The amount for each account is determined during payment for an Invoice.   `
 
                 },
                 {
                     title:'View Account',
                     id:'viewaccount',
                     url:'http://civilengineer.io/construction/slides/viewaccount.png',
-                    caption:`View Account Summary. Includes charges, transfers, and account balances. This makes account management easier. `
+                    caption:`View Account gives the account balance summary that includes charges and payments. It includes the link to Stripe so you can connect your account  `
                 },
                 
                 {
                     title:'Equipment',
                     id:'equipment',
                     url:'http://civilengineer.io/construction/slides/equipment.png',
-                    caption:`Add your Equipment. Enter the Ownership values, and costs of ownership, and the annual working hours. This program determines what the equipment rates should be based on the costs of ownership. Alternatively you may select rental rates and store your equipment as rentals. Connect one account per equipment`
+                    caption:`Equipment component was made to enter your equipment either by ownership or by rental. The Equipment component stores equipment costs for ownership and rental rates to determine default rates. `
                 },
                 {
                     title:'Equipment Ownership',
                     id:'ownershipcosts',
                     url:'http://civilengineer.io/construction/slides/equipment_1.png',
-                    caption:`Add Equipment ownwership costs to determine default equipment rate based on cost of ownership`
+                    caption:`Enter your equipment ownership costs and other variables to determine what the default equipment rate is. `
                 },
 
                 {
                     title:'Materials',
                     id:'materials',
                     url:'http://civilengineer.io/construction/slides/materials.png',
-                    caption:`Add Materials to your company. This makes keeping track of materials eaiser and sets the default unit price. This makes estimating eaiser `
+                    caption:`Materials component adds your company materials. This makes managing materials easier. This sets the default unit price for the material. `
                 },
                 {
                     title:'View Schedule',
                     id:'viewschedule',
                     url:'http://civilengineer.io/construction/slides/viewschedule.png',
-                    caption:`View Schedule loads your schedule for view. Includes the Project, Time, and Spec included for your schedule.  `
+                    caption:` View Schedule Component gives the employee their schedule in a calender. This makes communicating work between you and your employees better. The Employee can access their schedule for work.   `
                 },
               
 
@@ -563,48 +563,42 @@ class DynamicStyles {
                     title:'Project',
                     id:'project',
                     url:'http://civilengineer.io/construction/slides/project.png',
-                    caption:`Project Component organizes your project. This allows you to enter schedule and cost. Make proposals and send invoices. `
+                    caption:`The Project Component was made to give you access to all of the project component and give the basic project information `
 
                 }, 
 
-                {
-                    title:'Milestones/Critical Path',
-                    id:'milestones',
-                    url:'http://civilengineer.io/construction/slides/criticalpath.png',
-                    caption:`Project Milestones with Critical Path component provided by the PM for construction. This sets the project duration and determines crtical path days for each milestone. This helps the Service Provider during Construction`
-
-                }, 
+               
                 {
                     title:'Schedule',
                     id:'Schedule',
                     url:'http://civilengineer.io/construction/slides/schedule.png',
-                    caption:`Schedule allows you to easily schedule labor, equipment, and materials for your job. This makes scheduling eaiser `
+                    caption:`The schedule component is where you enter your schedule labor, equipment, and materials for the project. These costs get added into a Proposal for authorization from the PM. `
                 },
 
                 {
                     title:'Actual',
                     id:'actual',
                     url:'http://civilengineer.io/construction/slides/actual.png',
-                    caption:`Actual cost components for recording actual costs. This makes recording your actual costs easier  `
+                    caption:`Actual cost component works the same as your schedule but it for recording actual costs as they occur. Employees who clock in will use the actual component to enter their labor for the project.   `
                 },  
                 {
                     title:'Proposal',
                     id:'proposals',
                     url:'http://civilengineer.io/construction/slides/proposals.png',
-                    caption:`Use the Proposal component to create a proposal and add items to the proposals. You add the item by clicking on it when a proposal is active. You can modify the payitems inside this component.   `
+                    caption:`The proposal component was made to add your schedule items and send to the PM for apporval. The proposal is formatted as a Construction-Bid automatically when you enter the CSI-code for the work you are performing.   `
                 },
                 {
                     title:'View Proposal',
                     id:'viewinvoice',
                     url:'http://civilengineer.io/construction/slides/viewproposal.png',
-                    caption:`View Proposal gives the itemized construction proposal for the job   `
+                    caption:`View Proposal allows you to view the final proposal sent to the PM after you add your items to it.   `
                 },
 
                 {
                     title:'Invoices',
                     id:'invoices',
                     url:'http://civilengineer.io/construction/slides/invoices.png',
-                    caption:`Invoice component was made to easily create and add items to the invoice. Create the invoice. Add Items to the invoice and click save. You can adjust the profit factor or any of the pay items before sending the invoice.   `
+                    caption:`Invoices works the same as the Proposal component except it is for adding your actual costs items into invoices   `
                 },
   
   
@@ -612,27 +606,34 @@ class DynamicStyles {
                     title:'View Invoice',
                     id:'viewinvoice',
                     url:'http://civilengineer.io/construction/slides/viewinvoice.png',
-                    caption:`View Invoice shows the itemized cost for construction per specfication. Includes transfer payment summary.  `
+                    caption:`View Invoice shows the invoice in construction-bid format. View Invoice also contains payment, transfer, and balance remaining details.   `
                 },
                 {
                     title:'Labor, Equipment, Materials',
                     id:'lem',
                     url:'http://civilengineer.io/construction/slides/lem.png',
-                    caption:`Labor, materials, equipment breakdown for each item in the schedule  `
+                    caption:`Labor, materials, equipment breakdowns are given for each for schedule and actual pay items.   `
                 },
               
                 {
                     title:'Quantity Take Off Schedule',
                     id:'takeoffschedule',
                     url:'http://civilengineer.io/construction/slides/costestimate.png',
-                    caption:`Engineering estimate produces itemized schedule. This sets the scope on the project.  `
+                    caption:`The Engineers provide the master quanitity take-off schedule for bid.  `
                 },
                 {
                     title:'Specification',
                     id:'specification',
                     url:'http://civilengineer.io/construction/slides/specification.png',
-                    caption:`Engineers submit specifications for each item in the contract.   `
-                }
+                    caption:`Engineers create the specifications for the team to follow. This sets the quality standards for construction   `
+                },
+                {
+                    title:'Milestones/Critical Path',
+                    id:'milestones',
+                    url:'http://civilengineer.io/construction/slides/criticalpath.png',
+                    caption:`Milestones and Critical Path calculations are provided to the Service Provider. The service provider uses these milestones when they enter schedule and cost. Critical Path methods give float and total project float for each milestone. This makes communicating schedule between the PM and service provider better .`
+
+                }, 
                 
         ])
         }
