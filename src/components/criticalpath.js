@@ -243,9 +243,11 @@ class CriticalPath {
                 const milestone = dynamicstyles.getmilestonebyid.call(this, this.state.activemilestoneid);
                 const float = dynamicstyles.getfloatbymilestoneid.call(this,this.state.activemilestoneid) 
                 const projectfloat = dynamicstyles.calcTotalProjectFloat.call(this,this.state.activemilestoneid)
+                const lag = dynamicstyles.getlagbymilestoneid.call(this,this.state.activemilestoneid)
+            
                 return (
                     <div style={{ ...styles.generalContainer }}>
-                       <div style={{ ...styles.generalContainer }}><span style={{ ...styles.generalFont, ...regularFont }}>Active Milestone Is: {milestone.milestone}  Float is {float} days Project Float is {projectfloat} days</span></div> 
+                       <div style={{ ...styles.generalContainer }}><span style={{ ...styles.generalFont, ...regularFont }}>Active Milestone Is: {milestone.milestone}  Float is {float} days Project Float is {projectfloat} days Lag is {lag} days</span></div> 
                     </div>
                 )
             }

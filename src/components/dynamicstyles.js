@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart,getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject} from './functions'
+import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart,getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime} from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin } from './actions/api';
 
@@ -911,7 +911,55 @@ class DynamicStyles {
         }
         return empty; 
         }
+
+    
         
+        getlagbymilestoneid(milestoneid) {
+            const dynamicstyles = new DynamicStyles();
+            const milestones = dynamicstyles.getmilestones.call(this);
+            let lag = 0;
+        
+            const checklag = (startdate, enddate, i, lag) => {
+                let replacelag = false;
+        
+        
+                const check = Math.round((startdate-enddate)*(1/(1000*60*60*24)))
+                
+                
+                if(i===0 && check>0) {
+                    replacelag = true;
+                } else if(check < lag) {
+                    replacelag = true;
+                }
+        
+            
+        
+                return replacelag;
+            }
+            
+            if(milestones) {
+                const mymilestone = dynamicstyles.getmilestonebyid.call(this,milestoneid);
+                if(mymilestone) {
+        
+                const startdate = getDateTime(mymilestone.start);
+        
+                if(mymilestone.hasOwnProperty("predessors")) {
+                    // eslint-disable-next-line
+                    mymilestone.predessors.map((predessor,i)=> {
+        
+                        const enddate = getDateTime(dynamicstyles.getmilestonebyid.call(this,predessor.predessor).completion)
+                     
+                        if(startdate >= enddate && checklag(startdate,enddate,i,lag)) {
+                            lag = Math.round((startdate-enddate)*(1/(1000*60*60*24)))
+                        }
+        
+                    })
+                }
+        
+                }
+            }
+            return lag;
+        }    
     
     calcTotalProjectFloat(milestoneid) {
         const dynamicstyles = new DynamicStyles();

@@ -2258,6 +2258,12 @@ export function monthString(month) {
     }
 }
 
+export function getDateTime (datestr)  {
+    let offset = getOffsetDate(datestr)
+    let datein = new Date(`${datestr.replace(/-/g, '/')} 00:00:00${offset}`)
+    return datein.getTime();
+  }
+
 export function trailingZeros(num) {
     if (num < 10) {
         return (`0${num}`);
