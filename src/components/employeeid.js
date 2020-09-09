@@ -19,7 +19,7 @@ class EmployeeID {
                         // eslint-disable-next-line
                         company.office.employees.employee.map(employee => {
                             let myemployee = dynamicstyles.getemployeebyid.call(this, employee.providerid)
-                            console.log(myemployee)
+                      
                             options.push(<option value={myemployee.providerid}>{myemployee.firstname} {myemployee.lastname}</option>)
                         })
 
@@ -42,6 +42,7 @@ class EmployeeID {
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
+                        <span style={{...regularFont,...styles.generalFont}}>Employee ID</span> <br/>
                         <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
                             value={this.getemployeeid()}
                             onChange={event => { this.handleemployeeid(event.target.value) }}>

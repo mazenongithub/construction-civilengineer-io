@@ -282,7 +282,7 @@ class Invoices extends Component {
             updateinfo = `Updated ${UTCStringFormatDateforProposal(myinvoice.updated)}`
         }
       
-            return(<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont, ...styles.marginLeft60 }}>
+            return(<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont, ...styles.marginLeft60 }} key={myinvoice.invoiceid}>
                 <div style={{ ...styles.flex1 }} onClick={() => { this.makeinvoiceactive(invoiceid) }}>
                     {this.handlecheckicon(myinvoice.invoiceid)}
                     <span style={{ ...regularFont, ...styles.generalFont }}> Invoice ID {myinvoice.invoiceid} {updateinfo}</span>
@@ -349,7 +349,7 @@ class Invoices extends Component {
         }
         return (
 
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }}>
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }} key={item.equipmentid}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
                     {myequipment.equipment} CSI: {csi.csi} - {csi.title}   TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)}
@@ -429,7 +429,7 @@ class Invoices extends Component {
             }
         }
         return (
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }}>
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }} key={item.materialid}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
                     {inputUTCStringForMaterialIDWithTime(item.timein)} {material.material} CSI: {csi.csi}-{csi.title}
@@ -491,7 +491,7 @@ class Invoices extends Component {
             }
         }
         return (
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }}>
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }} key={item.laborid}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
                     {employee.firstname} {employee.lastname} TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)} CSI {csi.csi}-{csi.title}  Total Hours {totalhours.toFixed(2)} Hrs at  $

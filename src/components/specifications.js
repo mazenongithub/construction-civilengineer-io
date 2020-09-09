@@ -40,7 +40,7 @@ class Estimate extends Component {
         const projectid = this.props.match.params.projectid;
         const companyid = this.props.match.params.companyid;
         return (
-            <div style={{ ...styles.generalContainer }}>
+            <div style={{ ...styles.generalContainer }} key={spec.specid}>
                 <Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }} to={`/${profile}/company/${companyid}/projects/${projectid}/specifications/${csi.csiid}`}>{csi.csi} - {csi.title}</Link>
             </div>
         )

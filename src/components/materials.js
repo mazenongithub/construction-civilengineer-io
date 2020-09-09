@@ -336,7 +336,7 @@ class Materials extends Component {
             let mycsi = this.getcsibyid(csiid);
             csi = `${mycsi.csi} - ${mycsi.title}`
         }
-        return (<div style={{ ...styles.generalFlex, ...this.getactivematerialbackground(mymaterial.materialid) }}>
+        return (<div style={{ ...styles.generalFlex, ...this.getactivematerialbackground(mymaterial.materialid) }} key={mymaterial.materialid}>
             <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
                 <span onClick={() => { this.makematerialactive(mymaterial.materialid) }}>{mymaterial.material}  {mymaterial.unitcost}/{mymaterial.unit} Account:{account} Construction:{csi}</span>
                 <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removematerial(mymaterial) }}>{removeIconSmall()} </button>

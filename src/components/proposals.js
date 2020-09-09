@@ -301,7 +301,7 @@ class Proposals extends Component {
             updateinfo = `Updated ${UTCStringFormatDateforProposal(myproposal.updated)}`
         }
      
-            return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont, ...styles.marginLeft60 }}>
+            return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont, ...styles.marginLeft60 }} key={myproposal.proposalid}>
                 <div style={{ ...styles.flex1 }} onClick={() => { this.makeproposalactive(proposalid) }}>
                     {this.handlecheckicon(myproposal.proposalid)}
                     <span style={{ ...regularFont, ...styles.generalFont }}>Proposal ID {myproposal.proposalid} {updateinfo}</span>

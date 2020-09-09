@@ -24,7 +24,7 @@ class CriticalPath {
                     let type = predessor.type;
                     if (type === 'start-to-finish') {
                         let mymilestone = dynamicstyles.getmilestonebyid.call(this, milestoneid)
-                        jsx.push(<div style={{ ...styles.generalContainer }}>
+                        jsx.push(<div style={{ ...styles.generalContainer }} key={`predessor${milestoneid}`}>
                             <span style={{ ...regularFont, ...styles.generalFont }}>{mymilestone.milestone}</span> 
                         </div>)
                     }

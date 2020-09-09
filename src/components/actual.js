@@ -42,14 +42,14 @@ class Actual extends Component {
 
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-     
+
         this.timeindefault()
         this.timeoutdefault();
         this.materialdatedefault();
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
-        if(myproject) {
-            this.props.reduxProject({ projectid: myproject.projectid})
+        const myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        if (myproject) {
+            this.props.reduxProject({ projectid: myproject.projectid })
         }
     }
     componentWillUnmount() {
@@ -1302,6 +1302,7 @@ class Actual extends Component {
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
         const scheduleview = new ScheduleView();
+        const checkmanager = dynamicstyles.checkmanager.call(this)
         const validate = () => {
             let validation = true;
             if (this.state.activelaborid && this.state.active === 'labor') {
@@ -1664,9 +1665,10 @@ class Actual extends Component {
         }
 
         const showemployeeid = () => {
-            if (this.state.active === 'labor') {
+            if (checkmanager) {
+                if (this.state.active === 'labor') {
 
-                if (this.state.activelaborid) {
+
                     const validate = dynamicstyles.checkinvoicelaborid.call(this, this.state.activelaborid)
                     if (validate) {
                         return (employeeid.showemployeeid.call(this))
@@ -1680,12 +1682,8 @@ class Actual extends Component {
                         }
 
                     }
-                } else {
-                    return (employeeid.showemployeeid.call(this))
                 }
 
-            } else {
-                return;
             }
 
         }

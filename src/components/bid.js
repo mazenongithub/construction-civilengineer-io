@@ -496,7 +496,7 @@ class Bid extends Component {
 
         } else {
             return (
-                <div style={{ ...styles.generalFlex }} key={item.lineid}>
+                <div style={{ ...styles.generalFlex }} key={item.csiid}>
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont, ...styles.showBorder }}>
