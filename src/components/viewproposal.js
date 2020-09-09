@@ -14,8 +14,8 @@ class ViewProposal extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
-
+ 
+       
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);

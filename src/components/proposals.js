@@ -15,9 +15,10 @@ class Proposals extends Component {
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
+     
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
+    
 
     }
     componentWillUnmount() {

@@ -17,7 +17,7 @@ class Invoices extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
+    
 
     }
     componentWillUnmount() {

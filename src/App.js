@@ -280,7 +280,7 @@ class App extends Component {
         myproject.map(myproject => {
           let projectid = myproject.title;
           projectidlinks.push(
-            <div style={{ ...styles.generalContainer }} key={`link${myproject.projectid}`}>
+            <div style={{ ...styles.generalContainer }} key={`link${myproject.projectid}`} onClick={()=>{this.props.reduxProject({projectid})}}>
               <Link to={`/${profile}/company/${companyid}/projects/${projectid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}> /{myproject.title} </Link>
             </div>)
 
@@ -359,9 +359,9 @@ class App extends Component {
           companyid = myuser.company.companyid;
         }
         if (this.props.project) {
-          if (this.props.project.hasOwnProperty("activeprojectid")) {
-            if (this.props.project.activeprojectid) {
-              let project = dynamicstyles.getprojectbytitle.call(this, this.props.project.activeprojectid);
+          if (this.props.project.hasOwnProperty("projectid")) {
+        
+              let project = dynamicstyles.getprojectbyid.call(this, this.props.project.projectid);
               const projectid = project.title;
 
               const invoices = () => {
@@ -403,7 +403,9 @@ class App extends Component {
 
               return (
                 <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
-                  <div style={{ ...styles.generalContainer }}>
+                  <div style={{ ...styles.generalContainer }} onClick={()=>{
+                    this.props.reduxProject({projectid})
+                  }}>
                     <Link to={`/${profile}/company/${companyid}/projects/${projectid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }} > /{projectid} </Link>
                   </div>
 
@@ -430,7 +432,7 @@ class App extends Component {
                     <Link to={`/${profile}/company/${companyid}/projects/${projectid}/milestones`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /milestones </Link>
                   </div>
                 </div>)
-            }
+            
           }
         }
       }

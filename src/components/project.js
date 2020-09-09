@@ -12,7 +12,7 @@ class Project extends Component {
     }
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
-        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
+            
         this.updateWindowDimensions();
     }
     componentWillUnmount() {
@@ -132,6 +132,17 @@ class Project extends Component {
                                 </div>
                             </div>
 
+
+                            
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+
+                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/milestones`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                        /milestones
+                                    </Link>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -229,7 +240,7 @@ function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
         navigation: state.navigation,
-        projectid: state.projectid,
+        project: state.project,
         allusers: state.allusers,
         allcompanys: state.allcompanys
     }

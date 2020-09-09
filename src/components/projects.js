@@ -152,6 +152,15 @@ class Projects extends Component {
                                 </div>
                             </div>
 
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                             
+                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                                    <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/milestones`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                        /milestones
+                                    </Link>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 

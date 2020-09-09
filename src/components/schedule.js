@@ -41,7 +41,7 @@ class Schedule extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
+      
         this.timeindefault()
         this.timeoutdefault();
         this.materialdatedefault();
