@@ -15,6 +15,12 @@ class BidSchedule extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        const dynamicstyles = new DynamicStyles();
+        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
+        if(myproject) {
+      
+            this.props.reduxProject({ projectid: myproject.projectid})
+        }
       
     }
 
@@ -366,7 +372,7 @@ class BidSchedule extends Component {
         if (scheduleitems) {
             // eslint-disable-next-line
             scheduleitems.map((item, i) => {
-                console.log(csiid, item)
+          
                 if (item.csiid === csiid) {
                     key = i
                 }

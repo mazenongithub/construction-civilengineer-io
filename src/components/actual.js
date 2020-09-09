@@ -46,6 +46,11 @@ class Actual extends Component {
         this.timeindefault()
         this.timeoutdefault();
         this.materialdatedefault();
+        const dynamicstyles = new DynamicStyles();
+        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
+        if(myproject) {
+            this.props.reduxProject({ projectid: myproject.projectid})
+        }
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);

@@ -1063,7 +1063,7 @@ class DynamicStyles {
             let result = await firebase.auth().signInWithPopup(provider)
             // The signed-in user info.
             var user = result.user;
-            console.log(user)
+          
             let firstname = "";
             let lastname = "";
             if (user.providerData[0].displayName) {
@@ -1980,7 +1980,7 @@ class DynamicStyles {
 
         try {
             let response = await AppleLogin(values)
-            console.log("RESPONSE LOGIN", response)
+            console.log(response)
          
             if (response.hasOwnProperty("myuser")) {
                 this.props.reduxUser(response.myuser)
@@ -2872,15 +2872,15 @@ class DynamicStyles {
         return key;
     }
     getmyequipmentbyid(equipmentid) {
-        console.log(equipmentid)
+
         const dynamicstyles = new DynamicStyles();
         let equipments = false;
 
         let myequipment = dynamicstyles.getmyequipment.call(this)
-        console.log(myequipment)
+ 
         // eslint-disable-next-line
         myequipment.map((equipment) => {
-            console.log(equipment)
+     
             if (equipment.equipmentid === equipmentid) {
                 equipments = equipment
             }
@@ -3013,7 +3013,7 @@ class DynamicStyles {
     }
 
     getprojectbymilestoneid(milestoneid) {
-        console.log(milestoneid)
+ 
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
         let myproject = false;
@@ -3686,9 +3686,9 @@ class DynamicStyles {
         const AFactor = () => {
             const T = Period();
             const i = Number(myequipment.ownership.loaninterest);
-            console.log(T, i)
+        
             if (T) {
-                console.log(AmmortizeFactor(i, T))
+             
                 return (AmmortizeFactor(i, T))
             } else {
 
@@ -3703,18 +3703,18 @@ class DynamicStyles {
 
             return (Math.round(annual * years))
         }
-        console.log(i)
+  
         if (i > 0) {
             equipmentrate = (P() * AFactor()) / (workinghours);
         } else {
-            console.log(P(), totalworkinghours(), Period())
+          
             equipmentrate = P() / (totalworkinghours())
         }
 
         return equipmentrate;
     }
     getcostbyid(equipmentid,costid) {
-        console.log(equipmentid,costid)
+    
         const dynamicstyles = new DynamicStyles();
         let costs = false;
         const myequipment = dynamicstyles.getmyequipmentbyid.call(this,equipmentid)

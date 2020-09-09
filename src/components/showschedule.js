@@ -29,7 +29,7 @@ class ShowSchedule extends Component {
             myschedule.map(schedule => {
                 const csi = dynamicstyles.getcsibyid.call(this,schedule.csiid)
                 const project = dynamicstyles.getprojectbymilestoneid.call(this,schedule.milestoneid) 
-                console.log(project)
+              
 
                 if (
                     (dateStringFromUTCTime(schedule.timein) === this.state.day_1)

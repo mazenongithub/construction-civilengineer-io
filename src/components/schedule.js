@@ -41,10 +41,15 @@ class Schedule extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-      
         this.timeindefault()
         this.timeoutdefault();
         this.materialdatedefault();
+        const dynamicstyles = new DynamicStyles();
+        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
+        if(myproject) {
+        
+            this.props.reduxProject({ projectid: myproject.projectid})
+        }
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);

@@ -13,7 +13,12 @@ class Estimate extends Component {
     }
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
-        this.props.reduxProject({ activeprojectid: this.props.match.params.projectid })
+        const dynamicstyles = new DynamicStyles();
+        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
+        if(myproject) {
+          
+            this.props.reduxProject({ projectid: myproject.projectid})
+        }
         this.updateWindowDimensions();
 
     }
@@ -31,7 +36,7 @@ class Estimate extends Component {
         let bidschedule = false;
         if (myuser) {
             const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
-            console.log(project)
+     
             if (project) {
                 if (project.hasOwnProperty("costestimate")) {
                     if (project.costestimate.hasOwnProperty("bidschedule")) {
@@ -163,7 +168,7 @@ class Estimate extends Component {
     showbiditems() {
 
         const biditems = this.getbiditems();
-        console.log(biditems)
+    
         let items = [];
         if (biditems) {
             // eslint-disable-next-line

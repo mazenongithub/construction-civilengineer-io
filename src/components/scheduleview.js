@@ -65,6 +65,7 @@ class ScheduleView {
                         me[schedule.providerid] = {};
                         me[schedule.providerid]["firstname"] = employee.firstname;
                         me[schedule.providerid]["lastname"] = employee.lastname;
+                        me[schedule.providerid]["providerid"] = employee.providerid;
                         me[schedule.providerid]["schedule"] = [];
                         me[schedule.providerid]["schedule"].push({ timein: schedule.timein, timeout: schedule.timeout })
                         employees.push(me)
@@ -81,6 +82,7 @@ class ScheduleView {
                         let me = {};
                         const myequipment = dynamicstyles.getmyequipmentbyid.call(this, schedule.myequipmentid)
                         me[schedule.myequipmentid] = {};
+                        me[schedule.myequipmentid]["equipmentid"] = schedule.myequipmentid;
                         me[schedule.myequipmentid]["equipment"] = myequipment.equipment;
                         me[schedule.myequipmentid]["schedule"] = [];
                         me[schedule.myequipmentid]["schedule"].push({ timein: schedule.timein, timeout: schedule.timeout })
@@ -118,7 +120,8 @@ class ScheduleView {
                     let props = Object.getOwnPropertyNames(employee)
                     let firstname = employee[props[0]].firstname
                     let lastname = employee[props[0]].lastname
-                    showschedule.push(<text className="timegraph-1" transform={`translate(0, ${ypos})`}>{firstname} {lastname}</text>)
+                    let key = employee[props[0]].providerid;
+                    showschedule.push(<text key={key} className="timegraph-1" transform={`translate(0, ${ypos})`}>{firstname} {lastname}</text>)
                    
 
                     if (employee[props].hasOwnProperty("schedule")) {
@@ -147,7 +150,8 @@ class ScheduleView {
                 equipment.map(myequipment => {
                     let props = Object.getOwnPropertyNames(myequipment)
                     let equipment = myequipment[props[0]].equipment
-                    showschedule.push(<text className="timegraph-1" transform={`translate(0, ${ypos})`}>{equipment}</text>)
+                    let key = myequipment[props[0]].equipmentid;
+                    showschedule.push(<text key={key} className="timegraph-1" transform={`translate(0, ${ypos})`}>{equipment}</text>)
  
             
                     if (myequipment[props].hasOwnProperty("schedule")) {

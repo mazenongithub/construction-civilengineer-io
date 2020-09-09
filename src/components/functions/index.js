@@ -473,7 +473,6 @@ export function getScheduleDates(datestring) {
     const newDate = new Date(`${datestring.replace(/-/g, '/')} 00:00:00${offset}`)
     const day = newDate.getDay();
     const dayofweek = getDayofWeek(day)
-    console.log(datestring,dayofweek)
     let day_1 = "";
     let day_2 = "";
     let day_3 = "";
@@ -1809,7 +1808,6 @@ export function inputUTCStringForLaborID(timein) {
 
     let datein = new Date(`${timein.replace(/-/g, '/')} UTC`)
     let hours = datein.getHours();
-    console.log("hours" , hours, timein)
     let ampm
     if (hours > 12) {
         hours = hours - 12;
