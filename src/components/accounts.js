@@ -469,7 +469,7 @@ showmyaccounts() {
         // eslint-disable-next-line
         myaccounts.map(account => {
             accounts.push(
-                <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...this.getactivebackground(account.accountid) }}>
+                <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...this.getactivebackground(account.accountid) }} key={account.accountid}>
                     <span onClick={() => { this.makeaccountactive(account.accountid) }}>{account.accountname}</span>
 
                     <Link style={{ ...styles.generalLink, ...styles.addLeftMargin15 }} to={`/${this.props.match.params.providerid}/company/${this.props.match.params.companyid}/accounts/${account.accountid}`}>View Account</Link>

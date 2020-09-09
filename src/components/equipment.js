@@ -402,8 +402,8 @@ class Equipment extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const removeIcon = this.getremoveicon()
         return (
-            <div style={{ ...styles.generalFlex }}>
-                <div key={cost.costid}
+            <div style={{ ...styles.generalFlex }} key={cost.costid}>
+                <div 
                     style={{ ...styles.flex5, ...regularFont, ...styles.bottomMargin15, ...styles.generalFont, ...this.getactiveecostbackground(cost.costid) }} onClick={() => { this.makeequipmentcostactive(cost.costid) }}>
                     {formatDateStringDisplay(cost.timein)} Cost:${Number(cost.cost).toFixed(2)}  Detail: {cost.detail}
                 </div>
@@ -1069,7 +1069,7 @@ class Equipment extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const removeIcon = this.getremoveicon();
         return (
-            <div style={{ ...styles.generalFlex }}>
+            <div style={{ ...styles.generalFlex }} key={equipment.equipmentid}>
                 <div style={{ ...styles.flex5, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...this.getactiveequipmentbackground(equipment.equipmentid) }} key={equipment.equipmentid} onClick={() => { this.makequipmentactive(equipment.equipmentid) }}>
                     {equipment.equipment}
                 </div>

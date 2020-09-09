@@ -2871,6 +2871,21 @@ class DynamicStyles {
 
         return key;
     }
+
+    getaccounts() {
+        const dynamicstyles = new DynamicStyles();
+        let company = dynamicstyles.getcompany.call(this);
+        let accounts = false;
+        if (company.hasOwnProperty("office")) {
+            let office = company.office;
+            if (office.hasOwnProperty("accounts")) {
+                accounts = company.office.accounts.account;
+
+            }
+        }
+        return accounts;
+    }
+    
     getmyequipmentbyid(equipmentid) {
 
         const dynamicstyles = new DynamicStyles();

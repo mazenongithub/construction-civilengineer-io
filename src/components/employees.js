@@ -561,11 +561,13 @@ class Employees extends Component {
                         <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
                             Per Month <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
                                 value={this.getpermonth()}
+                                readOnly={true}
                             />
                         </div>
                         <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
                             Per Week  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
                                 value={this.getperweek()}
+                                readOnly={true}
                             />
                         </div>
 
@@ -595,11 +597,13 @@ class Employees extends Component {
                         <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
                             Per Month <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
                                 value={this.getbenefitmonth()}
+                                readOnly={true}
                             />
                         </div>
                         <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
                             Per Week  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                value={this.getbenefitweek()} />
+                                value={this.getbenefitweek()}
+                                readOnly={true} />
                         </div>
 
                     </div>
@@ -609,11 +613,13 @@ class Employees extends Component {
                         <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
                             Per Day  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
                                 value={this.getbenefitday()}
+                                readOnly={true}
                             />
                         </div>
                         <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.addMargin }}>
                             Per Hour  <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
                                 value={this.getbenefithour()}
+                                readOnly={true}
                             />
                         </div>
                     </div>
@@ -1020,7 +1026,7 @@ class Employees extends Component {
             }
         }
 
-        return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...this.getactiveebenefitbackground(benefit.benefitid) }} onClick={() => { this.makebenefitidactive(benefit.benefitid) }}>
+        return (<div key={benefit.benefitid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...this.getactiveebenefitbackground(benefit.benefitid) }} onClick={() => { this.makebenefitidactive(benefit.benefitid) }}>
             {benefit.benefit}  Account:  {account.account} {account.accountname} Amount: {benefit.amount} {remove()}
         </div>)
 

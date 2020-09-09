@@ -4,12 +4,13 @@ import { MyStylesheet } from './styles';
 
 class AccountID {
     loadaccounts() {
-        let accounts = this.getaccounts();
-        let options = [<option value=""> Select Account ID</option>];
+        const dynamicstyles = new DynamicStyles();
+        let accounts =dynamicstyles.getaccounts.call(this)
+        let options = [<option key={`selectanaccount`} value=""> Select Account ID</option>];
         if (accounts) {
             // eslint-disable-next-line
             accounts.map(account => {
-                options.push(<option value={account.accountid} key={account.accountid}>{account.accountname}</option>)
+                options.push(<option key={account.accountid} value={account.accountid}>{account.accountname}</option>)
             })
         }
         return options;
