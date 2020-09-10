@@ -916,7 +916,8 @@ class Actual extends Component {
                     if (equipments) {
                         myuser.company.projects.myproject[i].actualequipment.myequipment.push(newEquipment)
                     } else {
-                        myuser.company.projects.myproject[i].actualequipment.myequipment = [newEquipment]
+                        const actualequipment = {myequipment:[newEquipment]}
+                        myuser.company.projects.myproject[i].actualequipment = actualequipment;
                     }
                     this.props.reduxUser(myuser)
                     this.setState({ activeequipmentid: equipmentid })
@@ -974,7 +975,8 @@ class Actual extends Component {
                     if (labors) {
                         myuser.company.projects.myproject[i].actuallabor.mylabor.push(newLabor)
                     } else {
-                        myuser.company.projects.myproject[i].actuallabor.mylabor = [newLabor]
+                        const actuallabor = {mylabor:[newLabor]}
+                        myuser.company.projects.myproject[i].actuallabor = actuallabor;
                     }
                     this.props.reduxUser(myuser)
                     this.setState({ activelaborid: laborid })
@@ -1250,7 +1252,8 @@ class Actual extends Component {
                         myuser.company.projects.myproject[i].actualmaterials.mymaterial.push(newMaterial)
 
                     } else {
-                        myuser.company.projects[i].materials = [newMaterial]
+                        const actualmaterials = {mymaterial:[newMaterial]}
+                        myuser.company.projects.myproject[i].actualmaterials = actualmaterials;
                     }
 
                     this.props.reduxUser(myuser)
@@ -1302,7 +1305,7 @@ class Actual extends Component {
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
         const scheduleview = new ScheduleView();
-        const checkmanager = dynamicstyles.checkmanager.call(this)
+
         const validate = () => {
             let validation = true;
             if (this.state.activelaborid && this.state.active === 'labor') {
@@ -1665,7 +1668,7 @@ class Actual extends Component {
         }
 
         const showemployeeid = () => {
-            if (checkmanager) {
+
                 if (this.state.active === 'labor') {
 
 
@@ -1684,7 +1687,6 @@ class Actual extends Component {
                     }
                 }
 
-            }
 
         }
 
