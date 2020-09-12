@@ -428,17 +428,19 @@ removeaccount(account) {
     let dynamicstyles = new DynamicStyles();
     const checkmanager = dynamicstyles.checkmanager.call(this)
     if(checkmanager) {
-    if (window.confirm(`Are you sure you want to delete Account ${account.account}?`)) {
+    if (window.confirm(`Are you sure you want to delete ${account.accountname}?`)) {
         let validate = this.validateDeleteAccount(account);
         if (validate.deleteaccount) {
             const myuser = dynamicstyles.getuser.call(this);
             if (myuser) {
+                const myaccount = dynamicstyles.getaccountbyid.call(this,account.accountid)
+                if(myaccount) {
                 const i = dynamicstyles.getaccountkeybyid.call(this, account.accountid)
                 myuser.company.office.accounts.account.splice(i, 1);
-                if (myuser.company.office.accounts.account.length === 0) {
-                    delete myuser.company.office.accounts.account;
-                    delete myuser.company.office.accounts;
-                }
+                this.props.reduxUser(myuser)
+                this.setState({activeaccountid:false})
+
+            }
 
 
 
