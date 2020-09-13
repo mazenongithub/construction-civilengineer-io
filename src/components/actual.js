@@ -701,7 +701,7 @@ class Actual extends Component {
         this.timeindefault()
         this.timeoutdefault();
         this.materialdatedefault();
-        this.setState({ quantity: '', unit: '', unitcost: '', laborrate: '', equipmentrate: '',activeequipmentid:'', activematerialid:'', activelaborid:'' })
+        this.setState({ quantity: '', unit: '', unitcost: '', laborrate: '', equipmentrate: '', activeequipmentid: '', activematerialid: '', activelaborid: '' })
 
     }
 
@@ -916,7 +916,7 @@ class Actual extends Component {
                     if (equipments) {
                         myuser.company.projects.myproject[i].actualequipment.myequipment.push(newEquipment)
                     } else {
-                        const actualequipment = {myequipment:[newEquipment]}
+                        const actualequipment = { myequipment: [newEquipment] }
                         myuser.company.projects.myproject[i].actualequipment = actualequipment;
                     }
                     this.props.reduxUser(myuser)
@@ -975,7 +975,7 @@ class Actual extends Component {
                     if (labors) {
                         myuser.company.projects.myproject[i].actuallabor.mylabor.push(newLabor)
                     } else {
-                        const actuallabor = {mylabor:[newLabor]}
+                        const actuallabor = { mylabor: [newLabor] }
                         myuser.company.projects.myproject[i].actuallabor = actuallabor;
                     }
                     this.props.reduxUser(myuser)
@@ -1252,7 +1252,7 @@ class Actual extends Component {
                         myuser.company.projects.myproject[i].actualmaterials.mymaterial.push(newMaterial)
 
                     } else {
-                        const actualmaterials = {mymaterial:[newMaterial]}
+                        const actualmaterials = { mymaterial: [newMaterial] }
                         myuser.company.projects.myproject[i].actualmaterials = actualmaterials;
                     }
 
@@ -1550,7 +1550,9 @@ class Actual extends Component {
                         {showtimein()}
                     </div>
                     <div style={{ ...styles.flex1 }}>
-                        {showtimeout()}
+                        <div style={{ ...styles.addLeftMargin15 }}>
+                            {showtimeout()}
+                        </div>
                     </div>
                 </div>)
 
@@ -1669,23 +1671,23 @@ class Actual extends Component {
 
         const showemployeeid = () => {
 
-                if (this.state.active === 'labor') {
+            if (this.state.active === 'labor') {
 
 
-                    const validate = dynamicstyles.checkinvoicelaborid.call(this, this.state.activelaborid)
-                    if (validate) {
-                        return (employeeid.showemployeeid.call(this))
-                    } else {
-                        const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid)
-                        if (mylabor) {
-                            const employee = dynamicstyles.getemployeebyproviderid.call(this, mylabor.providerid);
-                            if (employee) {
-                                return (<span style={{ ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>{employee.firstname} {employee.lastname}</span>)
-                            }
+                const validate = dynamicstyles.checkinvoicelaborid.call(this, this.state.activelaborid)
+                if (validate) {
+                    return (employeeid.showemployeeid.call(this))
+                } else {
+                    const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid)
+                    if (mylabor) {
+                        const employee = dynamicstyles.getemployeebyproviderid.call(this, mylabor.providerid);
+                        if (employee) {
+                            return (<span style={{ ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>{employee.firstname} {employee.lastname}</span>)
                         }
-
                     }
+
                 }
+            }
 
 
         }

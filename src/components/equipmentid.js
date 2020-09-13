@@ -30,7 +30,7 @@ class EquipmentID {
                         <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
                             value={this.getequipmentid()}
                             onChange={event => { this.handleequipmentid(event.target.value) }}>
-                            <option value={false}>Select Equipment</option>
+                            <option value={false}>Select An Equipment to Create Item</option>
                             {equipmentid.loadequipment.call(this)}
                         </select>
                     </div>

@@ -1422,7 +1422,7 @@ class Schedule extends Component {
             }
         }
         const showtimes = () => {
-            if (this.state.width > 1200 && menu === 'closed') {
+            if (this.state.width > 1200) {
 
 
                 return (<div style={{ ...styles.generalFlex }}>
@@ -1430,7 +1430,9 @@ class Schedule extends Component {
                         {showtimein()}
                     </div>
                     <div style={{ ...styles.flex1 }}>
+                        <div style={{...styles.addLeftMargin15}}>
                         {showtimeout()}
+                        </div>
                     </div>
                 </div>)
 

@@ -36,7 +36,7 @@ class MaterialID {
                     value={this.getmymaterialid()}
                     onChange={event => { this.handlemymaterialid(event.target.value) }}
                 >
-                    <option value={false}>Select A MaterialID</option>
+                    <option value={false}>Select A MaterialID to Create Material</option>
                     {materialid.showmymaterials.call(this)}
 
                 </select>

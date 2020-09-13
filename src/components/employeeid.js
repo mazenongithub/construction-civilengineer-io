@@ -46,7 +46,7 @@ class EmployeeID {
                         <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
                             value={this.getemployeeid()}
                             onChange={event => { this.handleemployeeid(event.target.value) }}>
-                            <option value={false}>Select An Employee</option>
+                            <option value={false}>Select An Employee to Create Labor Item</option>
                             {employeeid.loademployees.call(this)}
                         </select>
                     </div>
