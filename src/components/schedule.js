@@ -702,7 +702,7 @@ class Schedule extends Component {
         this.timeindefault()
         this.timeoutdefault();
         this.materialdatedefault();
-        this.setState({ quantity: '', unit: '', unitcost: '', laborrate: '', equipmentrate: '' })
+        this.setState({ quantity: '', unit: '', unitcost: '', laborrate: '', equipmentrate: '', activeequipmentid:'', activematerialid:'', activelaborid:'' })
 
     }
 
@@ -775,7 +775,7 @@ class Schedule extends Component {
                 if (project) {
                     const projectid = project.projectid;
                     const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
-                    const myequipment = dynamicstyles.getschedulematerialbyid.call(this, equipment.equipmentid);
+                    const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, equipment.equipmentid);
                     if (myequipment) {
                         const j = dynamicstyles.getscheduleequipmentkeybyid.call(this, equipment.equipmentid);
                         myuser.company.projects.myproject[i].scheduleequipment.myequipment.splice(j, 1)

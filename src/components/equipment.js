@@ -190,7 +190,7 @@ class Equipment extends Component {
                     }
 
                 } else {
-                    this.setState({ equipment })
+               
                     let equipmentid = makeID.equipmentid.call(this);
 
                     let ownership = "";

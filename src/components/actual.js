@@ -701,7 +701,7 @@ class Actual extends Component {
         this.timeindefault()
         this.timeoutdefault();
         this.materialdatedefault();
-        this.setState({ quantity: '', unit: '', unitcost: '', laborrate: '', equipmentrate: '' })
+        this.setState({ quantity: '', unit: '', unitcost: '', laborrate: '', equipmentrate: '',activeequipmentid:'', activematerialid:'', activelaborid:'' })
 
     }
 
@@ -779,7 +779,7 @@ class Actual extends Component {
                 if (project) {
                     const projectid = project.projectid;
                     const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
-                    const myequipment = dynamicstyles.getactualmaterialbyid.call(this, equipment.equipmentid);
+                    const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipment.equipmentid);
                     if (myequipment) {
                         const j = dynamicstyles.getactualequipmentkeybyid.call(this, equipment.equipmentid);
                         myuser.company.projects.myproject[i].actualequipment.myequipment.splice(j, 1)
