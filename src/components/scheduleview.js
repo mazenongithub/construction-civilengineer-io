@@ -33,6 +33,19 @@ class ScheduleView {
             return key;
         }
 
+        const validatenewequipment = (equipment, equipmentid) => {
+            let validate = true;
+            if (equipment.length > 0) {
+                // eslint-disable-next-line
+                equipment.map(myequipment => {
+                    if (myequipment.hasOwnProperty(equipmentid)) {
+                        validate = false;
+                    }
+                })
+            }
+            return validate;
+        }
+
         
 
         const validatenewemployee = (employees, providerid) => {
@@ -78,7 +91,7 @@ class ScheduleView {
               
                 } else if (schedule.hasOwnProperty("equipmentid")) {
                 
-                    if (validatenewemployee(equipment, schedule.equipmentid)) {
+                    if (validatenewequipment(equipment, schedule.myequipmentid)) {
                         let me = {};
                         const myequipment = dynamicstyles.getmyequipmentbyid.call(this, schedule.myequipmentid)
                         me[schedule.myequipmentid] = {};
