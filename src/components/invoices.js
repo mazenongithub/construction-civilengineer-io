@@ -139,10 +139,25 @@ class Invoices extends Component {
     }
     addItem(item) {
 
-
-
+        
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
+
+        const checkitem = (item) => {
+            let check = true;
+            if(item.hasOwnProperty("laborid")) {
+                check = dynamicstyles.checkinvoicelaborid.call(this,item.laborid)
+
+            } else if (item.hasOwnProperty("materialid")) {
+                check = dynamicstyles.checkinvoicematerialid.call(this,item.materialid)
+
+            } else if (item.hasOwnProperty("equipmentid")) {
+                check = dynamicstyles.checkinvoiceequipmentid.call(this,item.equipmentid)
+
+            }
+            return check;
+        }
+        if(checkitem(item)) {
 
         if (myuser) {
             if (this.state.activeinvoiceid) {
@@ -154,12 +169,14 @@ class Invoices extends Component {
                 let result = this.checkinvoiceitem(item);
                 let j = false;
                 if (result === 'add') {
-
+                    let check = false;
                     if (item.hasOwnProperty("laborid")) {
+                     
                         j = dynamicstyles.getactuallaborkeybyid.call(this, item.laborid)
                         myuser.company.projects.myproject[i].actuallabor.mylabor[j].invoiceid = invoiceid;
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
+                      
                     } else if (item.hasOwnProperty("materialid")) {
                         j = dynamicstyles.getactualmaterialkeybyid.call(this, item.materialid)
                         myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].invoiceid = invoiceid;
@@ -200,6 +217,10 @@ class Invoices extends Component {
 
             }
         }
+
+    } else {
+        alert(`This item cannot be updated because it is already paid`)
+    }
 
 
     }

@@ -229,7 +229,7 @@ class Proposals extends Component {
                 } else if (result === 'remove') {
 
                     if (item.hasOwnProperty("laborid")) {
-                        j = dynamicstyles.getschedulelaborbyid.call(this, item.laborid)
+                        j = dynamicstyles.getschedulelaborkeybyid.call(this, item.laborid)
                         myuser.company.projects.myproject[i].schedulelabor.mylabor[j].proposalid = ""
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
