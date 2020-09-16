@@ -39,8 +39,10 @@ class ViewInvoice extends Component {
         return lineids;
     }
     getbiditems() {
+        
         let items = [];
-        let myinvoice = this.getinvoice();
+        const dynamicstyles = new DynamicStyles();
+        const myinvoice = dynamicstyles.getinvoicebyid.call(this,this.props.match.params.invoiceid)
         if (myinvoice.hasOwnProperty("bid")) {
             // eslint-disable-next-line
             items = myinvoice.bid.biditem;
@@ -241,7 +243,8 @@ class ViewInvoice extends Component {
     getactualitems() {
 
         let actualitems = false;
-        let myinvoice = this.getinvoice();
+        const dynamicstyles = new DynamicStyles();
+        const myinvoice = dynamicstyles.getinvoicebyid.call(this,this.props.match.params.invoiceid)
         if (myinvoice) {
             if (myinvoice.hasOwnProperty("bid")) {
                 actualitems = myinvoice.bid.biditem
@@ -382,7 +385,8 @@ class ViewInvoice extends Component {
 
     getinvoiceitemkey(csiid) {
         let key = false;
-        let myinvoice = this.getinvoice();
+        const dynamicstyles = new DynamicStyles();
+        const myinvoice = dynamicstyles.getinvoicebyid.call(this,this.props.match.params.invoiceid)
         if (myinvoice.hasOwnProperty("bid")) {
             // eslint-disable-next-line
             myinvoice.bid.biditem.map((item, i) => {
@@ -417,7 +421,12 @@ class ViewInvoice extends Component {
                     } else {
                         let unit = "";
                         let newItem = CreateBidItem(csiid, unit, quantity)
-                        myuser.company.projects.myproject[i].invoices.myinvoice[j].bid = { biditem: [newItem] }
+                        if(myinvoice.hasOwnProperty("bid")) {
+                            myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem.push(newItem);
+                        } else {
+                            myuser.company.projects.myproject[i].invoices.myinvoice[j].bid = { biditem: [newItem] }
+                        }
+                       
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     }
@@ -435,7 +444,8 @@ class ViewInvoice extends Component {
 
     getinvoiceitem(csiid) {
 
-        let myinvoice = this.getinvoice();
+        const dynamicstyles = new DynamicStyles();
+        const myinvoice = dynamicstyles.getinvoicebyid.call(this,this.props.match.params.invoiceid)
         let invoiceitem = false;
         if (myinvoice.hasOwnProperty("bid")) {
             // eslint-disable-next-line
@@ -463,7 +473,7 @@ class ViewInvoice extends Component {
                 const myinvoice = dynamicstyles.getinvoicebyid.call(this, this.props.match.params.invoiceid)
                 if (myinvoice) {
                     let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
-                    const lineitem = this.getinvoiceitem.call(csiid)
+                    const lineitem = this.getinvoiceitem(csiid)
                     if (lineitem) {
                         let k = dynamicstyles.getinvoiceitemkey.call(this, csiid)
                         myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].unit = unit;
@@ -473,7 +483,11 @@ class ViewInvoice extends Component {
                     } else {
                         let quantity = 1;
                         let newItem = CreateBidItem(csiid, unit, quantity)
-                        myuser.company.projects.myproject[i].invoices.myinvoice[j].bid = { biditem: [newItem] }
+                        if(myinvoice.hasOwnProperty("bid")) {
+                            myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem.push(newItem);
+                        } else {
+                            myuser.company.projects.myproject[i].invoices.myinvoice[j].bid = { biditem: [newItem] }
+                        }
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     }
@@ -781,9 +795,8 @@ if(myuser) {
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1,  ...styles.alignCenter }}>
-                           <span style={{...styles.generalFont, ...headerFont,...styles.boldFont}}>{project.title}</span> <br/>
-                           <span style={{...styles.generalFont, ...headerFont,...styles.boldFont}}>/viewinvoice</span> <br/>
-                           <span style={{...styles.generalFont, ...headerFont,...styles.boldFont}}>/{this.props.match.params.invoiceid}</span>
+                           <span style={{...styles.generalFont, ...headerFont,...styles.boldFont}}>/{project.title}</span> <br/>
+                           <span style={{...styles.generalFont, ...headerFont,...styles.boldFont}}>/viewinvoice/{this.props.match.params.invoiceid}</span>
                         </div>
                     </div>
 

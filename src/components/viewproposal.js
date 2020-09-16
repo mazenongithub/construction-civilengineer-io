@@ -431,7 +431,11 @@ class ViewProposal extends Component {
                     } else {
                         let quantity = "";
                         let newItem = CreateBidItem(csiid, unit, quantity)
-                        myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
+                        if(myproposal.hasOwnProperty("bidschedule")) {
+                            myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem.push(newItem);
+                        } else {
+                            myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
+                        }
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     }
