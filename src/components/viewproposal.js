@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidScheduleItem, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, isNumeric, sortcode } from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidScheduleItem, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, isNumeric, sortcode} from './functions';
 import { Link } from 'react-router-dom';
 class ViewProposal extends Component {
     constructor(props) {
@@ -451,7 +451,6 @@ class ViewProposal extends Component {
         let proposalid = this.props.match.params.proposalid;
 
 
-
         const styles = MyStylesheet();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const bidField = dynamicstyles.getbidfield.call(this)
@@ -459,7 +458,7 @@ class ViewProposal extends Component {
         let profit = () => {
             return (
                 <input type="text"
-                    value={Number(this.getprofit(item.csiid)).toFixed(4)}
+                     value={Number(this.getprofit(csi.csiid)).toFixed(4)}
                     onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                 />)
@@ -540,7 +539,7 @@ class ViewProposal extends Component {
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Overhead And Profit % <br />
                                 <input type="text"
-                                    value={+Number(this.getprofit(csi.csiid).toFixed(4))}
+                                     value={Number(this.getprofit(csi.csiid)).toFixed(4)}
                                     onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
                                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                                 />
@@ -560,6 +559,7 @@ class ViewProposal extends Component {
         }
     }
     handlechangeprofit(profit, csiid) {
+        
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
         let proposalid = this.props.match.params.proposalid;

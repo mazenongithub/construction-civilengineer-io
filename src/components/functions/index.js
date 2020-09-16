@@ -2409,6 +2409,14 @@ export function validateEmail(value) {
     return errmsg;
 }
 
+export function leadingZero(str) {
+    if(str.indexOf('.') === str.length - 1) {
+     str= `${str}0` 
+      
+    }
+      return str;
+    }
+
 export function sortcode(codeb, codea) {
 
     if (Number(codea.csi) < Number(codeb.csi)) {
