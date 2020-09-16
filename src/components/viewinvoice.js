@@ -200,7 +200,7 @@ class ViewInvoice extends Component {
     }
     getquantity(csiid) {
 
-        let scheduleitem = this.getscheduleitem(csiid);
+        let scheduleitem = this.getactualitem(csiid);
         let quantity = "";
         if(scheduleitem) {
         quantity = scheduleitem.quantity
