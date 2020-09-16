@@ -1291,7 +1291,6 @@ class Schedule extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const csi = new CSI();
         const materialdate = new MaterialDate();
-        const menu = dynamicstyles.getnavigation.call(this)
         const employeeid = new EmployeeID();
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
@@ -1516,8 +1515,8 @@ class Schedule extends Component {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                    <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>Schedule </span></div>
-                                    <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>/{this.props.match.params.projectid} </span></div>
+                                <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>/{this.props.match.params.projectid} </span></div>
+                                    <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>/schedule </span></div>
                                 </div>
                             </div>
 

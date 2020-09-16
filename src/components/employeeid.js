@@ -20,7 +20,7 @@ class EmployeeID {
                         company.office.employees.employee.map(employee => {
                             let myemployee = dynamicstyles.getemployeebyid.call(this, employee.providerid)
                       
-                            options.push(<option value={myemployee.providerid}>{myemployee.firstname} {myemployee.lastname}</option>)
+                            options.push(<option key={`option${myemployee.providerid}`} value={myemployee.providerid}>{myemployee.firstname} {myemployee.lastname}</option>)
                         })
 
                     }

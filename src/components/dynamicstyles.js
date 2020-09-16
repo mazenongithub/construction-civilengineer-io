@@ -1392,39 +1392,9 @@ class DynamicStyles {
 
     }
 
-    getinvoiceitem(csiid) {
 
-        let myinvoice = this.getinvoice();
-        let invoiceitem = false;
-        if (myinvoice.hasOwnProperty("bid")) {
-            // eslint-disable-next-line
-            myinvoice.bid.biditem.map((item) => {
-                if (item.csiid === csiid) {
-                    invoiceitem = item
-                }
 
-            })
-        }
-        return invoiceitem;
-
-    }
-
-    getproposalitem(csiid) {
-
-        let myproposal = this.getproposal();
-        let proposalitem = false;
-        if (myproposal.hasOwnProperty("bidschedule")) {
-            // eslint-disable-next-line
-            myproposal.bidschedule.biditem.map((item) => {
-                if (item.csiid === csiid) {
-                    proposalitem = item
-                }
-
-            })
-        }
-        return proposalitem;
-
-    }
+   
 
     getinvoiceitemkey(csiid) {
         let key = false;
@@ -3499,11 +3469,13 @@ class DynamicStyles {
 
             <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }} key={item.equipmentid}>
 
-                <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
-                    {myequipment.equipment} CSI: {csi.csi} - {csi.title}   TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)}
-                    Total Hours:{totalhours.toFixed(2)} x $<input type="text" style={{ ...styles.generalFont, ...smallFont, ...largeField }}
+                <div style={{ ...styles.flex3, ...this.getactivebackground(item) }}>
+                    <span  onClick={() => { this.addItem(item) }}>{myequipment.equipment} CSI: {csi.csi} - {csi.title}   TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)}
+                    Total Hours:{totalhours.toFixed(2)} x $ </span>
+                    <input type="text" style={{ ...styles.generalFont, ...smallFont, ...largeField }}
                         onChange={event => { this.handleequipmentrate(event.target.value, item.equipmentid) }}
-                        value={equipmentrate} /> = {amount} x {+Number(1+profit).toFixed(4)}= ${Number(amount * (1 + profit)).toFixed(2)}
+                        value={equipmentrate} /> 
+                        <span  onClick={() => { this.addItem(item) }}> = {amount} x {+Number(1+profit).toFixed(4)}= ${Number(amount * (1 + profit)).toFixed(2)}</span>
                 </div>
                 <div style={{ ...styles.flex1 }}>
 
@@ -3539,15 +3511,19 @@ class DynamicStyles {
         return (
             <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }} key={item.materialid}>
 
-                <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
-                    {inputUTCStringForMaterialIDWithTime(item.timein)} {material.material} CSI: {csi.csi}-{csi.title}
+                <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} >
+                   <span onClick={() => { this.addItem(item) }}> {inputUTCStringForMaterialIDWithTime(item.timein)} {material.material} CSI: {csi.csi}-{csi.title}</span>
                     <input type="text"
                         value={item.quantity}
                         onChange={event => { this.handlematerialquantity(event.target.value, item.materialid) }}
-                        style={{ ...styles.generalFont, ...smallFont, ...proposalFieldLarge }} />   x $
+                        style={{ ...styles.generalFont, ...smallFont, ...proposalFieldLarge }} />   
+                       <span onClick={() => { this.addItem(item) }}> x $</span>
                      <input type="text" value={item.unitcost}
                         onChange={event => { this.handlematerialunitcost(event.target.value, item.materialid) }}
-                        style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} /> / <input type="text" value={item.unit} onChange={event => { this.handlematerialunit(event.target.value, item.materialid) }} style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} />  = ${amount.toFixed(2)} x {+Number(profit).toFixed(4)} = ${Number(amount * profit).toFixed(2)}
+                        style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} /> 
+                       <span onClick={() => { this.addItem(item) }}> / </span>
+                        <input type="text" value={item.unit} onChange={event => { this.handlematerialunit(event.target.value, item.materialid) }} style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} />  
+                        <span onClick={() => { this.addItem(item) }}> = ${amount.toFixed(2)} x {+Number(profit).toFixed(4)} = ${Number(amount * profit).toFixed(2)}</span>
                 </div>
                 <div style={{ ...styles.flex1 }}>
 
@@ -3584,8 +3560,10 @@ class DynamicStyles {
         return (
             <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }} key={item.laborid}>
 
-                <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} onClick={() => { this.addItem(item) }}>
-                    {employee.firstname} {employee.lastname} TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)} CSI {csi.csi}-{csi.title}  Total Hours {totalhours.toFixed(2)} Hrs at  $<input type="text" value={item.laborrate} style={{ ...styles.generalFont, ...largeField, ...smallFont }} onChange={event => { this.handlelaborrate(event.target.value, item.laborid) }} />=  ${amount.toFixed(2)}  x {+Number(profit).toFixed(4)} = ${Number(amount * profit).toFixed(2)}
+                <div style={{ ...styles.flex3, ...this.getactivebackground(item) }}>
+                    <span onClick={() => { this.addItem(item) }}>{employee.firstname} {employee.lastname} TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)} CSI {csi.csi}-{csi.title}  Total Hours {totalhours.toFixed(2)} Hrs at  $</span>
+                    <input type="text" value={item.laborrate} style={{ ...styles.generalFont, ...largeField, ...smallFont }} onChange={event => { this.handlelaborrate(event.target.value, item.laborid) }} />
+                    <span onClick={() => { this.addItem(item) }}>= ${amount.toFixed(2)} x {+Number(profit).toFixed(4)} = ${Number(amount * profit).toFixed(2)}</span>
                 </div>
                 <div style={{ ...styles.flex1 }}>
 

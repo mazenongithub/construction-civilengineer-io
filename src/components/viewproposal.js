@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidScheduleItem, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, isNumeric } from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidScheduleItem, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, isNumeric, sortcode } from './functions';
 import { Link } from 'react-router-dom';
 class ViewProposal extends Component {
     constructor(props) {
@@ -67,14 +67,19 @@ class ViewProposal extends Component {
             // eslint-disable-next-line
             items.map(lineitem => {
                 if (validateNewItem(csis, lineitem)) {
-
+                    let csi = dynamicstyles.getcsibyid.call(this,lineitem.csiid)
                     let newItem = CreateBidScheduleItem(lineitem.csiid, "", 0)
+                    newItem.csi = csi.csi;
+                    newItem.title = csi.title;
                     csis.push(newItem)
                 }
             })
         }
 
-        return csis;
+
+        return (csis.sort((a,b)=> {
+            return(sortcode(a,b))
+        }));
     }
 
     showbiditems() {
@@ -98,8 +103,18 @@ class ViewProposal extends Component {
             // eslint-disable-next-line
             items = myproposal.bidschedule.biditem;
         }
+        console.log(items)
 
-        return (items)
+        return (
+            
+            items.sort((a,b) =>{
+
+            return sortcode(a,b);
+
+            })
+
+        
+        )
 
     }
     proposalitemsbycsiid(csiid) {
@@ -166,19 +181,11 @@ class ViewProposal extends Component {
     getquantity(csiid) {
 
         let scheduleitem = this.getscheduleitem(csiid);
-
-        if (scheduleitem) {
-            if (Number(scheduleitem.quantity) > 0) {
-                return Number(scheduleitem.quantity);
-
-            } else {
-
-                return 1
-            }
-
-        } else {
-            return ""
+        let quantity = "";
+        if(scheduleitem) {
+        quantity = scheduleitem.quantity
         }
+        return quantity;
 
     }
     getproposal() {
@@ -339,12 +346,29 @@ class ViewProposal extends Component {
         return key;
 
     }
+    getproposalitem(csiid) {
+
+        let myproposal = this.getproposal();
+   
+        let proposalitem = false;
+        if (myproposal.hasOwnProperty("bidschedule")) {
+            // eslint-disable-next-line
+            myproposal.bidschedule.biditem.map((item) => {
+                if (item.csiid === csiid) {
+                    proposalitem = item
+                }
+
+            })
+        }
+        return proposalitem;
+
+    }
     handlechangequantity(quantity, csiid) {
 
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
         if (isNumeric(quantity)) {
-
+         
             if (myuser) {
 
                 const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
@@ -353,8 +377,10 @@ class ViewProposal extends Component {
                     const myproposal = dynamicstyles.getproposalbyid.call(this, this.props.match.params.proposalid)
                     if (myproposal) {
                         let j = dynamicstyles.getproposalkeybyid.call(this, this.props.match.params.proposalid)
-                        const lineitem = dynamicstyles.getproposalitem.call(this, csiid)
+                        const lineitem = this.getproposalitem(csiid)
+     
                         if (lineitem) {
+                           
                             let k = dynamicstyles.getproposalitemkey.call(this, csiid)
                             myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].quantity = quantity;
                             myuser.company.projects.myproject[i].proposals.myproposal[j].updated = UTCTimefromCurrentDate();
@@ -363,7 +389,13 @@ class ViewProposal extends Component {
                         } else {
                             let unit = "";
                             let newItem = CreateBidItem(csiid, unit, quantity)
-                            myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
+
+                            if(myproposal.hasOwnProperty("bidschedule")) {
+                                myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem.push(newItem);
+                            } else {
+                                myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
+                            }
+                           
                             this.props.reduxUser(myuser);
                             this.setState({ render: 'render' })
                         }
@@ -389,7 +421,7 @@ class ViewProposal extends Component {
                 const myproposal = dynamicstyles.getproposalbyid.call(this, this.props.match.params.proposalid)
                 if (myproposal) {
                     let j = dynamicstyles.getproposalkeybyid.call(this, this.props.match.params.proposalid)
-                    const lineitem = dynamicstyles.getproposalitem.call(this, csiid)
+                    const lineitem = this.getproposalitem(csiid)
                     if (lineitem) {
                         let k = dynamicstyles.getproposalitemkey.call(this, csiid)
                         myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].unit = unit;

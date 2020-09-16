@@ -125,8 +125,10 @@ class ViewInvoice extends Component {
             // eslint-disable-next-line
             items.map(lineitem => {
                 if (validateNewItem(csis, lineitem)) {
-
+                    const csi = dynamicstyles.getcsibyid.call(this,lineitem.csiid)
                     let newItem = CreateBidItem(lineitem.csiid, "", 0)
+                    newItem.csi = csi.csi;
+                    newItem.title = csi.title;
                     csis.push(newItem)
                 }
             })
@@ -198,18 +200,12 @@ class ViewInvoice extends Component {
     }
     getquantity(csiid) {
 
-        let scheduleitem = this.getactualitem(csiid);
-
-        if (scheduleitem) {
-            if (Number(scheduleitem.quantity) > 0) {
-                return Number(scheduleitem.quantity);
-            } else {
-                return 1;
-            }
-
-        } else {
-            return ""
+        let scheduleitem = this.getscheduleitem(csiid);
+        let quantity = "";
+        if(scheduleitem) {
+        quantity = scheduleitem.quantity
         }
+        return quantity;
 
     }
     getinvoice() {
@@ -411,7 +407,7 @@ class ViewInvoice extends Component {
                 const myinvoice = dynamicstyles.getinvoicebyid.call(this, this.props.match.params.invoiceid)
                 if (myinvoice) {
                     let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
-                    const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
+                    const lineitem = this.getinvoiceitem(csiid);
                     if (lineitem) {
                         let k = dynamicstyles.getinvoiceitemkey.call(this, csiid)
                         myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].quantity = quantity;
@@ -437,6 +433,23 @@ class ViewInvoice extends Component {
 
     }
 
+    getinvoiceitem(csiid) {
+
+        let myinvoice = this.getinvoice();
+        let invoiceitem = false;
+        if (myinvoice.hasOwnProperty("bid")) {
+            // eslint-disable-next-line
+            myinvoice.bid.biditem.map((item) => {
+                if (item.csiid === csiid) {
+                    invoiceitem = item
+                }
+
+            })
+        }
+        return invoiceitem;
+
+    }
+
 
     handlechangeunit(unit, csiid) {
         const dynamicstyles = new DynamicStyles();
@@ -450,7 +463,7 @@ class ViewInvoice extends Component {
                 const myinvoice = dynamicstyles.getinvoicebyid.call(this, this.props.match.params.invoiceid)
                 if (myinvoice) {
                     let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
-                    const lineitem = dynamicstyles.getinvoiceitem.call(this, csiid)
+                    const lineitem = this.getinvoiceitem.call(csiid)
                     if (lineitem) {
                         let k = dynamicstyles.getinvoiceitemkey.call(this, csiid)
                         myuser.company.projects.myproject[i].invoices.myinvoice[j].bid.biditem[k].unit = unit;

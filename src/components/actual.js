@@ -1300,7 +1300,6 @@ class Actual extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const csi = new CSI();
         const materialdate = new MaterialDate();
-        const menu = dynamicstyles.getnavigation.call(this)
         const employeeid = new EmployeeID();
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
@@ -1542,15 +1541,18 @@ class Actual extends Component {
             }
         }
         const showtimes = () => {
-            if (this.state.width > 1200 && menu === 'closed') {
+            if (this.state.width > 1200) {
 
 
-                return (<div style={{ ...styles.generalFlex }}>
+                return (
+                <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
+               
                         {showtimein()}
+                   
                     </div>
                     <div style={{ ...styles.flex1 }}>
-                        <div style={{ ...styles.addLeftMargin15 }}>
+                        <div style={{ ...styles.addLeftMargin15, ...styles.generalContainer }}>
                             {showtimeout()}
                         </div>
                     </div>
@@ -1753,8 +1755,9 @@ class Actual extends Component {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                    <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>Actual </span></div>
-                                    <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>/{this.props.match.params.projectid} </span></div>
+                                <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>/{this.props.match.params.projectid} </span></div>
+                                    <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>/actual </span></div>
+                                 
                                 </div>
                             </div>
 

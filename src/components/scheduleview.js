@@ -144,7 +144,7 @@ class ScheduleView {
                             let params = getWeekSchedule(dates.day_1, dates.day_7, myschedule.timein, myschedule.timeout)
          
                             if(params.init > 0 && params.init <=840) {
-                            showschedule.push(<rect className={getColorClass(type)} x={365.42 + params.init} y={ypos - 25} width={params.length} height="25" />)
+                            showschedule.push(<rect key={`rect${key}`} className={getColorClass(type)} x={365.42 + params.init} y={ypos - 25} width={params.length} height="25" />)
                             }
 
                         })
@@ -173,7 +173,7 @@ class ScheduleView {
                        
                             let params = getWeekSchedule(dates.day_1, dates.day_7, myschedule.timein, myschedule.timeout)
                             if(params.init > 0 && params.init <=840) {
-                            showschedule.push(<rect className={getColorClass(type)} x={365.42 + params.init} y={ypos - 25} width={params.length} height="25" />)
+                            showschedule.push(<rect key={`rect${key}`} className={getColorClass(type)} x={365.42 + params.init} y={ypos - 25} width={params.length} height="25" />)
                             }
             
                         })
