@@ -405,9 +405,9 @@ class TimeIn {
                             let time = ampm;
                             let minutes = this.state.timeinminutes;
                             let timein = makeTimeString(year, month, day, hours, minutes, time);
-                            console.log(timein)
+                         
                             timein = UTCTimeStringfromTime(timein);
-                            console.log(timein)
+                     
                             myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = timein;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })

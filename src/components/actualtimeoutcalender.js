@@ -35,12 +35,12 @@ class CalenderTimeOut {
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const styles = MyStylesheet();
         if (this.state.calendertimein) {
-            let day = this.state.timeinday;
-            let year = this.state.timeinyear;
-            let month = this.state.timeinmonth;
-            let hours = this.state.timeinhours;
-            let time = this.state.timeinampm;
-            let minutes = this.state.timeinminutes;
+            let day = this.state.timeoutday;
+            let year = this.state.timeoutyear;
+            let month = this.state.timeoutmonth;
+            let hours = this.state.timeouthours;
+            let time = this.state.timeoutampm;
+            let minutes = this.state.timeoutminutes;
             let timeout = makeTimeString(year, month, day, hours, minutes, time);
             timeout = UTCTimeStringfromTime(timeout)
             const newDate = new Date(`${timeout.replace(/-/g, '/')} UTC`)
@@ -56,7 +56,7 @@ class CalenderTimeOut {
         }
     }
     activecell(num) {
-        if (Number(num) === Number(this.state.timeinday)) {
+        if (Number(num) === Number(this.state.timeoutday)) {
             return ({ backgroundColor: '#FED727', borderRadius: '5px' })
         } else {
             return;
@@ -69,12 +69,12 @@ class CalenderTimeOut {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const calendertimein = new CalenderTimeOut();
-        let day = this.state.timeinday;
-        let year = this.state.timeinyear;
-        let month = this.state.timeinmonth;
-        let hours = this.state.timeinhours;
-        let time = this.state.timeinampm;
-        let minutes = this.state.timeinminutes;
+        let day = this.state.timeoutday;
+        let year = this.state.timeoutyear;
+        let month = this.state.timeoutmonth;
+        let hours = this.state.timeouthours;
+        let time = this.state.timeoutampm;
+        let minutes = this.state.timeoutminutes;
         let timeout = makeTimeString(year, month, day, hours, minutes, time);
 
         timeout = UTCTimeStringfromTime(timeout);

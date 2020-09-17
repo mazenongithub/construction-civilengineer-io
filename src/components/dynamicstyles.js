@@ -1251,7 +1251,7 @@ class DynamicStyles {
                         let costid = cost.costid;
                         let equipmentid = cost.equipmentid;
                         let l = dynamicstyles.getequipmentkeybyid.call(this, equipmentid)
-                        let m = dynamicstyles.getequipmentcostskeybyid.call(this, oldcostid)
+                        let m = dynamicstyles.getequipmentcostskeybyid.call(this,equipmentid, oldcostid)
 
                         myuser.company.equipment.myequipment[l].ownership.cost[m].costid = costid;
                         if (this.state.activecostid === oldcostid) {
@@ -1786,12 +1786,7 @@ class DynamicStyles {
                 console.log(response)
                 dynamicstyles.handlecompanyids.call(this, response)
                 dynamicstyles.handleprojectids.call(this, response)
-                if (response.hasOwnProperty("allusers")) {
-                    let companys = returnCompanyList(response.allusers);
-                    this.props.reduxAllCompanys(companys)
-                    this.props.reduxAllUsers(response.allusers);
-
-                }
+               
                 if (response.hasOwnProperty("myuser")) {
 
                     this.props.reduxUser(response.myuser)

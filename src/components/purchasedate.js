@@ -26,7 +26,7 @@ class PurchaseDate {
                             if (myequipment) {
 
 
-                                const i = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+                                const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
                                 let day = this.state.purchasedateday;
                                 let month = this.state.purchasedatemonth;
                                 const timein = `${year}-${month}-${day}`

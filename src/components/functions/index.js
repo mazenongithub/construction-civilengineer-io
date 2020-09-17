@@ -1836,7 +1836,8 @@ export function inputUTCStringForLaborID(timein) {
     if (month < 10) {
         month = `0${month}`
     }
-    return (`${month}/${date}/${year} ${hours}:${minutes} ${ampm}`)
+    const seconds = trailingZeros(datein.getSeconds())
+    return (`${month}/${date}/${year} ${hours}:${minutes}:${seconds} ${ampm}`)
 
 }
 export function inputDateObjOutputAdjString(datein) {
@@ -1856,6 +1857,7 @@ export function inputDateObjOutputAdjString(datein) {
     let day = datein.getDate();
     let hours = datein.getHours();
     let minutes = datein.getMinutes();
+    
     if (month < 10) {
         month = `0${month}`
     }

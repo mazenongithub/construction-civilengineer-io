@@ -190,7 +190,7 @@ class Equipment extends Component {
                     }
 
                 } else {
-               
+
                     let equipmentid = makeID.equipmentid.call(this);
 
                     let ownership = "";
@@ -327,7 +327,8 @@ class Equipment extends Component {
             if (myequipment) {
                 if (this.state.activecostid === costid) {
 
-                    this.setState({ activecostid: false, equipmentdateday: '', equipmentdatemonth: '', equipmentdateyear: '' })
+                    this.setState({ activecostid: false})
+                    this.equipmentdatedefault()
                 } else {
                     const cost = dynamicstyles.getcostbyid.call(this, myequipment.equipmentid, costid)
                     if (cost) {
@@ -373,9 +374,10 @@ class Equipment extends Component {
                         const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
                         if (myequipment) {
                             const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
-                            const mycost = dynamicstyles.getequipmentcostsbyid.call(this, cost.costid);
+                            const mycost = dynamicstyles.getcostbyid.call(this, this.state.activeequipmentid, cost.costid);
+                        
                             if (mycost) {
-                                const j = dynamicstyles.getequipmentcostskeybyid.call(this, cost.costid)
+                                const j = dynamicstyles.getequipmentcostskeybyid.call(this,this.state.activeequipmentid, cost.costid)
 
                                 myuser.company.equipment.myequipment[i].ownership.cost.splice(j, 1);
                                 this.props.reduxUser(myuser)
@@ -403,7 +405,7 @@ class Equipment extends Component {
         const removeIcon = this.getremoveicon()
         return (
             <div style={{ ...styles.generalFlex }} key={cost.costid}>
-                <div 
+                <div
                     style={{ ...styles.flex5, ...regularFont, ...styles.bottomMargin15, ...styles.generalFont, ...this.getactiveecostbackground(cost.costid) }} onClick={() => { this.makeequipmentcostactive(cost.costid) }}>
                     {formatDateStringDisplay(cost.timein)} Cost:${Number(cost.cost).toFixed(2)}  Detail: {cost.detail}
                 </div>
@@ -496,54 +498,54 @@ class Equipment extends Component {
         if (myuser) {
 
             const checkmanager = dynamicstyles.checkmanager.call(this)
-            if(checkmanager) {
-            if (this.state.activeequipmentid) {
-                const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
-                if (myequipment) {
-                    let i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid);
+            if (checkmanager) {
+                if (this.state.activeequipmentid) {
+                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+                    if (myequipment) {
+                        let i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid);
 
-                    if (this.state.activecostid) {
-                        const mycost = dynamicstyles.getequipmentcostsbyid.call(this, this.state.activeequipmentid, this.state.activecostid)
-                        if (mycost) {
+                        if (this.state.activecostid) {
+                            const mycost = dynamicstyles.getequipmentcostsbyid.call(this, this.state.activeequipmentid, this.state.activecostid)
+                            if (mycost) {
 
-                            let j = dynamicstyles.getequipmentcostskeybyid.call(this,this.state.activeequipmentid,this.state.activecostid)
-                            myuser.company.equipment.myequipment[i].ownership.cost[j].cost = cost;
-                            
-                            this.props.reduxUser(myuser)
-                            this.setState({ render: 'render' })
+                                let j = dynamicstyles.getequipmentcostskeybyid.call(this, this.state.activeequipmentid, this.state.activecostid)
+                                myuser.company.equipment.myequipment[i].ownership.cost[j].cost = cost;
 
-                        }
+                                this.props.reduxUser(myuser)
+                                this.setState({ render: 'render' })
 
-                    } else {
+                            }
 
-                        let costid = makeID.costid.call(this);
-                        const year = this.state.equipmentdateyear;
-                        const day = this.state.equipmentdateday;
-                        const month = this.state.equipmentdatemonth;
-                        const datein = `${year}-${month}-${day}`;
-                        let detail = "";
-                        let newcost = CreateCostID(costid, cost, detail, datein)
-                        let equipment = this.getactiveequipment();
-
-                        if (equipment.ownership.hasOwnProperty("cost")) {
-                            myuser.company.equipment.myequipment[i].ownership.cost.push(newcost)
                         } else {
 
-                            myuser.company.equipment.myequipment[i].ownership.cost = [newcost]
-                        }
+                            let costid = makeID.costid.call(this);
+                            const year = this.state.equipmentdateyear;
+                            const day = this.state.equipmentdateday;
+                            const month = this.state.equipmentdatemonth;
+                            const datein = `${year}-${month}-${day}`;
+                            let detail = "";
+                            let newcost = CreateCostID(costid, cost, detail, datein)
+                            let equipment = this.getactiveequipment();
 
-                        this.props.reduxUser(myuser)
-                        this.setState({ activecostid: costid, render: 'render' })
+                            if (equipment.ownership.hasOwnProperty("cost")) {
+                                myuser.company.equipment.myequipment[i].ownership.cost.push(newcost)
+                            } else {
+
+                                myuser.company.equipment.myequipment[i].ownership.cost = [newcost]
+                            }
+
+                            this.props.reduxUser(myuser)
+                            this.setState({ activecostid: costid, render: 'render' })
+
+                        }
 
                     }
 
                 }
 
+            } else {
+                alert(`Only Managers can update equipment costs `)
             }
-
-        } else {
-            alert(`Only Managers can update equipment costs `)
-        }
 
         }
 
@@ -565,59 +567,59 @@ class Equipment extends Component {
         let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
-    
+
             const checkmanager = dynamicstyles.checkmanager.call(this)
-            if(checkmanager) {
-            if (this.state.activeequipmentid) {
-                const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
-                if (myequipment) {
-                    let i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid);
-    
-                    if (this.state.activecostid) {
-                        const mycost = dynamicstyles.getequipmentcostsbyid.call(this, this.state.activeequipmentid, this.state.activecostid)
-                        if (mycost) {
-    
-                            let j = dynamicstyles.getequipmentcostskeybyid.call(this,this.state.activeequipmentid,this.state.activecostid)
-                            myuser.company.equipment.myequipment[i].ownership.cost[j].detail = detail;
-                            
-                            this.props.reduxUser(myuser)
-                            this.setState({ render: 'render' })
-    
-                        }
-    
-                    } else {
-    
-                        let costid = makeID.costid.call(this);
-                        const year = this.state.equipmentdateyear;
-                        const day = this.state.equipmentdateday;
-                        const month = this.state.equipmentdatemonth;
-                        const datein = `${year}-${month}-${day}`;
-                        let cost = 0;
-                        let newcost = CreateCostID(costid, cost, detail, datein)
-                        let equipment = this.getactiveequipment();
-    
-                        if (equipment.ownership.hasOwnProperty("cost")) {
-                            myuser.company.equipment.myequipment[i].ownership.cost.push(newcost)
+            if (checkmanager) {
+                if (this.state.activeequipmentid) {
+                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+                    if (myequipment) {
+                        let i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid);
+
+                        if (this.state.activecostid) {
+                            const mycost = dynamicstyles.getequipmentcostsbyid.call(this, this.state.activeequipmentid, this.state.activecostid)
+                            if (mycost) {
+
+                                let j = dynamicstyles.getequipmentcostskeybyid.call(this, this.state.activeequipmentid, this.state.activecostid)
+                                myuser.company.equipment.myequipment[i].ownership.cost[j].detail = detail;
+
+                                this.props.reduxUser(myuser)
+                                this.setState({ render: 'render' })
+
+                            }
+
                         } else {
-    
-                            myuser.company.equipment.myequipment[i].ownership.cost = [newcost]
+
+                            let costid = makeID.costid.call(this);
+                            const year = this.state.equipmentdateyear;
+                            const day = this.state.equipmentdateday;
+                            const month = this.state.equipmentdatemonth;
+                            const datein = `${year}-${month}-${day}`;
+                            let cost = 0;
+                            let newcost = CreateCostID(costid, cost, detail, datein)
+                            let equipment = this.getactiveequipment();
+
+                            if (equipment.ownership.hasOwnProperty("cost")) {
+                                myuser.company.equipment.myequipment[i].ownership.cost.push(newcost)
+                            } else {
+
+                                myuser.company.equipment.myequipment[i].ownership.cost = [newcost]
+                            }
+
+                            this.props.reduxUser(myuser)
+                            this.setState({ activecostid: costid, render: 'render' })
+
                         }
-    
-                        this.props.reduxUser(myuser)
-                        this.setState({ activecostid: costid, render: 'render' })
-    
+
                     }
-    
+
                 }
-    
+
+            } else {
+                alert(`Only Managers can update equipment details `)
             }
-    
-        } else {
-            alert(`Only Managers can update equipment details `)
+
         }
-    
-        }
-    
+
     }
 
     showaccountcost() {
@@ -994,13 +996,19 @@ class Equipment extends Component {
         if (this.state.activeequipmentid !== equipmentid) {
             const myequipment = dynamicstyles.getmyequipmentbyid.call(this, equipmentid)
             if (myequipment) {
-                const purchasedateyear = myequipment.ownership.purchasedate.substring(0, 4)
-                const purchasedatemonth = myequipment.ownership.purchasedate.substring(5, 7);
-                const purchasedateday = myequipment.ownership.purchasedate.substring(8, 10);
-                const saledateyear = myequipment.ownership.saledate.substring(0, 4)
-                const saledatemonth = myequipment.ownership.saledate.substring(5, 7);
-                const saledateday = myequipment.ownership.saledate.substring(8, 10);
-                this.setState({ activeequipmentid: equipmentid, purchasedateyear, purchasedatemonth, purchasedateday, saledateyear, saledatemonth, saledateday })
+                if (myequipment.hasOwnProperty("ownership")) {
+
+                    const purchasedateyear = myequipment.ownership.purchasedate.substring(0, 4)
+                    const purchasedatemonth = myequipment.ownership.purchasedate.substring(5, 7);
+                    const purchasedateday = myequipment.ownership.purchasedate.substring(8, 10);
+                    const saledateyear = myequipment.ownership.saledate.substring(0, 4)
+                    const saledatemonth = myequipment.ownership.saledate.substring(5, 7);
+                    const saledateday = myequipment.ownership.saledate.substring(8, 10);
+                    this.setState({ activeequipmentid: equipmentid, purchasedateyear, purchasedatemonth, purchasedateday, saledateyear, saledatemonth, saledateday })
+                } else {
+                    this.setState({ activeequipmentid: equipmentid })
+                    
+                }
             }
         } else {
 
@@ -1450,32 +1458,32 @@ class Equipment extends Component {
                     return (myuser.company.url)
                 }
             }
-            if(checkmanager) {
-            return (
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
+            if (checkmanager) {
+                return (
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1 }}>
 
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <span style={{ ...headerFont, ...styles.boldFont }}>/{companyurl()}</span><br />
-                                <span style={{ ...headerFont, ...styles.boldFont }}>/equipment</span>
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                    <span style={{ ...headerFont, ...styles.boldFont }}>/{companyurl()}</span><br />
+                                    <span style={{ ...headerFont, ...styles.boldFont }}>/equipment</span>
+                                </div>
                             </div>
+
+                            {this.showequipment()}
+                            {showaccountid()}
+                            {this.showequipmentids()}
+                            {this.showequipmentdetail()}
+                            {this.equipmentdetail()}
+                            {this.showcostaccounts()}
+                            {this.showrentalrates()}
+
+
+                            {dynamicstyles.showsavecompany.call(this)}
+
                         </div>
-
-                        {this.showequipment()}
-                        {showaccountid()}
-                        {this.showequipmentids()}
-                        {this.showequipmentdetail()}
-                        {this.equipmentdetail()}
-                        {this.showcostaccounts()}
-                        {this.showrentalrates()}
-
-
-                        {dynamicstyles.showsavecompany.call(this)}
-
                     </div>
-                </div>
-            )
+                )
 
             } else {
                 return (<div style={{ ...styles.generalContainer, ...regularFont }}>
