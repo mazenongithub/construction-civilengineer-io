@@ -10,18 +10,89 @@ import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfi
 
 class DynamicStyles {
 
+    getactualitems() {
+        const dynamicstyles = new DynamicStyles();
+        let actualitems = false;
+        let myproject = dynamicstyles.getproject.call(this);
+        if (myproject) {
+            if (myproject.hasOwnProperty("bid")) {
+                actualitems = myproject.bid.biditem
+            }
+        }
+        return actualitems;
+    }
 
-    componentDidMount() {
-        window.addEventListener('resize', this.updateWindowDimensions);
-        this.updateWindowDimensions();
+    getactualitem(csiid) {
+        let actualitems = this.getactualitems();
 
+        let actualitem = false;
+        if (actualitems) {
+            // eslint-disable-next-line
+            actualitems.map(item => {
+                if (item.csiid === csiid) {
+                    actualitem = item;
+                }
+            })
+        }
+        return actualitem;
     }
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
+    getactualitemkey(csiid) {
+        let actualitems = this.getactualitems();
+        let key = false;
+        if (actualitems) {
+            // eslint-disable-next-line
+            actualitems.map((item, i) => {
+
+                if (item.csiid === csiid) {
+                    key = i
+                }
+            })
+        }
+        return key;
     }
-    updateWindowDimensions() {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
+
+
+    getscheduleitems() {
+        const dynamicstyles = new DynamicStyles();
+        let scheduleitems = false;
+        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+        if (myproject) {
+            if (myproject.hasOwnProperty("bidschedule")) {
+                scheduleitems = myproject.bidschedule.biditem
+            }
+        }
+        return scheduleitems;
     }
+
+    getscheduleitem(csiid) {
+        let scheduleitems = this.getscheduleitems();
+
+        let scheduleitem = false;
+        if (scheduleitems) {
+            // eslint-disable-next-line
+            scheduleitems.map(item => {
+                if (item.csiid === csiid) {
+                    scheduleitem = item;
+                }
+            })
+        }
+        return scheduleitem;
+    }
+    getscheduleitemkey(csiid) {
+        let scheduleitems = this.getscheduleitems();
+        let key = false;
+        if (scheduleitems) {
+            // eslint-disable-next-line
+            scheduleitems.map((item, i) => {
+          
+                if (item.csiid === csiid) {
+                    key = i
+                }
+            })
+        }
+        return key;
+    }
+
 
     getampmicon() {
         if (this.state.width > 1200) {
@@ -1483,6 +1554,94 @@ class DynamicStyles {
 
 
         return key;
+    }
+
+    getbidactual() {
+        const dynamicstyles = new DynamicStyles();
+        const project = dynamicstyles.getproject.call(this)
+        let actual = false;
+        if(project.hasOwnProperty("bid")) {
+            actual = project.bid
+        }
+        return actual;
+    
+    }
+
+    getbidschedulekeybyid(csiid) {
+        const dynamicstyles = new DynamicStyles();
+        const schedule = dynamicstyles.getbidschedule.call(this)
+        let key = false;
+        if(schedule) {
+            // eslint-disable-next-line
+            schedule.map((item,i)=> {
+                if(item.csiid === csiid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    
+    }
+
+    getbidactualkeybyid(csiid) {
+        const dynamicstyles = new DynamicStyles();
+        const actual = dynamicstyles.getbidactual.call(this)
+        let key = false;
+        if(actual) {
+            // eslint-disable-next-line
+            actual.map((item,i)=> {
+                if(item.csiid === csiid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    
+    }
+
+    getbidactualbyid(csiid) {
+        const dynamicstyles = new DynamicStyles();
+        const actual = dynamicstyles.getbidactual.call(this)
+        let myitem = false;
+        if(actual) {
+            // eslint-disable-next-line
+            actual.map(item=> {
+                if(item.csiid === csiid) {
+                    myitem = item;
+                }
+            })
+        }
+        return myitem;
+    
+    }
+
+    getbidschedule() {
+        const dynamicstyles = new DynamicStyles();
+        const project = dynamicstyles.getproject.call(this)
+        let schedule = false;
+        if(project.hasOwnProperty("bidschedule")) {
+            schedule = project.bidschedule;
+        }
+        return schedule;
+
+    }
+
+    getbidschedulebyid(csiid) {
+        const dynamicstyles = new DynamicStyles();
+        const schedule = dynamicstyles.getbidschedule.call(this)
+      
+        let myitem = false;
+        if(schedule) {
+ 
+            // eslint-disable-next-line
+            schedule.map(item=> {
+                if(item.csiid === csiid) {
+                    myitem = item;
+                }
+            })
+        }
+        return myitem;
+
     }
     getinvoicebyid(invoiceid) {
         let dynamicstyles = new DynamicStyles();

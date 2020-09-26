@@ -340,95 +340,30 @@ class BidSchedule extends Component {
         return directcost;
 
     }
-    getscheduleitems() {
-        const dynamicstyles = new DynamicStyles();
-        let scheduleitems = false;
-        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
-        if (myproject) {
-            if (myproject.hasOwnProperty("bidschedule")) {
-                scheduleitems = myproject.bidschedule.biditem
-            }
-        }
-        return scheduleitems;
-    }
-
-    getscheduleitem(csiid) {
-        let scheduleitems = this.getscheduleitems();
-
-        let scheduleitem = false;
-        if (scheduleitems) {
-            // eslint-disable-next-line
-            scheduleitems.map(item => {
-                if (item.csiid === csiid) {
-                    scheduleitem = item;
-                }
-            })
-        }
-        return scheduleitem;
-    }
-    getscheduleitemkey(csiid) {
-        let scheduleitems = this.getscheduleitems();
-        let key = false;
-        if (scheduleitems) {
-            // eslint-disable-next-line
-            scheduleitems.map((item, i) => {
-          
-                if (item.csiid === csiid) {
-                    key = i
-                }
-            })
-        }
-        return key;
-    }
 
     getquantity(csiid) {
-        let quantity = 0;
+        let quantity = ""
+
         const dynamicstyles = new DynamicStyles();
-        let myproposal = dynamicstyles.getmyproposals.call(this)
-        if (myproposal) {
-            // eslint-disable-next-line
-            myproposal.map(proposals => {
-
-                if (proposals.hasOwnProperty("bidschedule")) {
-                    // eslint-disable-next-line
-                    proposals.bidschedule.biditem.map(item => {
-                        if (item.unit && item.unit !== 'Lump Sum' && item.csiid === csiid) {
-                            quantity += Number(item.quantity);
-                        }
-                    })
-                }
-
-
-            })
-
+        const item = dynamicstyles.getbidschedulebyid.call(this, csiid);
+        if (item) {
+            quantity = item.quantity;
         }
         return quantity;
 
-    }
-    getunit(csiid) {
-        let unit = ""
-        const dynamicstyles = new DynamicStyles();
-        let myproposal = dynamicstyles.getmyproposals.call(this)
-        if (myproposal) {
-            // eslint-disable-next-line
-            myproposal.map(proposals => {
-
-                if (proposals.hasOwnProperty("bidschedule")) {
-                    // eslint-disable-next-line
-                    proposals.bidschedule.biditem.map(item => {
-                        if (item.csiid === csiid) {
-                            unit = item.unit
-                        }
-                    })
-                }
-
-
-            })
-
         }
-        return unit;
-
-    }
+     
+        getunit(csiid) {
+            let unit = ""
+    
+            const dynamicstyles = new DynamicStyles();
+            const item = dynamicstyles.getbidschedulebyid.call(this, csiid);
+            if (item) {
+                unit = item.unit
+            }
+            return unit 
+    
+            }
     getprofit(csiid) {
         const dynamicstyles = new DynamicStyles();
         const myschedule = dynamicstyles.getAllSchedule.call(this);
@@ -491,15 +426,39 @@ class BidSchedule extends Component {
     }
     handlequantity(csiid, quantity) {
         const dynamicstyles = new DynamicStyles();
-        let myuser = this.getuser();
-        if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = this.getscheduleitemkey(csiid);
+        const myuser = dynamicstyles.getuser.call(this)
+        if(myuser) {
+            const project = dynamicstyles.getproject.call(this);
+            if (project) {
+                const i = dynamicstyles.getprojectkeybyid.call(this, project.projectid);
+                const scheduleitems = dynamicstyles.getbidschedule.call(this)
+                if(scheduleitems) {
 
-            myuser.company.projects.myproject[i].bidschedule.biditem[j].quantity = quantity;
-            this.props.reduxUser(myuser);
-            this.setState({ render: 'render' });
+                const scheduleitem = dynamicstyles.getbidschedulebyid.call(this, csiid)
+                if (scheduleitem) {
+                    const j = dynamicstyles.getbidschedulekeybyid.call(this, csiid)
+                    myuser.company.projects.myproject[i].bidschedule[j].quantity = quantity;
+                    this.props.reduxUser(myuser);
+                    this.setState({ render: 'render' })
+                   
+                } else {
+                    let newItem = {csiid, quantity, unit:''}
+                    myuser.company.projects.myproject[i].bidschedule.push(newItem)
+                    this.props.reduxUser(myuser);
+                    this.setState({ render: 'render' })
+                }
 
+            } else {
+                let newItem = {csiid, quantity, unit:''}
+                myuser.company.projects.myproject[i].bidschedule = [newItem]
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            }
+
+           
+
+
+            }
         }
 
     }
@@ -519,14 +478,42 @@ class BidSchedule extends Component {
 
     handleunit(csiid, unit) {
         const dynamicstyles = new DynamicStyles();
-        let myuser = this.getuser();
-        if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
-            let j = this.getscheduleitemkey(csiid);
-            myuser.company.projects.myproject[i].bidschedule.biditem[j].unit = unit;
-            this.props.reduxUser(myuser);
-            this.setState({ render: 'render' });
+        const myuser = dynamicstyles.getuser.call(this)
+      
+        if(myuser) {
+            const project = dynamicstyles.getproject.call(this);
+            if (project) {
+                const i = dynamicstyles.getprojectkeybyid.call(this, project.projectid);
+                const scheduleitems = dynamicstyles.getbidschedule.call(this)
+                if(scheduleitems) {
+                   
+                const scheduleitem = dynamicstyles.getbidschedulebyid.call(this, csiid)
+              
+                if (scheduleitem) {
+                    
+                    const j = dynamicstyles.getbidschedulekeybyid.call(this, csiid)
+                    myuser.company.projects.myproject[i].bidschedule[j].unit = unit;
+                    this.props.reduxUser(myuser);
+                    this.setState({ render: 'render' })
+                   
+                } else {
+                    let newItem = {csiid, quantity:'', unit}
+                    myuser.company.projects.myproject[i].bidschedule.push(newItem)
+                    this.props.reduxUser(myuser);
+                    this.setState({ render: 'render' })
+                }
 
+            } else {
+                let newItem = {csiid, quantity:'', unit}
+                myuser.company.projects.myproject[i].bidschedule = [newItem]
+                this.props.reduxUser(myuser);
+                this.setState({ render: 'render' })
+            }
+
+           
+
+
+            }
         }
 
     }
@@ -553,13 +540,18 @@ class BidSchedule extends Component {
             return (
                 <div style={{ ...styles.generalContainer }}>
                     Unit <br />
-                    {this.getunit(csi.csiid)}
+                    <input type="text"
+                        style={{ ...regularFont, ...styles.generalFont, ...styles.minWidth90, ...styles.alignCenter }}
+                        value={this.getunit(item.csiid)}
+                        onChange={event => { this.handleunit(item.csiid,event.target.value) }} />
                 </div>)
         }
         const quantity = () => {
             return (<div style={{ ...styles.generalContainer }}>
                 Quantity <br />
-                {this.getquantity()}
+                <input type="text"
+                    style={{ ...regularFont, ...styles.generalFont, ...styles.minWidth90, ...styles.alignCenter }}
+                    value={this.getquantity(item.csiid)} onChange={event => { this.handlequantity(item.csiid,event.target.value) }} />
 
             </div>)
         }
@@ -581,7 +573,7 @@ class BidSchedule extends Component {
 
         } else {
             return (
-                <div style={{ ...styles.generalFlex }} key={csi.csiid}>
+                <div style={{ ...styles.generalFlex }} key={item.csiid}>
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont, ...styles.showBorder }}>
@@ -589,14 +581,11 @@ class BidSchedule extends Component {
                                     {csi.csi}-{csi.title} </Link>
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                                Quantity <br />
-                                {this.getquantity(csi.csiid)}
+                               {quantity()}
 
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                                Unit <br />
-                                {this.getunit(csi.csiid)}
-
+                                {unit()}
                             </div>
                         </div>
 
@@ -683,6 +672,8 @@ class BidSchedule extends Component {
                     </div>
 
                     {dynamicstyles.showbidtable.call(this)}
+
+                    {dynamicstyles.showsaveproject.call(this)}
 
 
 
