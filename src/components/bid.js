@@ -354,14 +354,14 @@ class Bid extends Component {
                     this.setState({ render: 'render' })
                    
                 } else {
-                    let newItem = {csiid, quantity, unit:''}
+                    let newItem = {csiid, quantity, unit:'', providerid:myuser.providerid}
                     myuser.company.projects.myproject[i].bid.push(newItem)
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 }
 
             } else {
-                let newItem = {csiid, quantity, unit:''}
+                let newItem = {csiid, quantity, unit:'', providerid:myuser.providerid}
                 myuser.company.projects.myproject[i].bid = [newItem]
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
@@ -396,14 +396,14 @@ class Bid extends Component {
                     this.setState({ render: 'render' })
                    
                 } else {
-                    let newItem = {csiid, quantity:'', unit}
+                    let newItem = {csiid, quantity:'', unit, providerid:myuser.providerid}
                     myuser.company.projects.myproject[i].bid.push(newItem)
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 }
 
             } else {
-                let newItem = {csiid, quantity:'', unit}
+                let newItem = {csiid, quantity:'', unit, providerid:myuser.providerid}
                 myuser.company.projects.myproject[i].bid = [newItem]
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
