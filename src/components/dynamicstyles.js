@@ -575,7 +575,7 @@ class DynamicStyles {
                     title:'Construction by civilengineer.io',
                     id:'construction',
                     url:'http://civilengineer.io/construction/slides/construction.png',
-                    caption:`This is Construction Management by Civil Engineer.io. Full Construction Management Program from A to Z. Ready for companies to use. `
+                    caption:`Construction Management by Civil Engineer.io. The most comprehensive construction management program for construction companies `
                 },
                 {
                     title:'Company',
@@ -679,12 +679,27 @@ class DynamicStyles {
                     url:'http://civilengineer.io/construction/slides/viewinvoice.png',
                     caption:`View Invoice shows the invoice in construction-bid format. View Invoice also contains payment, transfer, and balance remaining details.   `
                 },
+
+                {
+                    title:'Bid Schedule',
+                    id:'bidschedule',
+                    url:'http://civilengineer.io/construction/slides/bidschedule.png',
+                    caption:` View Project level bid schedule in construction format. Add your unit and quantities to produce unit prices   `
+                },
+                {
+                    title:'Actual Bid',
+                    id:'bid',
+                    url:'http://civilengineer.io/construction/slides/bid.png',
+                    caption:` Bid puts together project level actual costs in construction format. Add your units and quantities to produce unit prices.   `
+                },
                 {
                     title:'Labor, Equipment, Materials',
                     id:'lem',
                     url:'http://civilengineer.io/construction/slides/lem.png',
                     caption:`Labor, materials, equipment breakdowns are given for each for schedule and actual pay items.   `
                 },
+
+
               
                 {
                     title:'Quantity Take Off Schedule',

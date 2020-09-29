@@ -649,7 +649,7 @@ class ViewProposal extends Component {
 
                             <div style={{ ...styles.generalFlex }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>{project.title}</span> <br />
+                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{project.title}</span> <br />
                                     <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/viewproposal</span> <br />
                                     <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{this.props.match.params.proposalid}</span>
                                 </div>

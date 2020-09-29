@@ -1295,6 +1295,7 @@ class Schedule extends Component {
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
         const scheduleview = new ScheduleView();
+        const menu = dynamicstyles.getnavigation.call(this)
         const equipmentrate = () => {
             if (this.state.active === 'equipment' && this.state.activeequipmentid) {
                 return (
@@ -1421,7 +1422,7 @@ class Schedule extends Component {
             }
         }
         const showtimes = () => {
-            if (this.state.width > 1200) {
+            if (this.state.width > 1200 && menu.open) {
 
 
                 return (<div style={{ ...styles.generalFlex }}>
@@ -1548,6 +1549,10 @@ class Schedule extends Component {
                             {equipmentrate()}
                             {showmaterialquantity()}
 
+
+                            {dynamicstyles.showsaveproject.call(this)}
+
+
                             {scheduleview.showschedule.call(this, "schedule")}
 
                             {this.showlaborids()}
@@ -1556,8 +1561,7 @@ class Schedule extends Component {
 
                            
 
-                            {dynamicstyles.showsaveproject.call(this)}
-
+                            
 
 
 

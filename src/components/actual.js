@@ -1318,6 +1318,7 @@ class Actual extends Component {
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
         const scheduleview = new ScheduleView();
+        const menu = dynamicstyles.getnavigation.call(this)
 
         const validate = () => {
             let validation = true;
@@ -1555,7 +1556,7 @@ class Actual extends Component {
             }
         }
         const showtimes = () => {
-            if (this.state.width > 1200) {
+            if (this.state.width > 1200 && menu === 'closed') {
 
 
                 return (
@@ -1803,13 +1804,15 @@ class Actual extends Component {
                             {equipmentrate()}
                             {showmaterialquantity()}
 
+                            {dynamicstyles.showsaveproject.call(this)}
+
                             {scheduleview.showschedule.call(this, "actual")}
 
                             {this.showlaborids()}
                             {this.showmaterialids()}
                             {this.showequipmentids()}
 
-                            {dynamicstyles.showsaveproject.call(this)}
+                          
 
                         </div>
                     </div>)

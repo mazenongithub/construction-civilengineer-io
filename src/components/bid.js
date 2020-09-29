@@ -16,12 +16,12 @@ class Bid extends Component {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
-        if(myproject) {
-        
-            this.props.reduxProject({ projectid: myproject.projectid})
+        const myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        if (myproject) {
+
+            this.props.reduxProject({ projectid: myproject.projectid })
         }
-       
+
     }
 
     componentWillUnmount() {
@@ -237,7 +237,7 @@ class Bid extends Component {
         return directcost;
 
     }
-  
+
     getmyinvoices() {
         const dynamicstyles = new DynamicStyles();
         let invoices = false;
@@ -249,18 +249,18 @@ class Bid extends Component {
     }
     getquantity(csiid) {
         let quantity = ""
-    
+
         const dynamicstyles = new DynamicStyles();
         const item = dynamicstyles.getbidactualbyid.call(this, csiid);
         if (item) {
             quantity = item.quantity;
         }
         return quantity;
-    
-        }
-     
-        
-    
+
+    }
+
+
+
     getunit(csiid) {
         let unit = ""
 
@@ -269,9 +269,9 @@ class Bid extends Component {
         if (item) {
             unit = item.unit
         }
-        return unit 
+        return unit
 
-        }
+    }
     getprofit(csiid) {
         const dynamicstyles = new DynamicStyles();
         const myactual = dynamicstyles.getAllActual.call(this);
@@ -339,35 +339,35 @@ class Bid extends Component {
     handlequantity(csiid, quantity) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
-        if(myuser) {
+        if (myuser) {
             const project = dynamicstyles.getproject.call(this);
             if (project) {
                 const i = dynamicstyles.getprojectkeybyid.call(this, project.projectid);
                 const actualitems = dynamicstyles.getbidactual.call(this)
-                if(actualitems) {
+                if (actualitems) {
 
-                const actualitem = dynamicstyles.getbidactualbyid.call(this, csiid)
-                if (actualitem) {
-                    const j = dynamicstyles.getbidactualkeybyid.call(this, csiid)
-                    myuser.company.projects.myproject[i].bid[j].quantity = quantity;
-                    this.props.reduxUser(myuser);
-                    this.setState({ render: 'render' })
-                   
+                    const actualitem = dynamicstyles.getbidactualbyid.call(this, csiid)
+                    if (actualitem) {
+                        const j = dynamicstyles.getbidactualkeybyid.call(this, csiid)
+                        myuser.company.projects.myproject[i].bid[j].quantity = quantity;
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+
+                    } else {
+                        let newItem = { csiid, quantity, unit: '', providerid: myuser.providerid }
+                        myuser.company.projects.myproject[i].bid.push(newItem)
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    }
+
                 } else {
-                    let newItem = {csiid, quantity, unit:'', providerid:myuser.providerid}
-                    myuser.company.projects.myproject[i].bid.push(newItem)
+                    let newItem = { csiid, quantity, unit: '', providerid: myuser.providerid }
+                    myuser.company.projects.myproject[i].bid = [newItem]
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 }
 
-            } else {
-                let newItem = {csiid, quantity, unit:'', providerid:myuser.providerid}
-                myuser.company.projects.myproject[i].bid = [newItem]
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
-            }
 
-           
 
 
             }
@@ -378,38 +378,38 @@ class Bid extends Component {
     handleunit(csiid, unit) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
-      
-        if(myuser) {
+
+        if (myuser) {
             const project = dynamicstyles.getproject.call(this);
             if (project) {
                 const i = dynamicstyles.getprojectkeybyid.call(this, project.projectid);
                 const actualitems = dynamicstyles.getbidactual.call(this)
-                if(actualitems) {
-                   
-                const actualitem = dynamicstyles.getbidactualbyid.call(this, csiid)
-               
-                if (actualitem) {
-                    
-                    const j = dynamicstyles.getbidactualkeybyid.call(this, csiid)
-                    myuser.company.projects.myproject[i].bid[j].unit = unit;
-                    this.props.reduxUser(myuser);
-                    this.setState({ render: 'render' })
-                   
+                if (actualitems) {
+
+                    const actualitem = dynamicstyles.getbidactualbyid.call(this, csiid)
+
+                    if (actualitem) {
+
+                        const j = dynamicstyles.getbidactualkeybyid.call(this, csiid)
+                        myuser.company.projects.myproject[i].bid[j].unit = unit;
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+
+                    } else {
+                        let newItem = { csiid, quantity: '', unit, providerid: myuser.providerid }
+                        myuser.company.projects.myproject[i].bid.push(newItem)
+                        this.props.reduxUser(myuser);
+                        this.setState({ render: 'render' })
+                    }
+
                 } else {
-                    let newItem = {csiid, quantity:'', unit, providerid:myuser.providerid}
-                    myuser.company.projects.myproject[i].bid.push(newItem)
+                    let newItem = { csiid, quantity: '', unit, providerid: myuser.providerid }
+                    myuser.company.projects.myproject[i].bid = [newItem]
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 }
 
-            } else {
-                let newItem = {csiid, quantity:'', unit, providerid:myuser.providerid}
-                myuser.company.projects.myproject[i].bid = [newItem]
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
-            }
 
-           
 
 
             }
@@ -430,7 +430,7 @@ class Bid extends Component {
 
     }
 
- 
+
     showbiditem(item) {
 
         const dynamicstyles = new DynamicStyles();
@@ -456,7 +456,7 @@ class Bid extends Component {
                 Quantity <br />
                 <input type="text"
                     style={{ ...regularFont, ...styles.generalFont, ...styles.minWidth90, ...styles.alignCenter }}
-                    value={this.getquantity(item.csiid)} onChange={event => { this.handlequantity(item.csiid,event.target.value) }} />
+                    value={this.getquantity(item.csiid)} onChange={event => { this.handlequantity(item.csiid, event.target.value) }} />
 
             </div>)
         }
@@ -467,7 +467,7 @@ class Bid extends Component {
                     <input type="text"
                         style={{ ...regularFont, ...styles.generalFont, ...styles.minWidth90, ...styles.alignCenter }}
                         value={this.getunit(item.csiid)}
-                        onChange={event => { this.handleunit(item.csiid,event.target.value) }} />
+                        onChange={event => { this.handleunit(item.csiid, event.target.value) }} />
                 </div>)
         }
         if (this.state.width > 1200) {
@@ -497,7 +497,7 @@ class Bid extends Component {
                                     {csi.csi}-{csi.title} </Link>
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                               {quantity()}
+                                {quantity()}
 
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
@@ -579,13 +579,14 @@ class Bid extends Component {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                                    /bids
-                        </div>
+                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{this.props.match.params.projectid}</span> <br/>
+                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/bid</span>
+                                </div>
                             </div>
 
                             <div style={{ ...styles.generalFlex }}>
-                                <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.fontBold }}>
-                                    Actual Bid
+                                <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont }}>
+                                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}> Actual Bid </span>
                         </div>
                             </div>
 
