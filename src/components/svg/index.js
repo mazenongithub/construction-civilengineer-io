@@ -9,6 +9,14 @@ export function closeDetail() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111.2 112.99"><defs><style></style></defs><title>closeDetail</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path className="closedetail-1" d="M2.38,101.05c15,9.35,33.83,10,48.8,1.44,17.18-9.78,26.5-30,23-50.24" /><polygon className="closedetail-2" points="74.02 3.52 40.65 51.96 107.39 51.96 74.02 3.52" /></g></g></svg>)
 }
 
+export function hamburgerIcon() {
+    return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98.28 59.52"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="hide"><g id="Layer_1-2" data-name="Layer 1"><rect className="hamburger-1" x="0.5" y="0.5" width="97.28" height="58.52" rx="6.74"/><rect className="hamburger-2" x="18.46" y="12.39" width="61.36" height="8.47" rx="1.88"/><rect className="hamburger-2" x="18.46" y="25.53" width="61.36" height="8.47" rx="1.88"/><rect className="hamburger-2" x="18.46" y="38.66" width="61.36" height="8.47" rx="1.88"/></g></g></g></svg>)
+}
+
+export function cheeseburgerIcon() {
+    return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98.28 59.52"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="hide"><g id="Layer_1-2" data-name="Layer 1"><rect class="hamburger-1" x="0.5" y="0.5" width="97.28" height="58.52" rx="6.74"/><rect class="hamburger-2" x="14.43" y="25.53" width="43.15" height="8.47" rx="1.88" transform="translate(6.24 65.76) rotate(-90)"/><rect class="hamburger-2" x="27.56" y="25.53" width="43.15" height="8.47" rx="1.88" transform="translate(19.38 78.9) rotate(-90)"/><rect class="hamburger-2" x="40.7" y="25.53" width="43.15" height="8.47" rx="1.88" transform="translate(32.52 92.03) rotate(-90)"/></g></g></g></svg>)
+}
+
 export function dropDateIcon() {
     return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 94 46"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_3" data-name="Layer 3"><rect className="dropicon-1" x="0.5" y="0.5" width="93" height="45" rx="4.43"/><polygon className="dropicon-2" points="47 39.5 15.5 12.5 78.5 12.5 47 39.5"/></g></g></svg>)
 }

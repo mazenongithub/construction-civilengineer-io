@@ -5,7 +5,7 @@ import { CheckUserNode, LogoutUserNode, LoadCSIs } from './components/actions/ap
 import * as actions from './components/actions';
 import './App.css';
 import { MyStylesheet } from './components/styles'
-import { Icon, Logo } from './components/svg';
+import { cheeseburgerIcon, hamburgerIcon, Logo } from './components/svg';
 import Landing from './components/landing';
 import Login from './components/login';
 import Profile from './components/profile';
@@ -657,6 +657,15 @@ class App extends Component {
     }
     const getmainlogo = dynamicstyles.getmainlogo.call(this)
 
+    const getIcon = () => {
+      const navigation = dynamicstyles.getnavigation.call(this)
+      if(navigation === 'open') {
+        return(hamburgerIcon())
+      } else {
+        return(cheeseburgerIcon())
+      }
+    }
+
     return (
       <BrowserRouter>
         <div style={{ ...styles.generalFlex }}>
@@ -664,8 +673,8 @@ class App extends Component {
 
             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
               <div style={{ ...styles.flex1, ...styles.alignCenter, ...styles.addMargin }}>
-                <div className="createlink" style={{ ...styles.generalContainer, ...iconwidth, ...styles.headerBackground, ...styles.thickBorder, ...styles.addBorderRadius }}>
-                  <button className="createlink" style={{ ...iconwidth, ...styles.generalButton, ...styles.headerBackground, ...styles.alignCenter, ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{Icon()}</button>
+                <div className="createlink" style={{ ...styles.generalContainer, ...iconwidth }}>
+                  <button className="createlink" style={{ ...iconwidth, ...styles.generalButton,  ...styles.addBorderRadius }} onClick={() => { this.toogleappmenu() }}>{getIcon()}</button>
                 </div>
               </div>
 
