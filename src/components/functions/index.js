@@ -1,3 +1,219 @@
+export function RomanLower(num) {
+
+    if (isNaN(num))
+        return NaN;
+    var digits = String(+num).split(""),
+        key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+               "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+               "","I","II","III","IV","V","VI","VII","VIII","IX"],
+        roman = "",
+        i = 3;
+    while (i--)
+        roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+    return (Array(+digits.join("") + 1).join("M") + roman).toLowerCase();
+
+}
+
+
+export function getListNumber(listType,num,i) {
+  
+    let listnumber = "";
+    switch(listType) {
+        case "Part":
+            return(PartNumber(num))
+        case "1.01":
+            return `${i}.${trailingZeros(num)}`
+        case "A.B.C":
+            return(`${LetterCounter(num)}.`)
+        case "1.2.3":
+            return(`${num}.`)
+        case "a.b.c":
+            return(`${LetterCounterLower(num)}.`)
+        case "i.ii.iii":
+            return (`${RomanLower(num)}.`)
+        default:
+            break;
+
+    }
+    return listnumber;
+}
+
+export function PartNumber(num) {
+    return(`Part ${num}`)
+}
+
+export function LetterCounterLower(num) {
+
+    const numericAlpha = (num) => {
+        switch (Number(num)) {
+            case 1:
+                return 'a'
+            case 2:
+                return 'b'
+            case 3:
+                return 'c'
+            case 4:
+                return 'd'
+            case 5:
+                return 'e'
+            case 6:
+                return 'f'
+            case 7:
+                return 'g'
+            case 8:
+                return 'h'
+            case 9:
+                return 'i'
+            case 10:
+                return 'j'
+            case 11:
+                return 'k'
+            case 12:
+                return 'l'
+            case 13:
+                return 'm'
+            case 14:
+                return 'n'
+            case 15:
+                return 'o'
+            case 16:
+                return 'p'
+            case 17:
+                return 'q'
+            case 18:
+                return 'r'
+            case 19:
+                return 's'
+            case 20:
+                return 't'
+            case 21:
+                return 'u'
+            case 22:
+                return 'v'
+            case 23:
+                return 'w'
+            case 24:
+                return 'x'
+            case 25:
+                return 'y'
+            case 26:
+                return 'z'
+            default:
+                return ''
+
+        }
+
+
+
+    }
+
+    let Zs = 0;
+    let newnum = "";
+    let Z = "";
+    if (num > 26) {
+
+        Zs = Math.floor(num / 26);
+
+        for (let i = 0; i < Zs; i++) {
+
+            Z += `z`
+
+        }
+        newnum = num % 26
+
+    } else {
+        newnum = num;
+    }
+
+    return `${Z}${numericAlpha(newnum)}`
+
+}
+export function LetterCounter(num) {
+
+    const numericAlpha = (num) => {
+        switch (Number(num)) {
+            case 1:
+                return 'A'
+            case 2:
+                return 'B'
+            case 3:
+                return 'C'
+            case 4:
+                return 'D'
+            case 5:
+                return 'E'
+            case 6:
+                return 'F'
+            case 7:
+                return 'G'
+            case 8:
+                return 'H'
+            case 9:
+                return 'I'
+            case 10:
+                return 'J'
+            case 11:
+                return 'K'
+            case 12:
+                return 'L'
+            case 13:
+                return 'M'
+            case 14:
+                return 'N'
+            case 15:
+                return 'O'
+            case 16:
+                return 'P'
+            case 17:
+                return 'Q'
+            case 18:
+                return 'R'
+            case 19:
+                return 'S'
+            case 20:
+                return 'T'
+            case 21:
+                return 'U'
+            case 22:
+                return 'V'
+            case 23:
+                return 'W'
+            case 24:
+                return 'X'
+            case 25:
+                return 'Y'
+            case 26:
+                return 'Z'
+            default:
+                return ''
+
+        }
+
+
+
+    }
+
+    let Zs = 0;
+    let newnum = "";
+    let Z = "";
+    if (num > 26) {
+
+        Zs = Math.floor(num / 26);
+
+        for (let i = 0; i < Zs; i++) {
+
+            Z += `Z`
+
+        }
+        newnum = num % 26
+
+    } else {
+        newnum = num;
+    }
+
+    return `${Z}${numericAlpha(newnum)}`
+
+}
 export function CreateUser(providerid, client, clientid, firstname, lastname, emailaddress, phonenumber, profileurl, profile) {
     return ({ providerid, client, clientid, firstname, lastname, emailaddress, phonenumber, profileurl, profile })
 }
@@ -698,92 +914,6 @@ export function toggleAMDateObj(datein) {
 }
 
 
-export function LetterCounter(num) {
-
-    const numericAlpha = (num) => {
-        switch (Number(num)) {
-            case 1:
-                return 'A'
-            case 2:
-                return 'B'
-            case 3:
-                return 'C'
-            case 4:
-                return 'D'
-            case 5:
-                return 'E'
-            case 6:
-                return 'F'
-            case 7:
-                return 'G'
-            case 8:
-                return 'H'
-            case 9:
-                return 'I'
-            case 10:
-                return 'J'
-            case 11:
-                return 'K'
-            case 12:
-                return 'L'
-            case 13:
-                return 'M'
-            case 14:
-                return 'N'
-            case 15:
-                return 'O'
-            case 16:
-                return 'P'
-            case 17:
-                return 'Q'
-            case 18:
-                return 'R'
-            case 19:
-                return 'S'
-            case 20:
-                return 'T'
-            case 21:
-                return 'U'
-            case 22:
-                return 'V'
-            case 23:
-                return 'W'
-            case 24:
-                return 'X'
-            case 25:
-                return 'Y'
-            case 26:
-                return 'Z'
-            default:
-                return ''
-
-        }
-
-
-
-    }
-
-    let Zs = 0;
-    let newnum = "";
-    let Z = "";
-    if (num > 26) {
-
-        Zs = Math.floor(num / 26);
-
-        for (let i = 0; i < Zs; i++) {
-
-            Z += `Z`
-
-        }
-        newnum = num % 26
-
-    } else {
-        newnum = num;
-    }
-
-    return `${Z}${numericAlpha(newnum)}`
-
-}
 
 export function sortpart(b, a) {
     if (Number(b.part) < Number(a.part)) {

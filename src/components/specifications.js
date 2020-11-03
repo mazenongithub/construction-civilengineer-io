@@ -74,7 +74,13 @@ class Estimate extends Component {
             const active = dynamicstyles.checkactive.call(this)
             if (active) {
                 const project = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
+               
                 if(project) {
+
+                    if(!project.hasOwnProperty("specifications")) {
+                        dynamicstyles.loadprojectspecs.call(this,project.projectid) 
+                    }
+
                 return (
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1 }}>

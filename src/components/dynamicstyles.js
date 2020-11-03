@@ -3,9 +3,9 @@ import { MyStylesheet } from './styles';
 import { sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart,getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime} from './functions'
+import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
-import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin } from './actions/api';
+import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin, LoadSpecifications } from './actions/api';
 
 
 class DynamicStyles {
@@ -84,7 +84,7 @@ class DynamicStyles {
         if (scheduleitems) {
             // eslint-disable-next-line
             scheduleitems.map((item, i) => {
-          
+
                 if (item.csiid === csiid) {
                     key = i
                 }
@@ -106,12 +106,12 @@ class DynamicStyles {
     }
 
     getcheckfield() {
-        if(this.state.width>1200) {
-            return({width:'77px'})
-        } else if (this.state.width>800) {
-            return({width:'55px'})
+        if (this.state.width > 1200) {
+            return ({ width: '77px' })
+        } else if (this.state.width > 800) {
+            return ({ width: '55px' })
         } else {
-            return({width:'33px'})
+            return ({ width: '33px' })
         }
     }
 
@@ -294,25 +294,25 @@ class DynamicStyles {
         }
     }
     getmainlogo() {
-        if(this.state.width>1200) {
-            return({width:'449px',height:'71px'})
-        } else if (this.state.width>800) {
-            return({width:'376px',height:'59px'})
+        if (this.state.width > 1200) {
+            return ({ width: '449px', height: '71px' })
+        } else if (this.state.width > 800) {
+            return ({ width: '376px', height: '59px' })
         } else {
 
-            return({width:'302px',height:'48px'})
+            return ({ width: '302px', height: '48px' })
 
         }
 
     }
     getlogoicon() {
-        if(this.state.width>1200) {
-            return({width:'100px',height:'70px'})
-        } else if (this.state.width>800) {
-            return({width:'91px',height:'64px'})
+        if (this.state.width > 1200) {
+            return ({ width: '100px', height: '70px' })
+        } else if (this.state.width > 800) {
+            return ({ width: '91px', height: '64px' })
         } else {
 
-            return({width:'82px',height:'58px'})
+            return ({ width: '82px', height: '58px' })
 
         }
     }
@@ -321,19 +321,19 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
         let labor = [];
-        if(myuser) {
-            if(myuser.hasOwnProperty("company")) {
-                if(myuser.company.hasOwnProperty("projects")) {
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("projects")) {
                     // eslint-disable-next-line
-                    myuser.company.projects.myproject.map(project=> {
-                       if(project.hasOwnProperty("actuallabor"))  {
-                           // eslint-disable-next-line
-                           project.actuallabor.mylabor.map(mylabor=> {
-                               if(mylabor.providerid === providerid) {
-                                   labor.push(mylabor)
-                               }
-                           })
-                       }
+                    myuser.company.projects.myproject.map(project => {
+                        if (project.hasOwnProperty("actuallabor")) {
+                            // eslint-disable-next-line
+                            project.actuallabor.mylabor.map(mylabor => {
+                                if (mylabor.providerid === providerid) {
+                                    labor.push(mylabor)
+                                }
+                            })
+                        }
                     })
                 }
             }
@@ -345,19 +345,19 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
         let labor = [];
-        if(myuser) {
-            if(myuser.hasOwnProperty("company")) {
-                if(myuser.company.hasOwnProperty("projects")) {
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("projects")) {
                     // eslint-disable-next-line
-                    myuser.company.projects.myproject.map(project=> {
-                       if(project.hasOwnProperty("schedulelabor"))  {
-                           // eslint-disable-next-line
-                           project.schedulelabor.mylabor.map(mylabor=> {
-                               if(mylabor.providerid === providerid) {
-                                   labor.push(mylabor)
-                               }
-                           })
-                       }
+                    myuser.company.projects.myproject.map(project => {
+                        if (project.hasOwnProperty("schedulelabor")) {
+                            // eslint-disable-next-line
+                            project.schedulelabor.mylabor.map(mylabor => {
+                                if (mylabor.providerid === providerid) {
+                                    labor.push(mylabor)
+                                }
+                            })
+                        }
                     })
                 }
             }
@@ -368,19 +368,19 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
         let labor = [];
-        if(myuser) {
-            if(myuser.hasOwnProperty("company")) {
-                if(myuser.company.hasOwnProperty("projects")) {
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("projects")) {
                     // eslint-disable-next-line
-                    myuser.company.projects.myproject.map(project=> {
-                       if(project.hasOwnProperty("schedulelabor"))  {
-                           // eslint-disable-next-line
-                           project.schedulelabor.mylabor.map(mylabor=> {
-                               if(mylabor.providerid === myuser.providerid) {
-                                   labor.push(mylabor)
-                               }
-                           })
-                       }
+                    myuser.company.projects.myproject.map(project => {
+                        if (project.hasOwnProperty("schedulelabor")) {
+                            // eslint-disable-next-line
+                            project.schedulelabor.mylabor.map(mylabor => {
+                                if (mylabor.providerid === myuser.providerid) {
+                                    labor.push(mylabor)
+                                }
+                            })
+                        }
                     })
                 }
             }
@@ -389,12 +389,12 @@ class DynamicStyles {
     }
     getnavigation() {
         let navigation = false;
-        
-        if(this.props.navigation) {
-            if(this.props.navigation.hasOwnProperty("position")) {
-                navigation  = this.props.navigation.position;
+
+        if (this.props.navigation) {
+            if (this.props.navigation.hasOwnProperty("position")) {
+                navigation = this.props.navigation.position;
             }
-           
+
 
         }
         return navigation;
@@ -426,10 +426,10 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const myaccounts = dynamicstyles.getmyaccounts.call(this);
         let myaccount = false;
-        if(myaccounts) {
+        if (myaccounts) {
             // eslint-disable-next-line
-            myaccounts.map(account=> {
-                if(account.stripe === stripe) {
+            myaccounts.map(account => {
+                if (account.stripe === stripe) {
                     myaccount = account;
                 }
             })
@@ -442,29 +442,29 @@ class DynamicStyles {
         // checks to see if there is one manager
         let validate = true;
         const dynamicstyles = new DynamicStyles();
-        let obj= dynamicstyles.getuser.call(this);
-      
+        let obj = dynamicstyles.getuser.call(this);
+
         const validatemyuser = (obj) => {
             let validateuser = false;
             // eslint-disable-next-line
-            obj.company.office.employees.employee.map(employee=> {
-                if(employee.manager === 'manager' && employee.providerid !== providerid) {
+            obj.company.office.employees.employee.map(employee => {
+                if (employee.manager === 'manager' && employee.providerid !== providerid) {
                     validateuser = true;
                 }
             })
 
             return validateuser;
-          
+
         }
 
-        if(obj) {
-            const employee = dynamicstyles.getemployeebyid.call(this,providerid);
-            if(employee) {
-            validate = validatemyuser(obj)
+        if (obj) {
+            const employee = dynamicstyles.getemployeebyid.call(this, providerid);
+            if (employee) {
+                validate = validatemyuser(obj)
 
             }
         }
-        
+
         return validate;
 
     }
@@ -473,17 +473,17 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
         let check = false;
-        if(myuser) {
-        const employee =dynamicstyles.getemployeebyid.call(this,myuser.providerid);
-        if(employee) {
-            if(employee.active === 'active') {
-                check = true;
+        if (myuser) {
+            const employee = dynamicstyles.getemployeebyid.call(this, myuser.providerid);
+            if (employee) {
+                if (employee.active === 'active') {
+                    check = true;
+                }
             }
-        }
 
         }
         return check;
-        
+
 
     }
 
@@ -491,17 +491,17 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
         let check = false;
-        if(myuser) {
-        const employee =dynamicstyles.getemployeebyid.call(this,myuser.providerid);
-        if(employee) {
-            if(employee.manager === 'manager') {
-                check = true;
+        if (myuser) {
+            const employee = dynamicstyles.getemployeebyid.call(this, myuser.providerid);
+            if (employee) {
+                if (employee.manager === 'manager') {
+                    check = true;
+                }
             }
-        }
 
         }
         return check;
-        
+
 
     }
     getemployeeaccountsbyid(providerid) {
@@ -544,15 +544,15 @@ class DynamicStyles {
     }
 
 
- 
+
     getslidebyid(id) {
         const dynamicstyles = new DynamicStyles();
         const slides = dynamicstyles.getslides.call(this)
         let myslide = false;
-        if(slides) {
+        if (slides) {
             // eslint-disable-next-line
-            slides.map(slide=>{
-                if(slide.id === id) {
+            slides.map(slide => {
+                if (slide.id === id) {
                     myslide = slide;
                 }
             })
@@ -561,179 +561,179 @@ class DynamicStyles {
     }
     getmainslide() {
         if (this.state.width > 1200) {
-            return ({ width:'1087px',height:'1035px' })
+            return ({ width: '1087px', height: '1035px' })
         } else if (this.state.width > 800) {
-            return ({ width:'762px',height:'725px' })
+            return ({ width: '762px', height: '725px' })
         } else {
-            return ({ width:'356px',height:'339px' })
+            return ({ width: '356px', height: '339px' })
         }
     }
     getslides() {
         const slides = () => {
-            return([
+            return ([
                 {
-                    title:'Construction by civilengineer.io',
-                    id:'construction',
-                    url:'http://civilengineer.io/construction/slides/construction.png',
-                    caption:`Construction Management by Civil Engineer.io. The most comprehensive construction management program for construction companies `
+                    title: 'Construction by civilengineer.io',
+                    id: 'construction',
+                    url: 'http://civilengineer.io/construction/slides/construction.png',
+                    caption: `Construction Management by Civil Engineer.io. The most comprehensive construction management program for construction companies `
                 },
                 {
-                    title:'Company',
-                    id:'company',
-                    url:'http://civilengineer.io/construction/slides/company.png',
-                    caption:`Company allows you to add your basic company info. It has links to other company components. This makes managing your company easier. `
+                    title: 'Company',
+                    id: 'company',
+                    url: 'http://civilengineer.io/construction/slides/company.png',
+                    caption: `Company allows you to add your basic company info. It has links to other company components. This makes managing your company easier. `
                 },
                 {
-                    title:'Employees/Benefits',
-                    id:'employees',
-                    url:'http://civilengineer.io/construction/slides/employees.png',
-                    caption:`Have your employees add your company. You can make them active and give them manager access. You can enter annual their benefits and working hours to determine their default Labor Rates    `
+                    title: 'Employees/Benefits',
+                    id: 'employees',
+                    url: 'http://civilengineer.io/construction/slides/employees.png',
+                    caption: `Have your employees add your company. You can make them active and give them manager access. You can enter annual their benefits and working hours to determine their default Labor Rates    `
                 },
                 {
-                    title:'Accounts',
-                    id:'accounts',
-                    url:'http://civilengineer.io/construction/slides/accounts.png',
-                    caption:`Accounts are created for your company to receive payment. Connect an account to a Employee Benefit, equipment, or material. The amount for each account is determined during payment for an Invoice.   `
+                    title: 'Accounts',
+                    id: 'accounts',
+                    url: 'http://civilengineer.io/construction/slides/accounts.png',
+                    caption: `Accounts are created for your company to receive payment. Connect an account to a Employee Benefit, equipment, or material. The amount for each account is determined during payment for an Invoice.   `
 
                 },
                 {
-                    title:'View Account',
-                    id:'viewaccount',
-                    url:'http://civilengineer.io/construction/slides/viewaccount.png',
-                    caption:`View Account gives the account balance summary that includes charges and payments. It includes the link to Stripe so you can connect your account  `
-                },
-                
-                {
-                    title:'Equipment',
-                    id:'equipment',
-                    url:'http://civilengineer.io/construction/slides/equipment.png',
-                    caption:`Equipment component was made to enter your equipment either by ownership or by rental. The Equipment component stores equipment costs for ownership and rental rates to determine default rates. `
-                },
-                {
-                    title:'Equipment Ownership',
-                    id:'ownershipcosts',
-                    url:'http://civilengineer.io/construction/slides/equipment_1.png',
-                    caption:`Enter your equipment ownership costs and other variables to determine what the default equipment rate is. `
+                    title: 'View Account',
+                    id: 'viewaccount',
+                    url: 'http://civilengineer.io/construction/slides/viewaccount.png',
+                    caption: `View Account gives the account balance summary that includes charges and payments. It includes the link to Stripe so you can connect your account  `
                 },
 
                 {
-                    title:'Materials',
-                    id:'materials',
-                    url:'http://civilengineer.io/construction/slides/materials.png',
-                    caption:`Materials component adds your company materials. This makes managing materials easier. This sets the default unit price for the material. `
+                    title: 'Equipment',
+                    id: 'equipment',
+                    url: 'http://civilengineer.io/construction/slides/equipment.png',
+                    caption: `Equipment component was made to enter your equipment either by ownership or by rental. The Equipment component stores equipment costs for ownership and rental rates to determine default rates. `
                 },
                 {
-                    title:'View Schedule',
-                    id:'viewschedule',
-                    url:'http://civilengineer.io/construction/slides/viewschedule.png',
-                    caption:` View Schedule Component gives the employee their schedule in a calender. This makes communicating work between you and your employees better. The Employee can access their schedule for work.   `
-                },
-              
-
-                {
-                    title:'Project',
-                    id:'project',
-                    url:'http://civilengineer.io/construction/slides/project.png',
-                    caption:`The Project Component was made to give you access to all of the project component and give the basic project information `
-
-                }, 
-
-               
-                {
-                    title:'Schedule',
-                    id:'Schedule',
-                    url:'http://civilengineer.io/construction/slides/schedule.png',
-                    caption:`The schedule component is where you enter your schedule labor, equipment, and materials for the project. These costs get added into a Proposal for authorization from the PM. `
+                    title: 'Equipment Ownership',
+                    id: 'ownershipcosts',
+                    url: 'http://civilengineer.io/construction/slides/equipment_1.png',
+                    caption: `Enter your equipment ownership costs and other variables to determine what the default equipment rate is. `
                 },
 
                 {
-                    title:'Actual',
-                    id:'actual',
-                    url:'http://civilengineer.io/construction/slides/actual.png',
-                    caption:`Actual cost component works the same as your schedule but it for recording actual costs as they occur. Employees who clock in will use the actual component to enter their labor for the project.   `
-                },  
-                {
-                    title:'Proposal',
-                    id:'proposals',
-                    url:'http://civilengineer.io/construction/slides/proposals.png',
-                    caption:`The proposal component was made to add your schedule items and send to the PM for apporval. The proposal is formatted as a Construction-Bid automatically when you enter the CSI-code for the work you are performing.   `
+                    title: 'Materials',
+                    id: 'materials',
+                    url: 'http://civilengineer.io/construction/slides/materials.png',
+                    caption: `Materials component adds your company materials. This makes managing materials easier. This sets the default unit price for the material. `
                 },
                 {
-                    title:'View Proposal',
-                    id:'viewinvoice',
-                    url:'http://civilengineer.io/construction/slides/viewproposal.png',
-                    caption:`View Proposal allows you to view the final proposal sent to the PM after you add your items to it.   `
-                },
-
-                {
-                    title:'Invoices',
-                    id:'invoices',
-                    url:'http://civilengineer.io/construction/slides/invoices.png',
-                    caption:`Invoices works the same as the Proposal component except it is for adding your actual costs items into invoices   `
-                },
-  
-  
-                {
-                    title:'View Invoice',
-                    id:'viewinvoice',
-                    url:'http://civilengineer.io/construction/slides/viewinvoice.png',
-                    caption:`View Invoice shows the invoice in construction-bid format. View Invoice also contains payment, transfer, and balance remaining details.   `
-                },
-
-                {
-                    title:'Bid Schedule',
-                    id:'bidschedule',
-                    url:'http://civilengineer.io/construction/slides/bidschedule.png',
-                    caption:` View Project level bid schedule in construction format. Add your unit and quantities to produce unit prices   `
-                },
-                {
-                    title:'Actual Bid',
-                    id:'bid',
-                    url:'http://civilengineer.io/construction/slides/bid.png',
-                    caption:` Bid puts together project level actual costs in construction format. Add your units and quantities to produce unit prices.   `
-                },
-                {
-                    title:'Labor, Equipment, Materials',
-                    id:'lem',
-                    url:'http://civilengineer.io/construction/slides/lem.png',
-                    caption:`Labor, materials, equipment breakdowns are given for each for schedule and actual pay items.   `
+                    title: 'View Schedule',
+                    id: 'viewschedule',
+                    url: 'http://civilengineer.io/construction/slides/viewschedule.png',
+                    caption: ` View Schedule Component gives the employee their schedule in a calender. This makes communicating work between you and your employees better. The Employee can access their schedule for work.   `
                 },
 
 
-              
                 {
-                    title:'Quantity Take Off Schedule',
-                    id:'takeoffschedule',
-                    url:'http://civilengineer.io/construction/slides/costestimate.png',
-                    caption:`The Engineers provide the master quanitity take-off schedule for bid.  `
-                },
-                {
-                    title:'Specification',
-                    id:'specification',
-                    url:'http://civilengineer.io/construction/slides/specification.png',
-                    caption:`Engineers create the specifications for the team to follow. This sets the quality standards for construction   `
-                },
-                {
-                    title:'Milestones/Critical Path',
-                    id:'milestones',
-                    url:'http://civilengineer.io/construction/slides/criticalpath.png',
-                    caption:`Milestones and Critical Path calculations are provided to the Service Provider. The service provider uses these milestones when they enter schedule and cost. Critical Path methods give float and total project float for each milestone. This makes communicating schedule between the PM and service provider better .`
+                    title: 'Project',
+                    id: 'project',
+                    url: 'http://civilengineer.io/construction/slides/project.png',
+                    caption: `The Project Component was made to give you access to all of the project component and give the basic project information `
 
-                }, 
-                
-        ])
+                },
+
+
+                {
+                    title: 'Schedule',
+                    id: 'Schedule',
+                    url: 'http://civilengineer.io/construction/slides/schedule.png',
+                    caption: `The schedule component is where you enter your schedule labor, equipment, and materials for the project. These costs get added into a Proposal for authorization from the PM. `
+                },
+
+                {
+                    title: 'Actual',
+                    id: 'actual',
+                    url: 'http://civilengineer.io/construction/slides/actual.png',
+                    caption: `Actual cost component works the same as your schedule but it for recording actual costs as they occur. Employees who clock in will use the actual component to enter their labor for the project.   `
+                },
+                {
+                    title: 'Proposal',
+                    id: 'proposals',
+                    url: 'http://civilengineer.io/construction/slides/proposals.png',
+                    caption: `The proposal component was made to add your schedule items and send to the PM for apporval. The proposal is formatted as a Construction-Bid automatically when you enter the CSI-code for the work you are performing.   `
+                },
+                {
+                    title: 'View Proposal',
+                    id: 'viewinvoice',
+                    url: 'http://civilengineer.io/construction/slides/viewproposal.png',
+                    caption: `View Proposal allows you to view the final proposal sent to the PM after you add your items to it.   `
+                },
+
+                {
+                    title: 'Invoices',
+                    id: 'invoices',
+                    url: 'http://civilengineer.io/construction/slides/invoices.png',
+                    caption: `Invoices works the same as the Proposal component except it is for adding your actual costs items into invoices   `
+                },
+
+
+                {
+                    title: 'View Invoice',
+                    id: 'viewinvoice',
+                    url: 'http://civilengineer.io/construction/slides/viewinvoice.png',
+                    caption: `View Invoice shows the invoice in construction-bid format. View Invoice also contains payment, transfer, and balance remaining details.   `
+                },
+
+                {
+                    title: 'Bid Schedule',
+                    id: 'bidschedule',
+                    url: 'http://civilengineer.io/construction/slides/bidschedule.png',
+                    caption: ` View Project level bid schedule in construction format. Add your unit and quantities to produce unit prices   `
+                },
+                {
+                    title: 'Actual Bid',
+                    id: 'bid',
+                    url: 'http://civilengineer.io/construction/slides/bid.png',
+                    caption: ` Bid puts together project level actual costs in construction format. Add your units and quantities to produce unit prices.   `
+                },
+                {
+                    title: 'Labor, Equipment, Materials',
+                    id: 'lem',
+                    url: 'http://civilengineer.io/construction/slides/lem.png',
+                    caption: `Labor, materials, equipment breakdowns are given for each for schedule and actual pay items.   `
+                },
+
+
+
+                {
+                    title: 'Quantity Take Off Schedule',
+                    id: 'takeoffschedule',
+                    url: 'http://civilengineer.io/construction/slides/costestimate.png',
+                    caption: `The Engineers provide the master quanitity take-off schedule for bid.  `
+                },
+                {
+                    title: 'Specification',
+                    id: 'specification',
+                    url: 'http://civilengineer.io/construction/slides/specification.png',
+                    caption: `Engineers create the specifications for the team to follow. This sets the quality standards for construction   `
+                },
+                {
+                    title: 'Milestones/Critical Path',
+                    id: 'milestones',
+                    url: 'http://civilengineer.io/construction/slides/criticalpath.png',
+                    caption: `Milestones and Critical Path calculations are provided to the Service Provider. The service provider uses these milestones when they enter schedule and cost. Critical Path methods give float and total project float for each milestone. This makes communicating schedule between the PM and service provider better .`
+
+                },
+
+            ])
         }
         return slides();
     }
     getsmallslide() {
         if (this.state.width > 1200) {
-            return ({ width:'362px',height:'345px' })
+            return ({ width: '362px', height: '345px' })
         } else if (this.state.width > 800) {
-            return ({ width:'254px',height:'241px' })
+            return ({ width: '254px', height: '241px' })
         } else {
-            return ({ width:'178px',height:'169px' })
+            return ({ width: '178px', height: '169px' })
         }
-    
+
     }
     showchargesbyaccountid(accountid) {
         const dynamicstyles = new DynamicStyles();
@@ -850,21 +850,21 @@ class DynamicStyles {
         const milestones = dynamicstyles.getmilestones.call(this)
         const projectinterval = dynamicstyles.getprojectinterval.call(this);
         let paths = {}
-    
-    
+
+
         const getmilestonebyid = (paths, milestoneid) => {
             let mymilestone = false;
             if (paths.hasOwnProperty(milestoneid)) {
-    
+
                 mymilestone = paths[milestoneid]
             }
-    
+
             return mymilestone;
-    
+
         }
-    
+
         const getPathsbyMilestoneID = (milestones, milestoneid) => {
-    
+
             let path = {};
             // eslint-disable-next-line
             milestones.map(milestone => {
@@ -874,21 +874,21 @@ class DynamicStyles {
                         if (predessor.predessor === milestoneid) {
                             path[`${milestone.milestoneid}`] = {};
                             path[`${milestone.milestoneid}`]['type'] = predessor.type
-    
-    
-    
+
+
+
                         }
-    
-    
+
+
                     })
-    
-    
-    
+
+
+
                 }
-    
-    
+
+
             })
-    
+
             return path;
         }
         if (milestones) {
@@ -899,38 +899,38 @@ class DynamicStyles {
                 paths[`${milestone.milestoneid}`]['start'] = milestone.start
                 paths[`${milestone.milestoneid}`]['completion'] = milestone.completion;
                 paths[`${milestone.milestoneid}`]['paths'] = getPathsbyMilestoneID(milestones, milestone.milestoneid)
-    
+
             })
-    
-    
-    
-    
+
+
+
+
             let interval = getDateInterval(projectinterval.start, projectinterval.completion)
             let scale = getScale(interval)
             let mymilestones = [];
-    
+
             // eslint-disable-next-line
             Object.getOwnPropertyNames(paths).map(path => {
                 mymilestones.push(path)
             })
-    
+
             // eslint-disable-next-line
             mymilestones.map((milestoneid, i) => {
-    
+
                 if ((paths[milestoneid]).hasOwnProperty("paths")) {
-    
-    
-    
+
+
+
                     if (Object.getOwnPropertyNames(paths[milestoneid].paths).length > 0) {
-    
+
                         // eslint-disable-next-line
                         Object.getOwnPropertyNames(paths[milestoneid].paths).map(prop => {
-    
+
                             const milestone_2 = getmilestonebyid(paths, prop)
                             let params = {};
                             let params_2 = {};
                             if (milestone_2) {
-    
+
                                 if (scale === 'month') {
                                     params = calculatemonth(projectinterval.start, projectinterval.completion, paths[milestoneid]['start'], paths[milestoneid]['completion'])
                                     params_2 = calculatemonth(projectinterval.start, projectinterval.completion, milestone_2['start'], milestone_2['completion'])
@@ -955,136 +955,136 @@ class DynamicStyles {
                             paths[milestoneid].paths[prop]['y2'] = y2
                             paths[milestoneid].paths[prop]['x2'] = params_2.xo
                             paths[milestoneid].paths[prop]['float'] = 'float';
-    
-    
+
+
                         })
-    
+
                     }
-    
-    
+
+
                 }
-    
-    
+
+
             })
         }
-    
-    
+
+
         let milestone_1 = "";
         let milestone_2 = "";
         for (let myprop in paths) {
             milestone_1 = getmilestonebyid(paths, myprop)
-    
-    
-    
+
+
+
             for (let mypath in paths[myprop]['paths']) {
                 milestone_2 = getmilestonebyid(paths, mypath)
                 let float = calculateFloat(milestone_1.completion, milestone_2.start)
                 paths[myprop]['paths'][mypath]['float'] = float
             }
-    
+
         }
-    
+
         return paths;
     }
-    
+
     checkemptypathsbymilestoneid(milestoneid) {
         const dynamicstyles = new DynamicStyles();
         const paths = dynamicstyles.getpaths.call(this)
         const path = paths[milestoneid];
         let empty = false;
-        if(checkemptyobject(path.paths)) {
-           empty  = true;
+        if (checkemptyobject(path.paths)) {
+            empty = true;
         }
-        return empty; 
+        return empty;
+    }
+
+
+
+    getlagbymilestoneid(milestoneid) {
+        const dynamicstyles = new DynamicStyles();
+        const milestones = dynamicstyles.getmilestones.call(this);
+        let lag = 0;
+
+        const checklag = (startdate, enddate, i, lag) => {
+            let replacelag = false;
+
+
+            const check = Math.round((startdate - enddate) * (1 / (1000 * 60 * 60 * 24)))
+
+
+            if (i === 0 && check > 0) {
+                replacelag = true;
+            } else if (check < lag) {
+                replacelag = true;
+            }
+
+
+
+            return replacelag;
         }
 
-    
-        
-        getlagbymilestoneid(milestoneid) {
-            const dynamicstyles = new DynamicStyles();
-            const milestones = dynamicstyles.getmilestones.call(this);
-            let lag = 0;
-        
-            const checklag = (startdate, enddate, i, lag) => {
-                let replacelag = false;
-        
-        
-                const check = Math.round((startdate-enddate)*(1/(1000*60*60*24)))
-                
-                
-                if(i===0 && check>0) {
-                    replacelag = true;
-                } else if(check < lag) {
-                    replacelag = true;
-                }
-        
-            
-        
-                return replacelag;
-            }
-            
-            if(milestones) {
-                const mymilestone = dynamicstyles.getmilestonebyid.call(this,milestoneid);
-                if(mymilestone) {
-        
+        if (milestones) {
+            const mymilestone = dynamicstyles.getmilestonebyid.call(this, milestoneid);
+            if (mymilestone) {
+
                 const startdate = getDateTime(mymilestone.start);
-        
-                if(mymilestone.hasOwnProperty("predessors")) {
+
+                if (mymilestone.hasOwnProperty("predessors")) {
                     // eslint-disable-next-line
-                    mymilestone.predessors.map((predessor,i)=> {
-        
-                        const enddate = getDateTime(dynamicstyles.getmilestonebyid.call(this,predessor.predessor).completion)
-                     
-                        if(startdate >= enddate && checklag(startdate,enddate,i,lag)) {
-                            lag = Math.round((startdate-enddate)*(1/(1000*60*60*24)))
+                    mymilestone.predessors.map((predessor, i) => {
+
+                        const enddate = getDateTime(dynamicstyles.getmilestonebyid.call(this, predessor.predessor).completion)
+
+                        if (startdate >= enddate && checklag(startdate, enddate, i, lag)) {
+                            lag = Math.round((startdate - enddate) * (1 / (1000 * 60 * 60 * 24)))
                         }
-        
+
                     })
                 }
-        
-                }
+
             }
-            return lag;
-        }    
-    
+        }
+        return lag;
+    }
+
     calcTotalProjectFloat(milestoneid) {
         const dynamicstyles = new DynamicStyles();
         const paths = dynamicstyles.getpaths.call(this)
         let checkcalc = true
-        let i =0;
+        let i = 0;
         let activemilestoneid = milestoneid;
-        while(checkcalc) {
-       
-       
-          window[`checkfloat_${i.toString()}`] = 0;
-              
-              
-              let j = 0;
-               checkcalc = false;
-               for (window[`mypath_${i.toString()}`] in paths[activemilestoneid]['paths']) {
-                   
-                if(!dynamicstyles.checkemptypathsbymilestoneid.call(this,window[`mypath_${i.toString()}`])) {
-                  checkcalc = true 
-                 }
-                    
-                
-                    if (j === 0 || window[`checkfloat_${i.toString()}`] > dynamicstyles.getfloatbymilestoneid.call(this, window[`mypath_${i.toString()}`])) {
-                       window[`checkfloat_${i.toString()}`] = dynamicstyles.getfloatbymilestoneid.call(this, window[`mypath_${i.toString()}`])
-                       activemilestoneid = window[`mypath_${i.toString()}`]
-                   }
-                j+=1
-              }
-          
-               i+=1;
-        
+        while (checkcalc) {
+
+
+            window[`checkfloat_${i.toString()}`] = 0;
+
+
+            let j = 0;
+            checkcalc = false;
+            for (window[`mypath_${i.toString()}`] in paths[activemilestoneid]['paths']) {
+
+                if (!dynamicstyles.checkemptypathsbymilestoneid.call(this, window[`mypath_${i.toString()}`])) {
+                    checkcalc = true
+                }
+
+
+                if (j === 0 || window[`checkfloat_${i.toString()}`] > dynamicstyles.getfloatbymilestoneid.call(this, window[`mypath_${i.toString()}`])) {
+                    window[`checkfloat_${i.toString()}`] = dynamicstyles.getfloatbymilestoneid.call(this, window[`mypath_${i.toString()}`])
+                    activemilestoneid = window[`mypath_${i.toString()}`]
+                }
+                j += 1
+            }
+
+            i += 1;
+
         }
-       let float = dynamicstyles.getfloatbymilestoneid.call(this, milestoneid)
-       let projectfloat = 0;
-       for(let k=0;k<i;k++) {
-         projectfloat+= Number(window[`checkfloat_${k.toString()}`])
-       }
-       return float + projectfloat
-       }
+        let float = dynamicstyles.getfloatbymilestoneid.call(this, milestoneid)
+        let projectfloat = 0;
+        for (let k = 0; k < i; k++) {
+            projectfloat += Number(window[`checkfloat_${k.toString()}`])
+        }
+        return float + projectfloat
+    }
 
     getfloatbymilestoneid(milestoneid) {
         const dynamicstyles = new DynamicStyles();
@@ -1149,7 +1149,7 @@ class DynamicStyles {
             let result = await firebase.auth().signInWithPopup(provider)
             // The signed-in user info.
             var user = result.user;
-          
+
             let firstname = "";
             let lastname = "";
             if (user.providerData[0].displayName) {
@@ -1161,9 +1161,9 @@ class DynamicStyles {
             let client = 'apple';
             let clientid = user.providerData[0].uid;
             let emailaddress = user.providerData[0].email;
-         
+
             let profile = this.state.profile;
-            this.setState({ client, clientid, profile, firstname, lastname, profileurl, phonenumber, emailaddress})
+            this.setState({ client, clientid, profile, firstname, lastname, profileurl, phonenumber, emailaddress })
             dynamicstyles.clientlogin.call(this, type)
 
         } catch (err) {
@@ -1233,10 +1233,10 @@ class DynamicStyles {
         values = { company, myuser: newuser }
         return values;
     }
-    getequipmentcostskeybyid(equipmentid,costid) {
+    getequipmentcostskeybyid(equipmentid, costid) {
         const dynamicstyles = new DynamicStyles();
         let key = false;
-        const myequipment = dynamicstyles.getmyequipmentbyid.call(this,equipmentid)
+        const myequipment = dynamicstyles.getmyequipmentbyid.call(this, equipmentid)
 
         if (myequipment.hasOwnProperty("ownership")) {
             // eslint-disable-next-line
@@ -1253,10 +1253,10 @@ class DynamicStyles {
     }
     checkemployeeactive(employeeid) {
         const dynamicstyles = new DynamicStyles();
-        const employee = dynamicstyles.getemployeebyid.call(this,employeeid);
+        const employee = dynamicstyles.getemployeebyid.call(this, employeeid);
         let check = true;
-        if(employee) {
-            if(employee.active === 'not-active') {
+        if (employee) {
+            if (employee.active === 'not-active') {
                 check = false;
             }
         }
@@ -1337,7 +1337,7 @@ class DynamicStyles {
                         let costid = cost.costid;
                         let equipmentid = cost.equipmentid;
                         let l = dynamicstyles.getequipmentkeybyid.call(this, equipmentid)
-                        let m = dynamicstyles.getequipmentcostskeybyid.call(this,equipmentid, oldcostid)
+                        let m = dynamicstyles.getequipmentcostskeybyid.call(this, equipmentid, oldcostid)
 
                         myuser.company.equipment.myequipment[l].ownership.cost[m].costid = costid;
                         if (this.state.activecostid === oldcostid) {
@@ -1417,38 +1417,38 @@ class DynamicStyles {
     async saveCompany() {
         const dynamicstyles = new DynamicStyles()
         const myuser = dynamicstyles.getuser.call(this);
-        if(myuser) {
-            const checkmanager = dynamicstyles.checkmanager.call(this,myuser.getemployeebyproviderid);
-            if(checkmanager) {
-        let params = dynamicstyles.getCompanyParams.call(this)
+        if (myuser) {
+            const checkmanager = dynamicstyles.checkmanager.call(this, myuser.getemployeebyproviderid);
+            if (checkmanager) {
+                let params = dynamicstyles.getCompanyParams.call(this)
 
-        const validate = dynamicstyles.validateCompany(params);
-        if (validate.validate) {
-            let response = await SaveCompany(params);
-            console.log(response)
-            dynamicstyles.handlecompanyids.call(this, response)
-            if (response.hasOwnProperty("allusers")) {
-                let companys = returnCompanyList(response.allusers);
-                this.props.reduxAllCompanys(companys)
-                this.props.reduxAllUsers(response.allusers);
-            }
-            if (response.hasOwnProperty("myuser")) {
-                this.props.reduxUser(response.myuser)
+                const validate = dynamicstyles.validateCompany(params);
+                if (validate.validate) {
+                    let response = await SaveCompany(params);
+                    console.log(response)
+                    dynamicstyles.handlecompanyids.call(this, response)
+                    if (response.hasOwnProperty("allusers")) {
+                        let companys = returnCompanyList(response.allusers);
+                        this.props.reduxAllCompanys(companys)
+                        this.props.reduxAllUsers(response.allusers);
+                    }
+                    if (response.hasOwnProperty("myuser")) {
+                        this.props.reduxUser(response.myuser)
+                    }
+
+                    if (response.hasOwnProperty("message")) {
+                        let dateupdated = inputUTCStringForLaborID(response.lastupdated)
+                        this.setState({ message: `${response.message} Last Updated ${dateupdated}` })
+                    }
+                } else {
+                    this.setState({ message: validate.message })
+                }
+
+            } else {
+                alert(`Only Managers have access to this function `)
             }
 
-            if (response.hasOwnProperty("message")) {
-                let dateupdated = inputUTCStringForLaborID(response.lastupdated)
-                this.setState({ message: `${response.message} Last Updated ${dateupdated}` })
-            }
-        } else {
-            this.setState({ message: validate.message })
         }
-
-    } else {
-        alert(`Only Managers have access to this function `)
-    }
-
-    }
     }
     async savemyprofile() {
         let dynamicstyles = new DynamicStyles();
@@ -1480,7 +1480,7 @@ class DynamicStyles {
 
 
 
-   
+
 
     getinvoiceitemkey(csiid) {
         let key = false;
@@ -1575,66 +1575,66 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const project = dynamicstyles.getproject.call(this)
         let actual = false;
-        if(project.hasOwnProperty("bid")) {
+        if (project.hasOwnProperty("bid")) {
             actual = project.bid
         }
         return actual;
-    
+
     }
 
     getbidschedulekeybyid(csiid) {
         const dynamicstyles = new DynamicStyles();
         const schedule = dynamicstyles.getbidschedule.call(this)
         let key = false;
-        if(schedule) {
+        if (schedule) {
             // eslint-disable-next-line
-            schedule.map((item,i)=> {
-                if(item.csiid === csiid) {
+            schedule.map((item, i) => {
+                if (item.csiid === csiid) {
                     key = i;
                 }
             })
         }
         return key;
-    
+
     }
 
     getbidactualkeybyid(csiid) {
         const dynamicstyles = new DynamicStyles();
         const actual = dynamicstyles.getbidactual.call(this)
         let key = false;
-        if(actual) {
+        if (actual) {
             // eslint-disable-next-line
-            actual.map((item,i)=> {
-                if(item.csiid === csiid) {
+            actual.map((item, i) => {
+                if (item.csiid === csiid) {
                     key = i;
                 }
             })
         }
         return key;
-    
+
     }
 
     getbidactualbyid(csiid) {
         const dynamicstyles = new DynamicStyles();
         const actual = dynamicstyles.getbidactual.call(this)
         let myitem = false;
-        if(actual) {
+        if (actual) {
             // eslint-disable-next-line
-            actual.map(item=> {
-                if(item.csiid === csiid) {
+            actual.map(item => {
+                if (item.csiid === csiid) {
                     myitem = item;
                 }
             })
         }
         return myitem;
-    
+
     }
 
     getbidschedule() {
         const dynamicstyles = new DynamicStyles();
         const project = dynamicstyles.getproject.call(this)
         let schedule = false;
-        if(project.hasOwnProperty("bidschedule")) {
+        if (project.hasOwnProperty("bidschedule")) {
             schedule = project.bidschedule;
         }
         return schedule;
@@ -1644,13 +1644,13 @@ class DynamicStyles {
     getbidschedulebyid(csiid) {
         const dynamicstyles = new DynamicStyles();
         const schedule = dynamicstyles.getbidschedule.call(this)
-      
+
         let myitem = false;
-        if(schedule) {
- 
+        if (schedule) {
+
             // eslint-disable-next-line
-            schedule.map(item=> {
-                if(item.csiid === csiid) {
+            schedule.map(item => {
+                if (item.csiid === csiid) {
                     myitem = item;
                 }
             })
@@ -1960,7 +1960,7 @@ class DynamicStyles {
                 console.log(response)
                 dynamicstyles.handlecompanyids.call(this, response)
                 dynamicstyles.handleprojectids.call(this, response)
-               
+
                 if (response.hasOwnProperty("myuser")) {
 
                     this.props.reduxUser(response.myuser)
@@ -2017,6 +2017,52 @@ class DynamicStyles {
                     <button style={{ ...styles.generalButton, ...saveprojecticon }} onClick={() => { dynamicstyles.savemyproject.call(this) }}>{saveProjectIcon()}</button>
                 </div>
             </div>)
+    }
+    async loadprojectspecs(projectid) {
+        const construction = new DynamicStyles();
+        const myuser = construction.getuser.call(this)
+        if (myuser) {
+
+            const project = construction.getproject.call(this)
+
+            if (project) {
+                const i = construction.getprojectkeybyid.call(this,project.projectid)
+
+
+                try {
+                    let specifications = [];
+                    let specs = await LoadSpecifications(projectid);
+                   
+                    if(specs.hasOwnProperty("length")) {
+                        
+                        specs.map(spec => {
+                            
+                            if(spec.hasOwnProperty("specifications")) {
+                                
+                                spec.specifications.map(myspec=> {
+                                    
+                                    specifications.push(myspec)
+                                })
+                            }
+
+                        })
+
+                    }
+                    
+                    myuser.company.projects.myproject[i].specifications = specifications;
+                    this.props.reduxUser(myuser)
+                    this.setState({render:'render'})
+                    
+
+
+                } catch (err) {
+                    alert(err)
+                }
+
+            }
+
+        }
+
     }
     showsavecompany() {
         const styles = MyStylesheet();
@@ -2120,7 +2166,7 @@ class DynamicStyles {
         try {
             let response = await AppleLogin(values)
             console.log(response)
-         
+
             if (response.hasOwnProperty("myuser")) {
                 this.props.reduxUser(response.myuser)
                 this.setState({ client: '', clientid: '', emailaddress: '', message: '', emailaddresscheck: false, profilecheck: false, profile: '', firstname: '', lastname: '', profileurl: '' })
@@ -2166,26 +2212,26 @@ class DynamicStyles {
             let profile = this.state.profile;
             this.setState({ client, clientid, emailaddress, firstname, lastname, profileurl, phonenumber, emailaddresscheck })
 
-        
-        
-                try {
 
-                    let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, profile, type }
-                    const response = await AppleLogin(values);
-                    console.log(response)
-                    if (response.hasOwnProperty("myuser")) {
-                        this.props.reduxUser(response.myuser)
-                        this.setState({ client: '', clientid: '', emailaddress: '', message: '' })
-                    } else if (response.hasOwnProperty("message")) {
-                        this.setState({ message: response.message })
-                    }
-                } catch (err) {
-                    alert(err)
+
+            try {
+
+                let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, profile, type }
+                const response = await AppleLogin(values);
+                console.log(response)
+                if (response.hasOwnProperty("myuser")) {
+                    this.props.reduxUser(response.myuser)
+                    this.setState({ client: '', clientid: '', emailaddress: '', message: '' })
+                } else if (response.hasOwnProperty("message")) {
+                    this.setState({ message: response.message })
                 }
+            } catch (err) {
+                alert(err)
+            }
 
-         
-              
-            
+
+
+
 
 
 
@@ -2580,6 +2626,7 @@ class DynamicStyles {
     getspecficationbycsi(projectid, csiid) {
         const dynamicstyles = new DynamicStyles();
         const specs = dynamicstyles.getspecficationsbyprojectid.call(this, projectid)
+        console.log(specs)
         let myspec = false;
         if (specs) {
             // eslint-disable-next-line
@@ -2596,15 +2643,16 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const myproject = dynamicstyles.getprojectbyid.call(this, projectid)
         let specifications = false;
+        console.log(myproject)
         if (myproject.hasOwnProperty("specifications")) {
             specifications = myproject.specifications;
         }
-       
+
         return specifications;
     }
 
     getbiditembycsiid(projectid, csiid) {
-        const dynamicstyles= new DynamicStyles();
+        const dynamicstyles = new DynamicStyles();
         let schedule = false;
         const project = dynamicstyles.getprojectbyid.call(this, projectid);
         if (project.hasOwnProperty("costestimate")) {
@@ -2934,7 +2982,7 @@ class DynamicStyles {
         const styles = MyStylesheet();
         if (this.state.width > 1200) {
             return (styles.font40)
-        } else if (this.state.wisth>800) {
+        } else if (this.state.wisth > 800) {
             return (styles.font30)
         } else {
             return (styles.font24)
@@ -2950,7 +2998,7 @@ class DynamicStyles {
     }
     getRegularFont() {
         const styles = MyStylesheet();
-        if(this.state.width>1200) {
+        if (this.state.width > 1200) {
             return (styles.font30)
         }
         if (this.state.width > 800) {
@@ -3024,17 +3072,17 @@ class DynamicStyles {
         }
         return accounts;
     }
-    
+
     getmyequipmentbyid(equipmentid) {
 
         const dynamicstyles = new DynamicStyles();
         let equipments = false;
 
         let myequipment = dynamicstyles.getmyequipment.call(this)
- 
+
         // eslint-disable-next-line
         myequipment.map((equipment) => {
-     
+
             if (equipment.equipmentid === equipmentid) {
                 equipments = equipment
             }
@@ -3046,12 +3094,12 @@ class DynamicStyles {
 
 
     getcreateproposal() {
-       
-            return ({
-                width: '32px',
-                height: '32px'
-            })
-        
+
+        return ({
+            width: '32px',
+            height: '32px'
+        })
+
 
     }
     getallusers() {
@@ -3167,18 +3215,18 @@ class DynamicStyles {
     }
 
     getprojectbymilestoneid(milestoneid) {
- 
+
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
         let myproject = false;
-        if(myuser.hasOwnProperty("company")) {
-           if(myuser.company.hasOwnProperty("projects")) {
+        if (myuser.hasOwnProperty("company")) {
+            if (myuser.company.hasOwnProperty("projects")) {
                 // eslint-disable-next-line
-                myuser.company.projects.myproject.map(project=> {
-                    if(project.hasOwnProperty("projectmilestones")) {
+                myuser.company.projects.myproject.map(project => {
+                    if (project.hasOwnProperty("projectmilestones")) {
                         // eslint-disable-next-line
-                        project.projectmilestones.mymilestone.map(milestone=> {
-                            if(milestone.milestoneid === milestoneid) {
+                        project.projectmilestones.mymilestone.map(milestone => {
+                            if (milestone.milestoneid === milestoneid) {
                                 myproject = project;
                             }
                         })
@@ -3292,8 +3340,8 @@ class DynamicStyles {
     }
     getcsis() {
         let csis = false;
-        if(this.props.csis) {
-            if(this.props.csis.hasOwnProperty("length")) {
+        if (this.props.csis) {
+            if (this.props.csis.hasOwnProperty("length")) {
                 csis = this.props.csis;
             }
         }
@@ -3302,18 +3350,18 @@ class DynamicStyles {
     getcsibyid(csiid) {
         let csi = false;
         let dynamicstyles = new DynamicStyles();
-       const csis = dynamicstyles.getcsis.call(this)
-       if(csis) {
-                // eslint-disable-next-line
-                csis.map(code => {
-                    if (code.csiid === csiid) {
-                        csi = code;
+        const csis = dynamicstyles.getcsis.call(this)
+        if (csis) {
+            // eslint-disable-next-line
+            csis.map(code => {
+                if (code.csiid === csiid) {
+                    csi = code;
 
-                    }
-                })
-            
-            }
-        
+                }
+            })
+
+        }
+
         return csi;
     }
     getprofitfield() {
@@ -3599,13 +3647,13 @@ class DynamicStyles {
         let checkinvoice = true;
         if (mymaterial) {
             if (mymaterial.settlementid) {
-                checkinvoice=false;
+                checkinvoice = false;
             }
         }
         return checkinvoice;
 
     }
-   
+
 
     checkinvoicelaborid(laborid) {
         const dynamicstyles = new DynamicStyles();
@@ -3639,12 +3687,12 @@ class DynamicStyles {
             <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }} key={item.equipmentid}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }}>
-                    <span  onClick={() => { this.addItem(item) }}>{myequipment.equipment} CSI: {csi.csi} - {csi.title}   TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)}
+                    <span onClick={() => { this.addItem(item) }}>{myequipment.equipment} CSI: {csi.csi} - {csi.title}   TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)}
                     Total Hours:{totalhours.toFixed(2)} x $ </span>
                     <input type="text" style={{ ...styles.generalFont, ...smallFont, ...largeField }}
                         onChange={event => { this.handleequipmentrate(event.target.value, item.equipmentid) }}
-                        value={equipmentrate} /> 
-                        <span  onClick={() => { this.addItem(item) }}> = {amount} x {+Number(1+profit).toFixed(4)}= ${Number(amount * (1 + profit)).toFixed(2)}</span>
+                        value={equipmentrate} />
+                    <span onClick={() => { this.addItem(item) }}> = {amount} x {+Number(1 + profit).toFixed(4)}= ${Number(amount * (1 + profit)).toFixed(2)}</span>
                 </div>
                 <div style={{ ...styles.flex1 }}>
 
@@ -3681,18 +3729,18 @@ class DynamicStyles {
             <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }} key={item.materialid}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }} >
-                   <span onClick={() => { this.addItem(item) }}> {inputUTCStringForMaterialIDWithTime(item.timein)} {material.material} CSI: {csi.csi}-{csi.title}</span>
+                    <span onClick={() => { this.addItem(item) }}> {inputUTCStringForMaterialIDWithTime(item.timein)} {material.material} CSI: {csi.csi}-{csi.title}</span>
                     <input type="text"
                         value={item.quantity}
                         onChange={event => { this.handlematerialquantity(event.target.value, item.materialid) }}
-                        style={{ ...styles.generalFont, ...smallFont, ...proposalFieldLarge }} />   
-                       <span onClick={() => { this.addItem(item) }}> x $</span>
-                     <input type="text" value={item.unitcost}
+                        style={{ ...styles.generalFont, ...smallFont, ...proposalFieldLarge }} />
+                    <span onClick={() => { this.addItem(item) }}> x $</span>
+                    <input type="text" value={item.unitcost}
                         onChange={event => { this.handlematerialunitcost(event.target.value, item.materialid) }}
-                        style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} /> 
-                       <span onClick={() => { this.addItem(item) }}> / </span>
-                        <input type="text" value={item.unit} onChange={event => { this.handlematerialunit(event.target.value, item.materialid) }} style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} />  
-                        <span onClick={() => { this.addItem(item) }}> = ${amount.toFixed(2)} x {+Number(profit).toFixed(4)} = ${Number(amount * profit).toFixed(2)}</span>
+                        style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} />
+                    <span onClick={() => { this.addItem(item) }}> / </span>
+                    <input type="text" value={item.unit} onChange={event => { this.handlematerialunit(event.target.value, item.materialid) }} style={{ ...styles.generalFont, ...smallFont, ...proposalFieldSmall }} />
+                    <span onClick={() => { this.addItem(item) }}> = ${amount.toFixed(2)} x {+Number(profit).toFixed(4)} = ${Number(amount * profit).toFixed(2)}</span>
                 </div>
                 <div style={{ ...styles.flex1 }}>
 
@@ -3788,7 +3836,7 @@ class DynamicStyles {
         return rentalrate;
 
     }
-    
+
     calculateequipmentratebyid(equipmentid, timein, timeout) {
 
         const dynamicstyles = new DynamicStyles();
@@ -3804,11 +3852,11 @@ class DynamicStyles {
     }
     getTransfersbyinvoiceid(invoiceid) {
         const dynamicstyles = new DynamicStyles();
-        const myinvoice = dynamicstyles.getinvoicebyid.call(this,invoiceid)
+        const myinvoice = dynamicstyles.getinvoicebyid.call(this, invoiceid)
         let transfers = false;
-        if(myinvoice) {
-            if(myinvoice.hasOwnProperty("transfers")) {
-            transfers = myinvoice.transfers.transfer;
+        if (myinvoice) {
+            if (myinvoice.hasOwnProperty("transfers")) {
+                transfers = myinvoice.transfers.transfer;
             }
         }
         return transfers;
@@ -3848,9 +3896,9 @@ class DynamicStyles {
         const AFactor = () => {
             const T = Period();
             const i = Number(myequipment.ownership.loaninterest);
-        
+
             if (T) {
-             
+
                 return (AmmortizeFactor(i, T))
             } else {
 
@@ -3865,21 +3913,21 @@ class DynamicStyles {
 
             return (Math.round(annual * years))
         }
-  
+
         if (i > 0) {
             equipmentrate = (P() * AFactor()) / (workinghours);
         } else {
-          
+
             equipmentrate = P() / (totalworkinghours())
         }
 
         return equipmentrate;
     }
-    getcostbyid(equipmentid,costid) {
-    
+    getcostbyid(equipmentid, costid) {
+
         const dynamicstyles = new DynamicStyles();
         let costs = false;
-        const myequipment = dynamicstyles.getmyequipmentbyid.call(this,equipmentid)
+        const myequipment = dynamicstyles.getmyequipmentbyid.call(this, equipmentid)
 
         if (myequipment.hasOwnProperty("ownership")) {
             // eslint-disable-next-line
@@ -4071,7 +4119,7 @@ class DynamicStyles {
         return material;
     }
 
-    
+
     getmilestonebyid(milestoneid) {
         let dynamicstyles = new DynamicStyles();
         let milestones = dynamicstyles.getmilestones.call(this)
@@ -4167,7 +4215,7 @@ class DynamicStyles {
         return key;
     }
 
-    
+
     getmyequipment() {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
