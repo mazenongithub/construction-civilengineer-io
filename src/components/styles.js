@@ -121,6 +121,12 @@ export function MyStylesheet() {
             minHeight: '60px',
             maxWidth: '77px'
         },
+        marginLeft90: {
+            marginLeft: '90px'
+        },
+        marginLeft120: {
+            marginLeft: '120px'
+        },
         marginLeft60: {
             marginLeft: '60px'
         },

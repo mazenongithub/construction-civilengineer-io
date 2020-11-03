@@ -366,8 +366,6 @@ class Specification extends Component {
                                                     return (` ${getListNumber(list.sublist.listType, j + 1, i + 1)} `)
                                                 }
     
-                                               
-    
                                                 paragraphs.push(<div style={{ ...styles.generalContainer, ...styles.marginLeft30 }} key={sublist.contentid}>
                                                     <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(sublist.contentid) }} onClick={() => { this.makelistactive(sublist.contentid) }}> {listtype_2()}</span>
                                                     <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(sublist.contentid) }} onClick={() => { this.makelistactive(sublist.contentid) }}>{sublist.content}</span>
@@ -520,7 +518,7 @@ class Specification extends Component {
                     if(!project.hasOwnProperty("specifications")) {
                         dynamicstyles.loadprojectspecs.call(this,project.projectid) 
                     }
-                    
+
                 return (<div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
 
