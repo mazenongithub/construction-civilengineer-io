@@ -2032,7 +2032,7 @@ class DynamicStyles {
                 try {
                     let specifications = [];
                     let specs = await LoadSpecifications(projectid);
-                   
+                   console.log(specs)
                     if(specs.hasOwnProperty("length")) {
                         
                         specs.map(spec => {
@@ -2626,7 +2626,7 @@ class DynamicStyles {
     getspecficationbycsi(projectid, csiid) {
         const dynamicstyles = new DynamicStyles();
         const specs = dynamicstyles.getspecficationsbyprojectid.call(this, projectid)
-        console.log(specs)
+
         let myspec = false;
         if (specs) {
             // eslint-disable-next-line
@@ -2643,7 +2643,7 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const myproject = dynamicstyles.getprojectbyid.call(this, projectid)
         let specifications = false;
-        console.log(myproject)
+
         if (myproject.hasOwnProperty("specifications")) {
             specifications = myproject.specifications;
         }
