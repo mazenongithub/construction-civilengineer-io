@@ -1320,6 +1320,12 @@ class Actual extends Component {
         const scheduleview = new ScheduleView();
         const menu = dynamicstyles.getnavigation.call(this)
 
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
+        
+
         const validate = () => {
             let validation = true;
             if (this.state.activelaborid && this.state.active === 'labor') {

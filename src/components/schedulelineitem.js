@@ -232,6 +232,12 @@ class ScheduleLineItem extends Component {
         const titleFont = dynamicstyles.gettitlefont.call(this)
         const csiid = this.props.match.params.csiid;
         const csi = dynamicstyles.getcsibyid.call(this, csiid)
+
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
+        
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>

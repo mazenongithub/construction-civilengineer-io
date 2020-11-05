@@ -73,7 +73,6 @@ class App extends Component {
     this.props.reduxNavigation({ position: 'open' })
     firebase.initializeApp(firebaseConfig());
     this.checkuser();
-    this.loadcsis();
     this.updateWindowDimensions();
   }
   componentWillUnmount() {

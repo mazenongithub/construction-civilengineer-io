@@ -619,6 +619,10 @@ class ViewProposal extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const proposal = dynamicstyles.getproposalbyid.call(this, this.props.match.params.proposalid)
         const myuser = dynamicstyles.getuser.call(this)
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
       
         const getupdated = () => {
             if (proposal.updated) {

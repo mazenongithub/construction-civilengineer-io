@@ -186,6 +186,10 @@ class Estimate extends Component {
         const styles = MyStylesheet();
         const headerFont = dynamicstyles.getHeaderFont.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
 
         const titlerow = () => {
             if (this.state.width > 800) {

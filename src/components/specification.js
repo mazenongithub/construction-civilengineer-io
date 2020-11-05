@@ -508,6 +508,12 @@ class Specification extends Component {
         const csi = dynamicstyles.getcsibyid.call(this, this.props.match.params.csiid)
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
+
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
+        
         if (myuser) {
             const active = dynamicstyles.checkactive.call(this)
             if (active) {

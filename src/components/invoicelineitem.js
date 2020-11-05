@@ -240,6 +240,12 @@ class InvoiceLineItem extends Component {
         const csi = dynamicstyles.getcsibyid.call(this, csiid)
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
+
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
+        
         if (myuser) {
             const checkmanager = dynamicstyles.checkmanager.call(this)
             if (checkmanager) {

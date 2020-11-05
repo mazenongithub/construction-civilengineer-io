@@ -5,10 +5,23 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
-import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin, LoadSpecifications } from './actions/api';
+import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin, LoadSpecifications, LoadCSIs } from './actions/api';
 
 
 class DynamicStyles {
+
+    async loadcsis() {
+        try {
+          let response = await LoadCSIs();
+          if (response.hasOwnProperty("csis")) {
+            this.props.reduxCSIs(response.csis);
+    
+          }
+    
+        } catch (err) {
+          alert(err)
+        }
+      }
 
     getactualitems() {
         const dynamicstyles = new DynamicStyles();

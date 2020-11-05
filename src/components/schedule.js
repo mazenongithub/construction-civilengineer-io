@@ -1296,6 +1296,12 @@ class Schedule extends Component {
         const materialid = new MaterialID();
         const scheduleview = new ScheduleView();
         const menu = dynamicstyles.getnavigation.call(this)
+
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
+        
         const equipmentrate = () => {
             if (this.state.active === 'equipment' && this.state.activeequipmentid) {
                 return (

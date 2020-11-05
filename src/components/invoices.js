@@ -723,6 +723,12 @@ class Invoices extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         const checkfield = dynamicstyles.getcheckfield.call(this)
+
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
+        
         const laboricon = () => {
             if (this.state.showlabor) {
                 return (<div style={{ ...styles.generalContainer }}>

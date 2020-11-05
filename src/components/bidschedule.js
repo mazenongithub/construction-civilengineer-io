@@ -650,6 +650,10 @@ class BidSchedule extends Component {
         const headerFont = dynamicstyles.getHeaderFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
 
         if(myuser) {
             const checkmanager = dynamicstyles.checkmanager.call(this)

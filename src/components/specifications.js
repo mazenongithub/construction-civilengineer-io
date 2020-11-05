@@ -70,6 +70,10 @@ class Estimate extends Component {
         const headerFont = dynamicstyles.getHeaderFont.call(this)
         const myuser = dynamicstyles.getuser.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this)
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
         if (myuser) {
             const active = dynamicstyles.checkactive.call(this)
             if (active) {
