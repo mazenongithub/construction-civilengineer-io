@@ -327,7 +327,7 @@ class Equipment extends Component {
             if (myequipment) {
                 if (this.state.activecostid === costid) {
 
-                    this.setState({ activecostid: false})
+                    this.setState({ activecostid: false })
                     this.equipmentdatedefault()
                 } else {
                     const cost = dynamicstyles.getcostbyid.call(this, myequipment.equipmentid, costid)
@@ -375,9 +375,9 @@ class Equipment extends Component {
                         if (myequipment) {
                             const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
                             const mycost = dynamicstyles.getcostbyid.call(this, this.state.activeequipmentid, cost.costid);
-                        
+
                             if (mycost) {
-                                const j = dynamicstyles.getequipmentcostskeybyid.call(this,this.state.activeequipmentid, cost.costid)
+                                const j = dynamicstyles.getequipmentcostskeybyid.call(this, this.state.activeequipmentid, cost.costid)
 
                                 myuser.company.equipment.myequipment[i].ownership.cost.splice(j, 1);
                                 this.props.reduxUser(myuser)
@@ -1007,7 +1007,7 @@ class Equipment extends Component {
                     this.setState({ activeequipmentid: equipmentid, purchasedateyear, purchasedatemonth, purchasedateday, saledateyear, saledatemonth, saledateday })
                 } else {
                     this.setState({ activeequipmentid: equipmentid })
-                    
+
                 }
             }
         } else {
@@ -1305,6 +1305,43 @@ class Equipment extends Component {
 
     }
 
+
+    getpurchasevalue() {
+        if (this.state.activeequipmentid) {
+            let equipment = this.getactiveequipment();
+            return (equipment.ownership.purchase)
+        }
+    }
+
+    handlepurchasevalue(purchasevalue) {
+        const dynamicstyles = new DynamicStyles();
+        let myuser = dynamicstyles.getuser.call(this);
+        if (myuser) {
+            if (this.state.activeequipmentid) {
+                const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+                if (myequipment) {
+
+                    const checkmanager = dynamicstyles.checkmanager.call(this)
+                    if (checkmanager) {
+                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                        myuser.company.equipment.myequipment[i].ownership.purchase = purchasevalue;
+
+                    } else {
+                        alert(`Only Managers can modify equipment purchase values `)
+                    }
+
+
+                    this.props.reduxUser(myuser)
+                    this.setState({ render: 'render' })
+
+                }
+
+            }
+
+        }
+
+    }
+
     handleresalevalue(resalevalue) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
@@ -1352,10 +1389,10 @@ class Equipment extends Component {
                                 {purchasedate.showpurchasedate.call(this)}
                             </div>
                             <div style={{ ...styles.flex1 }}>
-                                Loan Interest <br />
+                                Purchase Value <br />
                                 <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
-                                    value={this.getloaninterest()}
-                                    onChange={event => { this.handleloaninterest(event.target.value) }}
+                                    value={this.getpurchasevalue()}
+                                    onChange={event => { this.handlepurchasevalue(event.target.value) }}
                                 />
                             </div>
                         </div>
@@ -1378,6 +1415,14 @@ class Equipment extends Component {
                         <input type="text" style={{ ...styles.generalFont, ...regularFont }}
                                     value={this.getworkinghours()}
                                     onChange={event => { this.handleworkinghours(event.target.value) }}
+                                />
+                            </div>
+
+                            <div style={{ ...styles.flex1 }}>
+                                Loan Interest <br />
+                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
+                                    value={this.getloaninterest()}
+                                    onChange={event => { this.handleloaninterest(event.target.value) }}
                                 />
                             </div>
 

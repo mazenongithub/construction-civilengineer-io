@@ -2,7 +2,7 @@ import React from 'react';
 import DynamicStyles from './dynamicstyles';
 import { MyStylesheet } from './styles';
 import { removeIconSmall, dropDateIcon } from './svg';
-import { makeTimeString, monthstring, getFirstIsOnTime, check_29_feb_leapyear_time, check_30_time, check_31_time, UTCTimeStringfromTime, getDayString } from './functions'
+import { makeTimeString, monthstring, getFirstIsOnTime, check_29_feb_leapyear_time, check_30_time, check_31_time, UTCTimeStringfromTime, getDayString, trailingZeros } from './functions'
 import TimeOut from './scheduletimeout';
 
 class CalenderTimeOut {
@@ -36,15 +36,16 @@ class CalenderTimeOut {
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const styles = MyStylesheet();
         if (this.state.calendertimeout) {
-            let day = this.state.timeoutday;
+            let day = trailingZeros(this.state.timeoutday);
             let year = this.state.timeoutyear;
-            let month = this.state.timeoutmonth;
-            let hours = this.state.timeouthours;
+            let month = trailingZeros(this.state.timeoutmonth);
+            let hours = trailingZeros(this.state.timeouthours);
             let time = this.state.timeoutampm;
-            let minutes = this.state.timeoutminutes;
+            let minutes = trailingZeros(this.state.timeoutminutes);
             let timeout = makeTimeString(year, month, day, hours, minutes, time);
+            console.log(timeout)
             timeout = UTCTimeStringfromTime(timeout)
-            const newDate = new Date(`${timeout.replace(/-/g, '/')} UTC`)
+            const newDate = new Date(`${timeout}`)
             month = monthstring(newDate.getMonth());
             const date = newDate.getDate();
             year = newDate.getFullYear();

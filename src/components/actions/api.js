@@ -384,9 +384,10 @@ export async function SaveCompany(values) {
 }
 
 export async function SaveProject(values) {
-    const providerid = values.myuser.providerid;
+  
+    const providerid = 'mazen'
     let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/saveproject`;
-    console.log(APIURL);
+    console.log(APIURL)
     return fetch(APIURL, {
         method: 'post',
         credentials: 'include',
@@ -417,7 +418,8 @@ export async function SaveProject(values) {
 }
 
 export async function SaveProfile(values) {
-    const providerid = values.providerid;
+   console.log(values)
+  let providerid = 'mazen'
     let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/saveprofile`;
     console.log(APIURL);
     return fetch(APIURL, {
@@ -427,7 +429,7 @@ export async function SaveProfile(values) {
             'Content-Type': 'application/json',
         }),
 
-        body: JSON.stringify({ myuser: values })
+        body: JSON.stringify({ values })
     })
         .then(resp => {
 

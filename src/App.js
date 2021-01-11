@@ -29,7 +29,7 @@ import ViewInvoice from './components/viewinvoice'
 import ViewAccount from './components/viewaccount'
 import InvoiceLineItem from './components/invoicelineitem'
 import { Link } from 'react-router-dom';
-import { returnCompanyList } from './components/functions';
+import { returnCompanyList, updateTimes} from './components/functions';
 import DynamicStyles from './components/dynamicstyles';
 import PrivacyPolicy from './components/privacypolicy';
 import Estimate from './components/estimate';
@@ -105,6 +105,9 @@ class App extends Component {
       let response = await CheckUserNode();
 
       console.log(response)
+
+     response =updateTimes(response)
+
       if (response.hasOwnProperty("allusers")) {
         let companys = returnCompanyList(response.allusers);
         this.props.reduxAllCompanys(companys)

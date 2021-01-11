@@ -280,7 +280,7 @@ export function CreateScheduleLabor(laborid, providerid, milestoneid, csiid, tim
 
 export function dateStringFromUTCTime(timein) {
     //const timein = `2020-04-19 16:00:00`
-    let mydate = new Date(`${timein.replace(/-/g, '/')} UTC`)
+    let mydate = new Date(`${timein}`)
     const year = mydate.getFullYear();
     let month = mydate.getMonth() + 1;
     if (month < 10) {
@@ -307,7 +307,7 @@ export function calculateTotalMonths(purchasedate, saledate) {
     return (totalMonths)
 }
 export function UTCStringFormatDateforProposal(timeout) {
-    let newDate = new Date(`${timeout.replace(/-/g, '/')}-00:00`)
+    let newDate = new Date(`${timeout}-00:00`)
     let month = newDate.getMonth() + 1;
     if (month < 10) {
         month = `0${month}`
@@ -339,7 +339,7 @@ export function UTCStringFormatDateforProposal(timeout) {
 
 export function initfromtimeout(timeout) {
 //let timeout= '2020-04-21 01:24:32'
-const dateout = new Date(`${timeout.replace(/-/g, '/')} UTC`)
+const dateout = new Date(`${timeout}`)
 const hoursout = dateout.getHours();
 const minutesout = dateout.getMinutes();
 const heightout = hoursout *100 - (minutesout/60)*100;
@@ -361,7 +361,7 @@ export function scheduleHeight(timein, timeout, scale) {
 
 export function getTimeFromUTCString(timein) {
     //const timein = `2020-04-19 19:00:00`
-    let mydate = new Date(`${timein.replace(/-/g, '/')} UTC`)
+    let mydate = new Date(`${timein}`)
     let hours = mydate.getHours();
     if (hours < 10) {
         hours = `0${hours}`
@@ -416,7 +416,7 @@ export function inputDateSecActiveIDTimein(dateencoded, timein) {
         offset = `0${offset}`
     }
 
-    let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`);
+    let datein = new Date(`${timein}-00:00`);
     let month = newDate.getMonth() + 1;
     if (month < 10) {
         month = `0${month}`
@@ -465,7 +465,7 @@ export function inputDateSecActiveIDTimein(dateencoded, timein) {
 }
 export function decreaseCalendarDaybyOneYear(timein) {
     let offset = getOffsetDate(timein);
-    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+    let datein = new Date(`${timein} 00:00:00${offset}`)
     let currentYear = datein.getFullYear();
     let decreaseYear = currentYear - 1;
     let month = datein.getMonth() + 1;
@@ -481,7 +481,7 @@ export function decreaseCalendarDaybyOneYear(timein) {
 }
 export function decreaseCalendarDaybyOneMonth(timein) {
     let offset = getOffsetDate(timein);
-    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+    let datein = new Date(`${timein} 00:00:00${offset}`)
     let currentMonth = datein.getMonth() + 1;
     let year = datein.getFullYear();
     let decreaseMonth = currentMonth;
@@ -506,7 +506,7 @@ export function decreaseCalendarDaybyOneMonth(timein) {
 }
 export function increaseCalendarDayOneMonth(timein) {
     let offset = getOffsetDate(timein);
-    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+    let datein = new Date(`${timein} 00:00:00${offset}`)
     let currentMonth = datein.getMonth() + 1;
     let year = datein.getFullYear();
     let increaseMonth = currentMonth;
@@ -531,7 +531,7 @@ export function increaseCalendarDayOneMonth(timein) {
 }
 export function increaseCalendarDaybyOneYear(timein) {
     let offset = getOffsetDate(timein);
-    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+    let datein = new Date(`${timein} 00:00:00${offset}`)
     let currentYear = datein.getFullYear();
     let increaseYear = currentYear + 1;
     let month = datein.getMonth() + 1;
@@ -600,7 +600,7 @@ export function getOffset() {
 
 }
 export function AMPMfromTimeIn(timein) {
-    let datein = new Date(`${timein.replace(/-/g, '/')} UTC`);
+    let datein = new Date(`${timein}`);
     let hours = datein.getHours();
     let ampm = "";
     if (hours >= 12) {
@@ -783,10 +783,10 @@ const t0 = origin.getTime();
 const offset_2 = getOffsetDate(day_7)
 const endpoint =new Date(`${day_7.replace(/-/g, '/')} 23:59:59${offset_2}`);
 const tEnd = endpoint.getTime();
-const point  = new Date(`${timein.replace(/-/g, '/')} UTC`)
+const point  = new Date(`${timein}`)
 const tX = point.getTime();
 
-const timeoutpoint =  new Date(`${timeout.replace(/-/g, '/')} UTC`)
+const timeoutpoint =  new Date(`${timeout}`)
 const toutX = timeoutpoint.getTime()
 const length = (toutX -tX)/(1000*60*60*(1/5))
 const init = ((tX-t0)/(tEnd-t0))*840
@@ -794,7 +794,7 @@ return({init,length})
 
 }
 export function getOffsetDate(timein) {
-    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00 UTC`)
+    let datein = new Date(`${timein} 00:00:00 UTC`)
     let offset = datein.getTimezoneOffset() / 60
     let sym = "+";
     if (offset > 0) {
@@ -807,7 +807,7 @@ export function getOffsetDate(timein) {
 }
 export function makeDatefromTimein(timein) {
     const offset = getOffsetDate(timein);
-    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`)
+    let datein = new Date(`${timein} 00:00:00${offset}`)
 
     let year = datein.getFullYear();
     let month = datein.getMonth() + 1;
@@ -857,7 +857,7 @@ export function formatDateforCalendarDisplay(datein) {
 }
 export function adjustdatefromcalendar(timein, value) {
 
-    let offset = new Date(`${timein.replace(/-/g, '/')} 00:00:00`).getTimezoneOffset() / 60;
+    let offset = new Date(`${timein} 00:00:00`).getTimezoneOffset() / 60;
     let sym = "";
     if (offset < 0) {
         offset = -offset;
@@ -871,7 +871,7 @@ export function adjustdatefromcalendar(timein, value) {
         sym = "-";
     }
 
-    let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`)
+    let datein = new Date(`${timein}-00:00`)
     let hours = datein.getHours();
     let minutes = datein.getMinutes();
     let seconds = datein.getSeconds();
@@ -927,7 +927,7 @@ export function sortpart(b, a) {
 export function toggleAMTimeString(timein) {
 
     //let timein = '2020-04-08 15:00:00'
-    let datein = new Date(`${timein.replace(/-/g, '/')} UTC`)
+    let datein = new Date(`${timein}`)
     let offset = datein.getTimezoneOffset() / 60;
     let sym = "+";
     if (offset > 0) {
@@ -969,7 +969,7 @@ export function toggleAMTimeString(timein) {
     }
 
     let newtimein = `${year}-${month}-${day} ${hours}:${minutes}:00`
-    let utcdate = new Date(`${newtimein.replace(/-/g, '/')}${sym}${2 * offset}`)
+    let utcdate = new Date(`${newtimein}${sym}${2 * offset}`)
     month = utcdate.getMonth() + 1;
     if (month < 10) {
         month = `0${month}`
@@ -1056,8 +1056,8 @@ export function UTCTimefromCurrentDate() {
 }
 
 export function scheduleBox(timein,timeout) {
-const datein = new Date(`${timein.replace(/-/g, '/')} UTC`)
-const dateout = new Date(`${timeout.replace(/-/g, '/')} UTC`)
+const datein = new Date(`${timein}`)
+const dateout = new Date(`${timeout}`)
 
 const hoursin = datein.getHours();
 const minutesin = datein.getMinutes();
@@ -1072,8 +1072,72 @@ const init = heightin
 return{height,init}
 }
 
-export function getOffsetTime(timein) {
+export function  updateTimes(response) {
+    if(response.hasOwnProperty("myuser")) {
+        if(response.myuser.hasOwnProperty("company")) {
+            if(response.myuser.company.hasOwnProperty("projects")) {
+                // eslint-disable-next-line
+                response.myuser.company.projects.myproject.map((project,i)=> {
+                    if(project.hasOwnProperty("schedulelabor")) {
+                         // eslint-disable-next-line
+                        project.schedulelabor.mylabor.map((mylabor,j)=> {
+                          console.log(mylabor.timein,mylabor.timeout)
+                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = convertUTCTime(mylabor.timein)
+                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout)
+                        })
+                    }
+
+                    if(project.hasOwnProperty("scheduleequipment")) {
+                         // eslint-disable-next-line
+                        project.scheduleequipment.myequipment.map((myequipment,j)=> {
+                      
+                            response.myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timein = convertUTCTime(myequipment.timein)
+                            response.myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = convertUTCTime(myequipment.timeout)
+                        })
+                    }
+
+                    if(project.hasOwnProperty("actuallabor")) {
+                         // eslint-disable-next-line
+                        project.actuallabor.mylabor.map((mylabor,j)=> {
+                          console.log(mylabor.timein,mylabor.timeout)
+                            response.myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = convertUTCTime(mylabor.timein)
+                            response.myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout)
+                        })
+                    }
+                    
+                    if(project.hasOwnProperty("actualequipment")) {
+                         // eslint-disable-next-line
+                        project.actualequipment.myequipment.map((myequipment,j)=> {
+                      
+                            response.myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = convertUTCTime(myequipment.timein)
+                            response.myuser.company.projects.myproject[i].actualequipment.myequipment[j].timeout = convertUTCTime(myequipment.timeout)
+                        })
+                    }
+
+
+                })
+            }
+        }
+    }
+    return response
+}
+
+export function convertUTCTime(timein) {
+  
     let datein = new Date(`${timein.replace(/-/g, '/')} UTC`)
+    const year = datein.getFullYear();
+    const month = trailingZeros(datein.getMonth()+1);
+    const day = trailingZeros(datein.getDate());
+    const hours = trailingZeros(datein.getHours());
+    const minutes = trailingZeros(datein.getMinutes());
+    const offset = getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:00${getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:00`)}`)
+    
+    return (`${year}/${month}/${day} ${hours}:${minutes}:00${offset}`)
+    
+  }
+
+export function getOffsetTime(timein) {
+    let datein = new Date(`${timein}`)
     let offset = datein.getTimezoneOffset() / 60;
 
     let sym = "+";
@@ -1091,7 +1155,7 @@ export function increaseDateStringByOneMonth(timein) {
 
     let offset = getOffsetTime(timein)
 
-    let datein = new Date(`${timein.replace(/-/g, '/')}${offset}`);
+    let datein = new Date(`${timein}${offset}`);
     let month = datein.getMonth() + 1;
     let year = datein.getFullYear();
     if (month === 12) {
@@ -1134,7 +1198,7 @@ export function addincDateObj(datein, inc) {
 export function decreaseDateStringByOneMonth(timein) {
 
     let offset = getOffsetTime(timein)
-    let datein = new Date(`${timein.replace(/-/g, '/')}${offset}`);
+    let datein = new Date(`${timein}${offset}`);
     let month = datein.getMonth();
     let year = datein.getFullYear();
     if (month === 0) {
@@ -1173,7 +1237,7 @@ export function decreaseDateStringByOneMonth(timein) {
 export function decreaseDateStringByOneYear(timein) {
     let offset = getOffsetTime(timein)
 
-    let datein = new Date(`${timein.replace(/-/g, '/')}${offset}`);
+    let datein = new Date(`${timein}${offset}`);
     let month = datein.getMonth();
     let year = datein.getFullYear();
     year = year - 1;
@@ -1207,7 +1271,7 @@ export function decreasedateStringbyInc(timein, inc) {
 
     let offset = getOffsetTime(timein)
 
-    let datein = new Date(`${timein.replace(/-/g, '/')}${offset}`);
+    let datein = new Date(`${timein}${offset}`);
     let newdate = new Date(datein.getTime() - inc)
 
     let month = newdate.getMonth();
@@ -1240,7 +1304,7 @@ export function decreasedateStringbyInc(timein, inc) {
 
 export function increaseDateStringByOneYear(timein) {
     let offset = getOffsetTime(timein)
-    let datein = new Date(`${timein.replace(/-/g, '/')}${offset}`);
+    let datein = new Date(`${timein}${offset}`);
     let month = datein.getMonth();
     let year = datein.getFullYear();
     year = year + 1;
@@ -1274,7 +1338,7 @@ export function increaseDateStringByOneYear(timein) {
 export function increasedateStringbyInc(timein, inc) {
 
     let offset = getOffsetTime(timein)
-    let datein = new Date(`${timein.replace(/-/g, '/')}${offset}`);
+    let datein = new Date(`${timein}${offset}`);
     let newdate = new Date(datein.getTime() + inc)
 
     let month = newdate.getMonth();
@@ -1425,7 +1489,7 @@ export function inputTimeDateOutputUTCString(timein) {
     return (`${year}-${month}-${date} ${hours}:${minutes}:${seconds}`);
 }
 export function inputTimeInDateStringforPicker(timein) {
-    let dateobj = new Date(`${timein.replace(/-/g, '/')}-00:00`)
+    let dateobj = new Date(`${timein}-00:00`)
 
 
     let day = dateobj.getDate();
@@ -1459,7 +1523,7 @@ export function trailingzero(num) {
 }
 export function inputDateTimeOutDateObj(timein) {
 
-    let newDate = new Date(`${timein.replace(/-/g, '/')} UTC`);
+    let newDate = new Date(`${timein}`);
     return (newDate)
 }
 
@@ -1551,7 +1615,7 @@ export function check_29_feb_leapyear_date(dateobj) {
 
 
 export function check_31_time(timein) {
-    const dateobj = new Date(`${timein.replace(/-/g, '/')} UTC`)
+    const dateobj = new Date(`${timein}`)
     let month = dateobj.getMonth();
     if (month === 0 || month === 2 || month === 4 || month === 6 || month === 7 || month === 9 || month === 11) {
         return 31;
@@ -1560,7 +1624,7 @@ export function check_31_time(timein) {
 
 
 export function check_30_time(timein) {
-    const dateobj = new Date(`${timein.replace(/-/g, '/')} UTC`)
+    const dateobj = new Date(`${timein}`)
     let month = dateobj.getMonth();
     if (month !== 1) {
         return 30;
@@ -1569,7 +1633,7 @@ export function check_30_time(timein) {
 
 
 export function check_29_feb_leapyear_time(timein) {
-    const dateobj = new Date(`${timein.replace(/-/g, '/')} UTC`)
+    const dateobj = new Date(`${timein}`)
     let month = dateobj.getMonth();
 
     if (month === 1) {
@@ -1587,7 +1651,7 @@ export function check_29_feb_leapyear_time(timein) {
 
 }
 export function getFirstIsOnTime(timein) {
-    let datein = new Date(`${timein.replace(/-/g, '/')} UTC`)
+    let datein = new Date(`${timein}`)
     let monthdisplay = datein.getMonth() + 1;
     let fullyear = datein.getFullYear();
     let thefirstofthemonth = new Date(`${fullyear}/${monthdisplay}/1`);
@@ -1639,7 +1703,7 @@ export function getFirstIsOn(mydate) {
 
 export function inputUTCStringAddOffsetString(timein) {
 
-    let datein = new Date(`${timein.replace(/-/g, '/')}-00:00`)
+    let datein = new Date(`${timein}-00:00`)
     let fullyear = datein.getFullYear();
     let month = datein.getMonth() + 1
     let date = datein.getDate();
@@ -1716,7 +1780,7 @@ export function inputDateObjOutputCalendarDaySeconds(datein) {
     return dateinsec;
 }
 export function formatDateStringDisplay(timein) {
-    timein.replace(/-/g, '/')
+    
     timein = timein.split('-')
     let year = "";
     let month = "";
@@ -1745,12 +1809,12 @@ export function inputSecOutDateString(dateencoded) {
 }
 export function inputDateStringOutputSeconds(timein) {
     let offset = getOffsetDate(timein)
-    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`);
+    let datein = new Date(`${timein} 00:00:00${offset}`);
     return (datein.getTime())
 }
 export function inputtimeDBoutputCalendarDaySeconds(timein) {
 
-    let datein = new Date(`${timein.replace(/-/g, '/')} UTC`);
+    let datein = new Date(`${timein}`);
     let month = datein.getMonth() + 1;
     if (month < 10) {
         month = `0${month}`
@@ -1928,15 +1992,18 @@ export function ProfitForLabor(item) {
 
 export function calculatetotalhours(timeout, timein) {
 
-    let datein = new Date(`${timein.replace(/-/g, '/')}`)
-    let dateout = new Date(`${timeout.replace(/-/g, '/')}`)
+    let datein = new Date(`${timein}`)
+    let dateout = new Date(`${timeout}`)
     let totalhours = ((dateout.getTime() - datein.getTime()) / (1000 * 60 * 60))
     return totalhours;
 }
 
-export function inputUTCStringForLaborID(timein) {
 
-    let datein = new Date(`${timein.replace(/-/g, '/')} UTC`)
+
+export function inputUTCStringForLaborID(timein) {
+    console.log(timein)
+
+    let datein = new Date(timein)
     let hours = datein.getHours();
     let ampm
     if (hours > 12) {
@@ -2096,7 +2163,7 @@ export function getEquipmentRentalObj(timein, timeout) {
     // let timein = '2021-03-06 17:52:33';
     // let timeout = '2021-04-17 19:52:33';
 
-    let datein = new Date(`${timein.replace(/-/g, '/')} UTC`);
+    let datein = new Date(`${timein}`);
     let offset = datein.getTimezoneOffset() / 60;
     let sym = "";
     if (offset < 0) {
@@ -2109,7 +2176,7 @@ export function getEquipmentRentalObj(timein, timeout) {
         offset = `0${offset}`
     }
     offset = `${sym}${offset}:00`
-    let dateout = new Date(`${timeout.replace(/-/g, '/')} UTC`);
+    let dateout = new Date(`${timeout}`);
     let dateinYear = datein.getFullYear();
     let dateoutYear = dateout.getFullYear();
     let dateinMonth = datein.getMonth() + 1;
@@ -2181,7 +2248,7 @@ export function getEquipmentRentalObj(timein, timeout) {
     return (obj)
 }
 export function inputUTCStringForMaterialIDWithTime(timein) {
-    let newDate = new Date(`${timein.replace(/-/g, '/')} UTC`)
+    let newDate = new Date(`${timein}`)
     let date = newDate.getDate();
     if (date < 10) {
         date = `0${date}`
@@ -2296,7 +2363,7 @@ export function checkemptyobject(obj) {
 
     //let timein = '2020-12-31';
     let offset = getOffsetDate(timein);
-    let datein = new Date(`${timein.replace(/-/g, '/')} 00:00:00${offset}`);
+    let datein = new Date(`${timein} 00:00:00${offset}`);
     let newdate = new Date(datein.getTime())
     let day = newdate.getDate();
     let month = newdate.getMonth() + 1;
@@ -2394,9 +2461,18 @@ export function getDateTime (datestr)  {
     return datein.getTime();
   }
 
-export function trailingZeros(num) {
-    if (num < 10) {
-        return (`0${num}`);
+  export function trailingZeros(num) {
+
+    if (num.toString().length === 1) {
+
+
+        if (Number(num) < 10) {
+
+            return (`0${num}`);
+        } else {
+            return num;
+        }
+
     } else {
         return num;
     }
@@ -2566,16 +2642,16 @@ export function sortcode(codeb, codea) {
 
 export function getYearfromTimein(timein) {
     //let timein ='2020-05-13 20:00:00'
-    timein = timein.replace(/-/g, '/');
-    const newDate = new Date(`${timein} UTC`)
+
+    const newDate = new Date(`${timein}`)
     return newDate.getFullYear();
 
 }
 
 export function getAMPMfromTimeIn(timein) {
     //let timein ='2020-05-13 20:00:00'
-    timein = timein.replace(/-/g, '/');
-    const newDate = new Date(`${timein} UTC`)
+    
+    const newDate = new Date(`${timein}`)
     let hours = newDate.getHours();
     let ampm = "";
     if (hours > 12) {
@@ -2609,16 +2685,23 @@ export function makeTimeString(year, month, day, hours, minutes, time) {
 }
 
 export function UTCTimeStringfromTime(timein) {
-    //let timein = '2020-06-02 04:01 pm'
-    const time = timein.substring(17, 19)
+
+    let time = timein.substring(17, 19)
     let hours = timein.substring(11, 13);
     if (time === 'pm' && hours !== '12') {
         hours = Number(hours) + 12
     } else if (time === 'am' && hours === '12') {
         hours = '00'
     }
-    const sym = () => {
-        let myoffset = new Date().getTimezoneOffset() / 60
+    let minutes = timein.substring(14, 16)
+    let year = timein.substring(0, 4)
+    let month = timein.substring(5, 7);
+    let day = timein.substring(8, 10)
+
+
+
+    const sym = (timein) => {
+        let myoffset = new Date(timein).getTimezoneOffset() / 60
         let sym = "+";
         if (myoffset > 0) {
             sym = "-"
@@ -2626,46 +2709,26 @@ export function UTCTimeStringfromTime(timein) {
         return sym;
 
     }
-    const extraoffset = () => {
-        let myoffset = (new Date().getTimezoneOffset() / 60) * 2
+
+    const offset = (timein) => {
+        let myoffset = (new Date(timein).getTimezoneOffset() / 60)
 
         if (myoffset < 10) {
             myoffset = `0${myoffset}`
         }
         return myoffset;
     }
-    let minutes = timein.substring(14, 16)
-    let year = timein.substring(0, 4)
-    let month = timein.substring(5, 7);
-    let day = timein.substring(8, 10)
+    timein = `${year}/${month}/${day} ${hours}:${minutes}:00${sym(timein)}${offset(timein)}:00`
 
-    timein = `${year}/${month}/${day} ${hours}:${minutes}:00${sym()}${extraoffset()}:00`
-    const newDate = new Date(timein)
-    hours = newDate.getHours();
-    if (hours < 10) {
-        hours = `0${hours}`
-    }
-    minutes = newDate.getMinutes();
-    if (minutes < 10) {
-        minutes = `0${minutes}`
-    }
-    year = newDate.getFullYear();
-    day = newDate.getDate();
-    if (day < 10) {
-        day = `0${day}`
-    }
-    month = newDate.getMonth() + 1;
-    if (month < 10) {
-        month = `0${month}`
-    }
-    return (`${year}-${month}-${day} ${hours}:${minutes}:00`);
+    return timein
+
 }
 
 
 export function getMinutesfromTimein(timein) {
     //let timein ='2020-05-13 20:00:00'
-    timein = timein.replace(/-/g, '/');
-    const newDate = new Date(`${timein} UTC`)
+    
+    const newDate = new Date(`${timein}`)
     let minutes = newDate.getMinutes();
     if (minutes < 10) {
         minutes = `0${minutes}`
@@ -2675,8 +2738,8 @@ export function getMinutesfromTimein(timein) {
 
 export function getHoursfromTimein(timein) {
     //let timein ='2020-05-13 20:00:00'
-    timein = timein.replace(/-/g, '/');
-    const newDate = new Date(`${timein} UTC`)
+    
+    const newDate = new Date(`${timein}`)
     let hours = newDate.getHours();
     if (hours > 12) {
         hours = hours - 12;
@@ -2691,8 +2754,8 @@ export function getHoursfromTimein(timein) {
 
 export function getDayfromTimein(timein) {
     //let timein ='2020-05-13 20:00:00'
-    timein = timein.replace(/-/g, '/');
-    const newDate = new Date(`${timein} UTC`)
+    
+    const newDate = new Date(`${timein}`)
     let date = newDate.getDate();
     if (date < 10) {
         date = `0${date}`
@@ -2703,8 +2766,8 @@ export function getDayfromTimein(timein) {
 
 export function getMonthfromTimein(timein) {
 
-    timein = timein.replace(/-/g, '/');
-    const newDate = new Date(`${timein} UTC`)
+    
+    const newDate = new Date(`${timein}`)
     let month = newDate.getMonth() + 1;
     if (month < 10) {
         month = `0${month}`

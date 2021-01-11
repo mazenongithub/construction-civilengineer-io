@@ -1,6 +1,6 @@
 import React from 'react'
 import { MyStylesheet } from './styles';
-import { sorttimes } from './functions'
+import { updateTimes, sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime } from './functions'
@@ -12,16 +12,16 @@ class DynamicStyles {
 
     async loadcsis() {
         try {
-          let response = await LoadCSIs();
-          if (response.hasOwnProperty("csis")) {
-            this.props.reduxCSIs(response.csis);
-    
-          }
-    
+            let response = await LoadCSIs();
+            if (response.hasOwnProperty("csis")) {
+                this.props.reduxCSIs(response.csis);
+
+            }
+
         } catch (err) {
-          alert(err)
+            alert(err)
         }
-      }
+    }
 
     getactualitems() {
         const dynamicstyles = new DynamicStyles();
@@ -1960,43 +1960,84 @@ class DynamicStyles {
         return validate;
     }
     async savemyproject() {
-        let dynamicstyles = new DynamicStyles();
-        let values = dynamicstyles.getCompanyParams.call(this);
-        let myproject = dynamicstyles.getproject.call(this);
-        values.project = myproject;
-        let validatecompany = dynamicstyles.validateCompany.call(this, values);
-        let validateproject = dynamicstyles.validateProject.call(this, values.project)
 
-        if (validatecompany.validate && validateproject.validate) {
-            try {
-                let response = await SaveProject(values)
-                console.log(response)
-                dynamicstyles.handlecompanyids.call(this, response)
-                dynamicstyles.handleprojectids.call(this, response)
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+        if (myuser) {
 
-                if (response.hasOwnProperty("myuser")) {
+            if (myuser.hasOwnProperty("company")) {
+                const company = {};
+                company.companyid = myuser.company.companyid;
+                company.url = myuser.company.url;
+                company.address = myuser.company.address;
+                company.city = myuser.company.city;
+                company.contactstate = myuser.company.contactstate;
+                company.zipcode = myuser.company.zipcode;
+                company.company = myuser.company.company;
 
-                    this.props.reduxUser(response.myuser)
+                company.office = myuser.company.office;
+                if (myuser.company.hasOwnProperty("materials")) {
+                    company.materials = myuser.company.materials;
+                }
+                if (myuser.company.hasOwnProperty("equipment")) {
+                    company.equipment = myuser.company.equipment;
                 }
 
-                let message = "";
-                if (response.hasOwnProperty("message")) {
-                    let lastupdated = inputUTCStringForLaborID(response.lastupdated)
-                    message = `${response.message} Last updated ${lastupdated}`
+
+                const newuser = CreateUser(myuser.providerid, myuser.client, myuser.clientid, myuser.firstname, myuser.lastname, myuser.emailaddress, myuser.phonenumber, myuser.profileurl, myuser.profile)
+                const myproject = dynamicstyles.getproject.call(this)
+                const project = {
+                    actualequipment: myproject.actualequipment,
+                    proposals: myproject.proposals,
+                    actualmaterials: myproject.actualmaterials,
+                    actuallabor: myproject.actuallabor,
+                    scheduleequipment: myproject.scheduleequipment,
+                    schedulematerials: myproject.schedulematerials,
+                    schedulelabor: myproject.schedulelabor,
+                    invoices: myproject.invoices,
+                    bidschedule: myproject.bidschedule,
+                    bid: myproject.bid,
+                    projectid: myproject.projectid
+                }
+                const values = { newuser, project, company }
+                console.log(values)
+
+                if (project) {
+                    try {
+                        let response = await SaveProject(values)
+
+                        console.log(response)
+                        dynamicstyles.handlecompanyids.call(this, response)
+                        dynamicstyles.handleprojectids.call(this, response)
+                        response = updateTimes(response)
+                        console.log(response)
+
+                        if (response.hasOwnProperty("myuser")) {
+
+                            this.props.reduxUser(response.myuser)
+                        }
+
+                        let message = "";
+
+                        if (response.hasOwnProperty("message")) {
+                            let lastupdated = inputUTCStringForLaborID(response.lastupdated)
+                            message = `${response.message} Last updated ${lastupdated}`
+
+                        }
+
+                        this.setState({ message })
+
+
+                    } catch (err) {
+                        alert(err)
+
+                    }
 
                 }
-                this.setState({ message })
-            } catch (err) {
-                alert(err)
+
+
             }
-
-        } else {
-            let message = "";
-            message += validatecompany.message;
-            message += validateproject.message;
-            this.setState({ message })
         }
-
     }
 
     showsaveprofile() {
@@ -2039,21 +2080,21 @@ class DynamicStyles {
             const project = construction.getproject.call(this)
 
             if (project) {
-                const i = construction.getprojectkeybyid.call(this,project.projectid)
+                const i = construction.getprojectkeybyid.call(this, project.projectid)
 
 
                 try {
                     let specifications = [];
                     let specs = await LoadSpecifications(projectid);
-                   console.log(specs)
-                    if(specs.hasOwnProperty("length")) {
-                        
+                    console.log(specs)
+                    if (specs.hasOwnProperty("length")) {
+ // eslint-disable-next-line
                         specs.map(spec => {
-                            
-                            if(spec.hasOwnProperty("specifications")) {
-                                
-                                spec.specifications.map(myspec=> {
-                                    
+
+                            if (spec.hasOwnProperty("specifications")) {
+ // eslint-disable-next-line
+                                spec.specifications.map(myspec => {
+
                                     specifications.push(myspec)
                                 })
                             }
@@ -2061,11 +2102,11 @@ class DynamicStyles {
                         })
 
                     }
-                    
+
                     myuser.company.projects.myproject[i].specifications = specifications;
                     this.props.reduxUser(myuser)
-                    this.setState({render:'render'})
-                    
+                    this.setState({ render: 'render' })
+
 
 
                 } catch (err) {

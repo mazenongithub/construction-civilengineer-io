@@ -237,7 +237,7 @@ class ScheduleLineItem extends Component {
         if(!csicodes) {
             dynamicstyles.loadcsis.call(this)
         }
-        
+
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -249,7 +249,6 @@ class ScheduleLineItem extends Component {
                     </div>
 
                     {dynamicstyles.showlinedetail.call(this)}
-
 
                 </div>
             </div>)

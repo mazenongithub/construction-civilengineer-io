@@ -947,6 +947,7 @@ class Schedule extends Component {
                     const timetimein = this.state.timeinampm;
                     const minutesin = this.state.timeinminutes;
                     let timein = makeTimeString(yearin, monthin, dayin, hoursin, minutesin, timetimein);
+                   console.log(timein)
                     timein = UTCTimeStringfromTime(timein);
                     const dayout = this.state.timeoutday;
                     const yearout = this.state.timeoutyear;
