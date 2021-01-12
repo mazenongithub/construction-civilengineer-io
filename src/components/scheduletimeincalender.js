@@ -81,6 +81,7 @@ class CalenderTimeIn {
         let timein = makeTimeString(year, month, day, hours, minutes, time);
 
         timein = UTCTimeStringfromTime(timein);
+        console.log(timein)
 
         const firstofmonth = getFirstIsOnTime(timein);
         const check29 = check_29_feb_leapyear_time(timein);

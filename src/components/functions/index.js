@@ -2681,7 +2681,7 @@ export function validateMonth(mon) {
     return (reg_ex.test(mon))
 }
 export function makeTimeString(year, month, day, hours, minutes, time) {
-    return `${year}-${month}-${day} ${hours}:${minutes} ${time}`
+    return `${year}/${month}/${day} ${hours}:${minutes} ${time}`
 }
 
 export function UTCTimeStringfromTime(timein) {
