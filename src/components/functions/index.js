@@ -1081,7 +1081,7 @@ export function  updateTimes(response) {
                     if(project.hasOwnProperty("schedulelabor")) {
                          // eslint-disable-next-line
                         project.schedulelabor.mylabor.map((mylabor,j)=> {
-                          console.log(mylabor.timein,mylabor.timeout)
+                         
                             response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = convertUTCTime(mylabor.timein.replace(/-/g, '/'))
                             response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout.replace(/-/g, '/'))
                         })
@@ -1099,7 +1099,7 @@ export function  updateTimes(response) {
                     if(project.hasOwnProperty("actuallabor")) {
                          // eslint-disable-next-line
                         project.actuallabor.mylabor.map((mylabor,j)=> {
-                          console.log(mylabor.timein,mylabor.timeout)
+                       
                             response.myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = convertUTCTime(mylabor.timein)
                             response.myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout)
                         })
@@ -2001,8 +2001,7 @@ export function calculatetotalhours(timeout, timein) {
 
 
 export function inputUTCStringForLaborID(timein) {
-    console.log(timein)
-
+  
     let datein = new Date(timein)
     let hours = datein.getHours();
     let ampm

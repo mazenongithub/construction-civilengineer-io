@@ -1812,11 +1812,13 @@ class DynamicStyles {
         }
     }
     validateProject(project) {
+        console.log(project)
         let validate = {};
         validate.validate = true;
         validate.message = "";
         const dynamicstyles = new DynamicStyles();
         if (project.hasOwnProperty("schedulelabor")) {
+            if(project.schedulelabor) {
             // eslint-disable-next-line
             project.schedulelabor.mylabor.map(mylabor => {
                 if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
@@ -1833,9 +1835,13 @@ class DynamicStyles {
 
                 }
             })
+
+        }
         }
 
         if (project.hasOwnProperty("actuallabor")) {
+
+            if(project.actuallabor) {
             // eslint-disable-next-line
             project.actuallabor.mylabor.map(mylabor => {
                 if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
@@ -1852,9 +1858,12 @@ class DynamicStyles {
 
                 }
             })
+
+        }
         }
 
         if (project.hasOwnProperty("schedulematerials")) {
+            if(project.schedulematerials) {
             // eslint-disable-next-line
             project.schedulematerials.mymaterial.map(mymaterial => {
                 let schedulematerial = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid)
@@ -1877,9 +1886,12 @@ class DynamicStyles {
 
                 }
             })
+
+        }
         }
 
         if (project.hasOwnProperty("actualmaterials")) {
+            if(project.actualmaterials) {
             // eslint-disable-next-line
             project.actualmaterials.mymaterial.map(mymaterial => {
                 let myactualmaterial = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid);
@@ -1902,8 +1914,11 @@ class DynamicStyles {
                     }
                 }
             })
+
+        }
         }
         if (project.hasOwnProperty("scheduleequipment")) {
+            if(project.scheduleequipment) {
             // eslint-disable-next-line
             project.scheduleequipment.myequipment.map(myequipment => {
                 let myscheduleequipment = "";
@@ -1928,9 +1943,12 @@ class DynamicStyles {
 
             })
 
+        }
+
 
         }
         if (project.hasOwnProperty("actualequipment")) {
+            if(project.actualequipment) {
             // eslint-disable-next-line
             project.actualequipment.myequipment.map(myequipment => {
                 let myactualequipment = "";
@@ -1955,6 +1973,8 @@ class DynamicStyles {
 
             })
 
+        }
+
 
         }
         return validate;
@@ -1963,7 +1983,11 @@ class DynamicStyles {
 
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
+
+
+
         if (myuser) {
+
 
             if (myuser.hasOwnProperty("company")) {
                 const company = {};
@@ -2000,44 +2024,57 @@ class DynamicStyles {
                     projectid: myproject.projectid
                 }
                 const values = { newuser, project, company }
-                console.log(values)
+                const params = {};
+                params.company = company;
+                params.myuser = newuser;
+                let validatecompany = dynamicstyles.validateCompany.call(this,params);
+                let validateproject = dynamicstyles.validateProject.call(this, project)
+                if (validatecompany.validate && validateproject.validate) {
+                    if (project) {
+                        try {
+                            let response = await SaveProject(values)
 
-                if (project) {
-                    try {
-                        let response = await SaveProject(values)
+                            console.log(response)
+                            dynamicstyles.handlecompanyids.call(this, response)
+                            dynamicstyles.handleprojectids.call(this, response)
+                            response = updateTimes(response)
+                            console.log(response)
 
-                        console.log(response)
-                        dynamicstyles.handlecompanyids.call(this, response)
-                        dynamicstyles.handleprojectids.call(this, response)
-                        response = updateTimes(response)
-                        console.log(response)
+                            if (response.hasOwnProperty("myuser")) {
 
-                        if (response.hasOwnProperty("myuser")) {
+                                this.props.reduxUser(response.myuser)
+                            }
 
-                            this.props.reduxUser(response.myuser)
+                            let message = "";
+
+                            if (response.hasOwnProperty("message")) {
+                                let lastupdated = inputUTCStringForLaborID(response.lastupdated)
+                                message = `${response.message} Last updated ${lastupdated}`
+
+                            }
+
+                            this.setState({ message })
+
+
+                        } catch (err) {
+                            alert(err)
+
                         }
-
-                        let message = "";
-
-                        if (response.hasOwnProperty("message")) {
-                            let lastupdated = inputUTCStringForLaborID(response.lastupdated)
-                            message = `${response.message} Last updated ${lastupdated}`
-
-                        }
-
-                        this.setState({ message })
-
-
-                    } catch (err) {
-                        alert(err)
 
                     }
 
+                } else {
+                    let message = "";
+                    message += validatecompany.message;
+                    message += validateproject.message;
+                    this.setState({ message })
                 }
 
 
             }
         }
+
+
     }
 
     showsaveprofile() {
@@ -2088,11 +2125,11 @@ class DynamicStyles {
                     let specs = await LoadSpecifications(projectid);
                     console.log(specs)
                     if (specs.hasOwnProperty("length")) {
- // eslint-disable-next-line
+                        // eslint-disable-next-line
                         specs.map(spec => {
 
                             if (spec.hasOwnProperty("specifications")) {
- // eslint-disable-next-line
+                                // eslint-disable-next-line
                                 spec.specifications.map(myspec => {
 
                                     specifications.push(myspec)
