@@ -1082,8 +1082,8 @@ export function  updateTimes(response) {
                          // eslint-disable-next-line
                         project.schedulelabor.mylabor.map((mylabor,j)=> {
                           console.log(mylabor.timein,mylabor.timeout)
-                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = convertUTCTime(mylabor.timein)
-                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout)
+                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = convertUTCTime(mylabor.timein.replace(/-/g, '/'))
+                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout.replace(/-/g, '/'))
                         })
                     }
 

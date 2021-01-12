@@ -71,12 +71,12 @@ class CalenderTimeIn {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const calendertimein = new CalenderTimeIn();
-        let day = this.state.timeinday;
+        let day = trailingZeros(this.state.timeinday);
         let year = this.state.timeinyear;
-        let month = this.state.timeinmonth;
-        let hours = this.state.timeinhours;
+        let month = trailingZeros(this.state.timeinmonth);
+        let hours = trailingZeros(this.state.timeinhours);
         let time = this.state.timeinampm;
-        let minutes = this.state.timeinminutes;
+        let minutes = trailingZeros(this.state.timeinminutes);
         let timein = makeTimeString(year, month, day, hours, minutes, time);
 
         timein = UTCTimeStringfromTime(timein);
