@@ -1437,6 +1437,7 @@ class DynamicStyles {
 
                 const validate = dynamicstyles.validateCompany(params);
                 if (validate.validate) {
+                    try {
                     let response = await SaveCompany(params);
                     console.log(response)
                     dynamicstyles.handlecompanyids.call(this, response)
@@ -1453,6 +1454,10 @@ class DynamicStyles {
                         let dateupdated = inputUTCStringForLaborID(response.lastupdated)
                         this.setState({ message: `${response.message} Last Updated ${dateupdated}` })
                     }
+
+                } catch (err) {
+                    alert(err)
+                }
                 } else {
                     this.setState({ message: validate.message })
                 }

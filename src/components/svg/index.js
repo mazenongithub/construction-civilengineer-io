@@ -14,7 +14,7 @@ export function hamburgerIcon() {
 }
 
 export function cheeseburgerIcon() {
-    return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98.28 59.52"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="hide"><g id="Layer_1-2" data-name="Layer 1"><rect class="hamburger-1" x="0.5" y="0.5" width="97.28" height="58.52" rx="6.74"/><rect class="hamburger-2" x="14.43" y="25.53" width="43.15" height="8.47" rx="1.88" transform="translate(6.24 65.76) rotate(-90)"/><rect class="hamburger-2" x="27.56" y="25.53" width="43.15" height="8.47" rx="1.88" transform="translate(19.38 78.9) rotate(-90)"/><rect class="hamburger-2" x="40.7" y="25.53" width="43.15" height="8.47" rx="1.88" transform="translate(32.52 92.03) rotate(-90)"/></g></g></g></svg>)
+    return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98.28 59.52"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="hide"><g id="Layer_1-2" data-name="Layer 1"><rect className="hamburger-1" x="0.5" y="0.5" width="97.28" height="58.52" rx="6.74"/><rect className="hamburger-2" x="14.43" y="25.53" width="43.15" height="8.47" rx="1.88" transform="translate(6.24 65.76) rotate(-90)"/><rect className="hamburger-2" x="27.56" y="25.53" width="43.15" height="8.47" rx="1.88" transform="translate(19.38 78.9) rotate(-90)"/><rect className="hamburger-2" x="40.7" y="25.53" width="43.15" height="8.47" rx="1.88" transform="translate(32.52 92.03) rotate(-90)"/></g></g></g></svg>)
 }
 
 export function dropDateIcon() {

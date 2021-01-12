@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { radioOpen, radioClosed, removeIconSmall, openDetail, closeDetail } from './svg'
+import { radioOpen, radioClosed, removeIconSmall, openDetail, closeDetail, CheckedBox, EmptyBox } from './svg'
 import { CreateCostID, CreateRentalRate, CreateEquipment, EquipmentOwnership, formatDateStringDisplay } from './functions';
 import DynamicStyles from './dynamicstyles';
 import PurchaseDate from './purchasedate';
@@ -483,7 +483,7 @@ class Equipment extends Component {
     getcost() {
 
         let cost = this.getactiveequipmentcost();
-        console.log()
+  
         if (cost) {
             return (cost.cost)
         } else {
@@ -505,7 +505,7 @@ class Equipment extends Component {
                         let i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid);
 
                         if (this.state.activecostid) {
-                            const mycost = dynamicstyles.getequipmentcostsbyid.call(this, this.state.activeequipmentid, this.state.activecostid)
+                            const mycost = dynamicstyles.getcostbyid.call(this, this.state.activeequipmentid, this.state.activecostid)
                             if (mycost) {
 
                                 let j = dynamicstyles.getequipmentcostskeybyid.call(this, this.state.activeequipmentid, this.state.activecostid)
@@ -576,7 +576,7 @@ class Equipment extends Component {
                         let i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid);
 
                         if (this.state.activecostid) {
-                            const mycost = dynamicstyles.getequipmentcostsbyid.call(this, this.state.activeequipmentid, this.state.activecostid)
+                            const mycost = dynamicstyles.getcostbyid.call(this, this.state.activeequipmentid, this.state.activecostid)
                             if (mycost) {
 
                                 let j = dynamicstyles.getequipmentcostskeybyid.call(this, this.state.activeequipmentid, this.state.activecostid)
@@ -622,60 +622,224 @@ class Equipment extends Component {
 
     }
 
+    getfrequency() {
+
+        const dynamicstyles = new DynamicStyles();
+        const equipmentid = this.state.activeequipmentid;
+        if (this.state.activecostid) {
+            const cost = dynamicstyles.getcostbyid.call(this, equipmentid, this.state.activecostid)
+            if (cost.hasOwnProperty("reoccurring")) {
+                return cost.reoccurring.frequency;
+            }
+        }
+
+    }
+
+    handlefrequency(amount) {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+        if (myuser) {
+            if (this.state.activeequipmentid) {
+                const equipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+                if (equipment) {
+                    const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                    if (this.state.activecostid) {
+                        const cost = dynamicstyles.getcostbyid.call(this, this.state.activeequipmentid, this.state.activecostid)
+                        if (cost) {
+                            if (cost.hasOwnProperty("reoccurring")) {
+                                const j = dynamicstyles.getequipmentcostskeybyid.call(this, this.state.activeequipmentid, this.state.activecostid)
+                                myuser.company.equipment.myequipment[i].ownership.cost[j].reoccurring.frequency = amount;
+                                this.props.reduxUser(myuser)
+                                this.setState({ render: 'render' })
+
+                            }
+
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+
+    }
+
+    handlereoccurring() {
+        const dynamicstyles = new DynamicStyles();
+        if (this.state.activeequipmentid) {
+            const equipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+            const myuser = dynamicstyles.getuser.call(this)
+            if (myuser) {
+                if (equipment) {
+                    const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                    if (this.state.activecostid) {
+                        const cost = dynamicstyles.getcostbyid.call(this, this.state.activeequipmentid, this.state.activecostid)
+                        if (cost) {
+                            const j = dynamicstyles.getequipmentcostskeybyid.call(this, this.state.activeequipmentid, this.state.activecostid)
+                            if (cost.hasOwnProperty("reoccurring")) {
+                                delete myuser.company.equipment.myequipment[i].ownership.cost[j].reoccurring
+                            } else {
+
+                                myuser.company.equipment.myequipment[i].ownership.cost[j].reoccurring = { frequency: '' }
+                            }
+                            this.props.reduxUser(myuser)
+                            this.setState({ render: 'render' })
+
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
+
     showaccountcost() {
         const styles = MyStylesheet();
-
-
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const equipmentdate = new EquipmentDate();
 
         if (this.state.activeequipmentid) {
-            let myequipment = this.getactiveequipment();
-            if (myequipment.ownershipstatus === 'owned') {
+
+            const equipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+           
+            if (equipment) {
+
+
+                const buttonWidth = () => {
+                    if (this.state.width > 1200) {
+                        return ({ width: '60px' })
+
+                    } else if (this.state.width > 600) {
+                        return ({ width: '50px' })
+
+                    } else {
+                        return ({ width: '40px' })
+                    }
+                }
 
 
 
-                return (
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1 }}>
+                if (equipment.ownershipstatus === 'owned') {
 
-                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1 }}>
-                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...styles.addRightMargin }}>
-                                        {equipmentdate.showequipmentdate.call(this)}
-                                    </div>
-                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-                                        Cost <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont }}
-                                            value={this.getcost()}
-                                            onChange={event => { this.handlecost(event.target.value) }} />
-                                    </div>
 
-                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                                        Detail <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont }}
-                                            value={this.getdetail()}
-                                            onChange={event => { this.handledetail(event.target.value) }}
-                                        />
+                    const getreoccuring = (equipment) => {
+
+                        if (this.state.activecostid) {
+                            const cost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                           
+                            if (cost) {
+                                if (cost.hasOwnProperty("reoccurring")) {
+                                    return (CheckedBox())
+
+                                } else {
+                                    return (EmptyBox())
+                                }
+                            } else {
+                                return (EmptyBox())
+                            }
+                        } else {
+                            return (EmptyBox())
+                        }
+
+                    }
+
+                    const frequency = (equipment) => {
+                        if (this.state.activecostid) {
+
+                            const cost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                          
+                            if (cost.hasOwnProperty("reoccurring")) {
+                                return (<select style={{ ...styles.generalField, ...regularFont, ...styles.generalFont }}
+                                    onChange={event => { this.handlefrequency(event.target.value) }}
+                                    value={this.getfrequency()}>
+                                    <option value={false}>Select Frequency</option>
+                                    <option value={`daily`}>Daily</option>
+                                    <option value={`weekly`}>Weekly</option>
+                                    <option value={`monthly`}>Monthly</option>
+                                    <option value={`annually`}>Annually</option>
+                                </select>)
+                            }
+                        }
+
+                    }
+
+
+                    const Reoccurring = (equipment) => {
+
+                        if (this.state.activecostid) {
+                            return (<div style={{ ...styles.generalContainer }}>
+                                <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => this.handlereoccurring()}> {getreoccuring(equipment)}</button>
+                                <span style={{ ...regularFont, ...styles.generalFont }}>
+                                    Reoccurring Cost
+                            </span>
+                                {frequency(equipment)}
+
+
+                            </div>
+                            )
+                        }
+                    }
+
+
+
+
+
+
+
+
+                    return (
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+
+                                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                    <div style={{ ...styles.flex1 }}>
+                                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...styles.addRightMargin }}>
+                                            {equipmentdate.showequipmentdate.call(this)}
+                                        </div>
+
+
+
+
+                                        <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+                                        <span style={{...styles.generalFont, ...regularFont}}>  Detail </span> <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                                value={this.getdetail()}
+                                                onChange={event => { this.handledetail(event.target.value) }}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div style={{ ...styles.generalFlex }}>
-                                <div style={{ ...styles.flex1 }}>
-                                    {this.showequipmentcosts()}
-                                </div>
-                            </div>
 
+                                <div style={{ ...styles.generalContainer,  ...styles.bottomMargin15 }}>
+                                   <span style={{...styles.generalFont, ...regularFont}}> Cost</span> <br /> 
+                                   <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                        value={this.getcost()}
+                                        onChange={event => { this.handlecost(event.target.value) }} />
+                                </div>
+
+                                {Reoccurring(equipment)}
+
+                                <div style={{ ...styles.generalFlex }}>
+                                    <div style={{ ...styles.flex1 }}>
+                                        {this.showequipmentcosts()}
+                                    </div>
+                                </div>
+
+
+
+                            </div>
                         </div>
-                    </div>
-                )
+                    )
 
-            } else {
-                return;
+                }
+
             }
         }
-        else {
-            return;
-        }
+
 
     }
     showequipmentowned() {
