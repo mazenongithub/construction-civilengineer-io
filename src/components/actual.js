@@ -920,7 +920,7 @@ class Actual extends Component {
                     const timetimeout = this.state.timeoutampm;
                     let timeout = makeTimeString(yearout, monthout, dayout, hoursout, minutesout, timetimeout);
                     timeout = UTCTimeStringfromTime(timeout);
-                    const equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout)
+                    const equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout) > 0 ? Number(dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout)).toFixed(2) : 0;
                     const engineerid = myuser.providerid;
 
 

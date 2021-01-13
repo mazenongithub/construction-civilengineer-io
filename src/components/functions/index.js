@@ -505,6 +505,7 @@ export function decreaseCalendarDaybyOneMonth(timein) {
     return (newDate)
 }
 export function increaseCalendarDayOneMonth(timein) {
+    
     let offset = getOffsetDate(timein);
     let datein = new Date(`${timein} 00:00:00${offset}`)
     let currentMonth = datein.getMonth() + 1;
@@ -1999,6 +2000,209 @@ export function calculatetotalhours(timeout, timein) {
 }
 
 
+export function validateLoanPayment(purchase, purchasedate, salvage, salvagedate, apr) {
+ 
+    let validate = true;
+
+    if (new Date(purchasedate).getTime() > new Date(salvagedate).getTime()) {
+
+        validate = false;
+
+
+    }
+
+    if (!Number(apr)) {
+        validate = false;
+
+    }
+
+    if (!Number(purchase)) {
+
+        validate = false;
+
+    }
+
+    return validate;
+
+
+}
+
+export function calculateTotalDays(purchasedate, salvagedate) {
+
+    const purchaseDate = new Date(`${purchasedate} 12:00:00${getOffsetDate(purchasedate)}`)
+    const salvageDate = new Date(`${salvagedate} 12:00:00${getOffsetDate(salvagedate)}`)
+
+    const purchasetime = purchaseDate.getTime();
+    const salvagetime = salvageDate.getTime();
+    const interval = salvagetime - purchasetime
+    const days = interval / (1000 * 60 * 60 * 24)
+    return Math.round(days)
+
+}
+
+export function calculateTotalWeeks(purchasedate, salvagedate) {
+
+    const purchaseDate = new Date(`${purchasedate} 12:00:00${getOffsetDate(purchasedate)}`)
+    const salvageDate = new Date(`${salvagedate} 12:00:00${getOffsetDate(salvagedate)}`)
+
+    const purchasetime = purchaseDate.getTime();
+    const salvagetime = salvageDate.getTime();
+    const interval = salvagetime - purchasetime
+    const weeks = interval / (1000 * 60 * 60 * 24 * 7)
+    return Math.floor(weeks)
+
+}
+
+export function increaseDateByOneWeek(timein) {
+    const offset = getOffsetDate(timein);
+    const TimeIn = new Date(`${timein} 12:00:00${offset}`);
+    let datetime = TimeIn.getTime();
+    datetime += (1000 * 60 * 60 * 24 * 7)
+    const oneWeek = new Date(datetime)
+    let month = oneWeek.getMonth() + 1;
+    month = trailingZeros(month)
+    let day = oneWeek.getDate();
+    day = trailingZeros(day)
+    const year = oneWeek.getFullYear();
+    return (`${year}/${month}/${day}`)
+
+
+}
+
+export function calculateTotalYears(purchasedate, salvagedate) {
+    let totalyears = 0;
+    const purchaseyearstr = purchasedate.split('/')
+    const purchaseyear = purchaseyearstr[0];
+    const purchasemonth = purchaseyearstr[1];
+    const purchaseday = purchaseyearstr[2];
+    const salvageyearstr = salvagedate.split('/')
+    const salvageyear = salvageyearstr[0]
+    const salvagemonth = salvageyearstr[1]
+    const salvageday = salvageyearstr[2]
+    if (purchasemonth >= salvagemonth) {
+
+        if (purchasemonth === salvagemonth) {
+
+            if (purchaseday >= salvageday) {
+
+                totalyears = salvageyear - purchaseyear - 1
+
+            } else {
+
+                totalyears = salvageyear - purchaseyear
+
+
+            }
+
+
+        }
+
+
+
+    } else {
+        totalyears = salvageyear - purchaseyear
+
+    }
+    return (totalyears)
+
+
+}
+
+export function newCost(costid, detail, purchasedate, amount) {
+    return ({ costid, detail, purchasedate, amount })
+}
+
+
+export function getRepaymentCosts(purchase, purchasedate, salvage, salvagedate, i) {
+
+    // let purchasedate = '2018/05/24'
+    // const salvagedate = '2023/05/24'
+    // const purchase = '7400'
+    // let salvage = '1500'
+    // const i = 16;
+
+
+
+
+
+    const period = calculateTotalMonths(purchasedate, salvagedate)
+
+    salvage = FutureCostPresent(i, period, salvage)
+
+    const value = purchase - salvage
+
+    const monthlyvalue = value * AmmortizeFactor(i, period)
+   
+    let costArray = [];
+    for (let x = 0; x < period; x++) {
+
+        let cost = newCost(makeID(16), 'repayment', purchasedate, monthlyvalue)
+        costArray.push(cost)
+        purchasedate = increaseCalendarDayOneMonth(purchasedate)
+
+
+    }
+    return costArray;
+}
+
+
+export function getInterval(salvagedate, purchasedate, reoccurring, amount, detail) {
+
+    let period = 0;
+    let x = 0;
+    let cost = {};
+    let costArray = [];
+    switch (reoccurring) {
+        case 'daily':
+            period = calculateTotalDays(purchasedate, salvagedate)
+            for (x = 0; x < period; x++) {
+                cost = newCost(makeID(16), detail, purchasedate, amount)
+                costArray.push(cost)
+                purchasedate = increasedatebyoneday(purchasedate)
+
+            }
+            break;
+        case 'weekly':
+            period = calculateTotalWeeks(purchasedate, salvagedate)
+            for (x = 0; x < period; x++) {
+                cost = newCost(makeID(16), detail, purchasedate, amount)
+                costArray.push(cost)
+                purchasedate = increaseDateByOneWeek(purchasedate)
+            }
+            break;
+        case 'monthly':
+            period = calculateTotalMonths(purchasedate, salvagedate)
+            for (x = 0; x < period; x++) {
+                cost = newCost(makeID(16), detail, purchasedate, amount)
+                costArray.push(cost)
+                purchasedate =increaseCalendarDayOneMonth(purchasedate)
+            }
+            
+
+            break;
+        case 'annually':
+            period = calculateTotalYears(purchasedate, salvagedate)
+            for (x = 0; x < period; x++) {
+                cost = newCost(makeID(16), detail, purchasedate, amount)
+                costArray.push(cost)
+                purchasedate = increaseCalendarDaybyOneYear(purchasedate)
+            }
+
+            break;
+
+
+        default:
+            break;
+
+
+    }
+    return costArray
+
+
+
+}
+
+
 
 export function inputUTCStringForLaborID(timein) {
   
@@ -2592,11 +2796,11 @@ export function AmmortizeFactor(i, n) {
     return factor;
 }
 export function FutureCostPresent(i, n, F) {
+    i = ((i / 1200));
     // let F=540;
     // let i=(.058/12);
     // let n = 40;
-    return (F * (Math.pow((1 + i), n)))
-
+    return (F * (1 / Math.pow((1 + i), n)))
 }
 export function validateEmail(value) {
     var reg_ex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/

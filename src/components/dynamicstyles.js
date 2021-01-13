@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { updateTimes, sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, FutureCostPresent, calculateTotalMonths, AmmortizeFactor, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime } from './functions'
+import { returnCompanyList, CreateUser, calculateTotalMonths, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime, validateLoanPayment, getRepaymentCosts, getInterval, newCost } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin, LoadSpecifications, LoadCSIs } from './actions/api';
 
@@ -1427,6 +1427,76 @@ class DynamicStyles {
         return validate;
 
     }
+    gettransformedcostsbyequimentid(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        const equipment = dynamicstyles.getmyequipmentbyid.call(this, equipmentid)
+
+        let costarray = [];
+        if (equipment) {
+
+            if (equipment.hasOwnProperty("ownership")) {
+                const purchase = Number(equipment.ownership.purchase);
+                const purchasedate = equipment.ownership.purchasedate;
+                const salvage = Number(equipment.ownership.resalevalue);
+                const saledate = equipment.ownership.saledate;
+                const apr = Number(equipment.ownership.loaninterest);
+                // validate
+                const validate = validateLoanPayment(purchase, purchasedate, salvage, saledate, apr)
+                let payments = [];
+                if (validate) {
+
+                    payments = getRepaymentCosts(purchase, purchasedate, salvage, saledate, apr);
+                    costarray = [...costarray, ...payments]
+
+                } else if (purchase && !apr) {
+
+                    payments = getInterval(saledate, purchasedate, 'monthly', ((purchase - salvage) / calculateTotalMonths(purchasedate, saledate)), 'ownership')
+                    costarray = [...costarray, ...payments]
+
+                }
+
+
+                if (equipment.ownership.hasOwnProperty("cost")) {
+
+                    // eslint-disable-next-line
+                    equipment.ownership.cost.map(cost => {
+
+
+                        if (cost.hasOwnProperty("reoccurring")) {
+
+
+
+                            if (equipment.hasOwnProperty("ownership")) {
+
+
+                                const reoccurringcosts = getInterval(equipment.ownership.saledate, equipment.ownership.purchasedate, cost.reoccurring.frequency, cost.cost, cost.detail)
+
+                                costarray = [...costarray, ...reoccurringcosts]
+
+                            }
+
+
+                        } else {
+
+                            costarray.push(newCost(cost.costid, cost.detail, cost.purchasedate, cost.cost))
+
+                        }
+
+
+                    })
+
+
+
+
+                }
+
+            }
+
+            //
+
+        }
+        return costarray;
+    }
     async saveCompany() {
         const dynamicstyles = new DynamicStyles()
         const myuser = dynamicstyles.getuser.call(this);
@@ -1438,26 +1508,26 @@ class DynamicStyles {
                 const validate = dynamicstyles.validateCompany(params);
                 if (validate.validate) {
                     try {
-                    let response = await SaveCompany(params);
-                    console.log(response)
-                    dynamicstyles.handlecompanyids.call(this, response)
-                    if (response.hasOwnProperty("allusers")) {
-                        let companys = returnCompanyList(response.allusers);
-                        this.props.reduxAllCompanys(companys)
-                        this.props.reduxAllUsers(response.allusers);
-                    }
-                    if (response.hasOwnProperty("myuser")) {
-                        this.props.reduxUser(response.myuser)
-                    }
+                        let response = await SaveCompany(params);
+                        console.log(response)
+                        dynamicstyles.handlecompanyids.call(this, response)
+                        if (response.hasOwnProperty("allusers")) {
+                            let companys = returnCompanyList(response.allusers);
+                            this.props.reduxAllCompanys(companys)
+                            this.props.reduxAllUsers(response.allusers);
+                        }
+                        if (response.hasOwnProperty("myuser")) {
+                            this.props.reduxUser(response.myuser)
+                        }
 
-                    if (response.hasOwnProperty("message")) {
-                        let dateupdated = inputUTCStringForLaborID(response.lastupdated)
-                        this.setState({ message: `${response.message} Last Updated ${dateupdated}` })
-                    }
+                        if (response.hasOwnProperty("message")) {
+                            let dateupdated = inputUTCStringForLaborID(response.lastupdated)
+                            this.setState({ message: `${response.message} Last Updated ${dateupdated}` })
+                        }
 
-                } catch (err) {
-                    alert(err)
-                }
+                    } catch (err) {
+                        alert(err)
+                    }
                 } else {
                     this.setState({ message: validate.message })
                 }
@@ -1817,168 +1887,168 @@ class DynamicStyles {
         }
     }
     validateProject(project) {
-        console.log(project)
+
         let validate = {};
         validate.validate = true;
         validate.message = "";
         const dynamicstyles = new DynamicStyles();
         if (project.hasOwnProperty("schedulelabor")) {
-            if(project.schedulelabor) {
-            // eslint-disable-next-line
-            project.schedulelabor.mylabor.map(mylabor => {
-                if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
-                    validate.validate = false;
-                    if (!mylabor.csiid) {
-                        validate.message += `Schedule labor ${mylabor.description} is missing CSIID `
-                    }
-                    if (!mylabor.milestoneid) {
-                        validate.message += `Schedule labor ${mylabor.description} is missing MilestoneID `
-                    }
-                    if (!mylabor.providerid) {
-                        validate.message += `Schedule labor ${mylabor.description} is missing ProviderID `
-                    }
+            if (project.schedulelabor) {
+                // eslint-disable-next-line
+                project.schedulelabor.mylabor.map(mylabor => {
+                    if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
+                        validate.validate = false;
+                        if (!mylabor.csiid) {
+                            validate.message += `Schedule labor ${mylabor.description} is missing CSIID `
+                        }
+                        if (!mylabor.milestoneid) {
+                            validate.message += `Schedule labor ${mylabor.description} is missing MilestoneID `
+                        }
+                        if (!mylabor.providerid) {
+                            validate.message += `Schedule labor ${mylabor.description} is missing ProviderID `
+                        }
 
-                }
-            })
+                    }
+                })
 
-        }
+            }
         }
 
         if (project.hasOwnProperty("actuallabor")) {
 
-            if(project.actuallabor) {
-            // eslint-disable-next-line
-            project.actuallabor.mylabor.map(mylabor => {
-                if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
-                    validate.validate = false;
-                    if (!mylabor.csiid) {
-                        validate.message += `Actual labor ${mylabor.description} is missing CSIID `
-                    }
-                    if (!mylabor.milestoneid) {
-                        validate.message += `Actual labor ${mylabor.description} is missing MilestoneID `
-                    }
-                    if (!mylabor.providerid) {
-                        validate.message += `Actual labor ${mylabor.description} is missing ProviderID `
-                    }
+            if (project.actuallabor) {
+                // eslint-disable-next-line
+                project.actuallabor.mylabor.map(mylabor => {
+                    if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
+                        validate.validate = false;
+                        if (!mylabor.csiid) {
+                            validate.message += `Actual labor ${mylabor.description} is missing CSIID `
+                        }
+                        if (!mylabor.milestoneid) {
+                            validate.message += `Actual labor ${mylabor.description} is missing MilestoneID `
+                        }
+                        if (!mylabor.providerid) {
+                            validate.message += `Actual labor ${mylabor.description} is missing ProviderID `
+                        }
 
-                }
-            })
+                    }
+                })
 
-        }
+            }
         }
 
         if (project.hasOwnProperty("schedulematerials")) {
-            if(project.schedulematerials) {
-            // eslint-disable-next-line
-            project.schedulematerials.mymaterial.map(mymaterial => {
-                let schedulematerial = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid)
-                let material = "";
-                if (schedulematerial) {
-                    material = schedulematerial.mymaterialid;
-                }
-
-                if (!schedulematerial || !mymaterial.mymaterialid || !mymaterial.csiid || !mymaterial.milestoneid) {
-                    validate.validate = false;
-                    if (!mymaterial.mymaterialid) {
-                        validate.message += `Schedule Material is missing materialid `
-                    }
-                    if (!mymaterial.csiid) {
-                        validate.message += `Schedule Material ${material} is missing csiid `
-                    }
-                    if (!mymaterial.milestoneid) {
-                        validate.message += `Schedule Material ${material} is missing milestoneid `
+            if (project.schedulematerials) {
+                // eslint-disable-next-line
+                project.schedulematerials.mymaterial.map(mymaterial => {
+                    let schedulematerial = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid)
+                    let material = "";
+                    if (schedulematerial) {
+                        material = schedulematerial.mymaterialid;
                     }
 
-                }
-            })
+                    if (!schedulematerial || !mymaterial.mymaterialid || !mymaterial.csiid || !mymaterial.milestoneid) {
+                        validate.validate = false;
+                        if (!mymaterial.mymaterialid) {
+                            validate.message += `Schedule Material is missing materialid `
+                        }
+                        if (!mymaterial.csiid) {
+                            validate.message += `Schedule Material ${material} is missing csiid `
+                        }
+                        if (!mymaterial.milestoneid) {
+                            validate.message += `Schedule Material ${material} is missing milestoneid `
+                        }
 
-        }
+                    }
+                })
+
+            }
         }
 
         if (project.hasOwnProperty("actualmaterials")) {
-            if(project.actualmaterials) {
-            // eslint-disable-next-line
-            project.actualmaterials.mymaterial.map(mymaterial => {
-                let myactualmaterial = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid);
-                let actualmaterial = "";
-                if (myactualmaterial) {
-                    actualmaterial = myactualmaterial.mymaterialid;
-                }
-                if (!mymaterial.mymaterialid || !mymaterial.csiid || !mymaterial.milestoneid) {
-                    validate.validate = false;
-                    if (!mymaterial.mymaterialid) {
-
-                        validate.message += `Actual Material is missing materialid `
+            if (project.actualmaterials) {
+                // eslint-disable-next-line
+                project.actualmaterials.mymaterial.map(mymaterial => {
+                    let myactualmaterial = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid);
+                    let actualmaterial = "";
+                    if (myactualmaterial) {
+                        actualmaterial = myactualmaterial.mymaterialid;
                     }
-                    if (!mymaterial.csiid) {
+                    if (!mymaterial.mymaterialid || !mymaterial.csiid || !mymaterial.milestoneid) {
+                        validate.validate = false;
+                        if (!mymaterial.mymaterialid) {
 
-                        validate.message += `Actual Material ${actualmaterial} is missing csiid `
-                    }
-                    if (!mymaterial.milestoneid) {
-                        validate.message += `Actual Material ${actualmaterial} is missing milestoneid `
-                    }
-                }
-            })
+                            validate.message += `Actual Material is missing materialid `
+                        }
+                        if (!mymaterial.csiid) {
 
-        }
+                            validate.message += `Actual Material ${actualmaterial} is missing csiid `
+                        }
+                        if (!mymaterial.milestoneid) {
+                            validate.message += `Actual Material ${actualmaterial} is missing milestoneid `
+                        }
+                    }
+                })
+
+            }
         }
         if (project.hasOwnProperty("scheduleequipment")) {
-            if(project.scheduleequipment) {
-            // eslint-disable-next-line
-            project.scheduleequipment.myequipment.map(myequipment => {
-                let myscheduleequipment = "";
-                let scheduleequipment = dynamicstyles.getequipmentfromid.call(this, myequipment.myequipmentid);
-                if (scheduleequipment) {
-                    myscheduleequipment = scheduleequipment.equipment;
-                }
-                if (!myequipment.myequipmentid || !myequipment.csiid || !myequipment.milestoneid) {
-                    validate.validate = false;
-                    if (!myequipment.myequipmentid) {
-                        validate.message += `Schedule Equipment is missing Equipment ID `;
+            if (project.scheduleequipment) {
+                // eslint-disable-next-line
+                project.scheduleequipment.myequipment.map(myequipment => {
+                    let myscheduleequipment = "";
+                    let scheduleequipment = dynamicstyles.getequipmentfromid.call(this, myequipment.myequipmentid);
+                    if (scheduleequipment) {
+                        myscheduleequipment = scheduleequipment.equipment;
                     }
-                    if (!myequipment.csiid) {
-                        validate.message += `Schedule Equipment ${myscheduleequipment} is missing CSIID `;
+                    if (!myequipment.myequipmentid || !myequipment.csiid || !myequipment.milestoneid) {
+                        validate.validate = false;
+                        if (!myequipment.myequipmentid) {
+                            validate.message += `Schedule Equipment is missing Equipment ID `;
+                        }
+                        if (!myequipment.csiid) {
+                            validate.message += `Schedule Equipment ${myscheduleequipment} is missing CSIID `;
+                        }
+
+                        if (!myequipment.milestoneid) {
+                            validate.message += `Schedule Equipment ${myscheduleequipment} is missing MilestoneID `;
+                        }
+
                     }
 
-                    if (!myequipment.milestoneid) {
-                        validate.message += `Schedule Equipment ${myscheduleequipment} is missing MilestoneID `;
-                    }
+                })
 
-                }
-
-            })
-
-        }
+            }
 
 
         }
         if (project.hasOwnProperty("actualequipment")) {
-            if(project.actualequipment) {
-            // eslint-disable-next-line
-            project.actualequipment.myequipment.map(myequipment => {
-                let myactualequipment = "";
-                let actualequipment = dynamicstyles.getequipmentfromid.call(this, myequipment.myequipmentid);
-                if (actualequipment) {
-                    myactualequipment = actualequipment.equipment;
-                }
-                if (!myequipment.myequipmentid || !myequipment.csiid || !myequipment.milestoneid) {
-                    validate.validate = false;
-                    if (!myequipment.myequipmentid) {
-                        validate.message += `Actual Equipment is missing Equipment ID `;
+            if (project.actualequipment) {
+                // eslint-disable-next-line
+                project.actualequipment.myequipment.map(myequipment => {
+                    let myactualequipment = "";
+                    let actualequipment = dynamicstyles.getequipmentfromid.call(this, myequipment.myequipmentid);
+                    if (actualequipment) {
+                        myactualequipment = actualequipment.equipment;
                     }
-                    if (!myequipment.csiid) {
-                        validate.message += `Actual Equipment ${myactualequipment} is missing CSIID `;
+                    if (!myequipment.myequipmentid || !myequipment.csiid || !myequipment.milestoneid) {
+                        validate.validate = false;
+                        if (!myequipment.myequipmentid) {
+                            validate.message += `Actual Equipment is missing Equipment ID `;
+                        }
+                        if (!myequipment.csiid) {
+                            validate.message += `Actual Equipment ${myactualequipment} is missing CSIID `;
+                        }
+
+                        if (!myequipment.milestoneid) {
+                            validate.message += `Actual Equipment ${myactualequipment} is missing MilestoneID `;
+                        }
+
                     }
 
-                    if (!myequipment.milestoneid) {
-                        validate.message += `Actual Equipment ${myactualequipment} is missing MilestoneID `;
-                    }
+                })
 
-                }
-
-            })
-
-        }
+            }
 
 
         }
@@ -2032,14 +2102,13 @@ class DynamicStyles {
                 const params = {};
                 params.company = company;
                 params.myuser = newuser;
-                let validatecompany = dynamicstyles.validateCompany.call(this,params);
+                let validatecompany = dynamicstyles.validateCompany.call(this, params);
                 let validateproject = dynamicstyles.validateProject.call(this, project)
                 if (validatecompany.validate && validateproject.validate) {
                     if (project) {
                         try {
                             let response = await SaveProject(values)
 
-                            console.log(response)
                             dynamicstyles.handlecompanyids.call(this, response)
                             dynamicstyles.handleprojectids.call(this, response)
                             response = updateTimes(response)
@@ -3958,50 +4027,26 @@ class DynamicStyles {
         return transfers;
     }
     calculateequipmentratebyownership(equipmentid) {
-        const dynamicstyles = new DynamicStyles();
-        const myequipment = dynamicstyles.getequipmentfromid.call(this, equipmentid);
-        const i = (Number(myequipment.ownership.loaninterest) / 100) / 12;
-        const workinghours = Math.round(Number(myequipment.ownership.workinghours) / 12);
         let equipmentrate = 0;
+        let totalamount = 0;
+        const dynamicstyles = new DynamicStyles();
+        const myequipment = dynamicstyles.getmyequipmentbyid.call(this,equipmentid)
+        if(myequipment) {
+        const costs = dynamicstyles.gettransformedcostsbyequimentid.call(this, equipmentid);
+       
+        if (costs.length > 0) {
 
-        const P = () => {
-            let P = 0;
-            const costs = dynamicstyles.getequipmentcostsbyid.call(this, myequipment.equipmentid)
-            if (costs) {
-                // eslint-disable-next-line
-                costs.map(cost => {
-                    let n = calculateTotalMonths(myequipment.ownership.purchasedate, cost.timein);
-                    let F = Number(cost.cost)
-                    P += FutureCostPresent(i, n, F);
-
-                })
+            const Period = () => {
+                let purchasedate = myequipment.ownership.purchasedate;
+                let saledate = myequipment.ownership.saledate;
+                if (purchasedate && saledate) {
+                    let totalmonths = calculateTotalMonths(purchasedate, saledate)
+                    return (totalmonths)
+                } else {
+                    return 0;
+                }
             }
-            return (P)
-        }
-        const Period = () => {
-            let purchasedate = myequipment.ownership.purchasedate;
-            let saledate = myequipment.ownership.saledate;
-            if (purchasedate && saledate) {
-                let totalmonths = calculateTotalMonths(purchasedate, saledate)
-                return (totalmonths)
-            } else {
-                return 0;
-            }
-
-        }
-        const AFactor = () => {
-            const T = Period();
-            const i = Number(myequipment.ownership.loaninterest);
-
-            if (T) {
-
-                return (AmmortizeFactor(i, T))
-            } else {
-
-                return 0;
-            }
-
-        }
+     
 
         const totalworkinghours = () => {
             let annual = Number(myequipment.ownership.workinghours);
@@ -4009,13 +4054,27 @@ class DynamicStyles {
 
             return (Math.round(annual * years))
         }
+// eslint-disable-next-line
+        costs.map(cost=> {
+       
+            totalamount+=Number(cost.amount);
+        })
 
-        if (i > 0) {
-            equipmentrate = (P() * AFactor()) / (workinghours);
-        } else {
-
-            equipmentrate = P() / (totalworkinghours())
+ 
+        if(totalworkinghours()>0) {
+            equipmentrate = totalamount/totalworkinghours()
+    
         }
+
+
+
+    }
+
+
+    }
+
+   
+
 
         return equipmentrate;
     }
