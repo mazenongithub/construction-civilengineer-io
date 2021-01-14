@@ -11,7 +11,7 @@ class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            render: '', width: 0, height: 0
+            render: '', width: 0, height: 0, spinner:false
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }

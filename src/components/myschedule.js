@@ -12,7 +12,7 @@ import MaterialDate from './viewscheduledate'
 class MySchedule extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, message: '', year: '', month: '', day: '', day_1: '', day_2: '', day_3: '', day_4: '', day_5: '', day_6: '', day_7: '', showcalender: true }
+        this.state = { render: '', width: 0, height: 0, message: '', year: '', month: '', day: '', day_1: '', day_2: '', day_3: '', day_4: '', day_5: '', day_6: '', day_7: '', showcalender: true,spinner:false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {

@@ -25,7 +25,7 @@ class Register extends Component {
             password: '',
             passwordcheck: false,
             register:true,
-            login:false
+            login:false,spinner:false
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }

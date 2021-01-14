@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 class Accounts extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activeaccountid: "", account: '', account_1: '', account_2: '', account_3: "", accountname: '' }
+        this.state = { render: '', width: 0, height: 0, activeaccountid: "", account: '', account_1: '', account_2: '', account_3: "", accountname: '', spinner:false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {

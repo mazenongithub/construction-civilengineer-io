@@ -11,7 +11,7 @@ import MakeID from './makeids';
 class Invoices extends Component {
     constructor(props) {
         super(props)
-        this.state = { width: 0, height: 0, activeinvoiceid: false, updated: new Date(), approved: '', showlabor: true, showmaterials: true, showequipment: true }
+        this.state = { width: 0, height: 0, activeinvoiceid: false, updated: new Date(), approved: '', showlabor: true, showmaterials: true, showequipment: true,spinner:false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {

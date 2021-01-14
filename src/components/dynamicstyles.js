@@ -6,7 +6,7 @@ import 'firebase/auth';
 import { returnCompanyList, CreateUser, calculateTotalMonths, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime, validateLoanPayment, getRepaymentCosts, getInterval, newCost } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin, LoadSpecifications, LoadCSIs } from './actions/api';
-
+import Spinner from './spinner'
 
 class DynamicStyles {
 
@@ -1508,6 +1508,7 @@ class DynamicStyles {
                 const validate = dynamicstyles.validateCompany(params);
                 if (validate.validate) {
                     try {
+                        this.setState({spinner:true})
                         let response = await SaveCompany(params);
                         console.log(response)
                         dynamicstyles.handlecompanyids.call(this, response)
@@ -1519,14 +1520,16 @@ class DynamicStyles {
                         if (response.hasOwnProperty("myuser")) {
                             this.props.reduxUser(response.myuser)
                         }
-
+                        let message = "";
                         if (response.hasOwnProperty("message")) {
                             let dateupdated = inputUTCStringForLaborID(response.lastupdated)
-                            this.setState({ message: `${response.message} Last Updated ${dateupdated}` })
+                            message = `${response.message} Last Updated ${dateupdated}` 
                         }
+                        this.setState({message, spinner:false})
 
                     } catch (err) {
                         alert(err)
+                        this.setState({spinner:false})
                     }
                 } else {
                     this.setState({ message: validate.message })
@@ -1539,11 +1542,12 @@ class DynamicStyles {
         }
     }
     async savemyprofile() {
+        try {
         let dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this)
-        let values = { providerid: myuser.providerid, firstname: myuser.firstname, lastname: myuser.lastname, emailaddress: myuser.emailaddress, phonenumber: myuser.phonenumber, profileurl: myuser.profileurl, profile: myuser.profile }
-
-        let response = await SaveProfile(values)
+        let user = { providerid: myuser.providerid, firstname: myuser.firstname, lastname: myuser.lastname, emailaddress: myuser.emailaddress, phonenumber: myuser.phonenumber, profileurl: myuser.profileurl, profile: myuser.profile }
+            this.setState({spinner:true})
+        let response = await SaveProfile({myuser:user})
         console.log(response)
         if (response.hasOwnProperty("allusers")) {
             let companys = returnCompanyList(response.allusers);
@@ -1562,7 +1566,12 @@ class DynamicStyles {
             message = `${response.message} Last updated ${lastupdated}`
 
         }
-        this.setState({ message })
+        this.setState({ message, spinner:false })
+
+    } catch(err) {
+        alert(err)
+        this.setState({spinner:false})
+    }
 
     }
 
@@ -2107,6 +2116,7 @@ class DynamicStyles {
                 if (validatecompany.validate && validateproject.validate) {
                     if (project) {
                         try {
+                            this.setState({spinner:true})
                             let response = await SaveProject(values)
 
                             dynamicstyles.handlecompanyids.call(this, response)
@@ -2127,11 +2137,12 @@ class DynamicStyles {
 
                             }
 
-                            this.setState({ message })
+                            this.setState({ message, spinner:false})
 
 
                         } catch (err) {
                             alert(err)
+                            this.setState({spinner:false})
 
                         }
 
@@ -2156,6 +2167,7 @@ class DynamicStyles {
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const saveprojecticon = dynamicstyles.getsaveprojecticon.call(this);
         const styles = MyStylesheet();
+        if(!this.state.spinner) {
         return (
             <div style={{ ...styles.generalContainer }}>
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.topMargin15, ...styles.bottomMargin15 }}>
@@ -2166,12 +2178,17 @@ class DynamicStyles {
                     <button style={{ ...styles.generalButton, ...saveprojecticon }} onClick={() => { dynamicstyles.savemyprofile.call(this) }}>{saveProfileIcon()}</button>
                 </div>
             </div>)
+
+        } else {
+            return (<Spinner/>)
+        }
     }
     showsaveproject() {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const saveprojecticon = dynamicstyles.getsaveprojecticon.call(this);
         const styles = MyStylesheet();
+        if(!this.state.spinner) {
         return (
             <div style={{ ...styles.generalContainer }}>
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.topMargin15, ...styles.bottomMargin15 }}>
@@ -2182,6 +2199,10 @@ class DynamicStyles {
                     <button style={{ ...styles.generalButton, ...saveprojecticon }} onClick={() => { dynamicstyles.savemyproject.call(this) }}>{saveProjectIcon()}</button>
                 </div>
             </div>)
+
+        } else {
+            return(<Spinner/>)
+        }
     }
     async loadprojectspecs(projectid) {
         const construction = new DynamicStyles();
@@ -2234,6 +2255,7 @@ class DynamicStyles {
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const savecompanyicon = dynamicstyles.getsavecompanyicon.call(this)
+        if(!this.state.spinner) {
         return (<div style={{ ...styles.generalContainer }}>
 
             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
@@ -2246,6 +2268,10 @@ class DynamicStyles {
 
         </div>
         )
+
+        } else {
+            return(<Spinner/>)
+        }
     }
     getsignupnow() {
         if (this.state.width > 1200) {
@@ -2329,7 +2355,9 @@ class DynamicStyles {
         let values = { emailaddress, client, clientid, firstname, lastname, profile, phonenumber, profileurl, type }
 
         try {
+            this.setState({spinner:true})
             let response = await AppleLogin(values)
+            this.setState({spinner:false})
             console.log(response)
 
             if (response.hasOwnProperty("myuser")) {
@@ -2346,6 +2374,7 @@ class DynamicStyles {
 
 
     async googleSignIn(type) {
+        const dynamicstyles = new DynamicStyles()
 
 
         try {
@@ -2378,21 +2407,8 @@ class DynamicStyles {
             this.setState({ client, clientid, emailaddress, firstname, lastname, profileurl, phonenumber, emailaddresscheck })
 
 
-
-            try {
-
-                let values = { client, clientid, firstname, lastname, emailaddress, profileurl, phonenumber, profile, type }
-                const response = await AppleLogin(values);
-                console.log(response)
-                if (response.hasOwnProperty("myuser")) {
-                    this.props.reduxUser(response.myuser)
-                    this.setState({ client: '', clientid: '', emailaddress: '', message: '' })
-                } else if (response.hasOwnProperty("message")) {
-                    this.setState({ message: response.message })
-                }
-            } catch (err) {
-                alert(err)
-            }
+            this.setState({ client, clientid, profile, firstname, lastname, profileurl, phonenumber, emailaddress })
+            dynamicstyles.clientlogin.call(this, type)
 
 
 

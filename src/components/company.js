@@ -11,7 +11,7 @@ import DynamicStyles from './dynamicstyles';
 class Company extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, url: '', company: '', urlcheck: false, message: '' }
+        this.state = { render: '', width: 0, height: 0, url: '', company: '', urlcheck: false, message: '',spinner:false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {

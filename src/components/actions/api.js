@@ -143,8 +143,8 @@ export async function LogoutUserNode(providerid) {
         if (!resp.ok) {
             if (resp.status >= 400 && resp.status < 500) {
                 return resp.json().then(data => {
-                    let err = { errorMessage: data.message };
-                    throw err;
+                    
+                    throw data.message
                 })
             }
             else {
@@ -384,8 +384,7 @@ export async function SaveCompany(values) {
 }
 
 export async function SaveProject(values) {
-  
-    const providerid = 'mazen'
+    const providerid = values.newuser.providerid;
     let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/saveproject`;
     console.log(APIURL)
     return fetch(APIURL, {
@@ -418,8 +417,8 @@ export async function SaveProject(values) {
 }
 
 export async function SaveProfile(values) {
-   console.log(values)
-  let providerid = 'mazen'
+let providerid = values.myuser.providerid;
+
     let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/saveprofile`;
     console.log(APIURL);
     return fetch(APIURL, {
@@ -429,7 +428,7 @@ export async function SaveProfile(values) {
             'Content-Type': 'application/json',
         }),
 
-        body: JSON.stringify({ values })
+        body: JSON.stringify(values)
     })
         .then(resp => {
 

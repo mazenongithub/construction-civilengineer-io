@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 class Bid extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, csiids: [], biditems: [] }
+        this.state = { render: '', width: 0, height: 0, csiids: [], biditems: [],spinner:false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
