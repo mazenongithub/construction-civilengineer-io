@@ -2,14 +2,14 @@ import React from 'react';
 import { MyStylesheet } from './styles'
 import DynamicStyles from './dynamicstyles';
 import MaterialCalender from './purchasedatecalender'
-import { validateMonth, validateDate, validateYear } from './functions';
+import { validateMonth, validateDate, validateYear, trailingZeros } from './functions';
 
 
 class PurchaseDate {
 
 
     handleyear(year) {
-      
+
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
@@ -57,7 +57,7 @@ class PurchaseDate {
 
     handleday(day) {
         day = day.toString();
-      
+
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
@@ -65,17 +65,17 @@ class PurchaseDate {
             const checkmanager = dynamicstyles.checkmanager.call(this)
             if (checkmanager) {
                 this.setState({ purchasedateday: day })
-                if (day.length === 2) {
+                if (this.state.activeequipmentid) {
+                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+                    if (myequipment) {
+
+                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+
+                        if (day.length === 2) {
 
 
-                    if (validateDate(day)) {
-
-                        if (this.state.activeequipmentid) {
-                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
-                            if (myequipment) {
-
-
-                                const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                            if (validateDate(day)) {
+                               
                                 let year = this.state.purchasedateyear;
                                 let month = this.state.purchasedatemonth;
                                 const timein = `${year}-${month}-${day}`
@@ -85,18 +85,29 @@ class PurchaseDate {
 
 
 
-
+                            } else {
+                                alert(`Invalid day format ${day}`)
                             }
 
+                        } else if (day.length === 1) {
+
+                            
+                            if(Number(day)) {
+                            let purchasemonth = trailingZeros(this.state.purchasedatemonth)
+                            let purchaseday = trailingZeros(day);
+                            let purchaseyear = this.state.purchasedateyear
+                            let timein = `${purchaseyear}-${purchasemonth}-${purchaseday}`
+                            myuser.company.equipment.myequipment[i].ownership.purchasedate = timein
+                            this.props.reduxUser(myuser);
+                            this.setState({ render: 'render', purchasedatemonth:purchasemonth })
+
+                            }
                         }
 
-
-
-                    } else {
-                        alert(`Invalid day format ${day}`)
                     }
 
                 }
+
 
             } else {
                 alert(`Only Managers can modify equipment dates`)
@@ -106,28 +117,25 @@ class PurchaseDate {
     }
 
     handlemonth(month) {
-       
+
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             const checkmanager = dynamicstyles.checkmanager.call(this)
             if (checkmanager) {
                 this.setState({ purchasedatemonth: month })
-                if (month.length === 2) {
 
-                    if (validateMonth(month)) {
+                if (this.state.activeequipmentid) {
+                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+                    if (myequipment) {
+                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
 
+                        if (month.length === 2) {
 
-
-
-
-                        if (this.state.activeequipmentid) {
-                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
-                            if (myequipment) {
+                            if (validateMonth(month)) {
 
 
-
-                                const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                         
                                 let day = this.state.purchasedateday;
                                 let year = this.state.purchasedateyear;
                                 const timein = `${year}-${month}-${day}`
@@ -138,14 +146,30 @@ class PurchaseDate {
 
 
 
+
+
+
+
+                            } else {
+                                alert(`Invalid month format ${month}`)
                             }
 
+                        } else if (month.length === 1) {
+
+                            if (Number(month)) {
+
+                                let purchasemonth = trailingZeros(month)
+                                let purchaseday = trailingZeros(this.state.purchasedateday);
+                                let purchaseyear = this.state.purchasedateyear
+                                let timein = `${purchaseyear}-${purchasemonth}-${purchaseday}`
+                                myuser.company.equipment.myequipment[i].ownership.purchasedate = timein;
+                                this.props.reduxUser(myuser);
+                                this.setState({ render: 'render', purchasedateday:purchaseday })
+
+                            }
                         }
 
 
-
-                    } else {
-                        alert(`Invalid month format ${month}`)
                     }
 
                 }

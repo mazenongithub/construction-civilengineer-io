@@ -2,14 +2,14 @@ import React from 'react';
 import { MyStylesheet } from './styles'
 import DynamicStyles from './dynamicstyles';
 import MaterialCalender from './saledatecalender'
-import { validateMonth, validateDate, validateYear } from './functions';
+import { validateMonth, validateDate, validateYear, trailingZeros } from './functions';
 
 
 class SaleDate {
 
 
     handleyear(year) {
-      
+
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
@@ -59,7 +59,7 @@ class SaleDate {
 
     handleday(day) {
         day = day.toString();
-      
+
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
@@ -67,18 +67,19 @@ class SaleDate {
             const checkmanager = dynamicstyles.checkmanager.call(this)
             if (checkmanager) {
                 this.setState({ saledateday: day })
-                if (day.length === 2) {
+
+                if (this.state.activeequipmentid) {
+                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+
+                    if (myequipment) {
+
+                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                        if (day.length === 2) {
 
 
-                    if (validateDate(day)) {
-
-                        if (this.state.activeequipmentid) {
-                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
-                            if (myequipment) {
+                            if (validateDate(day)) {
 
 
-
-                                const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
                                 let year = this.state.saledateyear;
                                 let month = this.state.saledatemonth;
                                 const timein = `${year}-${month}-${day}`
@@ -87,16 +88,24 @@ class SaleDate {
                                 this.setState({ render: 'render' })
 
 
-
-
+                            } else {
+                                alert(`Invalid day format ${day}`)
                             }
 
+                        } else if (day.length === 1) {
+
+                            if (Number(day)) {
+                                let salemonth = trailingZeros(this.state.saledatemonth)
+                                let saleday = trailingZeros(day);
+                                let saleyear = this.state.saledateyear
+                                let timein = `${saleyear}-${salemonth}-${saleday}`
+                                myuser.company.equipment.myequipment[i].ownership.saledate = timein
+                                this.props.reduxUser(myuser);
+                                this.setState({ render: 'render', saledatemonth: salemonth })
+
+                            }
                         }
 
-
-
-                    } else {
-                        alert(`Invalid day format ${day}`)
                     }
 
                 }
@@ -108,23 +117,22 @@ class SaleDate {
     }
 
     handlemonth(month) {
-      
+
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             const checkmanager = dynamicstyles.checkmanager.call(this)
             if (checkmanager) {
                 this.setState({ saledatemonth: month })
-                if (month.length === 2) {
+                if (this.state.activeequipmentid) {
+                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+                    if (myequipment) {
+                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                        if (month.length === 2) {
 
-                    if (validateMonth(month)) {
-
-                        if (this.state.activeequipmentid) {
-                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
-                            if (myequipment) {
+                            if (validateMonth(month)) {
 
 
-                                const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
                                 let day = this.state.saledateday;
                                 let year = this.state.saledateyear;
                                 const timein = `${year}-${month}-${day}`
@@ -133,17 +141,32 @@ class SaleDate {
                                 this.setState({ render: 'render' })
 
 
+
+
+
+                            } else {
+                                alert(`Invalid month format ${month}`)
                             }
 
+                        }  else if (month.length === 1) {
+
+                            if (Number(month)) {
+
+                                let salemonth = trailingZeros(month)
+                                let saleday = trailingZeros(this.state.saledateday);
+                                let saleyear = this.state.saledateyear
+                                let timein = `${saleyear}-${salemonth}-${saleday}`
+                                myuser.company.equipment.myequipment[i].ownership.saledate = timein;
+                                this.props.reduxUser(myuser);
+                                this.setState({ render: 'render', saledateday:saleday })
+
+                            }
                         }
 
-
-
-                    } else {
-                        alert(`Invalid month format ${month}`)
                     }
 
                 }
+
 
             } else {
                 alert(` Only Manager can change equipment month`)
