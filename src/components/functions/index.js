@@ -685,6 +685,7 @@ export function  getDayfromDateString (date) {
   
   }
 export function getScheduleDates(datestring) {
+    console.log(datestring)
     //const datestring = `2020-04-14`
     const offset = getOffsetDate(datestring)
     const newDate = new Date(`${datestring.replace(/-/g, '/')} 00:00:00${offset}`)
