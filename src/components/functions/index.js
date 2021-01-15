@@ -3,9 +3,9 @@ export function RomanLower(num) {
     if (isNaN(num))
         return NaN;
     var digits = String(+num).split(""),
-        key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
-               "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
-               "","I","II","III","IV","V","VI","VII","VIII","IX"],
+        key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM",
+            "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC",
+            "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
         roman = "",
         i = 3;
     while (i--)
@@ -15,20 +15,20 @@ export function RomanLower(num) {
 }
 
 
-export function getListNumber(listType,num,i) {
-  
+export function getListNumber(listType, num, i) {
+
     let listnumber = "";
-    switch(listType) {
+    switch (listType) {
         case "Part":
-            return(PartNumber(num))
+            return (PartNumber(num))
         case "1.01":
             return `${i}.${trailingZeros(num)}`
         case "A.B.C":
-            return(`${LetterCounter(num)}.`)
+            return (`${LetterCounter(num)}.`)
         case "1.2.3":
-            return(`${num}.`)
+            return (`${num}.`)
         case "a.b.c":
-            return(`${LetterCounterLower(num)}.`)
+            return (`${LetterCounterLower(num)}.`)
         case "i.ii.iii":
             return (`${RomanLower(num)}.`)
         default:
@@ -39,7 +39,7 @@ export function getListNumber(listType,num,i) {
 }
 
 export function PartNumber(num) {
-    return(`Part ${num}`)
+    return (`Part ${num}`)
 }
 
 export function LetterCounterLower(num) {
@@ -338,13 +338,13 @@ export function UTCStringFormatDateforProposal(timeout) {
 }
 
 export function initfromtimeout(timeout) {
-//let timeout= '2020-04-21 01:24:32'
-const dateout = new Date(`${timeout}`)
-const hoursout = dateout.getHours();
-const minutesout = dateout.getMinutes();
-const heightout = hoursout *100 - (minutesout/60)*100;
-const init = heightout
-return(init)
+    //let timeout= '2020-04-21 01:24:32'
+    const dateout = new Date(`${timeout}`)
+    const hoursout = dateout.getHours();
+    const minutesout = dateout.getMinutes();
+    const heightout = hoursout * 100 - (minutesout / 60) * 100;
+    const init = heightout
+    return (init)
 }
 
 export function scheduleHeight(timein, timeout, scale) {
@@ -505,7 +505,7 @@ export function decreaseCalendarDaybyOneMonth(timein) {
     return (newDate)
 }
 export function increaseCalendarDayOneMonth(timein) {
-    
+
     let offset = getOffsetDate(timein);
     let datein = new Date(`${timein} 00:00:00${offset}`)
     let currentMonth = datein.getMonth() + 1;
@@ -679,16 +679,16 @@ export function getDayofWeek(firstday) {
             return;
     }
 }
-export function  getDayfromDateString (date) {
+export function getDayfromDateString(date) {
     let dates = date.split('-')
-   return dates[2]
-  
-  }
+    return dates[2]
+
+}
 export function getScheduleDates(datestring) {
-    console.log(datestring)
     //const datestring = `2020-04-14`
+    datestring = datestring.replace(/-/g, '/')
     const offset = getOffsetDate(datestring)
-    const newDate = new Date(`${datestring.replace(/-/g, '/')} 00:00:00${offset}`)
+    const newDate = new Date(`${datestring} 00:00:00${offset}`)
     const day = newDate.getDay();
     const dayofweek = getDayofWeek(day)
     let day_1 = "";
@@ -770,29 +770,29 @@ export function getScheduleDates(datestring) {
     return { day_1, day_2, day_3, day_4, day_5, day_6, day_7 }
 }
 export function checkBlackout() {
-    
+
 }
 
-export function getWeekSchedule(day_1, day_7, timein,timeout) {
-// let day_1 = '2020-07-27';
-// let day_7 = '2020-08-02';
-// let timein = '2020-07-28 15:00:00'
-// let timeout = '2020-07-29 02:00:00'
+export function getWeekSchedule(day_1, day_7, timein, timeout) {
+    // let day_1 = '2020-07-27';
+    // let day_7 = '2020-08-02';
+    // let timein = '2020-07-28 15:00:00'
+    // let timeout = '2020-07-29 02:00:00'
 
-const offset_1 = getOffsetDate(day_1)
-const origin = new Date(`${day_1.replace(/-/g, '/')} 00:00:00${offset_1}`)
-const t0 = origin.getTime();
-const offset_2 = getOffsetDate(day_7)
-const endpoint =new Date(`${day_7.replace(/-/g, '/')} 23:59:59${offset_2}`);
-const tEnd = endpoint.getTime();
-const point  = new Date(`${timein}`)
-const tX = point.getTime();
+    const offset_1 = getOffsetDate(day_1)
+    const origin = new Date(`${day_1.replace(/-/g, '/')} 00:00:00${offset_1}`)
+    const t0 = origin.getTime();
+    const offset_2 = getOffsetDate(day_7)
+    const endpoint = new Date(`${day_7.replace(/-/g, '/')} 23:59:59${offset_2}`);
+    const tEnd = endpoint.getTime();
+    const point = new Date(`${timein}`)
+    const tX = point.getTime();
 
-const timeoutpoint =  new Date(`${timeout}`)
-const toutX = timeoutpoint.getTime()
-const length = (toutX -tX)/(1000*60*60*(1/5))
-const init = ((tX-t0)/(tEnd-t0))*840
-return({init,length})
+    const timeoutpoint = new Date(`${timeout}`)
+    const toutX = timeoutpoint.getTime()
+    const length = (toutX - tX) / (1000 * 60 * 60 * (1 / 5))
+    const init = ((tX - t0) / (tEnd - t0)) * 840
+    return ({ init, length })
 
 }
 export function getOffsetDate(timein) {
@@ -1057,60 +1057,60 @@ export function UTCTimefromCurrentDate() {
     return (`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`)
 }
 
-export function scheduleBox(timein,timeout) {
-const datein = new Date(`${timein}`)
-const dateout = new Date(`${timeout}`)
+export function scheduleBox(timein, timeout) {
+    const datein = new Date(`${timein}`)
+    const dateout = new Date(`${timeout}`)
 
-const hoursin = datein.getHours();
-const minutesin = datein.getMinutes();
-const heightin = hoursin *100 - (minutesin/60)*100;
+    const hoursin = datein.getHours();
+    const minutesin = datein.getMinutes();
+    const heightin = hoursin * 100 - (minutesin / 60) * 100;
 
-const hoursout = dateout.getHours();
-const minutesout = dateout.getMinutes();
-const heightout = hoursout *100 - (minutesout/60)*100;
+    const hoursout = dateout.getHours();
+    const minutesout = dateout.getMinutes();
+    const heightout = hoursout * 100 - (minutesout / 60) * 100;
 
-const height = heightout - heightin
-const init = heightin 
-return{height,init}
+    const height = heightout - heightin
+    const init = heightin
+    return { height, init }
 }
 
-export function  updateTimes(response) {
-    if(response.hasOwnProperty("myuser")) {
-        if(response.myuser.hasOwnProperty("company")) {
-            if(response.myuser.company.hasOwnProperty("projects")) {
+export function updateTimes(response) {
+    if (response.hasOwnProperty("myuser")) {
+        if (response.myuser.hasOwnProperty("company")) {
+            if (response.myuser.company.hasOwnProperty("projects")) {
                 // eslint-disable-next-line
-                response.myuser.company.projects.myproject.map((project,i)=> {
-                    if(project.hasOwnProperty("schedulelabor")) {
-                         // eslint-disable-next-line
-                        project.schedulelabor.mylabor.map((mylabor,j)=> {
-                         
+                response.myuser.company.projects.myproject.map((project, i) => {
+                    if (project.hasOwnProperty("schedulelabor")) {
+                        // eslint-disable-next-line
+                        project.schedulelabor.mylabor.map((mylabor, j) => {
+
                             response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = convertUTCTime(mylabor.timein.replace(/-/g, '/'))
                             response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout.replace(/-/g, '/'))
                         })
                     }
 
-                    if(project.hasOwnProperty("scheduleequipment")) {
-                         // eslint-disable-next-line
-                        project.scheduleequipment.myequipment.map((myequipment,j)=> {
-                      
+                    if (project.hasOwnProperty("scheduleequipment")) {
+                        // eslint-disable-next-line
+                        project.scheduleequipment.myequipment.map((myequipment, j) => {
+
                             response.myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timein = convertUTCTime(myequipment.timein)
                             response.myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = convertUTCTime(myequipment.timeout)
                         })
                     }
 
-                    if(project.hasOwnProperty("actuallabor")) {
-                         // eslint-disable-next-line
-                        project.actuallabor.mylabor.map((mylabor,j)=> {
-                       
+                    if (project.hasOwnProperty("actuallabor")) {
+                        // eslint-disable-next-line
+                        project.actuallabor.mylabor.map((mylabor, j) => {
+
                             response.myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = convertUTCTime(mylabor.timein)
                             response.myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout)
                         })
                     }
-                    
-                    if(project.hasOwnProperty("actualequipment")) {
-                         // eslint-disable-next-line
-                        project.actualequipment.myequipment.map((myequipment,j)=> {
-                      
+
+                    if (project.hasOwnProperty("actualequipment")) {
+                        // eslint-disable-next-line
+                        project.actualequipment.myequipment.map((myequipment, j) => {
+
                             response.myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = convertUTCTime(myequipment.timein)
                             response.myuser.company.projects.myproject[i].actualequipment.myequipment[j].timeout = convertUTCTime(myequipment.timeout)
                         })
@@ -1125,18 +1125,18 @@ export function  updateTimes(response) {
 }
 
 export function convertUTCTime(timein) {
-  
+
     let datein = new Date(`${timein.replace(/-/g, '/')} UTC`)
     const year = datein.getFullYear();
-    const month = trailingZeros(datein.getMonth()+1);
+    const month = trailingZeros(datein.getMonth() + 1);
     const day = trailingZeros(datein.getDate());
     const hours = trailingZeros(datein.getHours());
     const minutes = trailingZeros(datein.getMinutes());
     const offset = getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:00${getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:00`)}`)
-    
+
     return (`${year}/${month}/${day} ${hours}:${minutes}:00${offset}`)
-    
-  }
+
+}
 
 export function getOffsetTime(timein) {
     let datein = new Date(`${timein}`)
@@ -1782,7 +1782,7 @@ export function inputDateObjOutputCalendarDaySeconds(datein) {
     return dateinsec;
 }
 export function formatDateStringDisplay(timein) {
-    
+
     timein = timein.split('-')
     let year = "";
     let month = "";
@@ -2002,7 +2002,7 @@ export function calculatetotalhours(timeout, timein) {
 
 
 export function validateLoanPayment(purchase, purchasedate, salvage, salvagedate, apr) {
- 
+
     let validate = true;
 
     if (new Date(purchasedate).getTime() > new Date(salvagedate).getTime()) {
@@ -2133,7 +2133,7 @@ export function getRepaymentCosts(purchase, purchasedate, salvage, salvagedate, 
     const value = purchase - salvage
 
     const monthlyvalue = value * AmmortizeFactor(i, period)
-   
+
     let costArray = [];
     for (let x = 0; x < period; x++) {
 
@@ -2176,9 +2176,9 @@ export function getInterval(salvagedate, purchasedate, reoccurring, amount, deta
             for (x = 0; x < period; x++) {
                 cost = newCost(makeID(16), detail, purchasedate, amount)
                 costArray.push(cost)
-                purchasedate =increaseCalendarDayOneMonth(purchasedate)
+                purchasedate = increaseCalendarDayOneMonth(purchasedate)
             }
-            
+
 
             break;
         case 'annually':
@@ -2206,7 +2206,7 @@ export function getInterval(salvagedate, purchasedate, reoccurring, amount, deta
 
 
 export function inputUTCStringForLaborID(timein) {
-  
+
     let datein = new Date(timein)
     let hours = datein.getHours();
     let ampm
@@ -2258,7 +2258,7 @@ export function inputDateObjOutputAdjString(datein) {
     let day = datein.getDate();
     let hours = datein.getHours();
     let minutes = datein.getMinutes();
-    
+
     if (month < 10) {
         month = `0${month}`
     }
@@ -2484,22 +2484,22 @@ export function validatePassword(val) {
     return validate;
 }
 
-export function calculateFloat (day_1, day_2) {
-    const date_1 =new Date(`${day_1.replace(/-/g, '/')} 00:00:00${getOffsetDate(day_1)}`)
-    const date_2 =new Date(`${day_2.replace(/-/g, '/')} 00:00:00${getOffsetDate(day_2)}`)
+export function calculateFloat(day_1, day_2) {
+    const date_1 = new Date(`${day_1.replace(/-/g, '/')} 00:00:00${getOffsetDate(day_1)}`)
+    const date_2 = new Date(`${day_2.replace(/-/g, '/')} 00:00:00${getOffsetDate(day_2)}`)
     const time = date_2.getTime() - date_1.getTime();
-    return Math.round(time/(1000*60*60*24))
-    
-  }
+    return Math.round(time / (1000 * 60 * 60 * 24))
 
-  export function calculateday(int, compl, start, completion) {
+}
+
+export function calculateday(int, compl, start, completion) {
     //int = '2020-04-18'
     //compl = '2022-04-24'
 
     let xo = int.split('-');
     let x1 = xo[0];
     let x2 = xo[1];
-  	let x3 = xo[2]
+    let x3 = xo[2]
 
     let initime = `${x1}-${x2}-${x3}`
 
@@ -2555,15 +2555,15 @@ export function calculateyear(int, compl, start, completion) {
 export function checkemptyobject(obj) {
     let empty = true;
     // eslint-disable-next-line
-    for(let x in obj) {
-      empty = false;
-      
-    }
-    
-   return empty; 
-  }
+    for (let x in obj) {
+        empty = false;
 
-  export function increasedatebyoneday(timein) {
+    }
+
+    return empty;
+}
+
+export function increasedatebyoneday(timein) {
 
     //let timein = '2020-12-31';
     let offset = getOffsetDate(timein);
@@ -2659,13 +2659,13 @@ export function monthString(month) {
     }
 }
 
-export function getDateTime (datestr)  {
+export function getDateTime(datestr) {
     let offset = getOffsetDate(datestr)
     let datein = new Date(`${datestr.replace(/-/g, '/')} 00:00:00${offset}`)
     return datein.getTime();
-  }
+}
 
-  export function trailingZeros(num) {
+export function trailingZeros(num) {
 
     if (num.toString().length === 1) {
 
@@ -2684,17 +2684,17 @@ export function getDateTime (datestr)  {
 }
 
 
-  export function getRandomColor() {
+export function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
     for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+        color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
-  }
-  
+}
 
-  export function milestoneformatdatestring(datein) {
+
+export function milestoneformatdatestring(datein) {
 
     let dateinArray = datein.split('-');
     if (dateinArray.length === 3) {
@@ -2706,7 +2706,7 @@ export function getDateTime (datestr)  {
 
 }
 
-  export function getScale(interval) {
+export function getScale(interval) {
 
     let scale = "";
     if (interval < 180) {
@@ -2720,7 +2720,7 @@ export function getDateTime (datestr)  {
 
 }
 
-  export function getDateInterval(start, completion) {
+export function getDateInterval(start, completion) {
 
     const offsetstart = getOffsetDate(start);
     const datestart = new Date(`${start.replace(/-/g, '/')} 00:00:00${offsetstart}`)
@@ -2822,12 +2822,12 @@ export function validateEmail(value) {
 }
 
 export function leadingZero(str) {
-    if(str.indexOf('.') === str.length - 1) {
-     str= `${str}0` 
-      
+    if (str.indexOf('.') === str.length - 1) {
+        str = `${str}0`
+
     }
-      return str;
-    }
+    return str;
+}
 
 export function sortcode(codeb, codea) {
 
@@ -2854,7 +2854,7 @@ export function getYearfromTimein(timein) {
 
 export function getAMPMfromTimeIn(timein) {
     //let timein ='2020-05-13 20:00:00'
-    
+
     const newDate = new Date(`${timein}`)
     let hours = newDate.getHours();
     let ampm = "";
@@ -2931,7 +2931,7 @@ export function UTCTimeStringfromTime(timein) {
 
 export function getMinutesfromTimein(timein) {
     //let timein ='2020-05-13 20:00:00'
-    
+
     const newDate = new Date(`${timein}`)
     let minutes = newDate.getMinutes();
     if (minutes < 10) {
@@ -2942,7 +2942,7 @@ export function getMinutesfromTimein(timein) {
 
 export function getHoursfromTimein(timein) {
     //let timein ='2020-05-13 20:00:00'
-    
+
     const newDate = new Date(`${timein}`)
     let hours = newDate.getHours();
     if (hours > 12) {
@@ -2958,7 +2958,7 @@ export function getHoursfromTimein(timein) {
 
 export function getDayfromTimein(timein) {
     //let timein ='2020-05-13 20:00:00'
-    
+
     const newDate = new Date(`${timein}`)
     let date = newDate.getDate();
     if (date < 10) {
@@ -2970,7 +2970,7 @@ export function getDayfromTimein(timein) {
 
 export function getMonthfromTimein(timein) {
 
-    
+
     const newDate = new Date(`${timein}`)
     let month = newDate.getMonth() + 1;
     if (month < 10) {
