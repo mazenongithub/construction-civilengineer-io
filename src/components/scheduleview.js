@@ -323,7 +323,7 @@ class ScheduleView {
         const scheduleview = new ScheduleView();
         const styles = MyStylesheet();
         const dates = getScheduleDates(`${this.state.timeinyear}-${this.state.timeinmonth}-${this.state.timeinday}`)
-        console.log(dates)
+    
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const getypos = scheduleview.getypos.call(this)
