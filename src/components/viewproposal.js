@@ -23,6 +23,52 @@ class ViewProposal extends Component {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
+    getamount() {
+         const biditems = this.getitems();
+        let amount = 0;
+        if (biditems.length > 0) {
+            // eslint-disable-next-line
+            biditems.map(item => {
+                amount += this.getbidprice(item.csiid)
+            })
+        }
+
+        // 
+        return amount
+    }
+    getallscheduleitems() {
+        
+            const dynamicstyles = new DynamicStyles();
+            const proposalid = this.props.match.params.proposalid;
+            const items = dynamicstyles.getAllSchedule.call(this)
+    
+            let getitems = [];
+           // eslint-disable-next-line
+            items.map(item => {
+    
+                if (item.hasOwnProperty("laborid")) {
+                    if (item.proposalid === proposalid) {
+                        getitems.push(item)
+                    }
+    
+                }
+                if (item.hasOwnProperty("materialid")) {
+                    if (item.proposalid === proposalid) {
+                        getitems.push(item)
+                    }
+    
+                }
+                if (item.hasOwnProperty("equipmentid")) {
+                    if (item.proposalid === proposalid) {
+                        getitems.push(item)
+                    }
+    
+                }
+    
+            })
+
+            return getitems;
+    }
     getitems() {
         const dynamicstyles = new DynamicStyles();
         let proposalid = this.props.match.params.proposalid;
@@ -573,7 +619,7 @@ class ViewProposal extends Component {
         if (myuser) {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                const i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid)
+                const i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid)
                 if (myproject.hasOwnProperty("schedulelabor")) {
                     // eslint-disable-next-line
                     myproject.schedulelabor.mylabor.map((mylabor, j) => {
@@ -626,7 +672,8 @@ class ViewProposal extends Component {
         if(!csicodes) {
             dynamicstyles.loadcsis.call(this)
         }
-      
+
+        const amount = Number(this.getamount()).toFixed(2)
         const getupdated = () => {
             if (proposal.updated) {
                 return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin10 }}>
@@ -663,6 +710,10 @@ class ViewProposal extends Component {
                             </div>
 
                             {dynamicstyles.showbidtable.call(this)}
+
+                            <div style={{...styles.generalContainer}}>
+                                <span style={{...regularFont,...styles.generalFont}}>The estimated proposed amount is ${amount}</span>
+                            </div>
 
                             {getupdated()}
 

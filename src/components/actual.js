@@ -1797,15 +1797,9 @@ class Actual extends Component {
                             {showemployeeid()}
                             {showequipmentid()}
                             {showmaterialid()}
-
-
-
-
                             {milestonescsi()}
                             {showmaterialdate()}
-
                             {showtimes()}
-
                             {laborrate()}
                             {equipmentrate()}
                             {showmaterialquantity()}

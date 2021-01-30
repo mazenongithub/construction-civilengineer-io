@@ -9,6 +9,86 @@ import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfi
 import Spinner from './spinner'
 
 class DynamicStyles {
+    sumOfTransfersByLaborID(laborid) {
+        const dynamicstyles = new DynamicStyles();
+        const transfers = dynamicstyles.getActualTransfersByLaborID.call(this,laborid)
+        let amount = 0;
+        if(transfers) {
+            // eslint-disable-next-line
+            transfers.map(transfer=> {
+                amount +=Number(transfer.amount)
+                
+            })
+        }
+        return amount;
+    }
+
+    getActualTransfersByLaborID(laborid) {
+        const dynamicstyles = new DynamicStyles();
+        let gettransfers = false;
+        const labor = dynamicstyles.getactuallaborbyid.call(this,laborid)
+        if(labor.hasOwnProperty("actualtransfers")) {
+            gettransfers = labor.actualtransfers;
+
+        }
+        return gettransfers;
+
+    }
+
+    sumofTransfersByEquipmentID(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        const transfers = dynamicstyles.getActualTransfersByEquipmentID.call(this,equipmentid)
+        let amount = 0;
+        if(transfers) {
+            // eslint-disable-next-line
+            transfers.map(transfer=> {
+                amount +=Number(transfer.amount)
+                
+            })
+        }
+        return amount;
+
+    }
+
+    getActualTransfersByEquipmentID(equipmentid) {
+        const dynamicstyles = new DynamicStyles();
+        let gettransfers = false;
+        const equipment = dynamicstyles.getactualequipmentbyid.call(this,equipmentid)
+        if(equipment.hasOwnProperty("actualtransfers")) {
+            gettransfers = equipment.actualtransfers;
+
+        }
+        return gettransfers;
+    }
+
+    
+
+    sumOfTransfersByMaterialID(materialid) {
+        const dynamicstyles = new DynamicStyles();
+        const transfers = dynamicstyles.getActualTransfersByMaterialID.call(this,materialid)
+        let amount = 0;
+        if(transfers) {
+            // eslint-disable-next-line
+            transfers.map(transfer=> {
+                amount +=Number(transfer.amount)
+                
+            })
+        }
+        return amount;
+        
+    }
+
+    getActualTransfersByMaterialID(materialid) {
+        const dynamicstyles = new DynamicStyles();
+        let gettransfers= false;
+        let material = dynamicstyles.getactualmaterialbyid.call(this,materialid)
+        if(material.hasOwnProperty("actualtransfers")) {
+            gettransfers = material.actualtransfers;
+
+        }
+        return gettransfers;
+
+    }
 
     async loadcsis() {
         try {
