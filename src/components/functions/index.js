@@ -2209,7 +2209,7 @@ export function inputUTCStringForLaborID(timein) {
 
     let datein = new Date(timein)
     let hours = datein.getHours();
-    let ampm
+    let ampm = "";
     if (hours > 12) {
         hours = hours - 12;
         ampm = "PM"
