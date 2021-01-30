@@ -1221,7 +1221,7 @@ class Schedule extends Component {
                     if (mymaterial) {
                         const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid)
                         myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].mymaterialid = mymaterialid;
-                        this.reduxUser({ myuser })
+                        this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
                     }
 
