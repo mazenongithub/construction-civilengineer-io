@@ -2,7 +2,7 @@ import React from 'react';
 import DynamicStyles from './dynamicstyles';
 import { MyStylesheet } from './styles';
 import { removeIconSmall, dropDateIcon } from './svg';
-import { makeTimeString, monthstring, getFirstIsOnTime, check_29_feb_leapyear_time, check_30_time, check_31_time, UTCTimeStringfromTime, getDayString } from './functions'
+import { makeTimeString, monthstring, getFirstIsOnTime, check_29_feb_leapyear_time, check_30_time, check_31_time, UTCTimeStringfromTime, getDayString, trailingZeros} from './functions'
 import TimeIn from './actualtimein';
 
 class CalenderTimeIn {
@@ -36,20 +36,18 @@ class CalenderTimeIn {
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const styles = MyStylesheet();
         if (this.state.calendertimein) {
-            let day = this.state.timeinday;
-            let year = this.state.timeinyear;
-            let month = this.state.timeinmonth;
-            let hours = this.state.timeinhours;
-            let time = this.state.timeinampm;
-            let minutes = this.state.timeinminutes;
-            let timein = makeTimeString(year, month, day, hours, minutes, time);
-            
+            const timeinday = trailingZeros(this.state.timeinday);
+            const timeinyear = this.state.timeinyear;
+            const timeinmonth = trailingZeros(this.state.timeinmonth);
+            const timeinhours = trailingZeros(this.state.timeinhours);
+            const timeinampm = this.state.timeinampm;
+            const timeinminutes = trailingZeros(this.state.timeinminutes);
+            let timein = makeTimeString(timeinyear, timeinmonth, timeinday, timeinhours, timeinminutes, timeinampm);
             timein = UTCTimeStringfromTime(timein)
-
-            const newDate = new Date(`${timein.replace(/-/g, '/')} UTC`)
-            month = monthstring(newDate.getMonth());
+            const newDate = new Date(timein)
+            const month = monthstring(newDate.getMonth());
             const date = newDate.getDate();
-            year = newDate.getFullYear();
+            const year = newDate.getFullYear();
             const daystring = getDayString(newDate.getDay())
 
             return (<span className="createlink" style={{ ...styles.generalFont, ...headerFont }}>{daystring}, {month} {date}, {year}</span>

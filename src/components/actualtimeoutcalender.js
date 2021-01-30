@@ -2,7 +2,7 @@ import React from 'react';
 import DynamicStyles from './dynamicstyles';
 import { MyStylesheet } from './styles';
 import { removeIconSmall, dropDateIcon } from './svg';
-import { makeTimeString, monthstring, getFirstIsOnTime, check_29_feb_leapyear_time, check_30_time, check_31_time, UTCTimeStringfromTime, getDayString } from './functions'
+import { makeTimeString, monthstring, getFirstIsOnTime, check_29_feb_leapyear_time, check_30_time, check_31_time, UTCTimeStringfromTime, getDayString, trailingZeros } from './functions'
 import TimeOut from './actualtimeout';
 
 class CalenderTimeOut {
@@ -35,20 +35,21 @@ class CalenderTimeOut {
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const styles = MyStylesheet();
         if (this.state.calendertimein) {
-            let day = this.state.timeoutday;
-            let year = this.state.timeoutyear;
-            let month = this.state.timeoutmonth;
-            let hours = this.state.timeouthours;
-            let time = this.state.timeoutampm;
-            let minutes = this.state.timeoutminutes;
-            let timeout = makeTimeString(year, month, day, hours, minutes, time);
-            timeout = UTCTimeStringfromTime(timeout)
-            const newDate = new Date(`${timeout.replace(/-/g, '/')} UTC`)
-            month = monthstring(newDate.getMonth());
-            const date = newDate.getDate();
-            year = newDate.getFullYear();
-            const daystring = getDayString(newDate.getDay())
 
+            
+            const timeoutday = trailingZeros(this.state.timeoutday);
+            const timeoutyear = this.state.timeoutyear;
+            const timeoutmonth = trailingZeros(this.state.timeoutmonth);
+            const timeouthours = trailingZeros(this.state.timeouthours);
+            const timeoutampm = this.state.timeoutampm;
+            const timeoutminutes = trailingZeros(this.state.timeoutminutes);
+            let timeout = makeTimeString(timeoutyear, timeoutmonth, timeoutday, timeouthours, timeoutminutes, timeoutampm);
+            timeout = UTCTimeStringfromTime(timeout)
+            const newDate = new Date(timeout)
+            const month = monthstring(newDate.getMonth());
+            const date = newDate.getDate();
+            const year = newDate.getFullYear();
+            const daystring = getDayString(newDate.getDay())
             return (<span className="createlink" style={{ ...styles.generalFont, ...headerFont }}>{daystring}, {month} {date}, {year}</span>
             )
         } else {

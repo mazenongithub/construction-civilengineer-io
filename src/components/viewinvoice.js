@@ -405,9 +405,9 @@ class ViewInvoice extends Component {
 
         if(isNumeric(quantity)) {
         if (myuser) {
-            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            const myproject = dynamicstyles.getproject.call(this)
             if (myproject) {
-                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 const myinvoice = dynamicstyles.getinvoicebyid.call(this, this.props.match.params.invoiceid)
                 if (myinvoice) {
                     let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
@@ -467,9 +467,9 @@ class ViewInvoice extends Component {
 
 
         if (myuser) {
-            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            const myproject = dynamicstyles.getproject.call(this)
             if (myproject) {
-                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 const myinvoice = dynamicstyles.getinvoicebyid.call(this, this.props.match.params.invoiceid)
                 if (myinvoice) {
                     let j = dynamicstyles.getinvoicekeybyid.call(this, this.props.match.params.invoiceid)
@@ -619,7 +619,7 @@ class ViewInvoice extends Component {
         let myuser = dynamicstyles.getuser.call(this);
         const invoiceid = this.props.match.params.invoiceid;
         if (myuser) {
-            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            const myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
 

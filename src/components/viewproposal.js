@@ -367,21 +367,26 @@ class ViewProposal extends Component {
 
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
+        console.log("change quantity")
         if (isNumeric(quantity)) {
          
             if (myuser) {
 
-                const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+                const myproject = dynamicstyles.getproject.call(this)
                 if (myproject) {
                     let i = dynamicstyles.getprojectkey.call(this);
+                    console.log(i)
                     const myproposal = dynamicstyles.getproposalbyid.call(this, this.props.match.params.proposalid)
                     if (myproposal) {
+                      
                         let j = dynamicstyles.getproposalkeybyid.call(this, this.props.match.params.proposalid)
+                        console.log(j)
                         const lineitem = this.getproposalitem(csiid)
      
                         if (lineitem) {
                            
                             let k = dynamicstyles.getproposalitemkey.call(this, csiid)
+                            console.log(k)
                             myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].quantity = quantity;
                             myuser.company.projects.myproject[i].proposals.myproposal[j].updated = UTCTimefromCurrentDate();
                             this.props.reduxUser(myuser);
@@ -415,7 +420,7 @@ class ViewProposal extends Component {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            const myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            const myproject = dynamicstyles.getproject.call(this)
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 const myproposal = dynamicstyles.getproposalbyid.call(this, this.props.match.params.proposalid)
@@ -453,8 +458,6 @@ class ViewProposal extends Component {
         let companyid = this.props.match.params.companyid;
         let projectid = this.props.match.params.projectid;
         let proposalid = this.props.match.params.proposalid;
-
-
         const styles = MyStylesheet();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const bidField = dynamicstyles.getbidfield.call(this)
