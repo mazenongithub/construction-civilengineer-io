@@ -149,7 +149,8 @@ class ViewProposal extends Component {
             // eslint-disable-next-line
             items = myproposal.bidschedule.biditem;
         }
-        console.log(items)
+        
+  
 
         return (
             

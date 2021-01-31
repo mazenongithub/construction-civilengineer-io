@@ -2529,10 +2529,23 @@ class DynamicStyles {
             })
 
         }
+ // eslint-disable-next-line
+        actuals.map((myactual,i)=> {
+            if(myactual.hasOwnProperty("csiid")) {
+                let csi = dynamicstyles.getcsibyid.call(this,myactual.csiid)
+                myactual.csi = csi.csi
+                actuals[i] = myactual;
+            }
+        })
 
         actuals.sort((a, b) => {
             return sorttimes(a.timein, b.timein)
         })
+
+        
+
+       
+
 
 
         return actuals;
@@ -2566,10 +2579,19 @@ class DynamicStyles {
                 })
 
             }
-
+ // eslint-disable-next-line
+            schedules.map((myschedule,i)=> {
+                if(myschedule.hasOwnProperty("csiid")) {
+                    let csi = dynamicstyles.getcsibyid.call(this,myschedule.csiid)
+                    myschedule.csi = csi.csi
+                    schedules[i] = myschedule;
+                }
+            })
+            
             schedules.sort((a, b) => {
                 return sorttimes(a.timein, b.timein)
             })
+            
 
             return schedules;
 
@@ -3769,12 +3791,12 @@ class DynamicStyles {
     updateinvoice(invoiceid) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
-        const projectid = this.props.match.params.projectid;
+       
 
         if (myuser) {
-            const myproject = dynamicstyles.getprojectbyid.call(this, projectid);
+            const myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                const i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid)
                 const myinvoice = dynamicstyles.getinvoicebyid.call(this, invoiceid)
                 if (myinvoice) {
 

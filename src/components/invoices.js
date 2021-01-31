@@ -64,7 +64,7 @@ class Invoices extends Component {
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid)
@@ -86,15 +86,17 @@ class Invoices extends Component {
     }
 
     handlematerialprofit(profit, materialid) {
+        console.log(profit,materialid)
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            let myproject = dynamicstyles.getproject.call(this)
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid)
                 if (mymaterial) {
                     let j = dynamicstyles.getactualmaterialkeybyid.call(this, materialid);
+                    console.log(i,j)
                     myuser.company.projects.myproject[i].actualmaterials.mymaterial[j].profit = profit;
                     this.props.reduxUser(myuser);
                     if (mymaterial.invoiceid) {
@@ -112,7 +114,7 @@ class Invoices extends Component {
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
@@ -533,6 +535,7 @@ class Invoices extends Component {
         const dynamicstyles = new DynamicStyles();
         let items = [];
         let payitems = dynamicstyles.getAllActual.call(this)
+   
         if (payitems.hasOwnProperty("length")) {
             // eslint-disable-next-line
             payitems.map(item => {
@@ -585,7 +588,7 @@ class Invoices extends Component {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
@@ -607,7 +610,7 @@ class Invoices extends Component {
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid);
+            let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
                 let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
                 const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid)
@@ -631,7 +634,7 @@ class Invoices extends Component {
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            let myproject = dynamicstyles.getproject.call(this)
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid)
@@ -652,7 +655,7 @@ class Invoices extends Component {
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            let myproject = dynamicstyles.getproject.call(this)
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid)
@@ -674,7 +677,7 @@ class Invoices extends Component {
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            let myproject = dynamicstyles.getprojectbyid.call(this, this.props.match.params.projectid)
+            let myproject = dynamicstyles.getproject.call(this)
             if (myproject) {
                 let i = dynamicstyles.getprojectkey.call(this);
                 const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid)

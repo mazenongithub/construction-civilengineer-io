@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, inputUTCStringForLaborID, isNumeric } from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, inputUTCStringForLaborID, isNumeric, sortcode } from './functions';
 import { Link } from 'react-router-dom'
 class ViewInvoice extends Component {
     constructor(props) {
@@ -135,6 +135,10 @@ class ViewInvoice extends Component {
                 }
             })
         }
+
+       csis.sort((codea, codeb) => {
+            return (sortcode(codea, codeb))
+        })
 
         return csis;
     }
@@ -305,7 +309,7 @@ class ViewInvoice extends Component {
             })
 
         }
-        console.log(amount)
+   
 
         return amount;
     }

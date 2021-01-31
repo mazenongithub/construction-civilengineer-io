@@ -379,8 +379,8 @@ export function getTimeFromUTCString(timein) {
 }
 
 export function sorttimes(timeina, timeinb) {
-    timeina = new Date(timeina.replace(/-/g, '/'))
-    timeinb = new Date(timeinb.replace(/-/g, '/'))
+    timeina = new Date(timeina)
+    timeinb = new Date(timeinb)
     if (timeina < timeinb) {
         return -1;
     }
@@ -1084,8 +1084,8 @@ export function updateTimes(response) {
                         // eslint-disable-next-line
                         project.schedulelabor.mylabor.map((mylabor, j) => {
 
-                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = convertUTCTime(mylabor.timein.replace(/-/g, '/'))
-                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout.replace(/-/g, '/'))
+                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = convertUTCTime(mylabor.timein)
+                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout)
                         })
                     }
 
