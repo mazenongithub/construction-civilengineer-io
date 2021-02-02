@@ -307,7 +307,7 @@ export function calculateTotalMonths(purchasedate, saledate) {
     return (totalMonths)
 }
 export function UTCStringFormatDateforProposal(timeout) {
-    let newDate = new Date(`${timeout}-00:00`)
+    let newDate = new Date(`${timeout} UTC`)
     let month = newDate.getMonth() + 1;
     if (month < 10) {
         month = `0${month}`
