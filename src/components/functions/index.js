@@ -1136,7 +1136,7 @@ export function convertUTCTime(timein) {
     const seconds = trailingZeros(datein.getSeconds());
     const hours = trailingZeros(datein.getHours());
     const minutes = trailingZeros(datein.getMinutes());
-    const offset = getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:${getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:00`)}`)
+    const offset = getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:${seconds}`)
 
     return (`${year}/${month}/${day} ${hours}:${minutes}:${seconds}${offset}`)
 
