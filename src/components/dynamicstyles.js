@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { updateTimes, sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, calculateTotalMonths, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime, validateLoanPayment, getRepaymentCosts, getInterval, newCost } from './functions'
+import { returnCompanyList, CreateUser, calculateTotalMonths, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime, validateLoanPayment, getRepaymentCosts, getInterval, newCost, convertUTCTime,formatTimeString } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin, LoadSpecifications, LoadCSIs } from './actions/api';
 import Spinner from './spinner'
@@ -1602,7 +1602,7 @@ class DynamicStyles {
                         }
                         let message = "";
                         if (response.hasOwnProperty("message")) {
-                            let dateupdated = inputUTCStringForLaborID(response.lastupdated)
+                            let dateupdated = formatTimeString(convertUTCTime(response.lastupdated))
                             message = `${response.message} Last Updated ${dateupdated}` 
                         }
                         this.setState({message, spinner:false})
@@ -1642,7 +1642,7 @@ class DynamicStyles {
 
         let message = "";
         if (response.hasOwnProperty("message")) {
-            let lastupdated = inputUTCStringForLaborID(response.lastupdated)
+            let lastupdated = formatTimeString(convertUTCTime(response.lastupdated))
             message = `${response.message} Last updated ${lastupdated}`
 
         }
@@ -2212,7 +2212,7 @@ class DynamicStyles {
                             let message = "";
 
                             if (response.hasOwnProperty("message")) {
-                                let lastupdated = inputUTCStringForLaborID(response.lastupdated)
+                                let lastupdated = formatTimeString(convertUTCTime(response.lastupdated))
                                 message = `${response.message} Last updated ${lastupdated}`
 
                             }
@@ -3816,12 +3816,11 @@ class DynamicStyles {
     updateproposal(proposalid) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
-        const projectid = this.props.match.params.projectid;
-
+        
         if (myuser) {
-            const myproject = dynamicstyles.getprojectbyid.call(this, projectid);
+            const myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                const i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid)
                 const myproposal = dynamicstyles.getproposalbyid.call(this, proposalid)
                 if (myproposal) {
 

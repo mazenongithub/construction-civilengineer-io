@@ -66,7 +66,7 @@ class Invoices extends Component {
         if (myuser) {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid)
                 if (myequipment) {
                     let j = dynamicstyles.getactualequipmentkeybyid.call(this, equipmentid);
@@ -116,7 +116,7 @@ class Invoices extends Component {
         if (myuser) {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
                 if (mylabor) {
                     let j = dynamicstyles.getactuallaborkeybyid.call(this, laborid);
@@ -590,7 +590,7 @@ class Invoices extends Component {
         if (myuser) {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
                 if (mylabor) {
                     let j = dynamicstyles.getactuallaborkeybyid.call(this, laborid);
@@ -612,7 +612,7 @@ class Invoices extends Component {
         if (myuser) {
             let myproject = dynamicstyles.getproject.call(this);
             if (myproject) {
-                let i = dynamicstyles.getprojectkeybyid.call(this, this.props.match.params.projectid);
+                let i = dynamicstyles.getprojectkeybyid.call(this, myproject.projectid);
                 const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid)
                 if (myequipment) {
                     let j = dynamicstyles.getactualequipmentkeybyid.call(this, equipmentid);

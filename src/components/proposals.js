@@ -316,10 +316,13 @@ class Proposals extends Component {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
         if (myuser) {
-            let i = dynamicstyles.getprojectkey.call(this);
+            const myproject = dynamicstyles.getproject.call(this)
+            if(myproject) {
+            let i = dynamicstyles.getprojectkeybyid.call(this,myproject.projectid);
             const mylabor = dynamicstyles.getschedulelaborbyid.call(this, laborid)
             if (mylabor) {
                 let j = dynamicstyles.getschedulelaborkeybyid.call(this, laborid)
+                console.log(i,j)
                 myuser.company.projects.myproject[i].schedulelabor.mylabor[j].laborrate = laborrate;
                 this.props.reduxUser(myuser);
                 if (mylabor.proposalid) {
@@ -329,6 +332,8 @@ class Proposals extends Component {
                 }
 
             }
+
+        }
         }
     }
     handleequipmentrate(equipmentrate, equipmentid) {

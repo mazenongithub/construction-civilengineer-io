@@ -307,8 +307,11 @@ export function calculateTotalMonths(purchasedate, saledate) {
     return (totalMonths)
 }
 export function UTCStringFormatDateforProposal(timeout) {
-    const offset = getOffsetDate(timeout)
-    const newDate = new Date(`${timeout.replace(/-/g, '/')} 00:00:00${offset}`)
+
+
+
+    const newDate = new Date(`${timeout}`)
+  
 
     let month = newDate.getMonth() + 1;
     if (month < 10) {
@@ -999,65 +1002,39 @@ export function toggleAMTimeString(timein) {
 }
 
 export function UTCTimefromCurrentDate() {
-    let offset = new Date().getTimezoneOffset() / 60;
-    let sym = "";
-    if (offset < 0) {
-        offset = -offset;
-        sym = "+"
-    }
-    else {
-        sym = "-"
-    }
-    if (offset < 10) {
-        offset = `0${offset}`
-    }
-    let newDate = new Date();
-    let month = newDate.getMonth() + 1;
-    if (month < 10) {
-        month = `0${month}`;
-    }
-    let day = newDate.getDate();
-    if (day < 10) {
-        day = `0${day}`
-    }
-    let year = newDate.getFullYear();
-    let hours = newDate.getHours();
-    if (hours < 10) {
-        hours = `0${hours}`
-    }
-    let minutes = newDate.getMinutes();
-    if (minutes < 10) {
-        minutes = `0${minutes}`
-    }
-    let seconds = newDate.getSeconds();
-    if (seconds < 10) {
-        seconds = `0${seconds}`
-    }
-    let fakedate = new Date(`${year}/${month}/${day} ${hours}:${minutes}:${seconds}${sym}${2 * offset}:00`)
-    year = fakedate.getFullYear();
-    month = fakedate.getMonth() + 1;
-    day = fakedate.getDate();
-    hours = fakedate.getHours();
-    minutes = fakedate.getMinutes();
-    seconds = fakedate.getSeconds();
-    if (month < 10) {
-        month = `0${month}`;
-    }
-    if (day < 10) {
-        day = `0${day}`
-    }
-
-    if (hours < 10) {
-        hours = `0${hours}`
-    }
-    if (minutes < 10) {
-        minutes = `0${minutes}`
-    }
-    if (seconds < 10) {
-        seconds = `0${seconds}`
-    }
-    return (`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`)
+    const newDate = new Date();
+  
+    let timein = `${newDate.getFullYear()}/${trailingZeros(newDate.getMonth() +1)}/${trailingZeros(newDate.getDate())} ${trailingZeros(newDate.getHours())}:${trailingZeros(newDate.getMinutes())}:${trailingZeros(newDate.getSeconds())}`
+    let offset = getOffsetTime(timein)
+    return `${timein}${offset}`
 }
+
+export function formatTimeString (timein)  {
+  
+	let ampm = 'am'
+  timein = timein.split(' ')
+  timein[1] = timein[1].split(':')
+  
+  if(timein[1][0]>=12) {
+    
+    
+    ampm = 'pm'
+    
+    if(timein[1][0]>12) {
+      
+      timein[1][0] = timein[1][0] - 12;
+    }
+    
+}
+timein[1][1] = trailingZeros(timein[1][1])
+timein[1][2] = timein[1][2].split("-")
+timein[1][2][0] = trailingZeros(timein[1][2][0])
+  
+ return `${timein[1][0]}:${timein[1][1]}:${timein[1][2][0]} ${ampm}`
+    
+    
+}
+  
 
 export function scheduleBox(timein, timeout) {
     const datein = new Date(`${timein}`)
@@ -1118,6 +1095,30 @@ export function updateTimes(response) {
                         })
                     }
 
+                    if(project.hasOwnProperty("proposals")) {
+
+                        // eslint-disable-next-line
+                        project.proposals.myproposal.map((proposal,j) => {
+
+                            response.myuser.company.projects.myproject[i].proposals.myproposal[j].updated =  convertUTCTime(proposal.updated)
+                            response.myuser.company.projects.myproject[i].proposals.myproposal[j].approved =  convertUTCTime(proposal.approved)
+                            
+                        })
+
+                    }
+
+                    if(project.hasOwnProperty("invoices")) {
+
+                        // eslint-disable-next-line
+                        project.invoices.myinvoice.map((invoice,j)=> {
+                    
+                            response.myuser.company.projects.myproject[i].invoices.myinvoice[j].updated =  convertUTCTime(invoice.updated)
+                            response.myuser.company.projects.myproject[i].invoices.myinvoice[j].approved =  convertUTCTime(invoice.approved)
+                            
+                        })
+                    
+                    }
+
 
                 })
             }
@@ -1132,11 +1133,12 @@ export function convertUTCTime(timein) {
     const year = datein.getFullYear();
     const month = trailingZeros(datein.getMonth() + 1);
     const day = trailingZeros(datein.getDate());
+    const seconds = trailingZeros(datein.getSeconds());
     const hours = trailingZeros(datein.getHours());
     const minutes = trailingZeros(datein.getMinutes());
-    const offset = getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:00${getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:00`)}`)
+    const offset = getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:${getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:00`)}`)
 
-    return (`${year}/${month}/${day} ${hours}:${minutes}:00${offset}`)
+    return (`${year}/${month}/${day} ${hours}:${minutes}:${seconds}${offset}`)
 
 }
 
