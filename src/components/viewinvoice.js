@@ -296,12 +296,12 @@ class ViewInvoice extends Component {
             items.map(item => {
 
                 if(item.hasOwnProperty("laborid")) {
-                    amount += dynamicstyles.getActualTransfersByLaborID.call(this,item.laborid)
+                    amount += dynamicstyles.sumOfTransfersByLaborID.call(this,item.laborid)
                 } else if (item.hasOwnProperty("equipmentid")) {
-                    amount += dynamicstyles.getActualTransfersByEquipmentID.call(this,item.equipmentid)
+                    amount += dynamicstyles.sumOfTransfersByEquipmentID.call(this,item.equipmentid)
 
                 } else if (item.hasOwnProperty("materialid")) {
-                    amount += dynamicstyles.getActualTransfersByMaterialID.call(this,item.materialid)
+                    amount += dynamicstyles.sumOfTransfersByMaterialID.call(this,item.materialid)
 
                 }
 
@@ -325,7 +325,7 @@ class ViewInvoice extends Component {
         }
 
         // 
-        return Math.round((amount * 100))
+        return amount;
 
 
     }
@@ -593,7 +593,7 @@ class ViewInvoice extends Component {
 
         } else {
             return (
-                <div style={{ ...styles.generalFlex }} key={item.lineid}>
+                <div style={{ ...styles.generalFlex }} key={item.csiid}>
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont, ...styles.showBorder }}>
@@ -702,7 +702,7 @@ class ViewInvoice extends Component {
         const styles = MyStylesheet();
         const headerFont = dynamicstyles.getHeaderFont.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        const amount = Number(this.getamount() / 100).toFixed(2)
+        const amount = Number(this.getamount()).toFixed(2)
         const sumoftransfers = Number(this.sumoftransfers()).toFixed(2);
         const invoicebalance = Number(amount - sumoftransfers).toFixed(2);
 

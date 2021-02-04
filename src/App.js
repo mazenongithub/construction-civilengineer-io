@@ -132,7 +132,7 @@ class App extends Component {
     const myuser = dynamicstyles.getuser.call(this)
     const landing = new Landing();
     const styles = MyStylesheet();
- 
+    const projects = new Projects();
     
     const showlanding = () => {
       if (myuser) {
@@ -141,6 +141,10 @@ class App extends Component {
         return (landing.showlanding.call(this))
       }
 
+    }
+
+    const showprojects = () => {
+      return(projects.showprojects.call(this))
     }
     return (
 
@@ -160,7 +164,7 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/employees/:profile/actual" component={MyActual} />
           <Route exact path="/:providerid/company/:companyid/employees/:profile/schedule" component={MySchedule} />
           <Route exact path="/:providerid/company/:companyid/materials" component={Materials} />
-          <Route exact path="/:providerid/company/:companyid/projects" component={Projects} />
+          <Route exact path="/:providerid/company/:companyid/projects" render={showprojects} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/milestones" component={Milestones} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedule" component={Schedule} />

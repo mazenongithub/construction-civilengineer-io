@@ -1986,7 +1986,7 @@ export function DirectCostForLabor(item) {
 }
 export function DirectCostForEquipment(item) {
 
-    return (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.equipmentrate))
+    return (Number((item.timeout, item.timein)) * Number(item.equipmentrate))
 }
 export function ProfitForEquipment(item) {
 

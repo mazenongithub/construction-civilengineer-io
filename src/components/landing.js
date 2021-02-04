@@ -9,7 +9,7 @@ class Landing  {
         const smallslide = dynamicstyles.getsmallslide.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
         return(
-        <div style={{...styles.generalFlex}}>
+        <div style={{...styles.generalFlex}} key={slide.id}>
             <div style={{...styles.flex1}}>
 
         <div style={{...styles.generalContainer,...styles.showBorder,...smallslide,...styles.marginAuto}} onClick={()=>{this.setState({activeslideid:slide.id})}}>

@@ -35,7 +35,7 @@ class DynamicStyles {
 
     }
 
-    sumofTransfersByEquipmentID(equipmentid) {
+    sumOfTransfersByEquipmentID(equipmentid) {
         const dynamicstyles = new DynamicStyles();
         const transfers = dynamicstyles.getActualTransfersByEquipmentID.call(this,equipmentid)
         let amount = 0;

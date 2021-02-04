@@ -18,7 +18,7 @@ class Invoices extends Component {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const myproject = dynamicstyles.getproject.call(this)
         if (myproject) {
 
             this.props.reduxProject({ projectid: myproject.projectid })
@@ -775,7 +775,7 @@ class Invoices extends Component {
         if (myuser) {
             const checkmanager = dynamicstyles.checkmanager.call(this)
             if (checkmanager) {
-                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+                const project = dynamicstyles.getproject.call(this);
                 if (project) {
                     return (
                         <div style={{ ...styles.generalFlex }}>
@@ -822,6 +822,10 @@ class Invoices extends Component {
                         </div>
                     )
 
+                } else {
+                    return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                        <span style={{ ...styles.generalFont, ...regularFont }}>Project Not Found </span>
+                    </div>)
                 }
 
             } else {

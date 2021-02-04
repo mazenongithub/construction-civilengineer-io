@@ -546,7 +546,7 @@ class Proposals extends Component {
         if (myuser) {
             const checkmanager = dynamicstyles.checkmanager.call(this);
             if (checkmanager) {
-                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+                const project = dynamicstyles.getproject.call(this);
                 if (project) {
                     return (
                         <div style={{ ...styles.generalFlex }}>
