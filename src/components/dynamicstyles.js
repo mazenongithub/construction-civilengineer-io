@@ -3470,7 +3470,7 @@ class DynamicStyles {
 // eslint-disable-next-line
     myproject.actualequipment.myequipment.map(myequipment=> {
         if(myequipment.hasOwnProperty("actualtransfers")) {
-// eslint-disable-next-line
+// eslint-disable-next-line 
             myequipment.actualtransfers.map(transfer=> {
                 transfers.push(transfer)
             })

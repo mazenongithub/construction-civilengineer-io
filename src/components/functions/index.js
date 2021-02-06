@@ -1099,9 +1099,15 @@ export function updateTimes(response) {
 
                         // eslint-disable-next-line
                         project.proposals.myproposal.map((proposal, j) => {
-
+                            
+                            let updated = response.myuser.company.projects.myproject[i].proposals.myproposal[j].updated 
+                            let approved = response.myuser.company.projects.myproject[i].proposals.myproposal[j].approved;
+                            if(updated) {
                             response.myuser.company.projects.myproject[i].proposals.myproposal[j].updated = convertUTCTime(proposal.updated)
+                            }
+                            if(approved) {
                             response.myuser.company.projects.myproject[i].proposals.myproposal[j].approved = convertUTCTime(proposal.approved)
+                            }
 
                         })
 
@@ -1111,9 +1117,15 @@ export function updateTimes(response) {
 
                         // eslint-disable-next-line
                         project.invoices.myinvoice.map((invoice, j) => {
+                            let updated = response.myuser.company.projects.myproject[i].invoices.myinvoice[j].updated
+                            let approved = response.myuser.company.projects.myproject[i].invoices.myinvoice[j].approved
+                            if(updated) {
 
                             response.myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = convertUTCTime(invoice.updated)
+                            }
+                            if(approved) {
                             response.myuser.company.projects.myproject[i].invoices.myinvoice[j].approved = convertUTCTime(invoice.approved)
+                            }
 
                         })
 
