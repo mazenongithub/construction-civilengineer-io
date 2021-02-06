@@ -3437,24 +3437,52 @@ class DynamicStyles {
         if (projects) {
             // eslint-disable-next-line
             projects.map(myproject => {
-                if (myproject.hasOwnProperty("invoices")) {
-                    // eslint-disable-next-line
-                    myproject.invoices.myinvoice.map(myinvoice => {
-                        if (myinvoice.hasOwnProperty("transfers")) {
-                            if (myinvoice.transfers.hasOwnProperty("transfer")) {
-                                // eslint-disable-next-line
-                                myinvoice.transfers.transfer.map(transfer => {
-                                    if (transfer.destination === account.stripe) {
-                                        transfers.push(transfer)
-                                    }
 
-                                })
-                            }
-                        }
-                    })
-                }
+               if(myproject.hasOwnProperty("actuallabor" )) {
+// eslint-disable-next-line
+                myproject.actuallabor.mylabor.map(mylabor=> {
+                    if(mylabor.hasOwnProperty("actualtransfers")) {
+// eslint-disable-next-line
+                        mylabor.actualtransfers.map(transfer=> {
+                            transfers.push(transfer)
+                        })
+
+                    }
+                })
+               
+               }
+
+               if(myproject.hasOwnProperty("actualmaterials" )) {
+// eslint-disable-next-line
+                myproject.actualmaterials.mymaterial.map(mymaterial=> {
+                    if(mymaterial.hasOwnProperty("actualtransfers")) {
+            // eslint-disable-next-line
+                        mymaterial.actualtransfers.map(transfer=> {
+                            transfers.push(transfer)
+                        })
+            
+                    }
+                })
+               
+               }
+
+              if(myproject.hasOwnProperty("actualequipment" )) {
+// eslint-disable-next-line
+    myproject.actualequipment.myequipment.map(myequipment=> {
+        if(myequipment.hasOwnProperty("actualtransfers")) {
+// eslint-disable-next-line
+            myequipment.actualtransfers.map(transfer=> {
+                transfers.push(transfer)
             })
+
         }
+    })
+   
+   }
+
+            
+        })
+    }
         return transfers;
     }
     findactualequipmentbyid(equipmentid) {

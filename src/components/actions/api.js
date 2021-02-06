@@ -89,8 +89,8 @@ export async function UploadProfileImage(providerid, formdata) {
             return resp.json();
         })
 }
-export async function StripeConnect(profile, stripe) {
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${profile}/getuserloginlink/${stripe}`
+export async function StripeConnect(stripe) {
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${stripe}/dashboard`
     console.log(APIURL)
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
 

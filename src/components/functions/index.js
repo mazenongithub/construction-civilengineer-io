@@ -308,10 +308,10 @@ export function calculateTotalMonths(purchasedate, saledate) {
 }
 export function UTCStringFormatDateforProposal(timeout) {
 
-
+    console.log(timeout)
 
     const newDate = new Date(`${timeout}`)
-  
+
 
     let month = newDate.getMonth() + 1;
     if (month < 10) {
@@ -1003,38 +1003,38 @@ export function toggleAMTimeString(timein) {
 
 export function UTCTimefromCurrentDate() {
     const newDate = new Date();
-  
-    let timein = `${newDate.getFullYear()}/${trailingZeros(newDate.getMonth() +1)}/${trailingZeros(newDate.getDate())} ${trailingZeros(newDate.getHours())}:${trailingZeros(newDate.getMinutes())}:${trailingZeros(newDate.getSeconds())}`
+
+    let timein = `${newDate.getFullYear()}/${trailingZeros(newDate.getMonth() + 1)}/${trailingZeros(newDate.getDate())} ${trailingZeros(newDate.getHours())}:${trailingZeros(newDate.getMinutes())}:${trailingZeros(newDate.getSeconds())}`
     let offset = getOffsetTime(timein)
     return `${timein}${offset}`
 }
 
-export function formatTimeString (timein)  {
-  
-	let ampm = 'am'
-  timein = timein.split(' ')
-  timein[1] = timein[1].split(':')
-  
-  if(timein[1][0]>=12) {
-    
-    
-    ampm = 'pm'
-    
-    if(timein[1][0]>12) {
-      
-      timein[1][0] = timein[1][0] - 12;
+export function formatTimeString(timein) {
+
+    let ampm = 'am'
+    timein = timein.split(' ')
+    timein[1] = timein[1].split(':')
+
+    if (timein[1][0] >= 12) {
+
+
+        ampm = 'pm'
+
+        if (timein[1][0] > 12) {
+
+            timein[1][0] = timein[1][0] - 12;
+        }
+
     }
-    
+    timein[1][1] = trailingZeros(timein[1][1])
+    timein[1][2] = timein[1][2].split("-")
+    timein[1][2][0] = trailingZeros(timein[1][2][0])
+
+    return `${timein[1][0]}:${timein[1][1]}:${timein[1][2][0]} ${ampm}`
+
+
 }
-timein[1][1] = trailingZeros(timein[1][1])
-timein[1][2] = timein[1][2].split("-")
-timein[1][2][0] = trailingZeros(timein[1][2][0])
-  
- return `${timein[1][0]}:${timein[1][1]}:${timein[1][2][0]} ${ampm}`
-    
-    
-}
-  
+
 
 export function scheduleBox(timein, timeout) {
     const datein = new Date(`${timein}`)
@@ -1095,28 +1095,28 @@ export function updateTimes(response) {
                         })
                     }
 
-                    if(project.hasOwnProperty("proposals")) {
+                    if (project.hasOwnProperty("proposals")) {
 
                         // eslint-disable-next-line
-                        project.proposals.myproposal.map((proposal,j) => {
+                        project.proposals.myproposal.map((proposal, j) => {
 
-                            response.myuser.company.projects.myproject[i].proposals.myproposal[j].updated =  convertUTCTime(proposal.updated)
-                            response.myuser.company.projects.myproject[i].proposals.myproposal[j].approved =  convertUTCTime(proposal.approved)
-                            
+                            response.myuser.company.projects.myproject[i].proposals.myproposal[j].updated = convertUTCTime(proposal.updated)
+                            response.myuser.company.projects.myproject[i].proposals.myproposal[j].approved = convertUTCTime(proposal.approved)
+
                         })
 
                     }
 
-                    if(project.hasOwnProperty("invoices")) {
+                    if (project.hasOwnProperty("invoices")) {
 
                         // eslint-disable-next-line
-                        project.invoices.myinvoice.map((invoice,j)=> {
-                    
-                            response.myuser.company.projects.myproject[i].invoices.myinvoice[j].updated =  convertUTCTime(invoice.updated)
-                            response.myuser.company.projects.myproject[i].invoices.myinvoice[j].approved =  convertUTCTime(invoice.approved)
-                            
+                        project.invoices.myinvoice.map((invoice, j) => {
+
+                            response.myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = convertUTCTime(invoice.updated)
+                            response.myuser.company.projects.myproject[i].invoices.myinvoice[j].approved = convertUTCTime(invoice.approved)
+
                         })
-                    
+
                     }
 
 
@@ -2210,7 +2210,7 @@ export function getInterval(salvagedate, purchasedate, reoccurring, amount, deta
 
 
 export function inputUTCStringForLaborID(timein) {
-
+    console.log(timein)
     let datein = new Date(timein)
     let hours = datein.getHours();
     let ampm = "";
