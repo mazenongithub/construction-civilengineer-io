@@ -67,7 +67,7 @@ class Estimate extends Component {
     render() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+
         const myuser = dynamicstyles.getuser.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const csicodes = dynamicstyles.getcsis.call(this)

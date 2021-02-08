@@ -2,7 +2,7 @@ import React from 'react'
 import { MyStylesheet } from './styles'
 import DynamicStyles from './dynamicstyles'
 import { Link } from 'react-router-dom';
-import company from './company';
+
 class Header {
 
     showactiveproject(myuser) {
@@ -153,7 +153,7 @@ class Header {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const navigation = dynamicstyles.getNavigation.call(this)
+   
         const header = new Header();
 
         if (myuser) {

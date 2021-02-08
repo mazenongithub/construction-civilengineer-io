@@ -705,7 +705,7 @@ class Invoices extends Component {
     render() {
         let dynamicstyles = new DynamicStyles();
         let styles = MyStylesheet();
-        let headerFont = dynamicstyles.getHeaderFont.call(this)
+
         let proposalButton = dynamicstyles.getcreateproposal.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
@@ -754,8 +754,7 @@ class Invoices extends Component {
 
         }
         if (myuser) {
-            const checkmanager = dynamicstyles.checkmanager.call(this)
-            if (checkmanager) {
+       
                 const project = dynamicstyles.getproject.call(this);
                 if (project) {
                     return (
@@ -806,11 +805,7 @@ class Invoices extends Component {
                     </div>)
                 }
 
-            } else {
-                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Only Managers can view Invoices </span>
-                </div>)
-            }
+          
 
         } else {
             return (<div style={{ ...styles.generalContainer, ...regularFont }}>

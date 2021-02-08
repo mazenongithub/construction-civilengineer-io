@@ -570,7 +570,7 @@ class Bid extends Component {
     render() {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const titleFont = dynamicstyles.gettitlefont.call(this);
+
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)

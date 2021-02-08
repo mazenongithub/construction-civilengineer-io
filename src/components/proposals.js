@@ -496,7 +496,7 @@ class Proposals extends Component {
     render() {
         let dynamicstyles = new DynamicStyles();
         let styles = MyStylesheet();
-        let headerFont = dynamicstyles.getHeaderFont.call(this)
+
         let proposalButton = dynamicstyles.getcreateproposal.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)

@@ -229,7 +229,7 @@ class Project extends Component {
                             </div>
                         </div>
 
-                        {this.projectmenus()}
+                  
 
                     </div>
                 </div>
