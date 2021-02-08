@@ -383,96 +383,7 @@ class ViewEquipment extends Component {
         )
 
     }
-    showequipmentowned() {
-        const dynamicstyles = new DynamicStyles();
-        const styles = MyStylesheet();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        if (this.props.match.params.equipmentid) {
-            return (
-
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
-                        {this.showaccountcost()}
-                    </div>
-                </div>)
-
-        } else {
-            return;
-        }
-
-    }
-
-
-    handleOwnedIcon() {
-        if (this.props.match.params.equipmentid) {
-            let myequipment = this.getactiveequipment();
-            if (myequipment.ownershipstatus === 'owned') {
-                return (radioClosed())
-            } else {
-                return (radioOpen())
-            }
-
-        } else {
-            return (radioOpen())
-        }
-    }
-    handleRentedIcon() {
-        if (this.props.match.params.equipmentid) {
-            let myequipment = this.getactiveequipment();
-            if (myequipment.ownershipstatus === 'rented') {
-                return (radioClosed())
-            } else {
-                return (radioOpen())
-            }
-
-        } else {
-            return (radioOpen())
-        }
-    }
-
-
-    handleOwned() {
-        let dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
-        const checkmanager = dynamicstyles.checkmanager.call(this);
-        if (checkmanager) {
-            if (myuser) {
-                if (this.props.match.params.equipmentid) {
-
-                    let myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
-                    if (myequipment) {
-                        let i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
-                        if (myequipment.ownershipstatus !== 'owned') {
-                            myuser.company.equipment.myequipment[i].ownershipstatus = 'owned';
-                            let workinghours = 0;
-                            let purchasedate = `${this.state.purchasedateyear}-${this.state.purchasedatemonth}-${this.state.purchasedateday}`
-                            let saledate = `${this.state.saledateyear}-${this.state.saledatemonth}-${this.state.saledateday}`
-                            let loaninterest = 0;
-                            let resalevalue = 0;
-                            let ownership = EquipmentOwnership(workinghours, purchasedate, saledate, loaninterest, resalevalue)
-                            myuser.company.equipment.myequipment[i].ownership = ownership;
-
-
-
-
-                        } else {
-                            myuser.company.equipment.myequipment[i].ownershipstatus = ''
-                            delete myuser.company.equipment.myequipment[i].ownership;
-                        }
-
-                        this.props.reduxUser(myuser);
-                        this.setState({ render: 'render' })
-
-                    }
-
-                }
-
-            }
-
-        } else {
-            alert(`Only Managers have access to this function`)
-        }
-    }
+  
 
 
     handleworkinghours(workinghours) {
@@ -599,53 +510,6 @@ class ViewEquipment extends Component {
 
     }
 
-
-
-
-    accounts() {
-        const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const hideDetail = dynamicstyles.gethidedetails.call(this);
-        const regularFont = dynamicstyles.getRegularFont.call(this);
-
-        const iconmenu = () => {
-            if (this.state.costmenu) {
-                return (<span>Hide Cost Menu <button style={{ ...styles.generalButton, ...hideDetail }} onClick={() => { this.setState({ costmenu: false }) }}>{closeDetail()} </button></span>)
-            } else {
-                return (<span>Show Cost Menu <button style={{ ...styles.generalButton, ...hideDetail }} onClick={() => { this.setState({ costmenu: true }) }}>{openDetail()} </button></span>)
-            }
-        }
-        const costmenu = () => {
-            if (this.state.costmenu) {
-                return (<div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
-
-                        {this.showequipmentowned()}
-                    </div>
-                </div>)
-            }
-        }
-        if (this.props.match.params.equipmentid) {
-            let myequipment = this.getactiveequipment();
-            if (myequipment.ownershipstatus === 'owned') {
-                return (
-                    <div style={{ ...styles.flex }}>
-                        <div style={{ ...styles.flex1 }}>
-
-                            <div style={{ ...styles.generalFlex }}>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    {iconmenu()}
-                                </div>
-                            </div>
-                            {costmenu()}
-                        </div>
-                    </div>
-                )
-            }
-
-        }
-
-    }
     getloaninterest(equipment) {
         if (equipment.hasOwnProperty("ownership")) {
             return equipment.ownership.loaninterest
@@ -830,10 +694,6 @@ class ViewEquipment extends Component {
 
     }
 
-
-
-
-
     createOwnership() {
         let workinghours = 0;
         let purchasedate = `${this.state.purchasedateyear}-${this.state.purchasedatemonth}-${this.state.purchasedateday}`
@@ -860,10 +720,11 @@ class ViewEquipment extends Component {
 
                             myuser.company.equipment.myequipment[i].ownership = this.createOwnership()
                             
-                            if (equipment.hasOwnProperty("rented")) {
-                                delete myuser.company.equipment.myequipment[i].rented
-                            }
+                            
+                        }
 
+                        if (equipment.hasOwnProperty("rented")) {
+                            delete myuser.company.equipment.myequipment[i].rented
                         }
 
                     }

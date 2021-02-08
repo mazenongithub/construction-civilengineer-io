@@ -17,7 +17,6 @@ class Equipment extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.reset();
 
     }
     componentWillUnmount() {
@@ -28,40 +27,6 @@ class Equipment extends Component {
     }
 
 
-    getactiveequipment() {
-        const dynamicstyles = new DynamicStyles()
-        let activeequipment = false;
-
-        if (this.state.activeequipmentid) {
-            let equipmentid = this.state.activeequipmentid;
-            let myequipment = dynamicstyles.getequipment.call(this);
-            // eslint-disable-next-line
-            myequipment.map(equipment => {
-                if (equipment.equipmentid === equipmentid) {
-                    activeequipment = equipment
-                }
-            })
-
-        }
-        return activeequipment;
-    }
-
-    getactiveequipmentkey() {
-        const dynamicstyles = new DynamicStyles()
-        let key = false;
-        if (this.state.activeequipmentid) {
-            let equipmentid = this.state.activeequipmentid;
-            let myequipment = dynamicstyles.getmyequipment.call(this);
-            // eslint-disable-next-line
-            myequipment.map((equipment, i) => {
-                if (equipment.equipmentid === equipmentid) {
-                    key = i;
-                }
-            })
-
-        }
-        return key;
-    }
     getequipment() {
         const dynamicstyles = new DynamicStyles();
         let getequipment = "";
@@ -73,14 +38,11 @@ class Equipment extends Component {
     }
 
 
-
-
     handleequipment(equipment) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
-        const checkmanager = dynamicstyles.checkmanager.call(this)
-        if (checkmanager) {
+      
             if (myuser) {
                 if (this.state.activeequipmentid) {
                     const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
@@ -114,10 +76,9 @@ class Equipment extends Component {
                 }
 
             }
-        } else {
-            alert(`Only Managers have access to this function`)
-        }
+        
     }
+
     showequipment() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
@@ -283,15 +244,9 @@ class Equipment extends Component {
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
-
-
-
                         {this.showequipment()}
                         {this.showequipmentids()}
-
-
                         {dynamicstyles.showsavecompany.call(this)}
-
                     </div>
                 </div>
             )
