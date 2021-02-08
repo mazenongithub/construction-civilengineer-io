@@ -4,6 +4,7 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import { inputUTCStringForLaborID, calculatetotalhours, formatDateStringDisplay, DirectCostForMaterial, DirectCostForEquipment, DirectCostForLabor } from './functions';
+import { Link } from 'react-router-dom';
 
 class InvoiceLineItem extends Component {
     constructor(props) {
@@ -14,6 +15,11 @@ class InvoiceLineItem extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        const dynamicstyles = new DynamicStyles();
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
 
     }
     componentWillUnmount() {
@@ -232,27 +238,27 @@ class InvoiceLineItem extends Component {
     render() {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
-        const titleFont = dynamicstyles.gettitlefont.call(this)
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
         const csiid = this.props.match.params.csiid;
         const csi = dynamicstyles.getcsibyid.call(this, csiid)
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
-            dynamicstyles.loadcsis.call(this)
-        }
+     
         if(myuser) {
-            const checkmanager = dynamicstyles.checkmanager.call(this)
-            if (checkmanager) {
+            const project = dynamicstyles.getproject.call(this)
+            if (project) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...titleFont }}>
-                            {csi.csi} - {csi.title}
-                        </div>
-                    </div>
+                <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bid/csi/${csi.csiid}`}
+                                    > /{csi.csi} {csi.title}</Link>
+                                </div>
+                            </div>
 
                     {dynamicstyles.showlinedetail.call(this)}
 
@@ -262,7 +268,7 @@ class InvoiceLineItem extends Component {
 
         } else {
             return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Only Managers can view Bid Item </span>
+                <span style={{...styles.generalFont,...regularFont}}>Project Not Found </span>
             </div>) 
         }
 

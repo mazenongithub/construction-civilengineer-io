@@ -3,19 +3,24 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidScheduleItem, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, isNumeric, sortcode} from './functions';
+import { sorttimes, DirectCostForLabor, ProfitForLabor, DirectCostForMaterial, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidScheduleItem, CreateBidItem, UTCStringFormatDateforProposal, UTCTimefromCurrentDate, isNumeric, sortcode } from './functions';
 import { Link } from 'react-router-dom';
 class ViewProposal extends Component {
     constructor(props) {
         super(props)
-        this.state = { width: 0, height: 0,spinner:false }
+        this.state = { width: 0, height: 0, spinner: false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
- 
-       
+        const dynamicstyles = new DynamicStyles();
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if (!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
+
+
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -24,7 +29,7 @@ class ViewProposal extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
     getamount() {
-         const biditems = this.getitems();
+        const biditems = this.getitems();
         let amount = 0;
         if (biditems.length > 0) {
             // eslint-disable-next-line
@@ -37,37 +42,37 @@ class ViewProposal extends Component {
         return amount
     }
     getallscheduleitems() {
-        
-            const dynamicstyles = new DynamicStyles();
-            const proposalid = this.props.match.params.proposalid;
-            const items = dynamicstyles.getAllSchedule.call(this)
-    
-            let getitems = [];
-           // eslint-disable-next-line
-            items.map(item => {
-    
-                if (item.hasOwnProperty("laborid")) {
-                    if (item.proposalid === proposalid) {
-                        getitems.push(item)
-                    }
-    
-                }
-                if (item.hasOwnProperty("materialid")) {
-                    if (item.proposalid === proposalid) {
-                        getitems.push(item)
-                    }
-    
-                }
-                if (item.hasOwnProperty("equipmentid")) {
-                    if (item.proposalid === proposalid) {
-                        getitems.push(item)
-                    }
-    
-                }
-    
-            })
 
-            return getitems;
+        const dynamicstyles = new DynamicStyles();
+        const proposalid = this.props.match.params.proposalid;
+        const items = dynamicstyles.getAllSchedule.call(this)
+
+        let getitems = [];
+        // eslint-disable-next-line
+        items.map(item => {
+
+            if (item.hasOwnProperty("laborid")) {
+                if (item.proposalid === proposalid) {
+                    getitems.push(item)
+                }
+
+            }
+            if (item.hasOwnProperty("materialid")) {
+                if (item.proposalid === proposalid) {
+                    getitems.push(item)
+                }
+
+            }
+            if (item.hasOwnProperty("equipmentid")) {
+                if (item.proposalid === proposalid) {
+                    getitems.push(item)
+                }
+
+            }
+
+        })
+
+        return getitems;
     }
     getitems() {
         const dynamicstyles = new DynamicStyles();
@@ -113,7 +118,7 @@ class ViewProposal extends Component {
             // eslint-disable-next-line
             items.map(lineitem => {
                 if (validateNewItem(csis, lineitem)) {
-                    let csi = dynamicstyles.getcsibyid.call(this,lineitem.csiid)
+                    let csi = dynamicstyles.getcsibyid.call(this, lineitem.csiid)
                     let newItem = CreateBidScheduleItem(lineitem.csiid, "", 0)
                     newItem.csi = csi.csi;
                     newItem.title = csi.title;
@@ -123,8 +128,8 @@ class ViewProposal extends Component {
         }
 
 
-        return (csis.sort((a,b)=> {
-            return(sortcode(a,b))
+        return (csis.sort((a, b) => {
+            return (sortcode(a, b))
         }));
     }
 
@@ -149,18 +154,18 @@ class ViewProposal extends Component {
             // eslint-disable-next-line
             items = myproposal.bidschedule.biditem;
         }
-        
-  
+
+
 
         return (
-            
-            items.sort((a,b) =>{
 
-            return sortcode(a,b);
+            items.sort((a, b) => {
+
+                return sortcode(a, b);
 
             })
 
-        
+
         )
 
     }
@@ -229,8 +234,8 @@ class ViewProposal extends Component {
 
         let scheduleitem = this.getscheduleitem(csiid);
         let quantity = "";
-        if(scheduleitem) {
-        quantity = scheduleitem.quantity
+        if (scheduleitem) {
+            quantity = scheduleitem.quantity
         }
         return quantity;
 
@@ -396,7 +401,7 @@ class ViewProposal extends Component {
     getproposalitem(csiid) {
 
         let myproposal = this.getproposal();
-   
+
         let proposalitem = false;
         if (myproposal.hasOwnProperty("bidschedule")) {
             // eslint-disable-next-line
@@ -416,7 +421,7 @@ class ViewProposal extends Component {
         let myuser = dynamicstyles.getuser.call(this);
         console.log("change quantity")
         if (isNumeric(quantity)) {
-         
+
             if (myuser) {
 
                 const myproject = dynamicstyles.getproject.call(this)
@@ -425,13 +430,13 @@ class ViewProposal extends Component {
                     console.log(i)
                     const myproposal = dynamicstyles.getproposalbyid.call(this, this.props.match.params.proposalid)
                     if (myproposal) {
-                      
+
                         let j = dynamicstyles.getproposalkeybyid.call(this, this.props.match.params.proposalid)
                         console.log(j)
                         const lineitem = this.getproposalitem(csiid)
-     
+
                         if (lineitem) {
-                           
+
                             let k = dynamicstyles.getproposalitemkey.call(this, csiid)
                             console.log(k)
                             myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem[k].quantity = quantity;
@@ -442,12 +447,12 @@ class ViewProposal extends Component {
                             let unit = "";
                             let newItem = CreateBidItem(csiid, unit, quantity)
 
-                            if(myproposal.hasOwnProperty("bidschedule")) {
+                            if (myproposal.hasOwnProperty("bidschedule")) {
                                 myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem.push(newItem);
                             } else {
                                 myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
                             }
-                           
+
                             this.props.reduxUser(myuser);
                             this.setState({ render: 'render' })
                         }
@@ -483,7 +488,7 @@ class ViewProposal extends Component {
                     } else {
                         let quantity = "";
                         let newItem = CreateBidItem(csiid, unit, quantity)
-                        if(myproposal.hasOwnProperty("bidschedule")) {
+                        if (myproposal.hasOwnProperty("bidschedule")) {
                             myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule.biditem.push(newItem);
                         } else {
                             myuser.company.projects.myproject[i].proposals.myproposal[j].bidschedule = { biditem: [newItem] }
@@ -512,7 +517,7 @@ class ViewProposal extends Component {
         let profit = () => {
             return (
                 <input type="text"
-                     value={Number(this.getprofit(csi.csiid)).toFixed(4)}
+                    value={Number(this.getprofit(csi.csiid)).toFixed(4)}
                     onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                 />)
@@ -593,7 +598,7 @@ class ViewProposal extends Component {
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Overhead And Profit % <br />
                                 <input type="text"
-                                     value={Number(this.getprofit(csi.csiid)).toFixed(4)}
+                                    value={Number(this.getprofit(csi.csiid)).toFixed(4)}
                                     onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
                                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                                 />
@@ -613,7 +618,7 @@ class ViewProposal extends Component {
         }
     }
     handlechangeprofit(profit, csiid) {
-        
+
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
         let proposalid = this.props.match.params.proposalid;
@@ -669,10 +674,6 @@ class ViewProposal extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const proposal = dynamicstyles.getproposalbyid.call(this, this.props.match.params.proposalid)
         const myuser = dynamicstyles.getuser.call(this)
-        const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
-            dynamicstyles.loadcsis.call(this)
-        }
 
         const amount = Number(this.getamount()).toFixed(2)
         const getupdated = () => {
@@ -695,44 +696,39 @@ class ViewProposal extends Component {
             }
         }
         if (myuser) {
-            const checkmanager = dynamicstyles.checkmanager.call(this);
-            if (checkmanager) {
-                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-                return (
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1 }}>
 
-                            <div style={{ ...styles.generalFlex }}>
-                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{project.title}</span> <br />
-                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/viewproposal</span> <br />
-                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{this.props.match.params.proposalid}</span>
-                                </div>
+            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+            return (
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/proposals/${this.props.match.params.proposalid}`}
+                                > /{this.props.match.params.proposalid}</Link>
                             </div>
-
-                            {dynamicstyles.showbidtable.call(this)}
-
-                            <div style={{...styles.generalContainer}}>
-                                <span style={{...regularFont,...styles.generalFont}}>The estimated proposed amount is ${amount}</span>
-                            </div>
-
-                            {getupdated()}
-
-                            {getapproved()}
-
-                            {dynamicstyles.showsaveproject.call(this)}
-
-
-
                         </div>
-                    </div>
-                )
 
-            } else {
-                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Only Managers can view Proposal </span>
-                </div>)
-            }
+                        {dynamicstyles.showbidtable.call(this)}
+
+                        <div style={{ ...styles.generalContainer }}>
+                            <span style={{ ...regularFont, ...styles.generalFont }}>The estimated proposed amount is ${amount}</span>
+                        </div>
+
+                        {getupdated()}
+
+                        {getapproved()}
+
+                        {dynamicstyles.showsaveproject.call(this)}
+
+
+
+                    </div>
+                </div>
+            )
+
 
         } else {
             return (<div style={{ ...styles.generalContainer, ...regularFont }}>

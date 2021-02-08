@@ -19,6 +19,11 @@ class ViewSchedule extends Component {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
         this.datedefault()
+        const dynamicstyles = new DynamicStyles();
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -75,11 +80,7 @@ class ViewSchedule extends Component {
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
 
-        const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
-            dynamicstyles.loadcsis.call(this)
-        }
-
+      
         if (myuser) {
 
             return (

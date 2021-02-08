@@ -307,12 +307,7 @@ export function calculateTotalMonths(purchasedate, saledate) {
     return (totalMonths)
 }
 export function UTCStringFormatDateforProposal(timeout) {
-
-    console.log(timeout)
-
     const newDate = new Date(`${timeout}`)
-
-
     let month = newDate.getMonth() + 1;
     if (month < 10) {
         month = `0${month}`
@@ -381,6 +376,19 @@ export function getTimeFromUTCString(timein) {
     }
 
     return (`${hours}:${minutes}:${seconds}`)
+}
+export function sortdates(timeina, timeinb) {
+    timeina = new Date(timeina.replace(/-/g, '/'))
+    timeinb = new Date(timeinb.replace(/-/g, '/'))
+    if (timeina < timeinb) {
+        return -1;
+    }
+    else if (timeinb > timeina) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
 }
 
 export function sorttimes(timeina, timeinb) {
@@ -2222,7 +2230,7 @@ export function getInterval(salvagedate, purchasedate, reoccurring, amount, deta
 
 
 export function inputUTCStringForLaborID(timein) {
-    console.log(timein)
+  
     let datein = new Date(timein)
     let hours = datein.getHours();
     let ampm = "";

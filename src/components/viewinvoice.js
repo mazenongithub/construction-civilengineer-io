@@ -12,8 +12,13 @@ class ViewInvoice extends Component {
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
+        const dynamicstyles = new DynamicStyles();
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
 
 
 
@@ -200,8 +205,11 @@ class ViewInvoice extends Component {
             }
 
         })
-
+        if(directcost) {
         return ((profit / directcost) * 100)
+        } else {
+            return 0
+        }
 
     }
     getquantity(csiid) {
@@ -732,11 +740,7 @@ class ViewInvoice extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this);
         const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const csicodes = dynamicstyles.getcsis.call(this)
-        if (!csicodes) {
-            dynamicstyles.loadcsis.call(this)
-        }
-
+     
         const updated = () => {
             if (invoice.updated) {
                 return (<div style={{ ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...styles.topMargin15 }}>Invoice Updated On {UTCStringFormatDateforProposal(invoice.updated)}</div>)
@@ -754,9 +758,6 @@ class ViewInvoice extends Component {
         if (myuser) {
 
 
-            const checkmanager = dynamicstyles.checkmanager.call(this)
-            if (checkmanager) {
-
                 const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
                 if (project) {
                     return (
@@ -765,8 +766,10 @@ class ViewInvoice extends Component {
 
                                 <div style={{ ...styles.generalFlex }}>
                                     <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                        <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{project.title}</span> <br />
-                                        <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/viewinvoice/{this.props.match.params.invoiceid}</span>
+ 
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/invoices/${this.props.match.params.invoiceid}`}
+                                    > /{this.props.match.params.invoiceid}</Link>
                                     </div>
                                 </div>
 
@@ -781,11 +784,7 @@ class ViewInvoice extends Component {
 
                 }
 
-            } else {
-                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Only Manager can view Invoice </span>
-                </div>)
-            }
+           
         } else {
             return (<div style={{ ...styles.generalContainer, ...regularFont }}>
                 <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Invoice </span>

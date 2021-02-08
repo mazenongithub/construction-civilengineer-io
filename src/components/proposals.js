@@ -24,6 +24,11 @@ class Proposals extends Component {
       
             this.props.reduxProject({ projectid: myproject.projectid})
         }
+
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
     
 
     }
@@ -497,10 +502,7 @@ class Proposals extends Component {
         const myuser = dynamicstyles.getuser.call(this)
         const checkfield = dynamicstyles.getcheckfield.call(this)
 
-        const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
-            dynamicstyles.loadcsis.call(this)
-        }
+     
         
         const laboricon = () => {
             if (this.state.showlabor) {
@@ -551,13 +553,7 @@ class Proposals extends Component {
                     return (
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1 }}>
-                                <div style={{ ...styles.generalFlex }}>
-                                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                        <span style={{ ...styles.generalFont, ...headerFont,...styles.boldFont }}>/proposals</span><br />
-                                        <span style={{ ...styles.generalFont, ...headerFont,...styles.boldFont }}>{project.title}</span>
-                                    </div>
-
-                                </div>
+                   
 
                                 <div style={{ ...styles.generalFlex }}>
                                     <div style={{ ...styles.flex1, ...styles.generalFont }}>

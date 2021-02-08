@@ -3,8 +3,8 @@ import { MyStylesheet } from './styles'
 import DynamicStyles from './dynamicstyles'
 import { connect } from 'react-redux';
 import * as actions from './actions';
-import {LetterCounter, getListNumber} from './functions'
-
+import { LetterCounter, getListNumber } from './functions'
+import { Link } from 'react-router-dom';
 class Specification extends Component {
 
     constructor(props) {
@@ -92,413 +92,413 @@ class Specification extends Component {
 
         let key = [];
         if (spec.hasOwnProperty("paragraph")) {
-    
+
             if (spec.paragraph.hasOwnProperty("list")) {
-     // eslint-disable-next-line
+                // eslint-disable-next-line
                 spec.paragraph.list.map((list, i) => {
                     if (list.contentid === contentid) {
                         key = [i]
-    
+
                     }
-    
+
                     if (list.hasOwnProperty("sublist")) {
                         if (list.sublist.hasOwnProperty("list")) {
-     // eslint-disable-next-line
+                            // eslint-disable-next-line
                             list.sublist.list.map((sublist, j) => {
-    
+
                                 if (sublist.contentid === contentid) {
-    
+
                                     key = [i, j]
                                 }
-    
-    
+
+
                                 if (sublist.hasOwnProperty("sublist")) {
                                     if (sublist.sublist.hasOwnProperty("list")) {
-     // eslint-disable-next-line
+                                        // eslint-disable-next-line
                                         sublist.sublist.list.map((sublist_1, k) => {
-    
+
                                             if (sublist_1.contentid === contentid) {
-    
+
                                                 key = [i, j, k]
                                             }
-    
-    
-    
-    
+
+
+
+
                                             if (sublist_1.hasOwnProperty("sublist")) {
                                                 if (sublist_1.sublist.hasOwnProperty("list")) {
-     // eslint-disable-next-line
+                                                    // eslint-disable-next-line
                                                     sublist_1.sublist.list.map((sublist_2, l) => {
-    
+
                                                         if (sublist_2.contentid === contentid) {
                                                             key = [i, j, k, l]
                                                         }
-    
+
                                                         if (sublist_2.hasOwnProperty("sublist")) {
                                                             if (sublist_2.sublist.hasOwnProperty("list")) {
-     // eslint-disable-next-line
+                                                                // eslint-disable-next-line
                                                                 sublist_2.sublist.list.map((sublist_3, m) => {
-    
+
                                                                     if (sublist_3.contentid === contentid) {
-    
+
                                                                         key = [i, j, k, l, m]
                                                                     }
-    
+
                                                                 })
-    
+
                                                             }
-    
+
                                                         }
-    
+
                                                     })
-    
+
                                                 }
-    
+
                                             }
-    
+
                                         })
-    
-    
+
+
                                     }
-    
-    
+
+
                                 }
-    
-    
+
+
                             })
-    
-    
+
+
                         }
-    
-    
+
+
                     }
-    
-    
-    
+
+
+
                 })
             }
-    
-    
-    
+
+
+
         }
         return key
-    
-    
+
+
     }
-    
-    
-    
-        getlisttype(spec, contentid) {
-    
-            let listtype = spec;
-    
-    
-            if (spec.hasOwnProperty("paragraph")) {
-    
-    
-                if (spec.paragraph.hasOwnProperty("list")) {
-     // eslint-disable-next-line
-                    spec.paragraph.list.map(list => {
-    
-                        if (list.contentid === contentid) {
-    
-                            listtype = spec.paragraph.listType
-    
-                        }
-    
-                        if (list.hasOwnProperty("sublist")) {
-    
-    
-                            if (list.sublist.hasOwnProperty("list")) {
-     // eslint-disable-next-line
-                                list.sublist.list.map(sublist => {
-    
-                                    if (sublist.contentid === contentid) {
-                                        listtype = list.sublist.listType
-                                    }
-    
-    
-                                    if (sublist.hasOwnProperty("sublist")) {
-    
-                                        if (sublist.sublist.hasOwnProperty("list")) {
-     // eslint-disable-next-line
-                                            sublist.sublist.list.map(sublist_1 => {
-    
-                                                if (sublist_1.contentid === contentid) {
-                                                    listtype = sublist.sublist.listType
-                                                }
-    
-    
-    
-    
-                                                if (sublist_1.hasOwnProperty("sublist")) {
-    
-                                                    if (sublist_1.sublist.hasOwnProperty("list")) {
-     // eslint-disable-next-line
-                                                        sublist_1.sublist.list.map(sublist_2 => {
-    
-                                                            if (sublist_2.contentid === contentid) {
-                                                                listtype = sublist_1.sublist.listType
+
+
+
+    getlisttype(spec, contentid) {
+
+        let listtype = spec;
+
+
+        if (spec.hasOwnProperty("paragraph")) {
+
+
+            if (spec.paragraph.hasOwnProperty("list")) {
+                // eslint-disable-next-line
+                spec.paragraph.list.map(list => {
+
+                    if (list.contentid === contentid) {
+
+                        listtype = spec.paragraph.listType
+
+                    }
+
+                    if (list.hasOwnProperty("sublist")) {
+
+
+                        if (list.sublist.hasOwnProperty("list")) {
+                            // eslint-disable-next-line
+                            list.sublist.list.map(sublist => {
+
+                                if (sublist.contentid === contentid) {
+                                    listtype = list.sublist.listType
+                                }
+
+
+                                if (sublist.hasOwnProperty("sublist")) {
+
+                                    if (sublist.sublist.hasOwnProperty("list")) {
+                                        // eslint-disable-next-line
+                                        sublist.sublist.list.map(sublist_1 => {
+
+                                            if (sublist_1.contentid === contentid) {
+                                                listtype = sublist.sublist.listType
+                                            }
+
+
+
+
+                                            if (sublist_1.hasOwnProperty("sublist")) {
+
+                                                if (sublist_1.sublist.hasOwnProperty("list")) {
+                                                    // eslint-disable-next-line
+                                                    sublist_1.sublist.list.map(sublist_2 => {
+
+                                                        if (sublist_2.contentid === contentid) {
+                                                            listtype = sublist_1.sublist.listType
+                                                        }
+
+                                                        if (sublist_2.hasOwnProperty("sublist")) {
+
+                                                            if (sublist_2.sublist.hasOwnProperty("list")) {
+                                                                // eslint-disable-next-line
+                                                                sublist_2.sublist.list.map(sublist_3 => {
+                                                                    if (sublist_3.contentid === contentid) {
+                                                                        listtype = sublist_2.sublist.listType
+
+                                                                    }
+
+                                                                })
+
+
                                                             }
-    
-                                                            if (sublist_2.hasOwnProperty("sublist")) {
-    
-                                                                if (sublist_2.sublist.hasOwnProperty("list")) {
-     // eslint-disable-next-line
-                                                                    sublist_2.sublist.list.map(sublist_3 => {
-                                                                        if (sublist_3.contentid === contentid) {
-                                                                            listtype = sublist_2.sublist.listType
-    
-                                                                        }
-    
-                                                                    })
-    
-    
-                                                                }
-    
-    
-                                                            }
-    
-    
-    
-    
-    
-                                                        })
-    
-    
-                                                    }
-    
-    
+
+
+                                                        }
+
+
+
+
+
+                                                    })
+
+
                                                 }
-    
-    
-    
-    
-    
-                                            })
-    
-    
-                                        }
-    
-    
+
+
+                                            }
+
+
+
+
+
+                                        })
+
+
                                     }
-    
-    
-                                })
-    
-    
-                            }
-    
-    
+
+
+                                }
+
+
+                            })
+
+
                         }
-    
-    
-    
-                    })
-                }
-    
-    
-    
+
+
+                    }
+
+
+
+                })
             }
-            return listtype
-    
-    
-    
+
+
+
         }
-    
-     showspecification() {
+        return listtype
+
+
+
+    }
+
+    showspecification() {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const styles = MyStylesheet();
 
         if (myuser) {
-    
+
             const project = dynamicstyles.getproject.call(this);
-    
-    
+
+
             if (project) {
                 const projectid = project.projectid;
                 const spec = dynamicstyles.getspecficationbycsi.call(this, projectid, this.props.match.params.csiid)
                 console.log(spec)
                 if (spec) {
-    
+
                     const activebackground = (contentid) => {
                         if (this.state.activecontentid === contentid) {
-    
+
                             return { backgroundColor: '#D7A22A' }
                         }
                     }
-    
-               
-    
-    
+
+
+
+
                     const showparagraph = () => {
                         let paragraphs = [];
-    
+
                         if (spec.hasOwnProperty("paragraph")) {
-    
+
                             if (spec.paragraph.hasOwnProperty("list")) {
                                 // eslint-disable-next-line
                                 spec.paragraph.list.map((list, i) => {
-    
+
                                     const listtype_1 = () => {
-    
+
                                         return (` ${getListNumber(spec.paragraph.listType, i + 1, false)} `)
-    
+
                                     }
-    
+
                                     paragraphs.push(<div style={{ ...styles.generalContainer }} key={list.contentid}>
                                         <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(list.contentid) }} onClick={() => { this.makelistactive(list.contentid) }}> {listtype_1()}</span>
                                         <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(list.contentid) }} onClick={() => { this.makelistactive(list.contentid) }}>{list.content}</span>
-                                       
+
                                     </div>)
-    
-    
-    
+
+
+
                                     if (list.hasOwnProperty("sublist")) {
                                         if (list.sublist.hasOwnProperty("list")) {
                                             // eslint-disable-next-line
                                             list.sublist.list.map((sublist, j) => {
-    
+
                                                 const listtype_2 = () => {
-    
+
                                                     return (` ${getListNumber(list.sublist.listType, j + 1, i + 1)} `)
                                                 }
-    
+
                                                 paragraphs.push(<div style={{ ...styles.generalContainer, ...styles.marginLeft30 }} key={sublist.contentid}>
                                                     <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(sublist.contentid) }} onClick={() => { this.makelistactive(sublist.contentid) }}> {listtype_2()}</span>
                                                     <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(sublist.contentid) }} onClick={() => { this.makelistactive(sublist.contentid) }}>{sublist.content}</span>
-                                                
+
                                                 </div>)
-    
-    
+
+
                                                 if (sublist.hasOwnProperty("sublist")) {
                                                     if (sublist.sublist.hasOwnProperty("list")) {
                                                         // eslint-disable-next-line
                                                         sublist.sublist.list.map((sublist_1, k) => {
-    
+
                                                             const listtype_3 = () => {
-    
+
                                                                 return (` ${getListNumber(sublist.sublist.listType, k + 1, j + 1)} `)
                                                             }
-    
-                                
+
+
                                                             paragraphs.push(<div style={{ ...styles.generalContainer, ...styles.marginLeft60 }} key={sublist_1.contentid}>
                                                                 <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(sublist_1.contentid) }} onClick={() => { this.makelistactive(sublist_1.contentid) }}> {listtype_3()}</span>
                                                                 <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(sublist_1.contentid) }} onClick={() => { this.makelistactive(sublist_1.contentid) }}>{sublist_1.content}</span>
-                                                              
+
                                                             </div>)
-    
-    
+
+
                                                             if (sublist_1.hasOwnProperty("sublist")) {
                                                                 if (sublist_1.sublist.hasOwnProperty("list")) {
                                                                     // eslint-disable-next-line
                                                                     sublist_1.sublist.list.map((sublist_2, l) => {
-    
+
                                                                         const listtype_4 = () => {
-    
+
                                                                             return (` ${getListNumber(sublist_1.sublist.listType, l + 1, k + 1)} `)
                                                                         }
-    
+
                                                                         paragraphs.push(<div style={{ ...styles.generalContainer, ...styles.marginLeft90 }} key={sublist_2.contentid}>
                                                                             <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(sublist_2.contentid) }} onClick={() => { this.makelistactive(sublist_2.contentid) }}> {listtype_4()}</span>
                                                                             <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(sublist_2.contentid) }} onClick={() => { this.makelistactive(sublist_2.contentid) }}>{sublist_2.content}</span>
-                                                                       
+
                                                                         </div>)
-    
-    
+
+
                                                                         if (sublist_2.hasOwnProperty("sublist")) {
                                                                             if (sublist_2.sublist.hasOwnProperty("list")) {
                                                                                 // eslint-disable-next-line
                                                                                 sublist_2.sublist.list.map((sublist_3, m) => {
-    
+
                                                                                     const listtype_5 = () => {
-    
+
                                                                                         return (` ${getListNumber(sublist_2.sublist.listType, m + 1, k + 1)} `)
                                                                                     }
-    
-                                                                                  
-    
-    
+
+
+
+
                                                                                     paragraphs.push(<div style={{ ...styles.generalContainer, ...styles.marginLeft120 }} key={sublist_3.contentid}>
                                                                                         <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(sublist_3.contentid) }} onClick={() => { this.makelistactive(sublist_3.contentid) }}> {listtype_5()}</span>
                                                                                         <span style={{ ...styles.generalFont, ...regularFont, ...activebackground(sublist_3.contentid) }} onClick={() => { this.makelistactive(sublist_3.contentid) }}>{sublist_3.content}</span>
-                                                                                       
+
                                                                                     </div>)
-    
+
                                                                                 })
-    
-    
+
+
                                                                             }
                                                                         }
-    
-    
-    
+
+
+
                                                                     })
-    
-    
-    
-    
+
+
+
+
                                                                 }
                                                             }
-    
-    
-    
-    
+
+
+
+
                                                         })
-    
-    
-    
-    
+
+
+
+
                                                     }
                                                 }
-    
-    
-    
+
+
+
                                             })
-    
+
                                         }
-    
-    
-    
-    
-    
+
+
+
+
+
                                     }
-    
-    
+
+
                                 })
-    
-    
-    
-    
+
+
+
+
                             }
-    
+
                         }
-    
-    
-    
-    
+
+
+
+
                         return paragraphs;
                     }
-    
-    
-    
-    
+
+
+
+
                     return (
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1 }}>
-    
+
                                 {showparagraph()}
                             </div>
                         </div>
                     )
-    
+
                 }
-    
+
             }
         }
-    
+
     }
 
     render() {
@@ -510,46 +510,45 @@ class Specification extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
 
         const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
+        if (!csicodes) {
             dynamicstyles.loadcsis.call(this)
         }
-        
+
         if (myuser) {
             const active = dynamicstyles.checkactive.call(this)
             if (active) {
-                const project = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid);
-                if(project) {
+                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+                if (project) {
 
 
-                    if(!project.hasOwnProperty("specifications")) {
-                        dynamicstyles.loadprojectspecs.call(this,project.projectid) 
+                    if (!project.hasOwnProperty("specifications")) {
+                        dynamicstyles.loadprojectspecs.call(this, project.projectid)
                     }
 
-                return (<div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
+                    return (<div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1 }}>
 
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...headerFont, ...styles.alignCenter, ...styles.boldFont }}>
-                                /{project.title} <br />
-                            Specifications <br />
-                            CSI {this.props.match.params.csiid} <br />
-                                {csi.title}
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
 
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/specifications/csi/${csi.csi}`}
+                                    > /{csi.csi} {csi.title}</Link>
+                                </div>
                             </div>
-                        </div>
 
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1 }}>
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.flex1 }}>
 
-                                {this.showspecification()}
+                                    {this.showspecification()}
 
+                                </div>
                             </div>
+
+
                         </div>
-
-
                     </div>
-                </div>
-                )
+                    )
 
                 }
 

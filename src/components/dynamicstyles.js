@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { updateTimes, sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, calculateTotalMonths, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, sortcode, UTCTimefromCurrentDate, sortpart, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime, validateLoanPayment, getRepaymentCosts, getInterval, newCost, convertUTCTime,formatTimeString } from './functions'
+import { returnCompanyList, CreateUser, calculateTotalMonths, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, UTCTimefromCurrentDate,  getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime, validateLoanPayment, getRepaymentCosts, getInterval, newCost, convertUTCTime,formatTimeString } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin, LoadSpecifications, LoadCSIs } from './actions/api';
 import Spinner from './spinner'
@@ -479,6 +479,13 @@ class DynamicStyles {
             }
         }
         return labor;
+    }
+    getNavigation() {
+        let navigation = false;
+        if(this.props.hasOwnProperty("navigation")) {
+            navigation = this.props.navigation;
+        }
+        return navigation;
     }
     getnavigation() {
         let navigation = false;
@@ -1265,28 +1272,7 @@ class DynamicStyles {
 
     }
 
-    getallcsicodes() {
-        let codes = [];
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        codes = myuser.company.construction.civilengineer.csicodes.code;
-
-        if (myuser.company.construction.hasOwnProperty("csicodes")) {
-            // eslint-disable-next-line
-            myuser.company.construction.csicodes.code.map(code => {
-                codes.push(code)
-            })
-
-
-
-        }
-
-        codes.sort((codea, codeb) => {
-            return (sortcode(codea, codeb))
-        })
-
-        return codes;
-    }
+ 
 
     getCompanyParams() {
         const dynamicstyles = new DynamicStyles();
@@ -2828,6 +2814,21 @@ class DynamicStyles {
         }
         return key;
     }
+    getprojects() {
+        const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+        let projects = false;
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("projects")) {
+                    projects = myuser.company.projects.myproject;
+
+                }
+
+            }
+        }
+        return projects;
+    }
     getprojectbyid(projectid) {
 
         const dynamicstyles = new DynamicStyles();
@@ -2849,62 +2850,8 @@ class DynamicStyles {
         return projects;
     }
 
-    getsectionbyid(projectid, csiid, sectionid) {
-        const dynamicstyles = new DynamicStyles();
-        const spec = dynamicstyles.getspecficationbycsi.call(this, projectid, csiid)
-        let mysection = false;
-        if (spec) {
 
-            if (spec.hasOwnProperty("sections")) {
-                // eslint-disable-next-line
-                spec.sections.map(section => {
-                    if (section.sectionid === sectionid) {
-                        mysection = section;
-                    }
-                })
-            }
-        }
-        return mysection;
-    }
-
-    getsectionnumberbyid(projectid, csiid, sectionid) {
-        const dynamicstyles = new DynamicStyles();
-        const spec = dynamicstyles.getspecficationbycsi.call(this, projectid, csiid)
-        let mycounter = "";
-        if (spec.hasOwnProperty("sections")) {
-            const section = dynamicstyles.getsectionbyid.call(this, projectid, csiid, sectionid)
-            if (section) {
-                let part = section.part;
-
-                spec.sections.sort((b, a) => {
-                    return sortpart(b, a)
-                })
-
-                let counter = 1;
-                // eslint-disable-next-line
-                spec.sections.map((section, i) => {
-                    if (section.part === part) {
-
-                        if (section.sectionid === sectionid) {
-                            mycounter = counter;
-                        } else {
-                            counter += 1;
-                        }
-
-                    }
-
-
-
-                })
-
-            }
-
-        }
-        if (Number(mycounter) < 10) {
-            mycounter = `0${mycounter}`
-        }
-        return mycounter;
-    }
+  
 
     getspecficationbycsi(projectid, csiid) {
         const dynamicstyles = new DynamicStyles();
@@ -2983,28 +2930,7 @@ class DynamicStyles {
     }
 
 
-    getactiveequipment() {
-        const dynamicstyles = new DynamicStyles();
-        let equipment = false;
-        if (this.state.activeequipmentid) {
-            let equipmentid = this.state.activeequipmentid;
-            let myproject = dynamicstyles.getproject.call(this)
-            if (myproject.hasOwnProperty("actualequipment")) {
-                // eslint-disable-next-line
-                myproject.actualequipment.myequipment.map(myequipment => {
-                    if (myequipment.equipmentid === equipmentid) {
-                        equipment = myequipment;
-                    }
-                })
-
-            }
-
-        }
-        return equipment;
-    }
-
-
-
+   
     getmyemployees() {
         const dynamicstyles = new DynamicStyles()
         let myuser = dynamicstyles.getuser.call(this);
@@ -3090,6 +3016,8 @@ class DynamicStyles {
         return hourlyrate;
 
     }
+
+
 
 
 
@@ -3233,8 +3161,6 @@ class DynamicStyles {
     getactualequipmentkeybyid(equipmentid) {
         const dynamicstyles = new DynamicStyles();
         let key = false;
-
-
         let myproject = dynamicstyles.getproject.call(this);
         if (myproject.hasOwnProperty("actualequipment")) {
             // eslint-disable-next-line
@@ -3398,41 +3324,11 @@ class DynamicStyles {
         return allusers;
     }
 
-    getinvoiceidfromtransferid(transferid) {
+ 
+    gettransfers() {
         const dynamicstyles = new DynamicStyles();
         const projects = dynamicstyles.getmyprojects.call(this)
-        let invoiceid = false;
-        if (projects) {
-            // eslint-disable-next-line 
-            projects.map(myproject => {
-                if (myproject.hasOwnProperty("invoices")) {
-                    // eslint-disable-next-line
-                    myproject.invoices.myinvoice.map(myinvoice => {
-
-                        if (myinvoice.hasOwnProperty("transfers")) {
-                            if (myinvoice.transfers.hasOwnProperty("transfer")) {
-                                // eslint-disable-next-line
-                                myinvoice.transfers.transfer.map(transfer => {
-                                    if (transfer.transferid === transferid) {
-                                        invoiceid = myinvoice.invoiceid;
-                                    }
-
-                                })
-
-                            }
-                        }
-                    })
-
-
-                }
-            })
-        }
-        return invoiceid;
-    }
-    gettransfersbyaccountid(accountid) {
-        const dynamicstyles = new DynamicStyles();
-        const projects = dynamicstyles.getmyprojects.call(this)
-        const account = dynamicstyles.getaccountbyid.call(this, accountid);
+ 
         let transfers = [];
         if (projects) {
             // eslint-disable-next-line
@@ -3485,45 +3381,7 @@ class DynamicStyles {
     }
         return transfers;
     }
-    findactualequipmentbyid(equipmentid) {
-        const dynamicstyles = new DynamicStyles();
-        const projects = dynamicstyles.getmyprojects.call(this)
-        let equipment = false;
-        if (projects) {
-            // eslint-disable-next-line
-            projects.map(myproject => {
-                if (myproject.hasOwnProperty("actualequipment")) {
-                    // eslint-disable-next-line
-                    myproject.actualequipment.myequipment.map(myequipment => {
-                        if (myequipment.equipmentid === equipmentid) {
-                            equipment = myequipment;
-                        }
-                    })
-                }
-            })
-        }
-        return equipment;
-    }
-    findactualmaterialbyid(materialid) {
-        const dynamicstyles = new DynamicStyles();
-        const projects = dynamicstyles.getmyprojects.call(this)
-        let material = false;
-        if (projects) {
-            // eslint-disable-next-line
-            projects.map(myproject => {
-                if (myproject.hasOwnProperty("actualmaterials")) {
-                    // eslint-disable-next-line
-                    myproject.actualmaterials.mymaterial.map(mymaterial => {
-                        if (mymaterial.materialid === materialid) {
-                            material = mymaterial;
-                        }
-                    })
-                }
-
-            })
-        }
-        return material;
-    }
+  
 
     getprojectbymilestoneid(milestoneid) {
 
@@ -3615,40 +3473,7 @@ class DynamicStyles {
         }
 
     }
-    getcsipropertybyid(csiid) {
-        let csi = false;
-        let dynamicstyles = new DynamicStyles();
-        let company = dynamicstyles.getcompany.call(this);
-        let property = false;
-        if (company.hasOwnProperty("construction")) {
-            if (company.construction.hasOwnProperty("csicodes")) {
-                // eslint-disable-next-line
-                company.construction.csicodes.code.map(code => {
-                    if (code.csiid === csiid) {
-                        property = 'user'
-
-                    }
-                })
-            }
-
-            if (!csi) {
-                if (company.construction.hasOwnProperty("civilengineer")) {
-                    if (company.construction.civilengineer.hasOwnProperty("csicodes")) {
-                        // eslint-disable-next-line
-                        company.construction.civilengineer.csicodes.code.map(code => {
-                            if (code.csiid === csiid) {
-                                property = 'civilengineer'
-
-                            }
-                        })
-                    }
-
-                }
-            }
-
-        }
-        return property;
-    }
+  
     getcsis() {
         let csis = false;
         if (this.props.csis) {
@@ -3938,46 +3763,11 @@ class DynamicStyles {
 
     }
 
-    checkinvoiceequipmentid(equipmentid) {
-        const dynamicstyles = new DynamicStyles();
-        const myequipment = dynamicstyles.getactualequipmentbyid.call(this, equipmentid);
-        let checkinvoice = true;
-        if (myequipment) {
-            if (myequipment.settlementid) {
-                checkinvoice = false;
-            }
-        }
-        return checkinvoice;
+ 
 
-    }
+   
 
-    checkinvoicematerialid(materialid) {
-        const dynamicstyles = new DynamicStyles();
-        const mymaterial = dynamicstyles.getactualmaterialbyid.call(this, materialid);
-        let checkinvoice = true;
-        if (mymaterial) {
-            if (mymaterial.settlementid) {
-                checkinvoice = false;
-            }
-        }
-        return checkinvoice;
-
-    }
-
-
-    checkinvoicelaborid(laborid) {
-        const dynamicstyles = new DynamicStyles();
-        const mylabor = dynamicstyles.getactuallaborbyid.call(this, laborid);
-        let checkinvoice = true;
-        if (mylabor) {
-            if (mylabor.settlementid) {
-
-                checkinvoice = false;
-            }
-
-        }
-        return checkinvoice;
-    }
+   
 
     showequipmentitem(item) {
         let dynamicstyles = new DynamicStyles()
@@ -4160,17 +3950,7 @@ class DynamicStyles {
         return equipmentrate;
 
     }
-    getTransfersbyinvoiceid(invoiceid) {
-        const dynamicstyles = new DynamicStyles();
-        const myinvoice = dynamicstyles.getinvoicebyid.call(this, invoiceid)
-        let transfers = false;
-        if (myinvoice) {
-            if (myinvoice.hasOwnProperty("transfers")) {
-                transfers = myinvoice.transfers.transfer;
-            }
-        }
-        return transfers;
-    }
+
     calculateequipmentratebyownership(equipmentid) {
         let equipmentrate = 0;
         let totalamount = 0;
@@ -4291,25 +4071,7 @@ class DynamicStyles {
         }
         return equipment;
     }
-    findactuallaborbyid(laborid) {
-        const dynamicstyles = new DynamicStyles();
-        const projects = dynamicstyles.getmyprojects.call(this)
-        let labor = false;
-        if (projects) {
-            // eslint-disable-next-line
-            projects.map(myproject => {
-                if (myproject.hasOwnProperty("actuallabor")) {
-                    // eslint-disable-next-line
-                    myproject.actuallabor.mylabor.map(mylabor => {
-                        if (mylabor.laborid === laborid) {
-                            labor = mylabor;
-                        }
-                    })
-                }
-            })
-        }
-        return labor;
-    }
+   
 
     getactuallaborbyid(laborid) {
         const dynamicstyles = new DynamicStyles();
@@ -4460,17 +4222,7 @@ class DynamicStyles {
         }
         return myaccount;
     }
-    getmycsicodes() {
-        const dynamicstyles = new DynamicStyles();
-        const mycompany = dynamicstyles.getcompany.call(this);
-        let csis = false;
-        if (mycompany.hasOwnProperty("construction")) {
-            if (mycompany.construction.hasOwnProperty("csicodes")) {
-                csis = mycompany.construction.csicodes.code;
-            }
-        }
-        return csis;
-    }
+
     getmaterialkeybyid(materialid) {
         const dynamicstyles = new DynamicStyles();
         const company = dynamicstyles.getcompany.call(this);

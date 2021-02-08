@@ -21,6 +21,11 @@ class BidSchedule extends Component {
       
             this.props.reduxProject({ projectid: myproject.projectid})
         }
+
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
       
     }
 
@@ -650,10 +655,7 @@ class BidSchedule extends Component {
         const headerFont = dynamicstyles.getHeaderFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
-            dynamicstyles.loadcsis.call(this)
-        }
+      
 
         if(myuser) {
             const checkmanager = dynamicstyles.checkmanager.call(this)
@@ -662,12 +664,7 @@ class BidSchedule extends Component {
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
 
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter}}>
-                        <span style={{...styles.generalFont,...headerFont, ...styles.boldFont }}>/{this.props.match.params.projectid}</span><br/>
-                        <span style={{...styles.generalFont,...headerFont, ...styles.boldFont }}>/bidschedule</span>
-                        </div>
-                    </div>
+                
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.boldFont }}>

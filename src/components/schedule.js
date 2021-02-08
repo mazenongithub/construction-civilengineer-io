@@ -45,11 +45,13 @@ class Schedule extends Component {
         this.timeoutdefault();
         this.materialdatedefault();
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
-        if(myproject) {
-        
-            this.props.reduxProject({ projectid: myproject.projectid})
+     
+
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
         }
+        
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -1298,10 +1300,7 @@ class Schedule extends Component {
         const scheduleview = new ScheduleView();
         const menu = dynamicstyles.getnavigation.call(this)
 
-        const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
-            dynamicstyles.loadcsis.call(this)
-        }
+    
         
         const equipmentrate = () => {
             if (this.state.active === 'equipment' && this.state.activeequipmentid) {
@@ -1521,12 +1520,7 @@ class Schedule extends Component {
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
 
-                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>/{this.props.match.params.projectid} </span></div>
-                                    <div style={{ ...styles.generalContainer }}><span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>/schedule </span></div>
-                                </div>
-                            </div>
+                         
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>

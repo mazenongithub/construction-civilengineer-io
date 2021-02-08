@@ -89,12 +89,7 @@ class Estimate extends Component {
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1 }}>
 
-                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1, ...headerFont, ...styles.alignCenter,...styles.boldFont}}>
-                                    /{project.title} <br />
-                            Specifications
-                        </div>
-                            </div>
+                           
 
                             {this.showspecifications()}
 

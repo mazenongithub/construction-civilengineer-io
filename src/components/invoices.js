@@ -24,6 +24,11 @@ class Invoices extends Component {
             this.props.reduxProject({ projectid: myproject.projectid })
         }
 
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if(!csicodes) {
+            dynamicstyles.loadcsis.call(this)
+        }
+
 
     }
     componentWillUnmount() {
@@ -145,22 +150,6 @@ class Invoices extends Component {
         let dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
 
-        const checkitem = (item) => {
-            let check = true;
-            if (item.hasOwnProperty("laborid")) {
-                check = dynamicstyles.checkinvoicelaborid.call(this, item.laborid)
-
-            } else if (item.hasOwnProperty("materialid")) {
-                check = dynamicstyles.checkinvoicematerialid.call(this, item.materialid)
-
-            } else if (item.hasOwnProperty("equipmentid")) {
-                check = dynamicstyles.checkinvoiceequipmentid.call(this, item.equipmentid)
-
-            }
-            return check;
-        }
-        if (checkitem(item)) {
-
             if (myuser) {
                 if (this.state.activeinvoiceid) {
 
@@ -216,15 +205,10 @@ class Invoices extends Component {
                     }
 
 
-
                 }
             }
 
-        } else {
-            alert(`This item cannot be updated because it is already paid`)
-        }
-
-
+      
     }
 
     showinvoiceids() {
@@ -727,10 +711,7 @@ class Invoices extends Component {
         const myuser = dynamicstyles.getuser.call(this)
         const checkfield = dynamicstyles.getcheckfield.call(this)
 
-        const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
-            dynamicstyles.loadcsis.call(this)
-        }
+        
         
         const laboricon = () => {
             if (this.state.showlabor) {
@@ -781,10 +762,7 @@ class Invoices extends Component {
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1 }}>
                                 <div style={{ ...styles.generalFlex }}>
-                                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                        <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/invoices</span><br />
-                                        <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>{project.title}</span>
-                                    </div>
+                                 
 
                                 </div>
                                 <div style={{ ...styles.generalFlex }}>
