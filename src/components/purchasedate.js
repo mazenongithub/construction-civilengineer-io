@@ -13,20 +13,19 @@ class PurchaseDate {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            const checkmanager = dynamicstyles.checkmanager.call(this)
-            if (checkmanager) {
+            
                 this.setState({ purchasedateyear: year })
                 if (year.length === 4) {
 
                     if (validateYear(year)) {
 
 
-                        if (this.state.activeequipmentid) {
-                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+                   
+                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
                             if (myequipment) {
 
 
-                                const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                                const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
                                 let day = this.state.purchasedateday;
                                 let month = this.state.purchasedatemonth;
                                 const timein = `${year}-${month}-${day}`
@@ -40,7 +39,7 @@ class PurchaseDate {
 
                             }
 
-                        }
+                        
 
                     } else {
                         alert(`Invalid Year format ${year}`)
@@ -49,9 +48,7 @@ class PurchaseDate {
 
                 }
 
-            } else {
-                alert(` Only Managers can modify year purchase date `)
-            }
+            
         }
     }
 
@@ -62,14 +59,12 @@ class PurchaseDate {
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
 
-            const checkmanager = dynamicstyles.checkmanager.call(this)
-            if (checkmanager) {
                 this.setState({ purchasedateday: day })
-                if (this.state.activeequipmentid) {
-                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+                
+                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
                     if (myequipment) {
 
-                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
 
                         if (day.length === 2) {
 
@@ -109,11 +104,8 @@ class PurchaseDate {
                 }
 
 
-            } else {
-                alert(`Only Managers can modify equipment dates`)
-            }
-
-        }
+            
+        
     }
 
     handlemonth(month) {
@@ -121,14 +113,13 @@ class PurchaseDate {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            const checkmanager = dynamicstyles.checkmanager.call(this)
-            if (checkmanager) {
+       
                 this.setState({ purchasedatemonth: month })
 
-                if (this.state.activeequipmentid) {
-                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+               
+                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
                     if (myequipment) {
-                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
 
                         if (month.length === 2) {
 
@@ -174,11 +165,8 @@ class PurchaseDate {
 
                 }
 
-            } else {
-
-                alert(` Only Managers can modify equipment years `)
-            }
-        }
+           
+        
     }
 
 

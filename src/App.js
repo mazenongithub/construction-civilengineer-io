@@ -20,14 +20,14 @@ import ScheduleLineItem from './components/schedulelineitem';
 import Bid from './components/bid';
 import BidLineItem from './components/bidlineitem';
 import Materials from './components/materials';
-import Project from './components/project'
-import Proposals from './components/proposals'
+import Project from './components/project';
+import Proposals from './components/proposals';
 import ViewProposal from './components/viewproposal';
-import ProposalLineItem from './components/proposallineitem'
+import ProposalLineItem from './components/proposallineitem';
 import Invoices from './components/invoices';
-import ViewInvoice from './components/viewinvoice'
-import ViewAccount from './components/viewaccount'
-import InvoiceLineItem from './components/invoicelineitem'
+import ViewInvoice from './components/viewinvoice';
+import ViewAccount from './components/viewaccount';
+import InvoiceLineItem from './components/invoicelineitem';
 import { Link } from 'react-router-dom';
 import { returnCompanyList, updateTimes} from './components/functions';
 import DynamicStyles from './components/dynamicstyles';
@@ -40,11 +40,12 @@ import 'firebase/auth';
 import { firebaseConfig } from './firebaseconfig';
 import Schedule from './components/schedule';
 import Actual from './components/actual';
-import ViewSchedule from './components/viewschedule'
-import MySchedule from './components/myschedule'
+import ViewSchedule from './components/viewschedule';
+import MySchedule from './components/myschedule';
 import MyActual from './components/myactual';
-import Milestones from './components/milestones'
-import Header from './components/header'
+import Milestones from './components/milestones';
+import Header from './components/header';
+import ViewEquipment from './components/viewequipment';
 //import { TestUser } from './components/functions/testuser'
 
 
@@ -161,9 +162,10 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/accounts" component={Accounts} />
           <Route exact path="/:providerid/company/:companyid/accounts/:accountid" component={ViewAccount} />
           <Route exact path="/:providerid/company/:companyid/equipment" component={Equipment} />
+          <Route exact path="/:providerid/company/:companyid/equipment/:equipmentid" component={ViewEquipment} />
           <Route exact path="/:providerid/company/:companyid/employees" component={Employees} />
-          <Route exact path="/:providerid/company/:companyid/employees/:profile/actual" component={MyActual} />
-          <Route exact path="/:providerid/company/:companyid/employees/:profile/schedule" component={MySchedule} />
+          <Route exact path="/:providerid/company/:companyid/viewactual" component={MyActual} />
+          <Route exact path="/:providerid/company/:companyid/viewschedule" component={MySchedule} />
           <Route exact path="/:providerid/company/:companyid/materials" component={Materials} />
           <Route exact path="/:providerid/company/:companyid/projects" render={showprojects} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
@@ -201,7 +203,7 @@ class App extends Component {
         const equipment = () => {
           if (checkmanager) {
             return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link  onClick={()=>{this.handlenavigation({companyid})}}
+              <Link  onClick={()=>{this.handlenavigation({companyid, active:'equipment'})}}
               to={`/${profile}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /equipment
                </Link>
@@ -213,7 +215,7 @@ class App extends Component {
         const materials = () => {
           if (checkmanager) {
             return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link onClick={()=>{this.handlenavigation({companyid})}}
+              <Link onClick={()=>{this.handlenavigation({companyid, active:'materials'})}}
                to={`/${profile}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /materials
                </Link>
@@ -225,7 +227,7 @@ class App extends Component {
         const accounts = () => {
           if (checkmanager) {
             return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link onClick={()=>{this.handlenavigation({companyid})}}
+              <Link onClick={()=>{this.handlenavigation({companyid, active:'accounts'})}}
               to={`/${profile}/company/${companyid}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /accounts
               </Link>
@@ -240,7 +242,7 @@ class App extends Component {
           <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
 
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link  onClick={()=>{this.handlenavigation({companyid})}} 
+              <Link  onClick={()=>{this.handlenavigation({companyid, active:'employees'})}} 
               to={`/${profile}/company/${companyid}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /employees
               </Link>
@@ -252,14 +254,14 @@ class App extends Component {
             {materials()}
 
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link onClick={()=>{this.handlenavigation({companyid})}}
-               to={`/${profile}/company/${companyid}/employees/${profile}/schedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+              <Link onClick={()=>{this.handlenavigation({companyid, active:'viewschedule'})}}
+               to={`/${profile}/company/${companyid}/viewschedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /viewschedule
               </Link>
             </div>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link onClick={()=>{this.handlenavigation({companyid})}}
-                to={`/${profile}/company/${companyid}/employees/${profile}/actual`} 
+              <Link onClick={()=>{this.handlenavigation({companyid, active:'viewactual'})}}
+                to={`/${profile}/company/${companyid}/viewactual`} 
                 style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /viewactual
               </Link>
@@ -288,12 +290,21 @@ class App extends Component {
         navigation.project.active = obj.active;
       }
     }
+
      else if(obj.hasOwnProperty("companyid")) {
+      
       if(navigation.hasOwnProperty("project")) {
         delete navigation.project;
         
       }
-      navigation.companyid = obj.companyid;
+      navigation.company = {}
+      navigation.company.companyid = obj.companyid;
+
+      if(obj.hasOwnProperty("active")) {
+        navigation.company.active = obj.active
+      }
+    
+    
     }
 
     this.props.reduxNavigation(navigation)

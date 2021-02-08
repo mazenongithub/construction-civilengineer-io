@@ -1130,12 +1130,7 @@ class Employees extends Component {
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
 
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <span style={{ ...headerFont, ...styles.boldFont }}> /{getcompanyurl()}</span> <br />
-                                <span style={{ ...headerFont, ...styles.boldFont }}> /employees</span> <br />
-                            </div>
-                        </div>
+                   
 
                         <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.generalFont }}>

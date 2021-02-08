@@ -662,13 +662,6 @@ class Materials extends Component {
                     <div style={{ ...styles.flex1 }}>
 
                         <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <span style={{ ...headerFont, ...styles.boldFont }}> /{companyurl()}</span><br />
-                                <span style={{ ...headerFont, ...styles.boldFont }}>/materials</span>
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
                                 Create A Material <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField, ...maxWidth }}
                                     value={this.getmaterial()}

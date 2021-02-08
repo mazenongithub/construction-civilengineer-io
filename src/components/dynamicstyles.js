@@ -3937,19 +3937,7 @@ class DynamicStyles {
 
     }
 
-    calculateequipmentratebyid(equipmentid, timein, timeout) {
-
-        const dynamicstyles = new DynamicStyles();
-        const myequipment = dynamicstyles.getequipmentfromid.call(this, equipmentid);
-        let equipmentrate = 0;
-        if (myequipment.ownershipstatus === 'owned') {
-            equipmentrate = dynamicstyles.calculateequipmentratebyownership.call(this, equipmentid)
-        } else if (myequipment.ownershipstatus === 'rented') {
-            equipmentrate = dynamicstyles.getequipmentrentalratebyid.call(this, equipmentid, timein, timeout)
-        }
-        return equipmentrate;
-
-    }
+    
 
     calculateequipmentratebyownership(equipmentid) {
         let equipmentrate = 0;

@@ -502,18 +502,7 @@ render() {
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                        <span style={{ ...headerFont, ...styles.boldFont, ...styles.generalFont}}>
-                            /{companyurl()}
-                            </span> <br/>
-                            <span style={{ ...headerFont, ...styles.boldFont, ...styles.generalFont}}>
-                            /accounts
-                            </span>
-                        </div>
-                    </div>
-
-
+                  
                     {this.showaccount()}
 
                     {this.showmyaccounts()}

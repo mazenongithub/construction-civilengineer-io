@@ -72,7 +72,7 @@ class MySchedule extends Component {
         const styles = MyStylesheet();
         const materialdate = new MaterialDate();
         const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this);
+     
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
 
@@ -87,13 +87,7 @@ class MySchedule extends Component {
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.alignCenter }}>
 
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{this.props.match.params.profile}</span><br />
-                                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>View Schedule</span>
-                            </div>
-
-                        </div>
+                      
                         {materialdate.showmaterialdate.call(this)}
                         {showschedule.showschedule.call(this,"schedule")}
                     </div>

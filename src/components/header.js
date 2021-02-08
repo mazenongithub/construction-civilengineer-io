@@ -29,13 +29,19 @@ class Header {
         const dynamicstyles = new DynamicStyles();
         const navigation = dynamicstyles.getNavigation.call(this)
         if (obj.hasOwnProperty("companyid")) {
-            if (navigation.hasOwnProperty("projectid")) {
-                delete navigation.projectid;
-                navigation.companyid = obj.companyid;
-
+            if (navigation.hasOwnProperty("project")) {
+                delete navigation.project;
             }
 
+            navigation.company = {};
+            navigation.company.companyid = obj.companyid;
+            if (obj.hasOwnProperty("active")) {
+                navigation.company.active = obj.active
+            }
+
+
         }
+
         if (obj.hasOwnProperty("projectid")) {
             navigation.project = {}
             navigation.project.projectid = obj.projectid;
@@ -148,12 +154,82 @@ class Header {
         }
     }
 
+    showactivecompany(myuser) {
+        const dynamicstyles = new DynamicStyles();
+        const navigation = dynamicstyles.getNavigation.call(this)
+
+        const styles = MyStylesheet();
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const header = new Header();
+
+        if (navigation) {
+            if (navigation.hasOwnProperty("company")) {
+                if (navigation.company.hasOwnProperty("active")) {
+                    switch (navigation.company.active) {
+                        case 'equipment':
+                            return (
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        onClick={() => { header.handleHeader.call(this, { companyid: myuser.company.companyid, active: 'equipment' }) }}
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/equipment`}
+                                    > /equipment</Link>
+                                </div>)
+                        case 'employees':
+                            return (
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        onClick={() => { header.handleHeader.call(this, { companyid: myuser.company.companyid, active: 'employees' }) }}
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/employees`}
+                                    > /employees</Link>
+                                </div>)
+                        case 'accounts':
+                            return (
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        onClick={() => { header.handleHeader.call(this, { companyid: myuser.company.companyid, active: 'accounts' }) }}
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/accounts`}
+                                    > /accounts</Link>
+                                </div>)
+                        case 'materials':
+                            return (
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        onClick={() => { header.handleHeader.call(this, { companyid: myuser.company.companyid, active: 'materials' }) }}
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/materials`}
+                                    > /materials</Link>
+                                </div>)
+                        case 'viewschedule':
+                            return (
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        onClick={() => { header.handleHeader.call(this, { companyid: myuser.company.companyid, active: 'viewschedule' }) }}
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/viewschedule`}
+                                    > /viewschedule</Link>
+                                </div>)
+
+                        case 'viewactual':
+                            return (
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        onClick={() => { header.handleHeader.call(this, { companyid: myuser.company.companyid, active: 'viewschedule' }) }}
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/viewactual`}
+                                    > /viewactual</Link>
+                                </div>)
+                        default:
+                            break
+                    }
+                }
+            }
+        }
+
+    }
+
     showHeader() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         const headerFont = dynamicstyles.getHeaderFont.call(this)
-   
+
         const header = new Header();
 
         if (myuser) {
@@ -175,6 +251,7 @@ class Header {
                     <Link to={`/${myuser.profile}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{myuser.profile}</Link>
                 </div>
                 {company(myuser)}
+                {header.showactivecompany.call(this, myuser)}
                 {header.showactiveproject.call(this, myuser)}
                 {header.showactiveprojectcomponent.call(this, myuser)}
 
