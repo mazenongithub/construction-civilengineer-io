@@ -44,6 +44,7 @@ import ViewSchedule from './components/viewschedule'
 import MySchedule from './components/myschedule'
 import MyActual from './components/myactual';
 import Milestones from './components/milestones'
+import Header from './components/header'
 //import { TestUser } from './components/functions/testuser'
 
 
@@ -200,7 +201,8 @@ class App extends Component {
         const equipment = () => {
           if (checkmanager) {
             return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link to={`/${profile}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+              <Link  onClick={()=>{this.handlenavigation({companyid})}}
+              to={`/${profile}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /equipment
                </Link>
             </div>)
@@ -211,7 +213,8 @@ class App extends Component {
         const materials = () => {
           if (checkmanager) {
             return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link to={`/${profile}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+              <Link onClick={()=>{this.handlenavigation({companyid})}}
+               to={`/${profile}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /materials
                </Link>
             </div>)
@@ -222,7 +225,8 @@ class App extends Component {
         const accounts = () => {
           if (checkmanager) {
             return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link to={`/${profile}/company/${companyid}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+              <Link onClick={()=>{this.handlenavigation({companyid})}}
+              to={`/${profile}/company/${companyid}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /accounts
               </Link>
             </div>)
@@ -236,7 +240,8 @@ class App extends Component {
           <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
 
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link to={`/${profile}/company/${companyid}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+              <Link  onClick={()=>{this.handlenavigation({companyid})}} 
+              to={`/${profile}/company/${companyid}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /employees
               </Link>
             </div>
@@ -247,12 +252,13 @@ class App extends Component {
             {materials()}
 
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link to={`/${profile}/company/${companyid}/employees/${profile}/schedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+              <Link onClick={()=>{this.handlenavigation({companyid})}}
+               to={`/${profile}/company/${companyid}/employees/${profile}/schedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /viewschedule
               </Link>
             </div>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-              <Link 
+              <Link onClick={()=>{this.handlenavigation({companyid})}}
                 to={`/${profile}/company/${companyid}/employees/${profile}/actual`} 
                 style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /viewactual
@@ -271,6 +277,29 @@ class App extends Component {
     }
   }
 
+  handlenavigation(obj) {
+  
+    const dynamicstyles = new DynamicStyles();
+    const navigation = dynamicstyles.getNavigation.call(this)
+    if(obj.hasOwnProperty("projectid")) {
+      navigation.project= {}
+      navigation.project.projectid = obj.projectid;
+      if(obj.hasOwnProperty("active")) {
+        navigation.project.active = obj.active;
+      }
+    }
+     else if(obj.hasOwnProperty("companyid")) {
+      if(navigation.hasOwnProperty("project")) {
+        delete navigation.project;
+        
+      }
+      navigation.companyid = obj.companyid;
+    }
+
+    this.props.reduxNavigation(navigation)
+    this.setState({render:'render'})
+  }
+
   projectidlinks() {
     const dynamicstyles = new DynamicStyles()
     const regularFont = dynamicstyles.getRegularFont.call(this)
@@ -287,7 +316,7 @@ class App extends Component {
           let projectid = myproject.title;
           projectidlinks.push(
             <div style={{ ...styles.generalContainer }} key={`link${myproject.projectid}`} onClick={()=>{this.props.reduxProject({projectid})}}>
-              <Link to={`/${profile}/company/${companyid}/projects/${projectid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}> /{myproject.title} </Link>
+              <Link onClick={()=>{this.handlenavigation({projectid:myproject.projectid})}} to={`/${profile}/company/${companyid}/projects/${myproject.title}`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}> /{myproject.title} </Link>
             </div>)
 
         })
@@ -332,20 +361,17 @@ class App extends Component {
     const headerFont = dynamicstyles.getHeaderFont.call(this)
 
     if (user) {
-      const company = () => {
-        let mycompany = "";
+   
         if (user.hasOwnProperty("company")) {
-          mycompany = user.company.url;
+        return ( <Link onClick={()=>{this.handlenavigation({companyid:user.company.companyid})}}
+        to={`/${user.profile}/company/${user.company.url}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{user.company.url} </Link>)
         } else {
-          mycompany = 'company'
+          return ( <Link 
+          to={`/${user.profile}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /company </Link>)
         }
-        return mycompany;
+    
       }
-      return (
-        <Link to={`/${user.profile}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{company()} </Link>)
-    } else {
-      return;
-    }
+
   }
 
 
@@ -355,94 +381,79 @@ class App extends Component {
     const headerFont = dynamicstyles.getHeaderFont.call(this);
     const regularFont = dynamicstyles.getRegularFont.call(this);
     const styles = MyStylesheet();
-    const checkmanager = dynamicstyles.checkmanager.call(this)
-    const checkactive = dynamicstyles.checkactive.call(this)
-    if (checkactive) {
+    const navigation = dynamicstyles.getNavigation.call(this)
+
+     
       if (myuser) {
-        const profile = myuser.profile;
-        let companyid = false;
-        if (myuser.hasOwnProperty("company")) {
-          companyid = myuser.company.companyid;
-        }
-        if (this.props.project) {
-          if (this.props.project.hasOwnProperty("projectid")) {
-        
-              let project = dynamicstyles.getprojectbyid.call(this, this.props.project.projectid);
-              const projectid = project.title;
+    
+        if(navigation.hasOwnProperty("project")) {
 
-              const invoices = () => {
-                if (checkmanager) {
-                  return (<div style={{ ...styles.generalContainer }}>
-                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /invoices </Link>
-                  </div>)
-                }
-              }
+          const project = dynamicstyles.getprojectbyid.call(this,navigation.project.projectid)
 
-              const proposals = () => {
-                if (checkmanager) {
-                  return (<div style={{ ...styles.generalContainer }}>
-                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /proposals </Link>
-                  </div>)
-                }
-
-              }
-
-              const bid = () => {
-                if (checkmanager) {
-                  return (<div style={{ ...styles.generalContainer }}>
-                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
-                  </div>)
-                }
-              }
-
-              const bidschedule = () => {
-                if (checkmanager) {
-                  return (<div style={{ ...styles.generalContainer }}>
-                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
-                  </div>)
-                }
-
-              }
-
-
-
+          if(project) {
 
               return (
                 <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
-                  <div style={{ ...styles.generalContainer }} onClick={()=>{
-                    this.props.reduxProject({projectid})
-                  }}>
-                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }} > /{projectid} </Link>
+                  <div style={{ ...styles.generalContainer }}>
+                    <Link onClick={()=>{this.handlenavigation({projectid:project.projectid})}}
+                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }} > /{project.title} </Link>
                   </div>
 
                   <div style={{ ...styles.generalContainer }}>
-                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /schedule </Link>
+                    <Link 
+                    onClick={()=>{this.handlenavigation({projectid:project.projectid,active:'schedule'})}}
+
+                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /schedule </Link>
                   </div>
-                  {proposals()}
-                  {bidschedule()}
+                  <div style={{ ...styles.generalContainer }}>
+                    <Link  
+                    onClick={()=>{this.handlenavigation({projectid:project.projectid,active:'proposals'})}}
+                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/proposals`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /proposals </Link>
+                  </div>
+                  <div style={{ ...styles.generalContainer }}>
+                    <Link 
+                       onClick={()=>{this.handlenavigation({projectid:project.projectid,active:'bidschedule'})}}
+                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
+                  </div>
 
                   <div style={{ ...styles.generalContainer }}>
-                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /actual </Link>
+                    <Link 
+                    onClick={()=>{this.handlenavigation({projectid:project.projectid,active:'actual'})}}
+                     to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /actual </Link>
                   </div>
-                  {invoices()}
-                  {bid()}
+                  <div style={{ ...styles.generalContainer }}>
+                    <Link    onClick={()=>{this.handlenavigation({projectid:project.projectid,active:'invoices'})}}
+                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/invoices`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /invoices </Link>
+                  </div>
+                  <div style={{ ...styles.generalContainer }}>
+                    <Link 
+                       onClick={()=>{this.handlenavigation({projectid:project.projectid,active:'bid'})}}
+                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
+                    </div>
 
 
                   <div style={{ ...styles.generalContainer }}>
-                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/estimate`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /costestimate </Link>
+                    <Link    onClick={()=>{this.handlenavigation({projectid:project.projectid,active:'estimate'})}}
+                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/estimate`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /costestimate </Link>
                   </div>
                   <div style={{ ...styles.generalContainer }}>
-                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/specifications`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /specifications </Link>
+                    <Link    onClick={()=>{this.handlenavigation({projectid:project.projectid,active:'specifications'})}}
+                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/specifications`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /specifications </Link>
                   </div>
                   <div style={{ ...styles.generalContainer }}>
-                    <Link to={`/${profile}/company/${companyid}/projects/${projectid}/milestones`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /milestones </Link>
+                    <Link    onClick={()=>{this.handlenavigation({projectid:project.projectid,active:'milestones'})}}
+                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/milestones`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /milestones </Link>
                   </div>
                 </div>)
+
+
+              }
+
+        }
             
           }
-        }
-      }
-    }
+     
+    
   }
 
 
@@ -671,6 +682,8 @@ class App extends Component {
         return(cheeseburgerIcon())
       }
     }
+    const header = new Header();
+
 
     return (
       <BrowserRouter>
@@ -696,6 +709,7 @@ class App extends Component {
               <div style={{ ...getflex_1() }}>
 
                 {submenus()}
+                {header.showHeader.call(this)}
 
                 {this.showRouter()}
 
