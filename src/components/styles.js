@@ -124,6 +124,12 @@ export function MyStylesheet() {
         marginLeft90: {
             marginLeft: '90px'
         },
+        noBorder:{
+            border:'0px'
+        },
+        whiteBackground:{
+            backgroundColor:'#FFFFFF'
+        },
         marginLeft120: {
             marginLeft: '120px'
         },

@@ -46,6 +46,7 @@ import MyActual from './components/myactual';
 import Milestones from './components/milestones';
 import Header from './components/header';
 import ViewEquipment from './components/viewequipment';
+import ViewEmployee from './components/viewemployee'
 //import { TestUser } from './components/functions/testuser'
 
 
@@ -164,6 +165,7 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/equipment" component={Equipment} />
           <Route exact path="/:providerid/company/:companyid/equipment/:equipmentid" component={ViewEquipment} />
           <Route exact path="/:providerid/company/:companyid/employees" component={Employees} />
+          <Route exact path="/:providerid/company/:companyid/employees/:employeeid" component={ViewEmployee} />
           <Route exact path="/:providerid/company/:companyid/viewactual" component={MyActual} />
           <Route exact path="/:providerid/company/:companyid/viewschedule" component={MySchedule} />
           <Route exact path="/:providerid/company/:companyid/materials" component={Materials} />

@@ -11,6 +11,7 @@ import AccountID from './accountid'
 import EquipmentDate from './equipmentdate';
 import { Link } from 'react-router-dom';
 import MakeID from './makeids'
+import Frequency from './frequency';
 
 
 class ViewEquipment extends Component {
@@ -259,6 +260,7 @@ class ViewEquipment extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const equipmentdate = new EquipmentDate();
         const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const frequency = new Frequency();
 
         const buttonWidth = () => {
             if (this.state.width > 1200) {
@@ -296,21 +298,13 @@ class ViewEquipment extends Component {
 
         }
 
-        const frequency = (equipment) => {
+        const showfrequency = (equipment) => {
             if (this.state.activecostid) {
 
                 const cost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
 
                 if (cost.hasOwnProperty("reoccurring")) {
-                    return (<select style={{ ...styles.generalField, ...regularFont, ...styles.generalFont }}
-                        onChange={event => { this.handlefrequency(event.target.value) }}
-                        value={this.getfrequency()}>
-                        <option value={false}>Select Frequency</option>
-                        <option value={`daily`}>Daily</option>
-                        <option value={`weekly`}>Weekly</option>
-                        <option value={`monthly`}>Monthly</option>
-                        <option value={`annually`}>Annually</option>
-                    </select>)
+                    return (frequency.showFrequency.call(this))
                 }
             }
 
@@ -325,7 +319,7 @@ class ViewEquipment extends Component {
                     <span style={{ ...regularFont, ...styles.generalFont }}>
                         Reoccurring Cost
                             </span>
-                    {frequency(equipment)}
+                    {showfrequency(equipment)}
 
 
                 </div>
@@ -815,7 +809,7 @@ class ViewEquipment extends Component {
 
     }
 
-    handlefrequency(amount) {
+    handleFrequency(amount) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {

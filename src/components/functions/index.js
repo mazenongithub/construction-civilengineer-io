@@ -244,8 +244,11 @@ export function CreateMyMaterial(materialid, mymaterialid, providerid, milestone
 export function CreateActualMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit) {
     return ({ materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit })
 }
-export function CreateBenefit(benefitid, benefit, accountid, amount) {
-    return ({ benefitid, benefit, accountid, amount })
+export function newBenefit(benefitid, detail,purchasedate,amount,accountid) {
+    return ({ benefitid, detail, purchasedate, amount, accountid})
+}
+export function CreateBenefit(benefitid, benefit, accountid, amount, frequency) {
+    return ({ benefitid, benefit, accountid, amount, frequency})
 }
 export function CreateCompany(url, company, address, city, contactstate, zipcode) {
     return ({ url, company, address, city, contactstate, zipcode })
@@ -277,6 +280,65 @@ export function CreateCostID(costid, cost, detail, timein) {
 export function CreateScheduleLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid, profit) {
     return ({ laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, proposalid, profit })
 }
+
+export function getBenefitInterval(reoccurring, amount, detail, accountid) {
+ 
+    const newDate = new Date();
+    const year = newDate.getFullYear();
+    let purchasedate = `${year}/01/01`
+    let salvagedate =`${year+1}/01/01`
+     
+      let period = 0;
+      let x = 0;
+      let benefit = {};
+      let benefitArray = [];
+      switch (reoccurring) {
+          case 'daily':
+              period = calculateTotalDays(purchasedate, salvagedate)
+              for (x = 0; x < period; x++) {
+                  benefit = newBenefit(makeID(16), detail, purchasedate, amount,accountid)
+                  benefitArray.push(benefit)
+                  purchasedate = increasedatebyoneday(purchasedate)
+  
+              }
+              break;
+          case 'weekly':
+              period = calculateTotalWeeks(purchasedate, salvagedate)
+              for (x = 0; x < period; x++) {
+                  benefit = newBenefit(makeID(16), detail, purchasedate, amount,accountid)
+                  benefitArray.push(benefit)
+                  purchasedate = increaseDateByOneWeek(purchasedate)
+              }
+              break;
+          case 'monthly':
+              period = calculateTotalMonths(purchasedate, salvagedate)
+              for (x = 0; x < period; x++) {
+                  benefit = newBenefit(makeID(16), detail, purchasedate, amount,accountid)
+                  benefitArray.push(benefit)
+                  purchasedate = increaseDateStringByOneMonth(purchasedate)
+              }
+  
+              break;
+          case 'annually':
+              period = calculateTotalYears(purchasedate, salvagedate)
+              for (x = 0; x < period; x++) {
+                  benefit = newBenefit(makeID(16), detail, purchasedate, amount, accountid)
+                  benefitArray.push(benefit)
+                  purchasedate = increaseCalendarDaybyOneYear(purchasedate)
+              }
+  
+              break;
+  
+  
+          default:
+              break
+     
+  
+  }
+  
+    return benefitArray
+  
+      }
 
 export function dateStringFromUTCTime(timein) {
     //const timein = `2020-04-19 16:00:00`
@@ -1179,9 +1241,9 @@ export function getOffsetTime(timein) {
 
 export function increaseDateStringByOneMonth(timein) {
 
-    let offset = getOffsetTime(timein)
+    const offset = getOffsetDate(timein)
 
-    let datein = new Date(`${timein}${offset}`);
+    let datein = new Date(`${timein} 12:00:00${offset}`);
     let month = datein.getMonth() + 1;
     let year = datein.getFullYear();
     if (month === 12) {
@@ -1193,7 +1255,6 @@ export function increaseDateStringByOneMonth(timein) {
     }
 
     let date = datein.getDate();
-    let hours = datein.getHours();
 
     if (month < 10) {
         month = `0${month}`;
@@ -1202,20 +1263,8 @@ export function increaseDateStringByOneMonth(timein) {
     if (date < 10) {
         date = `0${date}`;
     }
-    hours = datein.getHours();
-    if (hours < 10) {
-        hours = `0${hours}`;
-    }
-    let minutes = datein.getMinutes();
-    if (minutes < 10) {
-        minutes = `0${minutes}`;
-    }
-    let seconds = datein.getSeconds();
-    if (seconds < 10) {
-        seconds = `0${seconds}`;
-    }
 
-    return (`${year}-${month}-${date} ${hours}:${minutes}:${seconds}`);
+    return (`${year}/${month}/${date}`);
 }
 
 export function addincDateObj(datein, inc) {
@@ -2097,18 +2146,18 @@ export function increaseDateByOneWeek(timein) {
 export function calculateTotalYears(purchasedate, salvagedate) {
     let totalyears = 0;
     const purchaseyearstr = purchasedate.split('/')
-    const purchaseyear = purchaseyearstr[0];
-    const purchasemonth = purchaseyearstr[1];
-    const purchaseday = purchaseyearstr[2];
+    const purchaseyear = Number(purchaseyearstr[0]);
+    const purchasemonth = Number(purchaseyearstr[1]);
+    const purchaseday = Number(purchaseyearstr[2]);
     const salvageyearstr = salvagedate.split('/')
-    const salvageyear = salvageyearstr[0]
-    const salvagemonth = salvageyearstr[1]
-    const salvageday = salvageyearstr[2]
+    const salvageyear = Number(salvageyearstr[0])
+    const salvagemonth = Number(salvageyearstr[1])
+    const salvageday = Number(salvageyearstr[2])
     if (purchasemonth >= salvagemonth) {
 
         if (purchasemonth === salvagemonth) {
 
-            if (purchaseday >= salvageday) {
+            if (purchaseday > salvageday) {
 
                 totalyears = salvageyear - purchaseyear - 1
 
@@ -2646,7 +2695,7 @@ export function increasedatebyoneday(timein) {
     if (month < 10) {
         month = `0${month}`
     }
-    return (`${year}-${month}-${day}`)
+    return (`${year}/${month}/${day}`)
 }
 
 
