@@ -244,11 +244,11 @@ export function CreateMyMaterial(materialid, mymaterialid, providerid, milestone
 export function CreateActualMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit) {
     return ({ materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit })
 }
-export function newBenefit(benefitid, detail,purchasedate,amount,accountid) {
-    return ({ benefitid, detail, purchasedate, amount, accountid})
+export function newBenefit(benefitid, detail, purchasedate, amount, accountid) {
+    return ({ benefitid, detail, purchasedate, amount, accountid })
 }
 export function CreateBenefit(benefitid, benefit, accountid, amount, frequency) {
-    return ({ benefitid, benefit, accountid, amount, frequency})
+    return ({ benefitid, benefit, accountid, amount, frequency })
 }
 export function CreateCompany(url, company, address, city, contactstate, zipcode) {
     return ({ url, company, address, city, contactstate, zipcode })
@@ -282,63 +282,64 @@ export function CreateScheduleLabor(laborid, providerid, milestoneid, csiid, tim
 }
 
 export function getBenefitInterval(reoccurring, amount, detail, accountid) {
- 
+
     const newDate = new Date();
     const year = newDate.getFullYear();
     let purchasedate = `${year}/01/01`
-    let salvagedate =`${year+1}/01/01`
-     
-      let period = 0;
-      let x = 0;
-      let benefit = {};
-      let benefitArray = [];
-      switch (reoccurring) {
-          case 'daily':
-              period = calculateTotalDays(purchasedate, salvagedate)
-              for (x = 0; x < period; x++) {
-                  benefit = newBenefit(makeID(16), detail, purchasedate, amount,accountid)
-                  benefitArray.push(benefit)
-                  purchasedate = increasedatebyoneday(purchasedate)
-  
-              }
-              break;
-          case 'weekly':
-              period = calculateTotalWeeks(purchasedate, salvagedate)
-              for (x = 0; x < period; x++) {
-                  benefit = newBenefit(makeID(16), detail, purchasedate, amount,accountid)
-                  benefitArray.push(benefit)
-                  purchasedate = increaseDateByOneWeek(purchasedate)
-              }
-              break;
-          case 'monthly':
-              period = calculateTotalMonths(purchasedate, salvagedate)
-              for (x = 0; x < period; x++) {
-                  benefit = newBenefit(makeID(16), detail, purchasedate, amount,accountid)
-                  benefitArray.push(benefit)
-                  purchasedate = increaseDateStringByOneMonth(purchasedate)
-              }
-  
-              break;
-          case 'annually':
-              period = calculateTotalYears(purchasedate, salvagedate)
-              for (x = 0; x < period; x++) {
-                  benefit = newBenefit(makeID(16), detail, purchasedate, amount, accountid)
-                  benefitArray.push(benefit)
-                  purchasedate = increaseCalendarDaybyOneYear(purchasedate)
-              }
-  
-              break;
-  
-  
-          default:
-              break
-     
-  
-  }
-  
+    let salvagedate = `${year + 1}/01/01`
+
+    let period = 0;
+    let x = 0;
+    let benefit = {};
+    let benefitArray = [];
+    switch (reoccurring) {
+        case 'daily':
+            period = calculateTotalDays(purchasedate, salvagedate)
+            console.log(period, purchasedate, salvagedate)
+            for (x = 0; x < period; x++) {
+                benefit = newBenefit(makeID(16), detail, purchasedate, amount, accountid)
+                benefitArray.push(benefit)
+                purchasedate = increasedatebyoneday(purchasedate)
+
+            }
+            break;
+        case 'weekly':
+            period = calculateTotalWeeks(purchasedate, salvagedate)
+            for (x = 0; x < period; x++) {
+                benefit = newBenefit(makeID(16), detail, purchasedate, amount, accountid)
+                benefitArray.push(benefit)
+                purchasedate = increaseDateByOneWeek(purchasedate)
+            }
+            break;
+        case 'monthly':
+            period = calculateTotalMonths(purchasedate, salvagedate)
+            for (x = 0; x < period; x++) {
+                benefit = newBenefit(makeID(16), detail, purchasedate, amount, accountid)
+                benefitArray.push(benefit)
+                purchasedate = increaseDateStringByOneMonth(purchasedate)
+            }
+
+            break;
+        case 'annually':
+            period = calculateTotalYears(purchasedate, salvagedate)
+            for (x = 0; x < period; x++) {
+                benefit = newBenefit(makeID(16), detail, purchasedate, amount, accountid)
+                benefitArray.push(benefit)
+                purchasedate = increaseCalendarDaybyOneYear(purchasedate)
+            }
+
+            break;
+
+
+        default:
+            break
+
+
+    }
+
     return benefitArray
-  
-      }
+
+}
 
 export function dateStringFromUTCTime(timein) {
     //const timein = `2020-04-19 16:00:00`
@@ -1169,14 +1170,14 @@ export function updateTimes(response) {
 
                         // eslint-disable-next-line
                         project.proposals.myproposal.map((proposal, j) => {
-                            
-                            let updated = response.myuser.company.projects.myproject[i].proposals.myproposal[j].updated 
+
+                            let updated = response.myuser.company.projects.myproject[i].proposals.myproposal[j].updated
                             let approved = response.myuser.company.projects.myproject[i].proposals.myproposal[j].approved;
-                            if(updated) {
-                            response.myuser.company.projects.myproject[i].proposals.myproposal[j].updated = convertUTCTime(proposal.updated)
+                            if (updated) {
+                                response.myuser.company.projects.myproject[i].proposals.myproposal[j].updated = convertUTCTime(proposal.updated)
                             }
-                            if(approved) {
-                            response.myuser.company.projects.myproject[i].proposals.myproposal[j].approved = convertUTCTime(proposal.approved)
+                            if (approved) {
+                                response.myuser.company.projects.myproject[i].proposals.myproposal[j].approved = convertUTCTime(proposal.approved)
                             }
 
                         })
@@ -1189,12 +1190,12 @@ export function updateTimes(response) {
                         project.invoices.myinvoice.map((invoice, j) => {
                             let updated = response.myuser.company.projects.myproject[i].invoices.myinvoice[j].updated
                             let approved = response.myuser.company.projects.myproject[i].invoices.myinvoice[j].approved
-                            if(updated) {
+                            if (updated) {
 
-                            response.myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = convertUTCTime(invoice.updated)
+                                response.myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = convertUTCTime(invoice.updated)
                             }
-                            if(approved) {
-                            response.myuser.company.projects.myproject[i].invoices.myinvoice[j].approved = convertUTCTime(invoice.approved)
+                            if (approved) {
+                                response.myuser.company.projects.myproject[i].invoices.myinvoice[j].approved = convertUTCTime(invoice.approved)
                             }
 
                         })
@@ -1236,6 +1237,15 @@ export function getOffsetTime(timein) {
         offset = `0${offset}`
     }
     return (`${sym}${offset}:00`)
+
+}
+
+export function abbMonth(mon) {
+
+    // mon = 2021/01/23
+    const newDate = new Date(mon)
+    return (`${newDate.getMonth() + 1}/${newDate.getDate()}`)
+
 
 }
 
@@ -2113,6 +2123,9 @@ export function calculateTotalDays(purchasedate, salvagedate) {
     return Math.round(days)
 
 }
+export function convertDegresstoRadians(degree) {
+    return Number(degree) * (Math.PI / 180)
+}
 
 export function calculateTotalWeeks(purchasedate, salvagedate) {
 
@@ -2232,6 +2245,7 @@ export function getInterval(salvagedate, purchasedate, reoccurring, amount, deta
             for (x = 0; x < period; x++) {
                 cost = newCost(makeID(16), detail, purchasedate, amount)
                 costArray.push(cost)
+
                 purchasedate = increasedatebyoneday(purchasedate)
 
             }
@@ -2279,7 +2293,7 @@ export function getInterval(salvagedate, purchasedate, reoccurring, amount, deta
 
 
 export function inputUTCStringForLaborID(timein) {
-  
+
     let datein = new Date(timein)
     let hours = datein.getHours();
     let ampm = "";
@@ -2638,9 +2652,7 @@ export function checkemptyobject(obj) {
 
 export function increasedatebyoneday(timein) {
 
-    //let timein = '2020-12-31';
-    let offset = getOffsetDate(timein);
-    let datein = new Date(`${timein} 00:00:00${offset}`);
+    let datein = new Date(timein);
     let newdate = new Date(datein.getTime())
     let day = newdate.getDate();
     let month = newdate.getMonth() + 1;
@@ -2651,6 +2663,7 @@ export function increasedatebyoneday(timein) {
             if (month !== 12) {
                 month = month + 1;
 
+
             } else {
                 month = 1;
                 year = year + 1;
@@ -2660,9 +2673,7 @@ export function increasedatebyoneday(timein) {
 
         }
 
-    }
-
-    if (month === 4 || month === 6 || month === 9 || month === 11) {
+    } else if (month === 4 || month === 6 || month === 9 || month === 11) {
 
         if (day === 30) {
             day = 1;
@@ -2670,10 +2681,7 @@ export function increasedatebyoneday(timein) {
         } else {
             day = day + 1;
         }
-    }
-
-
-    if (month === 2) {
+    } else if (month === 2) {
         if (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)) {
             if (day === 29) {
                 day = 1;
@@ -2683,6 +2691,8 @@ export function increasedatebyoneday(timein) {
             if (day === 28) {
                 day = 1;
                 month = month + 1;
+            } else {
+                day = day + 1
             }
         }
 
@@ -2753,6 +2763,34 @@ export function trailingZeros(num) {
     } else {
         return num;
     }
+
+}
+
+export function getPieColor(i) {
+    i = i + 1;
+    switch (true) {
+        case i === 8 || i % 8 === 0:
+            return '#7BBBD6';
+        case (i === 7 || i % 7 === 0):
+            return '#FF6059';
+        case (i === 6 || i % 6 === 0):
+            return '#8D8D8D';
+        case (i === 5 || i % 5 === 0):
+            return '#C05DFF';
+        case (i === 4 || i % 4 === 0):
+            return '#FF2607';
+        case (i === 3 || i % 3 === 0):
+            return '#F28D35';
+        case (i === 2 || i % 2 === 0):
+            return '#F7D200';
+        case i === 1:
+            return '#14CC7F';
+        default:
+            return '#000000'
+    }
+
+
+
 
 }
 

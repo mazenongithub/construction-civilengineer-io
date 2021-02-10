@@ -487,17 +487,11 @@ showmyaccounts() {
 render() {
     const styles = MyStylesheet();
     const dynamicstyles = new DynamicStyles();
-    const headerFont = dynamicstyles.getHeaderFont.call(this)
+
     const myuser = dynamicstyles.getuser.call(this);
     const regularFont = dynamicstyles.getRegularFont.call(this)
     if (myuser) {
-        const companyurl = () => {
-            if (myuser.hasOwnProperty("company")) {
-                return (myuser.company.url)
-            }
-        }
-        const checkmanager = dynamicstyles.checkmanager.call(this)
-        if(checkmanager) {
+      
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -512,11 +506,7 @@ render() {
                 </div>
             </div>
         )
-        } else {
-            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
-                <span style={{ ...styles.generalFont, ...regularFont }}>You have to be a manager to view this component </span>
-            </div>) 
-        }
+       
     } else {
         return (<div style={{ ...styles.generalContainer, ...regularFont }}>
             <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Accounts</span>

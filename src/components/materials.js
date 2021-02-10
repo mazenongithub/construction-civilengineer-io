@@ -646,15 +646,10 @@ class Materials extends Component {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
         const maxWidth = dynamicstyles.getMaxWidth.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            const companyurl = () => {
-                if (myuser.hasOwnProperty("company")) {
-                    return (myuser.company.url)
-                }
-            }
+            
             const checkmanager = dynamicstyles.checkmanager.call(this);
             if(checkmanager) {
             return (

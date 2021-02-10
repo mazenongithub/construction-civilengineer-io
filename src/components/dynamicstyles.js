@@ -504,6 +504,7 @@ class DynamicStyles {
         const benefits = dynamicstyles.getemployeebenefitsbyid.call(this, providerid)
         let mybenefit = false;
         if (benefits) {
+            // eslint-disable-next-line
             benefits.map(benefit => {
                 if (benefit.benefitid === benefitid) {
                     mybenefit = benefit;
@@ -1386,6 +1387,7 @@ class DynamicStyles {
         const benefits = dynamicstyles.getemployeebenefitinterval.call(this,providerid);
        
         if(benefits.length>0) {
+            // eslint-disable-next-line
             benefits.map(benefit=> {
                 sum+=Number(benefit.amount)
             })
@@ -1403,6 +1405,7 @@ class DynamicStyles {
         const employee = dynamicstyles.getemployeebyid.call(this,providerid)
         if(employee) {
             if(employee.hasOwnProperty("benefits")) {
+      // eslint-disable-next-line
                 employee.benefits.benefit.map(benefit=> {
                     let interval = getBenefitInterval(benefit.frequency,Number(benefit.amount),benefit.benefit, benefit.accountid)
                     benefits = [...benefits,...interval]
@@ -3017,20 +3020,7 @@ class DynamicStyles {
         return key;
     }
 
-    getemployeebyprofile(profile) {
-        const dynamicstyles = new DynamicStyles()
-        let myemployees = dynamicstyles.getmyemployees.call(this)
-        let employees = false;
-        if (myemployees) {
-            // eslint-disable-next-line
-            myemployees.map(employee => {
-                if (employee.profile === profile) {
-                    employees = employee;
-                }
-            })
-        }
-        return employees;
-    }
+  
     getemployeebyprofile(profile) {
         const dynamicstyles = new DynamicStyles()
         let myemployees = dynamicstyles.getmyemployees.call(this)

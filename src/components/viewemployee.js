@@ -9,11 +9,12 @@ import { Link } from 'react-router-dom';
 import AccountID from './accountid'
 import Frequency from './frequency';
 import { removeIconSmall } from './svg';
+import PieChart from './piechart';
 
 class ViewEmployee extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, activeemployeeid: '', spinner: false }
+        this.state = { render: '', width: 0, height: 0, activeemployeeid: '', spinner: false, hidebenefits:[] }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -320,6 +321,7 @@ class ViewEmployee extends Component {
         const employee = this.getemployee();
         let showbenefit = [];
         if (employee.hasOwnProperty("benefits")) {
+            // eslint-disable-next-line
             employee.benefits.benefit.map(benefit => {
                 showbenefit.push(this.showbenefit(benefit))
 
@@ -412,6 +414,7 @@ class ViewEmployee extends Component {
         const benefits = this.getemployeebenefitinterval();
      
         if(benefits.length>0) {
+            // eslint-disable-next-line
             benefits.map(benefit=> {
                 sum+=Number(benefit.amount)
             })
@@ -429,6 +432,7 @@ class ViewEmployee extends Component {
         const employee = this.getemployee();
         if(employee) {
             if(employee.hasOwnProperty("benefits")) {
+                // eslint-disable-next-line
                 employee.benefits.benefit.map(benefit=> {
                     let interval = getBenefitInterval(benefit.frequency,Number(benefit.amount),benefit.benefit, benefit.accountid)
                     benefits = [...benefits,...interval]
@@ -459,6 +463,7 @@ class ViewEmployee extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const accountid = new AccountID();
         const frequency = new Frequency();
+        const piechart = new PieChart();
         if (myuser) {
             const employee = this.getemployee();
             if (employee) {
@@ -521,6 +526,8 @@ class ViewEmployee extends Component {
 
                             {this.showlaborRate()}
 
+                            {piechart.showpiechart.call(this,employee.providerid)}
+                            
 
                             {dynamicstyles.showsavecompany.call(this)}
 

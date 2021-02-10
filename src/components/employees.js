@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { removeIconSmall } from './svg';
+//import { removeIconSmall } from './svg';
 import DynamicStyles from './dynamicstyles';
 
 import { Link } from 'react-router-dom';
@@ -49,14 +49,14 @@ class Employees extends Component {
         return (myemployees)
     }
 
+ 
+
 
  
 
     removeemployee(employee) {
         const dynamicstyles = new DynamicStyles();
-        const checkmanager = dynamicstyles.checkmanager.call(this)
         const myuser = dynamicstyles.getuser.call(this);
-
         let myemployee = dynamicstyles.getemployeebyid.call(this, employee.providerid);
 
        

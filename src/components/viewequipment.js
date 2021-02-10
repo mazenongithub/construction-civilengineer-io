@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
-import { radioOpen, radioClosed, removeIconSmall, openDetail, closeDetail, CheckedBox, EmptyBox } from './svg'
+import { radioOpen, radioClosed, removeIconSmall, CheckedBox, EmptyBox } from './svg'
 import { EquipmentOwnership, formatDateStringDisplay, CreateCostID } from './functions';
 import PurchaseDate from './purchasedate';
 import SaleDate from './saledate';
