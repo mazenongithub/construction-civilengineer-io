@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { updateTimes, sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { returnCompanyList, CreateUser, calculateTotalMonths, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, UTCTimefromCurrentDate, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime, validateLoanPayment, getRepaymentCosts, getInterval, newCost, convertUTCTime, formatTimeString,getBenefitInterval } from './functions'
+import { returnCompanyList, CreateUser, calculateTotalMonths, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, UTCTimefromCurrentDate, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime, validateLoanPayment, getRepaymentCosts, getInterval, newCost, convertUTCTime, formatTimeString, getBenefitInterval } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
 import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin, LoadSpecifications, LoadCSIs } from './actions/api';
 import Spinner from './spinner'
@@ -1381,34 +1381,46 @@ class DynamicStyles {
 
     calculateLaborRatebyID(providerid) {
         const dynamicstyles = new DynamicStyles();
-        const employee = dynamicstyles.getemployeebyid.call(this,providerid)
+        const employee = dynamicstyles.getemployeebyid.call(this, providerid)
         let sum = 0;
-        if(employee) {
-        const benefits = dynamicstyles.getemployeebenefitinterval.call(this,providerid);
-       
-        if(benefits.length>0) {
-            // eslint-disable-next-line
-            benefits.map(benefit=> {
-                sum+=Number(benefit.amount)
-            })
-        }
+        if (employee) {
+            const benefits = dynamicstyles.getemployeebenefitinterval.call(this, providerid);
 
-    }
-    const workinghours = Number(employee.workinghours)
-    const laborrate = workinghours > 0 ? sum/workinghours : 0;
+            if (benefits.length > 0) {
+                // eslint-disable-next-line
+                benefits.map(benefit => {
+                    sum += Number(benefit.amount)
+                })
+            }
+
+        }
+        const workinghours = Number(employee.workinghours)
+        const laborrate = workinghours > 0 ? sum / workinghours : 0;
         return laborrate;
+    }
+    getButtonSize() {
+        if (this.state.width > 1200) {
+            return ({ width: '60px' })
+
+        } else if (this.state.width > 600) {
+            return ({ width: '50px' })
+
+        } else {
+            return ({ width: '40px' })
+
+        }
     }
 
     getemployeebenefitinterval(providerid) {
         const dynamicstyles = new DynamicStyles();
         let benefits = [];
-        const employee = dynamicstyles.getemployeebyid.call(this,providerid)
-        if(employee) {
-            if(employee.hasOwnProperty("benefits")) {
-      // eslint-disable-next-line
-                employee.benefits.benefit.map(benefit=> {
-                    let interval = getBenefitInterval(benefit.frequency,Number(benefit.amount),benefit.benefit, benefit.accountid)
-                    benefits = [...benefits,...interval]
+        const employee = dynamicstyles.getemployeebyid.call(this, providerid)
+        if (employee) {
+            if (employee.hasOwnProperty("benefits")) {
+                // eslint-disable-next-line
+                employee.benefits.benefit.map(benefit => {
+                    let interval = getBenefitInterval(benefit.frequency, Number(benefit.amount), benefit.benefit, benefit.accountid)
+                    benefits = [...benefits, ...interval]
                 })
             }
         }
@@ -1486,7 +1498,7 @@ class DynamicStyles {
                         let oldbenefitid = benefit.oldbenefitid;
                         let benefitid = benefit.benefitid;
                         let n = dynamicstyles.getemployeekeybyid.call(this, providerid);
-                        let o = dynamicstyles.getbenefitkeybyid.call(this, providerid,oldbenefitid)
+                        let o = dynamicstyles.getbenefitkeybyid.call(this, providerid, oldbenefitid)
                         myuser.company.office.employees.employee[n].benefits.benefit[o].benefitid = benefitid;
                         if (this.state.activebenefitid === oldbenefitid) {
                             this.setState({ activebenefitid: benefitid })
@@ -3020,7 +3032,7 @@ class DynamicStyles {
         return key;
     }
 
-  
+
     getemployeebyprofile(profile) {
         const dynamicstyles = new DynamicStyles()
         let myemployees = dynamicstyles.getmyemployees.call(this)
@@ -3255,9 +3267,9 @@ class DynamicStyles {
     }
     getremoveicon() {
         if (this.state.width > 800) {
-            return ({ width: '47px', height: '47px' })
+            return ({ width: '37px' })
         } else {
-            return ({ width: '36px', height: '36px' })
+            return ({ width: '30px' })
         }
     }
     getRegularFont() {
@@ -4251,6 +4263,30 @@ class DynamicStyles {
         }
         return myaccounts;
     }
+
+    touchtoedit() {
+
+        if(this.state.width>1200) {
+            return({width:'80px'})
+        } else {
+            return({width:'60px'})
+        } 
+    }
+
+
+    buttonSize() {
+        if (this.state.width > 1200) {
+            return ({ width: '60px' })
+
+        } else if (this.state.width > 600) {
+            return ({ width: '50px' })
+
+        } else {
+            return ({ width: '40px' })
+
+        }
+    }
+
 
     getaccountbyid(accountid) {
         const dynamicstyles = new DynamicStyles();

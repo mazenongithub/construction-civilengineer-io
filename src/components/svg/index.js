@@ -9,8 +9,21 @@ export function closeDetail() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111.2 112.99"><defs><style></style></defs><title>closeDetail</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path className="closedetail-1" d="M2.38,101.05c15,9.35,33.83,10,48.8,1.44,17.18-9.78,26.5-30,23-50.24" /><polygon className="closedetail-2" points="74.02 3.52 40.65 51.96 107.39 51.96 74.02 3.52" /></g></g></svg>)
 }
 
+export function goToIcon() {
+    return(
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86.79 35.34"><defs><style>
+</style></defs><g id="Layer_2" data-name="Layer 2"><g id="image"><path className="gotoicon-1" d="M1,13.15c-.4,0-.73.75-.73,1.68v7c0,.93.33,1.68.73,1.68H53V13.15Z"/><path className="gotoicon-1" d="M85.42,14.42,55.21.33C54.09-.19,53,1.78,53,4.41v23c0,4.93,2,8.6,4.07,7.55L85.44,20.75C86.92,20,86.91,15.12,85.42,14.42Z"/></g></g></svg>
+    )
+}
+
+export function TouchtoEdit() {
+    return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.02 55.03"><defs><style>
+    </style></defs><g id="Layer_2" data-name="Layer 2"><g id="outline"><rect className="touchtoedit-1" x="0.5" y="0.5" width="56.02" height="14.29" rx="2.18"/><text className="touchtoedit-2" transform="translate(6.74 9.68)"><tspan className="touchtoedit-3">T</tspan><tspan x="3.41" y="0">ouch </tspan><tspan className="touchtoedit-4" x="21.93" y="0">t</tspan><tspan x="24.53" y="0">o </tspan><tspan className="touchtoedit-5" x="30.62" y="0">E</tspan><tspan x="34.52" y="0">dit</tspan></text><path className="touchtoedit-6" d="M10.05,55a12.53,12.53,0,0,0-1.8-4.14,26.81,26.81,0,0,1-2.74-5,69.24,69.24,0,0,1-2.64-7.18C1.33,33.72-2.11,31.53,4,29a16,16,0,0,1,6-1.1l-.85-9.4V15a2.82,2.82,0,0,1,.34-1.8A3,3,0,0,1,12,11.58a2.07,2.07,0,0,1,1.68,1.48A11.59,11.59,0,0,1,14,15s.58,12.54,2,12.74a26.63,26.63,0,0,1,3.69,1.57,4.07,4.07,0,0,1,2.18,2.42c1.93,5.23.29,9.8,0,11.31a21.49,21.49,0,0,1-3.68,8.27l.54,3"/><line className="touchtoedit-7" x1="2.6" y1="29.64" x2="5.06" y2="34.68"/><line className="touchtoedit-7" x1="9.91" y1="27.94" x2="10.59" y2="32.72"/><line className="touchtoedit-7" x1="6.03" y1="28.38" x2="7.76" y2="33.26"/><line className="touchtoedit-7" x1="15.98" y1="27.69" x2="16.66" y2="31.51"/><path className="touchtoedit-8" d="M10,17V14.59a1.45,1.45,0,0,1,.71-1.1,1.93,1.93,0,0,1,2-.15,1,1,0,0,1,.5.83L13.16,17"/><line className="touchtoedit-9" x1="1.74" y1="2.93" x2="6.89" y2="2.93"/><line className="touchtoedit-9" x1="1.74" y1="11.02" x2="6.89" y2="11.02"/><line className="touchtoedit-9" x1="4.32" y1="2.93" x2="4.32" y2="11.02"/></g></g></svg>)
+}
+
 export function hamburgerIcon() {
     return(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98.28 59.52"><defs><style></style></defs><g id="Layer_2" data-name="Layer 2"><g id="hide"><g id="Layer_1-2" data-name="Layer 1"><rect className="hamburger-1" x="0.5" y="0.5" width="97.28" height="58.52" rx="6.74"/><rect className="hamburger-2" x="18.46" y="12.39" width="61.36" height="8.47" rx="1.88"/><rect className="hamburger-2" x="18.46" y="25.53" width="61.36" height="8.47" rx="1.88"/><rect className="hamburger-2" x="18.46" y="38.66" width="61.36" height="8.47" rx="1.88"/></g></g></g></svg>)
+
 }
 
 export function cheeseburgerIcon() {

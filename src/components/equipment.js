@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { removeIconSmall } from './svg'
+import { removeIconSmall, goToIcon, TouchtoEdit  } from './svg'
 import { CreateEquipment } from './functions';
 import DynamicStyles from './dynamicstyles';
 import { Link } from 'react-router-dom';
@@ -142,7 +142,7 @@ class Equipment extends Component {
             }
         } else {
 
-            this.reset();
+
             this.setState({ activeequipmentid: false })
         }
     }
@@ -207,24 +207,36 @@ class Equipment extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const removeIcon = dynamicstyles.getremoveicon.call(this);
         const myuser = dynamicstyles.getuser.call(this)
-
+        const buttonSize = dynamicstyles.buttonSize.call(this)
+        const touchtoedit = dynamicstyles.touchtoedit.call(this)
         const getactiveequipmentbackground = (equipmentid) => {
             if (this.state.activeequipmentid === equipmentid) {
                 return ({ backgroundColor: '#F2C4D2' })
             } else {
-                return;
+                return ({ backgroundColor: '#FFFFFF' })
             }
 
         } 
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 return (
+                    <div style={{...styles.generalContainer}}>
+
+                    <div style={{...styles.generalContainer, ...getactiveequipmentbackground(equipment.equipmentid), ...styles.bottomMargin15}}>
+                    <Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}
+                     to={`/${myuser.profile}/company/${myuser.company.url}/equipment/${equipment.equipmentid}`}> 
+                     <button style={{ ...getactiveequipmentbackground(equipment.equipmentid),...buttonSize, ...styles.noBorder}}>{goToIcon()}</button> {equipment.equipment}</Link>
+                    </div>
+
                     <div style={{ ...styles.generalFlex }} key={equipment.equipmentid}>
-                        <div style={{ ...styles.flex5, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...getactiveequipmentbackground(equipment.equipmentid) }} key={equipment.equipmentid}>
-                            <Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}
-                                to={`/${myuser.profile}/company/${myuser.company.url}/equipment/${equipment.equipmentid}`}>{equipment.equipment}</Link>
+
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }} key={equipment.equipmentid}>
+                        <button style={{...styles.generalButton,...touchtoedit}} 
+                             onClick={()=>{this.makequipmentactive(equipment.equipmentid)}}
+                            >{TouchtoEdit()}</button>
                         </div>
-                        <div style={{ ...styles.flex1 }} onClick={() => { this.removeequipment(equipment) }}> <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button></div>
+                        <div style={{ ...styles.flex1 }} onClick={() => { this.removeequipment(equipment) }}> <button style={{ ...styles.generalButton, ...removeIcon, ...styles.alignRight, ...getactiveequipmentbackground(equipment.equipmentid) }}>{removeIconSmall()} </button></div>
+                    </div>
                     </div>)
 
             }

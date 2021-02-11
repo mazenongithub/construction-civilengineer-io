@@ -395,12 +395,14 @@ class ViewEmployee extends Component {
 
         return (
             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...activebenefit(benefit.benefitid) }}
-            >
+           key={benefit.benefitid}>
                 <span style={{ ...styles.generalFont, ...regularFont }} onClick={() => { this.makebenefitactive(benefit.benefitid) }}>
                     {benefit.benefit} Amount: ${+Number(benefit.amount).toFixed(2)} {benefit.frequency} Account: {account.accountname}
-                    <button style={{ ...activebenefit(benefit.benefitid), ...styles.noBorder, ...removeIcon() }}
-                        onClick={() => { this.removebenefit(benefit) }}>{removeIconSmall()}</button>
-                </span>
+                    </span>
+                <button style={{ ...activebenefit(benefit.benefitid), ...styles.noBorder, ...removeIcon() }}
+                        onClick={() => { this.removebenefit(benefit) }}>{removeIconSmall()}
+                        </button>
+           
 
             </div>
         )

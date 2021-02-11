@@ -6,6 +6,7 @@ import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 
 import { Link } from 'react-router-dom';
+import { goToIcon } from './svg';
 
 class Employees extends Component {
     constructor(props) {
@@ -95,14 +96,27 @@ class Employees extends Component {
 
             if (employee) {
 
+                const buttonSize = () => {
+                    if(this.state.width>1200) {
+                        return({width:'60px'})
+
+                    } else if (this.state.width>600) {
+                        return({width:'50px'})
+                        
+                    } else {
+                        return({width:'40px'})
+
+                    }
+                }
+
 
                 return (
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={`myemployee${employee.providerid}`} >
                         <div style={{ ...styles.flex1 }}>
 
-                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }}
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}
                                 to={`/${myuser.profile}/company/${myuser.company.url}/employees/${employee.profile}`}
-                            > {employee.firstname} {employee.lastname}</Link>
+                            > <button style={{...styles.generalButton, ...buttonSize()}}>{goToIcon()}</button> {employee.firstname} {employee.lastname}</Link>
 
                         </div>
 
