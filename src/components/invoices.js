@@ -18,12 +18,7 @@ class Invoices extends Component {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getproject.call(this)
-        if (myproject) {
-
-            this.props.reduxProject({ projectid: myproject.projectid })
-        }
-
+      
         const csicodes = dynamicstyles.getcsis.call(this)
         if(!csicodes) {
             dynamicstyles.loadcsis.call(this)
@@ -710,8 +705,7 @@ class Invoices extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         const checkfield = dynamicstyles.getcheckfield.call(this)
-
-        
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
         
         const laboricon = () => {
             if (this.state.showlabor) {
@@ -760,10 +754,23 @@ class Invoices extends Component {
                     return (
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1 }}>
-                                <div style={{ ...styles.generalFlex }}>
+
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                > /{project.title}</Link>
+                            </div>
+                            
+
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                       
+                                        to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/invoices`}
+                                    > /invoices</Link>
+                                </div>
                                  
 
-                                </div>
+                            
                                 <div style={{ ...styles.generalFlex }}>
                                     <div style={{ ...styles.flex1, ...styles.generalFont }}>
                                         <button style={{ ...styles.generalButton, ...proposalButton }} onClick={() => { this.createnewinvoice() }}>{RedPlus()}</button><span style={{ ...styles.generalFont, ...regularFont }}>Create New Invoice</span>

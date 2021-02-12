@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { removeIconSmall, goToIcon, TouchtoEdit } from './svg';
 import { CreateAccount } from './functions';
@@ -8,94 +6,79 @@ import DynamicStyles from './dynamicstyles';
 import MakeID from './makeids';
 import { Link } from 'react-router-dom';
 
-class Accounts extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { render: '', width: 0, height: 0, activeaccountid: "", account: '', account_1: '', account_2: '', account_3: "", accountname: '', spinner: false }
-        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
-    }
-    componentDidMount() {
-        window.addEventListener('resize', this.updateWindowDimensions);
-        this.updateWindowDimensions();
-    }
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
-    }
-    updateWindowDimensions() {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
-    }
+class Accounts {
 
-  
     handleaccountname(accountname) {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
 
         if (myuser) {
-       
 
-                if (this.state.activeaccountid) {
-                    const account = dynamicstyles.getaccountbyid.call(this, this.state.activeaccountid)
-                    if (account) {
-                        let i = dynamicstyles.getaccountkeybyid.call(this, this.state.activeaccountid)
-                        myuser.company.office.accounts.account[i].accountname = accountname;
-                        this.props.reduxUser(myuser)
-                        this.setState({ render: 'render' })
-                    }
-
-
-                } else {
-                    let accountid = makeID.accountid.call(this)
-
-                    let newaccount = CreateAccount(accountid, accountname, myuser.providerid)
-
-                    if (myuser.company.office.hasOwnProperty("accounts")) {
-                        myuser.company.office.accounts.account.push(newaccount)
-                    } else {
-                        let accounts = { account: [newaccount] }
-                        myuser.company.office.accounts = accounts;
-                    }
+            if (this.state.activeaccountid) {
+                const account = dynamicstyles.getaccountbyid.call(this, this.state.activeaccountid)
+                if (account) {
+                    let i = dynamicstyles.getaccountkeybyid.call(this, this.state.activeaccountid)
+                    myuser.company.office.accounts.account[i].accountname = accountname;
                     this.props.reduxUser(myuser)
-                    this.setState({ activeaccountid: accountid })
-
+                    this.setState({ render: 'render' })
                 }
 
-        
+
+            } else {
+                let accountid = makeID.accountid.call(this)
+
+                let newaccount = CreateAccount(accountid, accountname, myuser.providerid)
+
+                if (myuser.company.office.hasOwnProperty("accounts")) {
+                    myuser.company.office.accounts.account.push(newaccount)
+                } else {
+                    let accounts = { account: [newaccount] }
+                    myuser.company.office.accounts = accounts;
+                }
+                this.props.reduxUser(myuser)
+                this.setState({ activeaccountid: accountid })
+
+            }
+
+
         }
 
     }
     getaccountname() {
+        const dynamicstyles = new DynamicStyles()
+        let accountname = "";
         if (this.state.activeaccountid) {
-            let account = this.getactiveaccount();
-            return (account.accountname)
-        } else {
-            return (this.state.accountname)
+            let account = dynamicstyles.getaccountbyid.call(this, this.state.activeaccountid)
+            accountname = account.accountname;
         }
+        return accountname;
     }
     makeaccountunactive() {
-        this.setState({activeaccountid:false})
+        this.setState({ activeaccountid: false })
     }
     showaccount() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles()
         const regularFont = dynamicstyles.getRegularFont.call(this)
-       
-            return (
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1}}>
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Account Name</span> <br />
-                         <input type="text"
-                            onChange={event => { this.handleaccountname(event.target.value) }}
-                            
-                            value={this.getaccountname()}
-                            style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }} />
-                    </div>
+        const accounts = new Accounts();
+
+        return (
+            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.flex1 }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Account Name</span> <br />
+                    <input type="text"
+                        onChange={event => { accounts.handleaccountname.call(this, event.target.value) }}
+
+                        value={accounts.getaccountname.call(this)}
+                        style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }} />
                 </div>
-            )
-        
+            </div>
+        )
+
     }
 
-  
+
     makeaccountactive(accountid) {
         if (this.state.activeaccountid !== accountid) {
 
@@ -165,107 +148,123 @@ class Accounts extends Component {
         return { deleteaccount, deletemessage }
     }
     removeaccount(account) {
+        const accounts = new Accounts();
         let dynamicstyles = new DynamicStyles();
-       
-            if (window.confirm(`Are you sure you want to delete ${account.accountname}?`)) {
-                let validate = this.validateDeleteAccount(account);
-                if (validate.deleteaccount) {
-                    const myuser = dynamicstyles.getuser.call(this);
-                    if (myuser) {
-                        const myaccount = dynamicstyles.getaccountbyid.call(this, account.accountid)
-                        if (myaccount) {
-                            const i = dynamicstyles.getaccountkeybyid.call(this, account.accountid)
-                            myuser.company.office.accounts.account.splice(i, 1);
-                            this.props.reduxUser(myuser)
-                            this.setState({ activeaccountid: false })
 
-                        }
-
-
+        if (window.confirm(`Are you sure you want to delete ${account.accountname}?`)) {
+            let validate = accounts.validateDeleteAccount.call(this, account);
+            if (validate.deleteaccount) {
+                const myuser = dynamicstyles.getuser.call(this);
+                if (myuser) {
+                    const myaccount = dynamicstyles.getaccountbyid.call(this, account.accountid)
+                    if (myaccount) {
+                        const i = dynamicstyles.getaccountkeybyid.call(this, account.accountid)
+                        myuser.company.office.accounts.account.splice(i, 1);
+                        this.props.reduxUser(myuser)
+                        this.setState({ activeaccountid: false })
 
                     }
 
-                } else {
-                    const message = validate.deletemessage;
-                    this.setState({ message })
+
+
                 }
 
-
+            } else {
+                const message = validate.deletemessage;
+                this.setState({ message })
             }
-   
+
+
+        }
+
 
     }
     showmyaccounts() {
         const dynamicstyles = new DynamicStyles();
         const myaccounts = dynamicstyles.getmyaccounts.call(this);
-        let accounts = [];
+        const accounts = new Accounts();
+        let getaccounts = [];
         let styles = MyStylesheet();
         let regularFont = dynamicstyles.getRegularFont.call(this);
         const buttonSize = dynamicstyles.getButtonSize.call(this)
         const removeIcon = dynamicstyles.getremoveicon.call(this)
         const touchtoedit = () => {
 
-            if(this.state.width>1200) {
-                return({width:'80px'})
+            if (this.state.width > 1200) {
+                return ({ width: '80px' })
             } else {
-                return({width:'60px'})
-            } 
+                return ({ width: '60px' })
+            }
         }
 
-    
+        const myuser = dynamicstyles.getuser.call(this)
 
-        if (myaccounts) {
 
-            // eslint-disable-next-line
-            myaccounts.map(account => {
-                accounts.push(
-                    <div style={{ ...styles.generalContainer }}>
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myaccounts) {
 
-                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...regularFont, ...styles.generalFont, ...this.getactivebackground(account.accountid), ...styles.bottomMargin15 }} key={account.accountid}>
+                    // eslint-disable-next-line
+                    myaccounts.map(account => {
+                        getaccounts.push(
+                            <div style={{ ...styles.generalContainer }} key={account.accountid}>
 
-                            <Link style={{ ...styles.generalLink, ...styles.addLeftMargin15 }} to={`/${this.props.match.params.providerid}/company/${this.props.match.params.companyid}/accounts/${account.accountid}`}>
-                                <span style={{ ...styles.generalFont, ...regularFont }}>{account.accountname}</span>
-                                <button style={{ ...this.getactivebackground(account.accountid), ...buttonSize, ...styles.noBorder }}
-                               >{goToIcon()}
-                               </button>
-                            </Link>
-                        </div>
-                        <div style={{...styles.generalFlex, ...styles.bottomMargin15}}>
-                            <div style={{...styles.flex1}}>
+                                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...regularFont, ...styles.generalFont, ...accounts.getactivebackground.call(this, account.accountid), ...styles.bottomMargin15 }}>
 
-                            <button style={{...styles.generalButton,...touchtoedit()}} 
-                             onClick={()=>{this.makeaccountactive(account.accountid)}}
-                            >{TouchtoEdit()}</button>
+                                    <Link style={{ ...styles.generalLink, ...styles.addLeftMargin15 }} to={`/${myuser.profile}/company/${myuser.company.url}/accounts/${account.accountid}`}>
+                                        <span style={{ ...styles.generalFont, ...regularFont }}>{account.accountname}</span>
+                                        <button style={{ ...accounts.getactivebackground.call(this, account.accountid), ...buttonSize, ...styles.noBorder }}
+                                        >{goToIcon()}
+                                        </button>
+                                    </Link>
+                                </div>
+                                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                    <div style={{ ...styles.flex1 }}>
 
+                                        <button style={{ ...styles.generalButton, ...touchtoedit() }}
+                                            onClick={() => { accounts.makeaccountactive.call(this, account.accountid) }}
+                                        >{TouchtoEdit()}</button>
+
+                                    </div>
+                                    <div style={{ ...styles.flex1 }}>
+                                        <button style={{ ...styles.generalButton, ...removeIcon, ...styles.alignRight }} onClick={() => { accounts.removeaccount.call(this, account) }}>{removeIconSmall()}</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div style={{...styles.flex1}}>
-                            <button style={{...styles.generalButton,...removeIcon, ...styles.alignRight}} onClick={()=>{this.removeaccount(account)}}>{removeIconSmall()}</button>
-                            </div>
-                        </div>
-                    </div>
-                )
+                        )
 
-            })
+                    })
+
+                }
+
+            }
 
         }
-        return accounts;
+        return getaccounts;
     }
-    render() {
+    showAccounts() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
-
         const myuser = dynamicstyles.getuser.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this)
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const accounts = new Accounts();
         if (myuser) {
 
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
 
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                to={`/${myuser.profile}/company/${myuser.company.companyid}/accounts`}
+                            > /accounts</Link>
+                        </div>
 
-                        {this.showaccount()}
 
-                        {this.showmyaccounts()}
+                        {accounts.showaccount.call(this)}
+
+                        {accounts.showmyaccounts.call(this)}
 
                         {dynamicstyles.showsavecompany.call(this)}
 
@@ -282,11 +281,6 @@ class Accounts extends Component {
     }
 
 }
-function mapStateToProps(state) {
-    return {
-        myusermodel: state.myusermodel,
-        navigation: state.navigation
-    }
-}
 
-export default connect(mapStateToProps, actions)(Accounts);
+
+export default Accounts;

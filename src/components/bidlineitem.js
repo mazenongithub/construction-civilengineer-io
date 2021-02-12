@@ -253,9 +253,20 @@ class InvoiceLineItem extends Component {
 
                 <div style={{ ...styles.generalFlex }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                > /{project.title}</Link>
+                            </div>
+
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/bid`}
+                                    > /bid</Link>
+                                </div>
 
                                     <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bid/csi/${csi.csiid}`}
+                                        to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/bid/csi/${csi.csiid}`}
                                     > /{csi.csi} {csi.title}</Link>
                                 </div>
                             </div>

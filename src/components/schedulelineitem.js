@@ -240,7 +240,7 @@ class ScheduleLineItem extends Component {
         const csi = dynamicstyles.getcsibyid.call(this, csiid)
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        
+
         if (myuser) {
             const project = dynamicstyles.getproject.call(this)
             if (project) {
@@ -248,8 +248,21 @@ class ScheduleLineItem extends Component {
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
 
-                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.generalFlex }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+
+                                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                            to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                        > /{project.title}</Link>
+                                    </div>
+
+                                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+
+                                            to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bidschedule`}
+                                        > /bidschedule</Link>
+                                    </div>
 
                                     <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
                                         to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bid/csi/${csi.csiid}`}

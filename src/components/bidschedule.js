@@ -16,12 +16,7 @@ class BidSchedule extends Component {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
-        if(myproject) {
-      
-            this.props.reduxProject({ projectid: myproject.projectid})
-        }
-
+     
         const csicodes = dynamicstyles.getcsis.call(this)
         if(!csicodes) {
             dynamicstyles.loadcsis.call(this)
@@ -658,13 +653,24 @@ class BidSchedule extends Component {
       
 
         if(myuser) {
-            const checkmanager = dynamicstyles.checkmanager.call(this)
-            if (checkmanager) {
+            const project = dynamicstyles.getproject.call(this)
+            if (project) {
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
 
-                
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                > /{project.title}</Link>
+                            </div>
+
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                      
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bidschedule`}
+                                    > /bidschedule</Link>
+                                </div>
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.alignCenter, ...headerFont, ...styles.boldFont }}>
@@ -684,7 +690,7 @@ class BidSchedule extends Component {
 
             } else {
                 return(<div style={{...styles.generalContainer,...regularFont}}>
-                    <span style={{...styles.generalFont,...regularFont}}>Only Managers can view Bid Schedule </span>
+                    <span style={{...styles.generalFont,...regularFont}}> Project Not Found </span>
                 </div>)
             }
 

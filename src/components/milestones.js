@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import * as actions from './actions';
 import { connect } from 'react-redux';
 import { MyStylesheet } from './styles';
-import {  milestoneformatdatestring } from './functions';
+import { milestoneformatdatestring } from './functions';
 import DynamicStyles from './dynamicstyles';
 import CriticalPath from './criticalpath'
-
+import { Link } from 'react-router-dom';
 
 
 class Milestones extends Component {
@@ -18,25 +18,14 @@ class Milestones extends Component {
             activemilestoneid: "",
             width: '',
             height: '',
-       
+
 
         }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
     componentDidMount() {
-
         window.addEventListener('resize', this.updateWindowDimensions);
-        const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
-        if(myproject) {
-
-            this.props.reduxProject({ projectid: myproject.projectid})
-        }
         this.updateWindowDimensions()
-
-        
-
-
     }
 
     componentWillUnmount() {
@@ -53,7 +42,7 @@ class Milestones extends Component {
 
     loadmilestoneids() {
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+        const myproject = dynamicstyles.getproject.call(this)
         let ids = [];
         if (myproject) {
 
@@ -73,11 +62,11 @@ class Milestones extends Component {
         if (this.state.activemilestoneid === milestoneid) {
             this.setState({ activemilestoneid: false })
         } else {
-         
+
             this.setState({ activemilestoneid: milestoneid })
         }
     }
-  
+
     showmilestone(mymilestone) {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
@@ -95,9 +84,8 @@ class Milestones extends Component {
                 <div style={{ ...styles.flex5, ...styles.generalFont, ...regularFont }} onClick={() => { this.makemilestoneactive(mymilestone.milestoneid) }}>
                     {mymilestone.milestone} From {milestoneformatdatestring(mymilestone.start)} to {milestoneformatdatestring(mymilestone.completion)}
 
-
                 </div>
-              
+
             </div>
         )
     }
@@ -109,33 +97,45 @@ class Milestones extends Component {
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const criticalpath = new CriticalPath();
         const myuser = dynamicstyles.getuser.call(this)
-        if(myuser) {
-        return (
-            <div style={{ ...styles.generalFlex, ...styles.addLeftMargin15}}>
-                <div style={{ ...styles.flex1 }}>
+        if (myuser) {
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{this.props.match.params.projectid} </span><br />
-                            <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>Project Milestones</span>
+            const project = dynamicstyles.getproject.call(this)
+            if (project) {
+                return (
+                    <div style={{ ...styles.generalFlex, ...styles.addLeftMargin15 }}>
+                        <div style={{ ...styles.flex1 }}>
+
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                > /{project.title}</Link>
+                            </div>
+
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/milestones`}
+                                > /milestones</Link>
+                            </div>
+
+
+                          
+
+
                         </div>
                     </div>
 
-    
+                )
 
-                    {this.loadmilestoneids()}
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Project Not found </span>
+                </div>)
 
-                    {criticalpath.showpath.call(this)}
-
-
-                </div>
-            </div>
-
-        )
+            }
 
         } else {
-            return(<div style={{...styles.generalContainer, ...styles.alignCenter}}>
-                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Milestones</span>
+            return (<div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Milestones</span>
             </div>)
 
         }

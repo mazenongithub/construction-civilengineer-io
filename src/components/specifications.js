@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { Link } from 'react-router-dom'
 
+
 class Estimate extends Component {
 
     constructor(props) {
@@ -15,10 +16,10 @@ class Estimate extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
-        if(myproject) {
-    
-            this.props.reduxProject({ projectid: myproject.projectid})
+        
+        const csicodes = dynamicstyles.getcsis.call(this)
+        if (!csicodes) {
+            dynamicstyles.loadcsis.call(this)
         }
         this.updateWindowDimensions();
 
@@ -53,7 +54,7 @@ class Estimate extends Component {
         let specids = [];
         if (myproject) {
             const specs = dynamicstyles.getspecficationsbyprojectid.call(this, myproject.projectid)
-     
+
             if (specs) {
                 // eslint-disable-next-line
                 specs.map(spec => {
@@ -71,30 +72,42 @@ class Estimate extends Component {
         const myuser = dynamicstyles.getuser.call(this);
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
-            dynamicstyles.loadcsis.call(this)
-        }
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        
         if (myuser) {
             const active = dynamicstyles.checkactive.call(this)
             if (active) {
-                const project = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
-               
-                if(project) {
+                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
 
-                    if(!project.hasOwnProperty("specifications")) {
-                        dynamicstyles.loadprojectspecs.call(this,project.projectid) 
+                if (project) {
+
+                    if (!project.hasOwnProperty("specifications")) {
+                        dynamicstyles.loadprojectspecs.call(this, project.projectid)
                     }
 
-                return (
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1 }}>
+                    return (
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1 }}>
 
-                           
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                > /{project.title}</Link>
+                            </div>
 
-                            {this.showspecifications()}
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    
+                                        to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/specifications`}
+                                    > /specifications</Link>
+                                </div>
 
-                        </div>
-                    </div>)
+
+
+                                {this.showspecifications()}
+
+                            </div>
+                        </div>)
 
                 }
 

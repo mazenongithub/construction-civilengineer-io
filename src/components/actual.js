@@ -31,6 +31,7 @@ import EmployeeID from './employeeid'
 import EquipmentID from './equipmentid';
 import MaterialID from './materialid';
 import ScheduleView from './scheduleview';
+import { Link } from 'react-router-dom';
 
 class Actual extends Component {
     constructor(props) {
@@ -47,12 +48,9 @@ class Actual extends Component {
         this.timeoutdefault();
         this.materialdatedefault();
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-        if (myproject) {
-            this.props.reduxProject({ projectid: myproject.projectid })
-        }
+
         const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
+        if (!csicodes) {
             dynamicstyles.loadcsis.call(this)
         }
     }
@@ -1324,7 +1322,7 @@ class Actual extends Component {
         const scheduleview = new ScheduleView();
         const menu = dynamicstyles.getnavigation.call(this)
 
-      
+
 
 
         const equipmentrate = () => {
@@ -1497,35 +1495,35 @@ class Actual extends Component {
         }
 
         const milestonescsi = () => {
-        
+
 
 
 
             if (this.state.width > 800) {
 
-        
-                    return (<div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1 }}>
-                            {milestoneid.showmilestoneid.call(this)}
-                        </div>
-                        <div style={{ ...styles.flex1 }}>
-                            {csi.showCSI.call(this)}
-                        </div>
-                    </div>)
 
-                
+                return (<div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
+                        {milestoneid.showmilestoneid.call(this)}
+                    </div>
+                    <div style={{ ...styles.flex1 }}>
+                        {csi.showCSI.call(this)}
+                    </div>
+                </div>)
+
+
 
 
             } else {
-           
-                    return (<div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1 }}>
-                            {milestoneid.showmilestoneid.call(this)}
-                            {csi.showCSI.call(this)}
-                        </div>
-                    </div>)
 
-                } 
+                return (<div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
+                        {milestoneid.showmilestoneid.call(this)}
+                        {csi.showCSI.call(this)}
+                    </div>
+                </div>)
+
+            }
 
         }
 
@@ -1533,12 +1531,12 @@ class Actual extends Component {
 
             if (this.state.active === 'labor') {
 
-                    return (employeeid.showemployeeid.call(this))
-               
-            
-        }
+                return (employeeid.showemployeeid.call(this))
 
-    }
+
+            }
+
+        }
 
         const showequipmentid = () => {
             if (this.state.active === 'equipment') {
@@ -1592,12 +1590,25 @@ class Actual extends Component {
 
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            const active = dynamicstyles.checkactive.call(this)
-            if (active) {
+            const project = dynamicstyles.getproject.call(this)
+            if (project) {
+
                 return (
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
+
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                > /{project.title}</Link>
+                            </div>
+
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/actual`}
+                                > /actual</Link>
+                            </div>
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
@@ -1634,11 +1645,15 @@ class Actual extends Component {
                         </div>
                     </div>)
 
+
             } else {
                 return (<div style={{ ...styles.generalContainer, ...regularFont }}>
-                    <span style={{ ...styles.generalFont, ...regularFont }}>You have to be active to view Actual </span>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Project Not Found </span>
                 </div>)
+
             }
+
+
 
         } else {
             return (<div style={{ ...styles.generalContainer, ...regularFont }}>

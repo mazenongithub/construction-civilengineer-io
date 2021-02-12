@@ -259,8 +259,23 @@ class InvoiceLineItem extends Component {
                             <div style={{ ...styles.generalFlex }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
 
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                > /{project.title}</Link>
+                            </div>
+                            
+
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                                     <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/invoices/${this.props.match.params.invoiceid}`}
+                                       
+                                        to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/invoices`}
+                                    > /invoices</Link>
+                                </div>
+                                 
+
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/invoices/${this.props.match.params.invoiceid}`}
                                     > /{this.props.match.params.invoiceid}</Link>
                                 </div>
                             </div>
@@ -269,7 +284,7 @@ class InvoiceLineItem extends Component {
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
 
                                     <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/invoices/${this.props.match.params.invoiceid}/csi/${csi.csiid}`}
+                                        to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/invoices/${this.props.match.params.invoiceid}/csi/${csi.csiid}`}
                                     > /{csi.csi} {csi.title}</Link>
                                 </div>
                             </div>

@@ -257,8 +257,21 @@ class ProposalLineItem extends Component {
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
 
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                                 <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/proposals/${this.props.match.params.proposalid}`}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                > /{project.title}</Link>
+                            </div>
+
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    
+                                        to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/proposals`}
+                                    > /proposals</Link>
+                                </div>
+
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/proposals/${this.props.match.params.proposalid}`}
                                 > /{this.props.match.params.proposalid}</Link>
                             </div>
                         </div>
@@ -267,7 +280,7 @@ class ProposalLineItem extends Component {
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
 
                                 <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/proposals/${this.props.match.params.proposalid}/csi/${csi.csiid}`}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/proposals/${this.props.match.params.proposalid}/csi/${csi.csiid}`}
                                 > /{csi.csi} {csi.title}</Link>
                             </div>
                         </div>

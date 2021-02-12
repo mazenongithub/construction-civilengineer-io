@@ -3,6 +3,7 @@ import { MyStylesheet } from './styles'
 import DynamicStyles from './dynamicstyles'
 import { connect } from 'react-redux';
 import * as actions from './actions';
+import { Link } from 'react-router-dom';
 
 class Estimate extends Component {
 
@@ -14,14 +15,9 @@ class Estimate extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
-        if(myproject) {
-          
-            this.props.reduxProject({ projectid: myproject.projectid})
-        }
-
+        
         const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
+        if (!csicodes) {
             dynamicstyles.loadcsis.call(this)
         }
         this.updateWindowDimensions();
@@ -41,7 +37,7 @@ class Estimate extends Component {
         let bidschedule = false;
         if (myuser) {
             const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
-     
+
             if (project) {
                 if (project.hasOwnProperty("costestimate")) {
                     if (project.costestimate.hasOwnProperty("bidschedule")) {
@@ -50,15 +46,15 @@ class Estimate extends Component {
 
                     }
 
-                   
 
-                   
+
+
 
 
                 }
             }
         }
-     
+
         return bidschedule;
 
 
@@ -72,15 +68,15 @@ class Estimate extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const csi = dynamicstyles.getcsibyid.call(this, biditem.csiid);
         const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
-    
+
         const quantityfield = dynamicstyles.getquantityfield.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
             if (project) {
-               
+
                 const quantity = biditem.quantity;
                 const unit = biditem.unit;
-                
+
 
                 if (this.state.width > 800) {
                     return (
@@ -99,11 +95,11 @@ class Estimate extends Component {
                                 </span>
                             </div>
                             <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter }}>
-                               
+
                             </div>
                             <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter }}>
                                 <span style={{ ...styles.generalFont, ...regularFont, ...quantityfield, ...styles.alignCenter }}>
-                                  
+
                                 </span>
                             </div>
                             <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter }}>
@@ -142,18 +138,18 @@ class Estimate extends Component {
 
                                 <div style={{ ...styles.generalFlex }}>
                                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter }}>
-                            
-                                    </div>
-                                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter }}>
-
-                                        
 
                                     </div>
                                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter }}>
-                                  
+
+
+
                                     </div>
                                     <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter }}>
-                                      
+
+                                    </div>
+                                    <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignCenter }}>
+
                                     </div>
 
                                 </div>
@@ -173,7 +169,7 @@ class Estimate extends Component {
     showbiditems() {
 
         const biditems = this.getbiditems();
-    
+
         let items = [];
         if (biditems) {
             // eslint-disable-next-line
@@ -191,7 +187,7 @@ class Estimate extends Component {
         const styles = MyStylesheet();
         const headerFont = dynamicstyles.getHeaderFont.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-      
+
         const titlerow = () => {
             if (this.state.width > 800) {
                 return (
@@ -266,27 +262,51 @@ class Estimate extends Component {
 
             }
         }
+        const myuser = dynamicstyles.getuser.call(this)
+        if (myuser) {
+            const project = dynamicstyles.getproject.call(this)
+            if (project) {
+                return (
+                    <div style={{ ...styles.generalFont }}>
+                        <div style={{ ...styles.flex1 }}>
 
-        return (
-            <div style={{ ...styles.generalFont }}>
-                <div style={{ ...styles.flex1 }}>
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                > /{project.title}</Link>
+                            </div>
 
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                            <span style={{ ...headerFont, ...styles.boldFont, ...styles.headerFamily }}>Engineer Estimate </span>
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/estimate`}
+                                > /estimate</Link>
+                            </div>
+
+                            {titlerow()}
+
+                            {this.showbiditems()}
+
+
+
+
                         </div>
-                    </div>
+                    </div>)
+            }
+            else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Project Not Found </span>
+                </div>)
+            }
 
-                    {titlerow()}
-
-                    {this.showbiditems()}
-
-
-
-
-                </div>
+        } else {
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>You must be logged in to view Bid </span>
             </div>)
+        }
+
     }
+
 
 }
 
@@ -297,7 +317,7 @@ function mapStateToProps(state) {
         project: state.project,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
-        csis:state.csis
+        csis: state.csis
     }
 }
 

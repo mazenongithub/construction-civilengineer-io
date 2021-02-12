@@ -4,52 +4,7 @@ import { Link } from 'react-router-dom';
 import DynamicStyles from './dynamicstyles';
 class Projects {
 
-    gettitlefont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font60)
-        } else {
-            return (styles.font40)
-        }
-
-    }
-    getHeaderFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font40)
-        } else {
-            return (styles.font30)
-        }
-
-    }
-    getRegularFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font24)
-        } else {
-            return (styles.font20)
-        }
-
-    }
-    getuser() {
-        let user = false;
-        if (this.props.myusermodel) {
-            if (this.props.myusermodel.hasOwnProperty("providerid")) {
-                user = this.props.myusermodel;
-            }
-        }
-        return user;
-    }
-    getcompany() {
-        let user = this.getuser();
-        let company = false;
-        if (user) {
-            if (user.hasOwnProperty("company")) {
-                company = user.company;
-            }
-        }
-        return (company)
-    }
+    
     showprojectids() {
         const dynamicstyles = new DynamicStyles();
         const projects = new Projects()
@@ -170,7 +125,7 @@ class Projects {
         if (myuser) {
             if(myuser.hasOwnProperty("company")) {
             return (
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={myproject.projectid}>
                     <div style={{ ...styles.flex1 }}>
 
                         <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
@@ -212,14 +167,6 @@ class Projects {
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
-
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <span style={{ ...styles.flex1, ...headerFont, ...styles.generalFont, ...styles.boldFont }}> /{company()}</span> <br />
-                                <span style={{ ...styles.flex1, ...headerFont, ...styles.generalFont, ...styles.boldFont }}> projects</span> <br />
-                            </div>
-                        </div>
-
 
                         {projects.showprojectids.call(this)}
 

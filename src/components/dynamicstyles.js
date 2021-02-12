@@ -5,7 +5,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import { returnCompanyList, CreateUser, calculateTotalMonths, getEquipmentRentalObj, calculatetotalhours, inputUTCStringForLaborID, inputUTCStringForMaterialIDWithTime, validateProviderID, UTCTimefromCurrentDate, getDateInterval, getScale, calculatemonth, calculateday, calculateyear, calculateFloat, checkemptyobject, getDateTime, validateLoanPayment, getRepaymentCosts, getInterval, newCost, convertUTCTime, formatTimeString, getBenefitInterval } from './functions'
 import { saveCompanyIcon, saveProjectIcon, saveProfileIcon, removeIconSmall } from './svg';
-import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin, LoadSpecifications, LoadCSIs } from './actions/api';
+import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin, LoadSpecifications, LoadCSIs, ValidateCompanyID } from './actions/api';
 import Spinner from './spinner'
 
 class DynamicStyles {
@@ -2382,6 +2382,60 @@ class DynamicStyles {
         }
 
     }
+
+    async validatecompanyid(url) {
+        const dynamicstyles = new DynamicStyles()
+        const myuser = dynamicstyles.getuser.call(this)
+        if (myuser) {
+
+            try {
+
+                let response = await ValidateCompanyID(url);
+                console.log(response)
+                if (response.hasOwnProperty("invalid")) {
+
+                    if(myuser.hasOwnProperty("company")) {
+                        myuser.company.invalid = response.invalid;
+                        this.props.reduxUser(myuser)
+                        this.setState({message:response.invalid})
+                    } else {
+                        this.setState({ urlcheck: false, message: response.invalid })
+                    }
+
+                    
+
+                } else if (response.hasOwnProperty("valid")) {
+
+                    if(myuser.hasOwnProperty("company")) {
+                        if(myuser.company.hasOwnProperty("invalid")) {
+                           
+                            delete myuser.company.invalid;
+                            this.props.reduxUser(myuser)
+                            this.setState({message:''})
+                          
+                        }
+                    } else {
+
+                        let message = `Your Company Will be Hosted at ${process.env.REACT_APP_CLIENT_API}/company/${url}`
+                        this.setState({ urlcheck: true, message })
+
+                    }
+
+                   
+
+                }
+
+            }
+
+            catch (err) {
+                alert(err)
+
+            }
+
+        }
+
+    }
+
     showsavecompany() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
@@ -4236,6 +4290,8 @@ class DynamicStyles {
         }
         return material;
     }
+
+    
 
 
     getmilestonebyid(milestoneid) {

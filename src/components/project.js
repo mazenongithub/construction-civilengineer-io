@@ -28,43 +28,7 @@ class Project extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
-    gettitlefont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font60)
-        } else {
-            return (styles.font40)
-        }
-
-    }
-    getHeaderFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font40)
-        } else {
-            return (styles.font30)
-        }
-
-    }
-    getRegularFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font30)
-        } else {
-            return (styles.font24)
-        }
-
-    }
-    getuser() {
-        let user = false;
-        if (this.props.myusermodel) {
-            if (this.props.myusermodel.hasOwnProperty("providerid")) {
-                user = this.props.myusermodel;
-            }
-        }
-        return user;
-    }
-
+ 
     projectmenus() {
         const styles = MyStylesheet();
         const companyid = this.props.match.params.companyid;
@@ -160,22 +124,9 @@ class Project extends Component {
 
             }
     getproject() {
-        let projectid = this.props.match.params.projectid;
-        let myprojects = false;
-        let myuser = this.getuser();
-        if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
-                if (myuser.company.hasOwnProperty("projects")) {
-                    // eslint-disable-next-line
-                    myuser.company.projects.myproject.map(myproject => {
-                        if (myproject.projectid === projectid) {
-                            myprojects = myproject;
-                        }
-                    })
-                }
-            }
-        }
-        return myprojects;
+        const dynamicstyles = new DynamicStyles();
+        return dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
+     
     }
     gettitle() {
         let myproject = this.getproject();
@@ -202,21 +153,24 @@ class Project extends Component {
     render() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
-        const titleFont = this.gettitlefont();
-        const regularFont = this.getRegularFont();
+        const regularFont = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
         if (myuser) {
+            const project = this.getproject()
+            if(project) {
             return (
 
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
 
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                                /{this.props.match.params.projectid}
-                            </div>
-                        </div>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                            to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                        > /{project.title}</Link>
+                                    </div>
 
+                    
                         <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
                             <div style={{ ...styles.generalContainer }}>
                                 Title: {this.gettitle()}
@@ -234,6 +188,13 @@ class Project extends Component {
                     </div>
                 </div>
             )
+
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Project Not Found</span>
+                </div>)
+
+            }
         } else {
             return (<div style={{ ...styles.generalContainer, ...regularFont }}>
                 <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Project </span>

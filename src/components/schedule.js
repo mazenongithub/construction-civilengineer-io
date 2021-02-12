@@ -31,11 +31,12 @@ import EmployeeID from './employeeid'
 import EquipmentID from './equipmentid';
 import MaterialID from './materialid';
 import ScheduleView from './scheduleview'
+import { Link } from 'react-router-dom';
 
 class Schedule extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, active: '', activelaborid: false, activeequipmentid: false, activematerialid: false, providerid: '', timeinmonth: '', timeinday: '', timeinyear: '', timeinhours: '', timeinminutes: '', timeinampm: '', csi_1: '', csi_2: '', csi_3: '', csi_4: '', timeoutmonth: '', timeoutday: '', timeoutminutes: '', timeouthours: '', timeoutyear: '', timeoutampm: '', milestoneid: '', csiid: '', laborrate: 0, equipmentrate: 0, mymaterialid: '', myequipmentid: '', materialdateday: '', materialdatemonth: '', materialdateyear: '', quantity: '', unit: '', unitcost: '', calendertimein: true, calendertimeout: true, materialcalender: true,spinner:false }
+        this.state = { render: '', width: 0, height: 0, active: '', activelaborid: false, activeequipmentid: false, activematerialid: false, providerid: '', timeinmonth: '', timeinday: '', timeinyear: '', timeinhours: '', timeinminutes: '', timeinampm: '', csi_1: '', csi_2: '', csi_3: '', csi_4: '', timeoutmonth: '', timeoutday: '', timeoutminutes: '', timeouthours: '', timeoutyear: '', timeoutampm: '', milestoneid: '', csiid: '', laborrate: 0, equipmentrate: 0, mymaterialid: '', myequipmentid: '', materialdateday: '', materialdatemonth: '', materialdateyear: '', quantity: '', unit: '', unitcost: '', calendertimein: true, calendertimeout: true, materialcalender: true, spinner: false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -45,13 +46,13 @@ class Schedule extends Component {
         this.timeoutdefault();
         this.materialdatedefault();
         const dynamicstyles = new DynamicStyles();
-     
+
 
         const csicodes = dynamicstyles.getcsis.call(this)
-        if(!csicodes) {
+        if (!csicodes) {
             dynamicstyles.loadcsis.call(this)
         }
-        
+
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -571,18 +572,18 @@ class Schedule extends Component {
 
                     const csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid);
                     let csi_1 = "";
-                    let csi_2= "";
+                    let csi_2 = "";
                     let csi_3 = "";
                     let csi_4 = "";
-                    if(csi) {
-                     csi_1 = csi.csi.substring(0, 2)
-                     csi_2 = csi.csi.substring(2, 4);
-                     csi_3 = csi.csi.substring(4, 6);
-              
-                    if (csi.csi.length > 6) {
-                        csi_4 = csi.csi.substring(7, 9);
+                    if (csi) {
+                        csi_1 = csi.csi.substring(0, 2)
+                        csi_2 = csi.csi.substring(2, 4);
+                        csi_3 = csi.csi.substring(4, 6);
+
+                        if (csi.csi.length > 6) {
+                            csi_4 = csi.csi.substring(7, 9);
+                        }
                     }
-                }
 
 
                     this.setState({ activelaborid: laborid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4 })
@@ -621,7 +622,7 @@ class Schedule extends Component {
                     return (styles.generalButton);
                 }
             }
-         
+
 
             const getactivelaborbackground = (laborid) => {
                 if (this.state.activelaborid === laborid) {
@@ -704,7 +705,7 @@ class Schedule extends Component {
         this.timeindefault()
         this.timeoutdefault();
         this.materialdatedefault();
-        this.setState({ quantity: '', unit: '', unitcost: '', laborrate: '', equipmentrate: '', activeequipmentid:'', activematerialid:'', activelaborid:'' })
+        this.setState({ quantity: '', unit: '', unitcost: '', laborrate: '', equipmentrate: '', activeequipmentid: '', activematerialid: '', activelaborid: '' })
 
     }
 
@@ -909,7 +910,7 @@ class Schedule extends Component {
                     if (equipments) {
                         myuser.company.projects.myproject[i].scheduleequipment.myequipment.push(newEquipment)
                     } else {
-                        const scheduleequipment = {myequipment:[newEquipment]}
+                        const scheduleequipment = { myequipment: [newEquipment] }
                         myuser.company.projects.myproject[i].scheduleequipment = scheduleequipment;
                     }
                     this.props.reduxUser(myuser)
@@ -949,7 +950,7 @@ class Schedule extends Component {
                     const timetimein = this.state.timeinampm;
                     const minutesin = this.state.timeinminutes;
                     let timein = makeTimeString(yearin, monthin, dayin, hoursin, minutesin, timetimein);
-                   console.log(timein)
+                    console.log(timein)
                     timein = UTCTimeStringfromTime(timein);
                     const dayout = this.state.timeoutday;
                     const yearout = this.state.timeoutyear;
@@ -969,7 +970,7 @@ class Schedule extends Component {
                     if (labors) {
                         myuser.company.projects.myproject[i].schedulelabor.mylabor.push(newLabor)
                     } else {
-                        const schedulelabor = {mylabor:[newLabor]}
+                        const schedulelabor = { mylabor: [newLabor] }
                         myuser.company.projects.myproject[i].schedulelabor = schedulelabor;
                     }
                     this.props.reduxUser(myuser)
@@ -1246,7 +1247,7 @@ class Schedule extends Component {
                         myuser.company.projects.myproject[i].schedulematerials.mymaterial.push(newMaterial)
 
                     } else {
-                        const schedulematerials = {mymaterial:[newMaterial]}
+                        const schedulematerials = { mymaterial: [newMaterial] }
                         myuser.company.projects.myproject[i].schedulematerials = schedulematerials;
                     }
 
@@ -1300,8 +1301,8 @@ class Schedule extends Component {
         const scheduleview = new ScheduleView();
         const menu = dynamicstyles.getnavigation.call(this)
 
-    
-        
+
+
         const equipmentrate = () => {
             if (this.state.active === 'equipment' && this.state.activeequipmentid) {
                 return (
@@ -1436,8 +1437,8 @@ class Schedule extends Component {
                         {showtimein()}
                     </div>
                     <div style={{ ...styles.flex1 }}>
-                        <div style={{...styles.addLeftMargin15}}>
-                        {showtimeout()}
+                        <div style={{ ...styles.addLeftMargin15 }}>
+                            {showtimeout()}
                         </div>
                     </div>
                 </div>)
@@ -1513,14 +1514,30 @@ class Schedule extends Component {
         }
         const myuser = dynamicstyles.getuser.call(this)
         if (myuser) {
-            const active = dynamicstyles.checkactive.call(this)
-            if (active) {
+
+            const project = dynamicstyles.getproject.call(this)
+            if (project) {
+
+
                 return (
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
 
-                         
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                > /{project.title}</Link>
+                            </div>
+
+
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/schedule`}
+                                > /schedule </Link>
+                            </div>
+
+
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
@@ -1560,20 +1577,15 @@ class Schedule extends Component {
                             {this.showmaterialids()}
                             {this.showequipmentids()}
 
-                           
-
-                            
-
-
-
 
                         </div>
                     </div>)
 
             } else {
                 return (<div style={{ ...styles.generalContainer, ...regularFont }}>
-                    <span style={{ ...styles.generalFont, ...regularFont }}>You have to be active to view Schedule </span>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Project Not Found </span>
                 </div>)
+
             }
 
         } else {
@@ -1581,6 +1593,8 @@ class Schedule extends Component {
                 <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Schedule </span>
             </div>)
         }
+
+
     }
 
 }

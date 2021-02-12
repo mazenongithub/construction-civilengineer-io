@@ -236,10 +236,16 @@ export async function CheckEmailAddress(emailaddress) {
         .then(resp => {
 
             if (!resp.ok) {
+                if (resp.status >= 400 && resp.status < 500) {
+                    return resp.json().then(data => {
 
-                let err = 'Request failed';
-                throw err;
-
+                        throw data.message;
+                    })
+                }
+                else {
+                    let err = 'Request failed or Server is not responding' ;
+                    throw err;
+                }
             }
 
             return resp.json();
@@ -267,33 +273,37 @@ export async function AppleLogin(values) {
                         throw data.message;
                     })
                 }
-
+                else {
+                    let err = 'Request failed or Server is not responding' ;
+                    throw err;
+                }
             }
 
             return resp.json();
         })
 }
 
-export async function ValidateCompanyID(values) {
+export async function ValidateCompanyID(companyurl) {
 
-    var APIURL = `${process.env.REACT_APP_SERVER_API}/construction/checknewcompanyid`
+    var APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${companyurl}/checkcompanyurl`
 
     return fetch(APIURL, {
-        method: 'post',
-        credentials: 'include',
-        headers: new Headers({
-            'Content-Type': 'application/json',
-        }),
+        credentials: 'include'
 
-        body: JSON.stringify(values)
     })
         .then(resp => {
 
             if (!resp.ok) {
-        
+                if (resp.status >= 400 && resp.status < 500) {
+                    return resp.json().then(data => {
+
+                        throw data.message;
+                    })
+                }
+                else {
                     let err = 'Request failed or Server is not responding' ;
                     throw err;
-                
+                }
             }
 
             return resp.json();
@@ -307,13 +317,18 @@ export async function CheckProviderID(profile) {
         .then(resp => {
 
             if (!resp.ok) {
-            
+                if (resp.status >= 400 && resp.status < 500) {
+                    return resp.json().then(data => {
+
+                        throw data.message;
+                    })
+                }
+                else {
                     let err = 'Request failed or Server is not responding' ;
                     throw err;
-                
+                }
             }
 
-            return resp.json();
         })
 }
 export async function RegisterUser(values) {

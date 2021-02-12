@@ -1,41 +1,22 @@
-import React, {Component} from 'react';
+import React from 'react';
 import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import ClientID from './clientid';
 import Profile from './profile';
-import * as actions from './actions';
-import { connect } from 'react-redux';
-class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            width: 0, height: 0, spinner:false
-        }
-        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-    }
-    componentDidMount() {
-        this.updateWindowDimensions();
-        window.addEventListener('resize', this.updateWindowDimensions);
-    }
 
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
-    }
+class Login  {
 
-    updateWindowDimensions() {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
-    }
- 
-    render() {
+    showLogin() {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const headerFont = dynamicstyles.getHeaderFont.call(this);
         const clientid = new ClientID();
+        const profile = new Profile();
 
         const myuser= dynamicstyles.getuser.call(this)
         if(myuser) {
      
-            return(<Profile/>)
+            return(profile.showProfile.call(this))
         } else {
             return(<div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -60,15 +41,5 @@ class Login extends Component {
 
 }
 
-function mapStateToProps(state) {
-    return {
-      myusermodel: state.myusermodel,
-      navigation: state.navigation,
-      project: state.project,
-      allusers: state.allusers,
-      allcompanys: state.allcompanys,
-      csis: state.csis
-    }
-  }
-  
-  export default connect(mapStateToProps, actions)(Login);
+
+  export default Login;

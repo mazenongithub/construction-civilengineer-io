@@ -19,11 +19,7 @@ class Proposals extends Component {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
         const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this,this.props.match.params.projectid)
-        if(myproject) {
-      
-            this.props.reduxProject({ projectid: myproject.projectid})
-        }
+        
 
         const csicodes = dynamicstyles.getcsis.call(this)
         if(!csicodes) {
@@ -501,7 +497,7 @@ class Proposals extends Component {
         const regularFont = dynamicstyles.getRegularFont.call(this)
         const myuser = dynamicstyles.getuser.call(this)
         const checkfield = dynamicstyles.getcheckfield.call(this)
-
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
      
         
         const laboricon = () => {
@@ -546,13 +542,25 @@ class Proposals extends Component {
         }
 
         if (myuser) {
-            const checkmanager = dynamicstyles.checkmanager.call(this);
-            if (checkmanager) {
+      
                 const project = dynamicstyles.getproject.call(this);
                 if (project) {
                     return (
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1 }}>
+
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                                > /{project.title}</Link>
+                            </div>
+
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    
+                                        to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/proposals`}
+                                    > /proposals</Link>
+                                </div>
                    
 
                                 <div style={{ ...styles.generalFlex }}>
@@ -591,14 +599,12 @@ class Proposals extends Component {
                     )
 
                 } else {
-                    return (<span>&nbsp;</span>)
+                    return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                        <span style={{ ...styles.generalFont, ...regularFont }}>Project Not Found </span>
+                    </div>)
                 }
 
-            } else {
-                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Only Managers can view Proposals</span>
-                </div>)
-            }
+           
 
 
         } else {

@@ -1,45 +1,26 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import * as actions from './actions';
+import React from 'react';
 import { MyStylesheet } from './styles';
-//import { removeIconSmall } from './svg';
 import DynamicStyles from './dynamicstyles';
-
 import { Link } from 'react-router-dom';
 import { goToIcon } from './svg';
 
-class Employees extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { render: '', width: 0, height: 0, activeemployeeid: '', search: '', activebenefitid: '', amount: "", accountid: '', benefit: '', month: '', week: '', day: '', hour: '', spinner: false }
-        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
-    }
-    componentDidMount() {
-        window.addEventListener('resize', this.updateWindowDimensions);
-        this.updateWindowDimensions();
-    }
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
-    }
-    updateWindowDimensions() {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
-    }
-
+class Employees {
 
 
     showmyemployees() {
         const dynamicstyles = new DynamicStyles()
         const myuser = dynamicstyles.getuser.call(this)
+        const employees = new Employees();
         let myemployees = [];
         if (myuser) {
 
-            let employees = dynamicstyles.getmyemployees.call(this)
+            let getemployees = dynamicstyles.getmyemployees.call(this)
 
-            if (employees) {
+            if (getemployees) {
                 // eslint-disable-next-line
-                employees.map(employee => {
+                getemployees.map(getemployee => {
 
-                    myemployees.push(this.showmyemployee(employee.providerid))
+                    myemployees.push(employees.showmyemployee.call(this, getemployee.providerid))
 
 
                 })
@@ -50,39 +31,35 @@ class Employees extends Component {
         return (myemployees)
     }
 
- 
-
-
- 
 
     removeemployee(employee) {
         const dynamicstyles = new DynamicStyles();
         const myuser = dynamicstyles.getuser.call(this);
         let myemployee = dynamicstyles.getemployeebyid.call(this, employee.providerid);
 
-       
 
-                if (window.confirm(`Are you sure you want to delete ${employee.firstname} ${employee.lastname} from the company?`)) {
-                    if (myuser.hasOwnProperty("company")) {
-                        if (myuser.company.office.hasOwnProperty("employees")) {
 
-                            if (myemployee.hasOwnProperty("benefits")) {
-                                this.setState({ message: `${employee.firstname} ${employee.lastname} has benefits to remove prior to removing from the company` })
-                            } else {
-                                let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid);
-                                myuser.company.office.employees.employee.splice(i, 1)
-                                if (myuser.company.office.employees.employee.length === 0) {
-                                    delete myuser.company.office.employees.employee
-                                    delete myuser.company.office.employees
-                                }
-                                this.setState({ activeemployeeid: false })
-                            }
+        if (window.confirm(`Are you sure you want to delete ${employee.firstname} ${employee.lastname} from the company?`)) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.office.hasOwnProperty("employees")) {
 
+                    if (myemployee.hasOwnProperty("benefits")) {
+                        this.setState({ message: `${employee.firstname} ${employee.lastname} has benefits to remove prior to removing from the company` })
+                    } else {
+                        let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid);
+                        myuser.company.office.employees.employee.splice(i, 1)
+                        if (myuser.company.office.employees.employee.length === 0) {
+                            delete myuser.company.office.employees.employee
+                            delete myuser.company.office.employees
                         }
-
+                        this.setState({ activeemployeeid: false })
                     }
+
                 }
-          
+
+            }
+        }
+
     }
     showmyemployee(providerid) {
         const dynamicstyles = new DynamicStyles();
@@ -97,14 +74,14 @@ class Employees extends Component {
             if (employee) {
 
                 const buttonSize = () => {
-                    if(this.state.width>1200) {
-                        return({width:'60px'})
+                    if (this.state.width > 1200) {
+                        return ({ width: '60px' })
 
-                    } else if (this.state.width>600) {
-                        return({width:'50px'})
-                        
+                    } else if (this.state.width > 600) {
+                        return ({ width: '50px' })
+
                     } else {
-                        return({width:'40px'})
+                        return ({ width: '40px' })
 
                     }
                 }
@@ -116,7 +93,7 @@ class Employees extends Component {
 
                             <Link style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}
                                 to={`/${myuser.profile}/company/${myuser.company.url}/employees/${employee.profile}`}
-                            > <button style={{...styles.generalButton, ...buttonSize()}}>{goToIcon()}</button> {employee.firstname} {employee.lastname}</Link>
+                            > <button style={{ ...styles.generalButton, ...buttonSize() }}>{goToIcon()}</button> {employee.firstname} {employee.lastname}</Link>
 
                         </div>
 
@@ -129,27 +106,31 @@ class Employees extends Component {
         }
     }
 
-  
 
-    render() {
+
+    showEmployees() {
         const dynamicstyles = new DynamicStyles();
+
         const styles = MyStylesheet();
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
-
+        const employees = new Employees();
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
         if (myuser) {
 
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
 
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                to={`/${myuser.profile}/company/${myuser.company.companyid}/employees`}
+                            > /employees</Link>
+                        </div>
 
 
-                        {this.showmyemployees()}
+                        {employees.showmyemployees.call(this)}
 
-
-
-                        {dynamicstyles.showsavecompany.call(this)}
 
                     </div>
                 </div>
@@ -162,14 +143,6 @@ class Employees extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        myusermodel: state.myusermodel,
-        navigation: state.navigation,
-        project: state.project,
-        allusers: state.allusers,
-        allcompanys: state.allcompanys
-    }
-}
 
-export default connect(mapStateToProps, actions)(Employees);
+
+export default Employees;

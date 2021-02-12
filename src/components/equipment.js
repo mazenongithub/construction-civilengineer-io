@@ -1,30 +1,13 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { removeIconSmall, goToIcon, TouchtoEdit  } from './svg'
+import { removeIconSmall, goToIcon, TouchtoEdit } from './svg'
 import { CreateEquipment } from './functions';
 import DynamicStyles from './dynamicstyles';
 import { Link } from 'react-router-dom';
 
 import MakeID from './makeids';
 class Equipment extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { render: '', width: 0, height: 0, activeequipmentid: '', accountid: '', equipment: '', ownership: '', activecostid: '', cost: '', resaledate: '', detail: '', resalevalue: '', loaninterest: '', workinghours: '', showdetail: true, equipmentdate: new Date(), costmenu: true, purchasecalender: true, purchasedateday: '', purchasedatemonth: '', purchasedateyear: '', saledateday: '', saledatemonth: '', saledateyear: '', salecalender: true, equipmentcalender: true, equipmentdateday: '', equipmentdateyear: '', equipmentdatemonth: '', spinner: false }
-        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
-    }
-    componentDidMount() {
-        window.addEventListener('resize', this.updateWindowDimensions);
-        this.updateWindowDimensions();
 
-    }
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
-    }
-    updateWindowDimensions() {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
-    }
 
 
     getequipment() {
@@ -42,79 +25,69 @@ class Equipment extends Component {
         const dynamicstyles = new DynamicStyles();
         let myuser = dynamicstyles.getuser.call(this);
         const makeID = new MakeID();
-      
-            if (myuser) {
-                if (this.state.activeequipmentid) {
-                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
-                    if (myequipment) {
-                        let i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
-                        myuser.company.equipment.myequipment[i].equipment = equipment;
-                        this.props.reduxUser(myuser)
-                        this.setState({ render: 'render' })
 
-                    }
+        if (myuser) {
+            if (this.state.activeequipmentid) {
+                const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+                if (myequipment) {
+                    let i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                    myuser.company.equipment.myequipment[i].equipment = equipment;
+                    this.props.reduxUser(myuser)
+                    this.setState({ render: 'render' })
 
-                } else {
-
-                    let equipmentid = makeID.equipmentid.call(this);
-
-                    let ownership = "";
-                    let accountid = this.state.accountid;
-
-
-                    let newEquipment = CreateEquipment(equipmentid, equipment, ownership, accountid)
-
-                    if (myuser.company.hasOwnProperty("equipment")) {
-                        myuser.company.equipment.myequipment.push(newEquipment);
-                    } else {
-                        let equipment = { myequipment: [newEquipment] };
-                        myuser.company.equipment = equipment;
-
-                    }
-                    this.props.reduxUser(myuser);
-                    this.setState({ activeequipmentid: equipmentid })
                 }
 
+            } else {
+
+                let equipmentid = makeID.equipmentid.call(this);
+
+                let ownership = "";
+                let accountid = this.state.accountid;
+
+
+                let newEquipment = CreateEquipment(equipmentid, equipment, ownership, accountid)
+
+                if (myuser.company.hasOwnProperty("equipment")) {
+                    myuser.company.equipment.myequipment.push(newEquipment);
+                } else {
+                    let equipment = { myequipment: [newEquipment] };
+                    myuser.company.equipment = equipment;
+
+                }
+                this.props.reduxUser(myuser);
+                this.setState({ activeequipmentid: equipmentid })
             }
-        
+
+        }
+
     }
 
     showequipment() {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this)
-        if (this.state.width > 800) {
-            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    Equipment
-                </div>
-                <div style={{ ...styles.flex4, ...styles.generalFont, ...regularFont }}>
-                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                        value={this.getequipment()}
-                        onChange={event => { this.handleequipment(event.target.value) }}
-                    />
-                </div>
-            </div>)
-        } else {
-            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    Equipment <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
-                        value={this.getequipment()}
-                        onChange={event => { this.handleequipment(event.target.value) }}
-                    />
-                </div>
-            </div>)
-        }
+        const equipment = new Equipment();
+
+        return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+            <div style={{ ...styles.flex1 }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Equipment </span><br /> <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
+                    value={equipment.getequipment.call(this)}
+                    onChange={event => { equipment.handleequipment.call(this, event.target.value) }}
+                />
+            </div>
+        </div>)
+
     }
-   
+
     showequipmentids() {
         const dynamicstyles = new DynamicStyles()
         let myequipment = dynamicstyles.getmyequipment.call(this)
         let equipmentids = [];
+        const equipment = new Equipment();
         if (myequipment) {
             // eslint-disable-next-line
-            myequipment.map(equipment => {
-                equipmentids.push(this.showequipmentid(equipment))
+            myequipment.map(getequipment => {
+                equipmentids.push(equipment.showequipmentid.call(this, getequipment))
 
             })
         }
@@ -179,14 +152,15 @@ class Equipment extends Component {
         }
         return validate;
     }
-    removeequipment(equipment) {
+    removeequipment(myequipment) {
+        const equipment = new Equipment();
         const dynamicstyles = new DynamicStyles();
-        if (window.confirm(`Are you sure you want to remove ${equipment.equipment}?`)) {
+        if (window.confirm(`Are you sure you want to remove ${myequipment.equipment}?`)) {
             const myuser = dynamicstyles.getuser.call(this)
-            const validate = this.checkremoveequipment(equipment.equipmentid);
+            const validate = equipment.checkremoveequipment.call(this, myequipment.equipmentid);
 
             if (validate.validate) {
-                const i = dynamicstyles.getequipmentkeybyid.call(this, equipment.equipmentid)
+                const i = dynamicstyles.getequipmentkeybyid.call(this, myequipment.equipmentid)
                 myuser.company.equipment.myequipment.splice(i, 1);
                 if (myuser.company.equipment.myequipment.length === 0) {
                     delete myuser.company.equipment.myequipment
@@ -201,7 +175,7 @@ class Equipment extends Component {
             }
         }
     }
-    showequipmentid(equipment) {
+    showequipmentid(getequipment) {
         const styles = MyStylesheet();
         const dynamicstyles = new DynamicStyles();
         const regularFont = dynamicstyles.getRegularFont.call(this)
@@ -209,6 +183,7 @@ class Equipment extends Component {
         const myuser = dynamicstyles.getuser.call(this)
         const buttonSize = dynamicstyles.buttonSize.call(this)
         const touchtoedit = dynamicstyles.touchtoedit.call(this)
+        const equipment = new Equipment()
         const getactiveequipmentbackground = (equipmentid) => {
             if (this.state.activeequipmentid === equipmentid) {
                 return ({ backgroundColor: '#F2C4D2' })
@@ -216,27 +191,27 @@ class Equipment extends Component {
                 return ({ backgroundColor: '#FFFFFF' })
             }
 
-        } 
+        }
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 return (
-                    <div style={{...styles.generalContainer}}>
+                    <div style={{ ...styles.generalContainer }} key={getequipment.equipmentid}>
 
-                    <div style={{...styles.generalContainer, ...getactiveequipmentbackground(equipment.equipmentid), ...styles.bottomMargin15}}>
-                    <Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}
-                     to={`/${myuser.profile}/company/${myuser.company.url}/equipment/${equipment.equipmentid}`}> 
-                     <button style={{ ...getactiveequipmentbackground(equipment.equipmentid),...buttonSize, ...styles.noBorder}}>{goToIcon()}</button> {equipment.equipment}</Link>
-                    </div>
-
-                    <div style={{ ...styles.generalFlex }} key={equipment.equipmentid}>
-
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }} key={equipment.equipmentid}>
-                        <button style={{...styles.generalButton,...touchtoedit}} 
-                             onClick={()=>{this.makequipmentactive(equipment.equipmentid)}}
-                            >{TouchtoEdit()}</button>
+                        <div style={{ ...styles.generalContainer, ...getactiveequipmentbackground(getequipment.equipmentid), ...styles.bottomMargin15 }}>
+                            <Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}
+                                to={`/${myuser.profile}/company/${myuser.company.url}/equipment/${getequipment.equipmentid}`}>
+                                <button style={{ ...getactiveequipmentbackground(getequipment.equipmentid), ...buttonSize, ...styles.noBorder }}>{goToIcon()}</button> {getequipment.equipment}</Link>
                         </div>
-                        <div style={{ ...styles.flex1 }} onClick={() => { this.removeequipment(equipment) }}> <button style={{ ...styles.generalButton, ...removeIcon, ...styles.alignRight, ...getactiveequipmentbackground(equipment.equipmentid) }}>{removeIconSmall()} </button></div>
-                    </div>
+
+                        <div style={{ ...styles.generalFlex }} key={getequipment.equipmentid}>
+
+                            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }} key={getequipment.equipmentid}>
+                                <button style={{ ...styles.generalButton, ...touchtoedit }}
+                                    onClick={() => { equipment.makequipmentactive.call(this, getequipment.equipmentid) }}
+                                >{TouchtoEdit()}</button>
+                            </div>
+                            <div style={{ ...styles.flex1 }} onClick={() => { equipment.removeequipment.call(this, getequipment) }}> <button style={{ ...styles.generalButton, ...removeIcon, ...styles.alignRight, ...getactiveequipmentbackground(getequipment.equipmentid) }}>{removeIconSmall()} </button></div>
+                        </div>
                     </div>)
 
             }
@@ -244,11 +219,13 @@ class Equipment extends Component {
         }
     }
 
-    render() {
+    showEquipment() {
         const dynamicstyles = new DynamicStyles();
         const styles = MyStylesheet();
         const myuser = dynamicstyles.getuser.call(this)
         const regularFont = dynamicstyles.getRegularFont.call(this)
+        const equipment = new Equipment()
+        const headerFont = dynamicstyles.getHeaderFont.call(this)
 
         if (myuser) {
 
@@ -256,8 +233,13 @@ class Equipment extends Component {
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
-                        {this.showequipment()}
-                        {this.showequipmentids()}
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                to={`/${myuser.profile}/company/${myuser.company.companyid}/equipment`}
+                            > /equipment</Link>
+                        </div>
+                        {equipment.showequipment.call(this)}
+                        {equipment.showequipmentids.call(this)}
                         {dynamicstyles.showsavecompany.call(this)}
                     </div>
                 </div>
@@ -273,11 +255,6 @@ class Equipment extends Component {
 
 }
 
-function mapStateToProps(state) {
-    return {
-        myusermodel: state.myusermodel,
-        navigation: state.navigation
-    }
-}
 
-export default connect(mapStateToProps, actions)(Equipment);
+
+export default Equipment;

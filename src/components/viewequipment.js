@@ -887,6 +887,106 @@ class ViewEquipment extends Component {
 
     }
 
+    makematerialactive(materialid) {
+        if (this.state.activematerialid === materialid) {
+            this.setState({ activematerialid: false })
+        } else {
+            this.setState({ activematerialid: materialid })
+        }
+
+    }
+    validatematerial(material) {
+        const dynamicstyles = new DynamicStyles();
+        const myprojects = dynamicstyles.getmyprojects.call(this);
+        let validate = true;
+        let validatemessage = "";
+        const materialid = material.materialid;
+        if (myprojects.hasOwnProperty("length")) {
+            // eslint-disable-next-line
+            myprojects.map(myproject => {
+                if (myproject.hasOwnProperty("schedulematerials")) {
+                    // eslint-disable-next-line
+                    myproject.schedulematerials.mymaterial.map(mymaterial => {
+                        if (mymaterial.mymaterialid === materialid) {
+                            validate = false;
+                            validatemessage += `Could not delete material ${material.material}, exists inside schedule materials Project ID ${myproject.projectid}`
+
+                        }
+                    })
+
+                }
+
+                if (myproject.hasOwnProperty("actualmaterials")) {
+                    // eslint-disable-next-line
+                    myproject.actualmaterials.mymaterial.map(mymaterial => {
+                        if (mymaterial.mymaterialid === materialid) {
+                            validate = false;
+                            validatemessage += `Could not delete material ${material.material}, exists inside actual materials Project ID ${myproject.projectid}`
+
+                        }
+                    })
+
+                }
+            })
+        }
+        return { validate, validatemessage }
+    }
+    
+    removematerial(material) {
+        const dynamicstyles = new DynamicStyles();
+  
+        if (window.confirm(`Are you sure you want to delete ${material.material}?`)) {
+            const validate = this.validatematerial(material);
+            if (validate.validate) {
+                let myuser = dynamicstyles.getuser.call(this);
+                const mymaterial = dynamicstyles.getmymaterialfromid.call(this,material.materialid)
+                if(mymaterial) {
+                const i = dynamicstyles.getmaterialkeybyid.call(this, material.materialid);
+                myuser.company.materials.mymaterial.splice(i, 1);
+                this.props.reduxUser(myuser);
+                this.setState({ activematerialid: false, message: '' })
+
+                }
+            } else {
+                this.setState({ message: validate.validatemessage })
+            }
+
+        }
+  
+    }
+
+    showmymaterial(mymaterial) {
+        const styles = MyStylesheet();
+        const regularFont = this.getRegularFont();
+        const removeIcon = this.getremoveicon();
+        let account = "";
+        let csi = "";
+        if (mymaterial.accountid) {
+            let myaccount = this.getaccountbyid(mymaterial.accountid)
+            account = ` ${myaccount.accountname}`
+
+        }
+        if (mymaterial.csiid) {
+            let csiid = mymaterial.csiid;
+            let mycsi = this.getcsibyid(csiid);
+            csi = `${mycsi.csi} - ${mycsi.title}`
+        }
+        return (<div style={{ ...styles.generalFlex, ...this.getactivematerialbackground(mymaterial.materialid) }} key={mymaterial.materialid}>
+            <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+                <span onClick={() => { this.makematerialactive(mymaterial.materialid) }}>{mymaterial.material}  {mymaterial.unitcost}/{mymaterial.unit} Account:{account} Construction:{csi}</span>
+                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.removematerial(mymaterial) }}>{removeIconSmall()} </button>
+            </div>
+        </div>)
+    }
+    getactivematerialbackground(materialid) {
+        if (this.state.activematerialid === materialid) {
+            return ({ backgroundColor: '#F2C4D2' })
+        } else {
+            return;
+        }
+
+    }
+
 
     render() {
         const accountid = new AccountID();
