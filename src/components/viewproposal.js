@@ -134,6 +134,7 @@ class ViewProposal extends Component {
     }
 
     showbiditems() {
+        const dynamicstyles = new DynamicStyles();
 
         let biditems = this.getitems();
 
@@ -504,10 +505,15 @@ class ViewProposal extends Component {
 
 
     }
+
     showbiditem(item) {
         const dynamicstyles = new DynamicStyles();
-        let providerid = this.props.match.params.providerid;
-        let companyid = this.props.match.params.companyid;
+        const myuser = dynamicstyles.getuser.call(this)
+        if(myuser) {
+
+        let providerid = myuser.providerid;
+        if(myuser.hasOwnProperty("company")) {
+        let companyid = myuser.company.url
         let projectid = this.props.match.params.projectid;
         let proposalid = this.props.match.params.proposalid;
         const styles = MyStylesheet();
@@ -519,32 +525,31 @@ class ViewProposal extends Component {
                 <input type="text"
                     value={Number(this.getprofit(csi.csiid)).toFixed(4)}
                     onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
-                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
+                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...bidField }}
                 />)
         }
-        let bidprice = Number(this.getbidprice(item.csiid)).toFixed(2);
-        let unitprice = +Number(this.getunitprice(item.csiid)).toFixed(4);
-        let directcost = Number(this.getdirectcost(item.csiid)).toFixed(2);
+        let bidprice = `$${Number(this.getbidprice(item.csiid)).toFixed(2)}`;
+        let unitprice = `$${Number(this.getunitprice(item.csiid)).toFixed(2)}`;
+        let directcost = `$${Number(this.getdirectcost(item.csiid)).toFixed(2)}`;
 
         const unit = () => {
             return (
                 <div style={{ ...styles.generalContainer }}>
-                    Unit <br />
                     <input type="text"
                         value={this.getunit(csi.csiid)}
                         onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
-                        style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
+                        style={{  ...regularFont, ...styles.generalFont, ...bidField }}
                     />
                 </div>)
         }
         const quantity = () => {
 
             return (<div style={{ ...styles.generalContainer }}>
-                Quantity <br />
+ 
                 <input type="text"
                     value={this.getquantity(item.csiid)}
                     onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
-                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
+                    style={{  ...regularFont, ...styles.generalFont, ...bidField }} />
             </div>)
         }
 
@@ -560,7 +565,7 @@ class ViewProposal extends Component {
                     <td style={{ ...styles.alignCenter }}>{directcost}</td>
                     <td style={{ ...styles.alignCenter }}>{profit()}</td>
                     <td style={{ ...styles.alignCenter }}>{bidprice}</td>
-                    <td style={{ ...styles.alignCenter }}>  {`$${unitprice}/${this.getunit(csi.csiid)}`}</td>
+                    <td style={{ ...styles.alignCenter }}>  {`${unitprice}/${this.getunit(csi.csiid)}`}</td>
                 </tr>)
 
 
@@ -578,14 +583,14 @@ class ViewProposal extends Component {
                                 <input type="text"
                                     value={this.getquantity(csi.csiid)}
                                     onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
-                                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
+                                    style={{ ...regularFont, ...styles.generalFont, ...bidField }} />
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit <br />
                                 <input type="text"
                                     value={this.getunit(csi.csiid)}
                                     onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
-                                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
+                                    style={{  ...regularFont, ...styles.generalFont, ...bidField }}
                                 />
                             </div>
                         </div>
@@ -593,28 +598,32 @@ class ViewProposal extends Component {
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Direct Cost <br />
-                                ${directcost}
+                                {directcost}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Overhead And Profit % <br />
                                 <input type="text"
                                     value={Number(this.getprofit(csi.csiid)).toFixed(4)}
                                     onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
-                                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
+                                    style={{ ...styles.generalFont, ...regularFont, ...bidField }}
                                 />
 
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Bid Price <br />
-                                ${bidprice}
+                                {bidprice}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit Price
-                                {`$${unitprice}/${this.getunit(csi.csiid)}`}
+                                {`${unitprice}/${this.getunit(csi.csiid)}`}
                             </div>
                         </div>
                     </div>
                 </div>)
+
+            }
+
+        }
         }
     }
     handlechangeprofit(profit, csiid) {

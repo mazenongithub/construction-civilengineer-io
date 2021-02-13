@@ -1097,6 +1097,8 @@ class ViewEquipment extends Component {
                             {this.showaccountcost(equipment)}
                             {equipmentrate(equipment)}
 
+                            {dynamicstyles.showsavecompany.call(this)}
+
 
                         </div>
 

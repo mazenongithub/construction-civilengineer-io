@@ -1299,7 +1299,7 @@ class Schedule extends Component {
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
         const scheduleview = new ScheduleView();
-        const menu = dynamicstyles.getnavigation.call(this)
+        const menu = dynamicstyles.getNavigation.call(this)
 
 
 
@@ -1413,6 +1413,7 @@ class Schedule extends Component {
             }
         }
 
+
         const showtimein = () => {
             if (this.state.active === 'labor' || this.state.active === 'equipment') {
                 return (timein.showtimein.call(this))
@@ -1428,11 +1429,12 @@ class Schedule extends Component {
                 return (materialdate.showmaterialdate.call(this))
             }
         }
+    
         const showtimes = () => {
-            if (this.state.width > 1200 && menu.open) {
+            if (this.state.width > 1200 && menu.position === 'closed') {
 
 
-                return (<div style={{ ...styles.generalFlex }}>
+                return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                     <div style={{ ...styles.flex1 }}>
                         {showtimein()}
                     </div>

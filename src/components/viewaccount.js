@@ -5,12 +5,13 @@ import { MyStylesheet } from './styles';
 import DynamicStyles from './dynamicstyles';
 import { StripeConnect } from './actions/api'
 import { inputUTCStringForLaborID, calculatetotalhours, sorttimes} from './functions'
+import { Link } from 'react-router-dom';
 
 class ViewAccount extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0 }
+        this.state = { render: '', width: 0, height: 0, stripeconnect:false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
 
@@ -218,12 +219,16 @@ class ViewAccount extends Component {
             if (response.url) {
                 myuser.company.office.accounts.account[i].stripedashboard = response.url;
                 this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
+                this.setState({ stripeconnect:true })
+
+            } else {
+                this.setState({ stripeconnect:true })
 
             }
 
 
         } catch (err) {
+            this.setState({stripeconnect:true})
             alert(err)
         }
 
@@ -327,7 +332,7 @@ class ViewAccount extends Component {
 
                     const accountid = this.props.match.params.accountid;
                     const account = dynamicstyles.getaccountbyid.call(this, accountid)
-                    if (account.stripe && !account.stripedashboard) {
+                    if (account.stripe && !account.stripedashboard && !this.state.stripeconnect) {
                         this.loadstripeconnect(myuser, account.stripe)
 
                     }
@@ -356,12 +361,19 @@ class ViewAccount extends Component {
                         return (
 
                             <div style={{ ...styles.generalContainer }}>
+                            
 
-                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>
-                                        /{this.props.match.params.accountid}
-                                    </span>
-                                </div>
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                to={`/${myuser.profile}/company/${myuser.company.companyid}/accounts`}
+                            > /accounts</Link>
+                        </div>
+
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                to={`/${myuser.profile}/company/${myuser.company.companyid}/accounts/${account.accountid}`}
+                            > /{account.accountname}</Link>
+                        </div>
 
 
                                 {stripeconnect(account)}

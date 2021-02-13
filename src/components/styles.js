@@ -115,7 +115,8 @@ export function MyStylesheet() {
             margin: 'auto'
         },
         bidField: {
-            maxWidth: '138px'
+            maxWidth: '138px',
+            width:'50%'
         },
         timedisplayContainer: {
             minHeight: '60px',
@@ -232,6 +233,9 @@ export function MyStylesheet() {
         },
         alignCenter: {
             textAlign: 'center'
+        },
+        generalTable:{
+            borderCollapse: 'collapse'
         },
         margin10: {
             margin: '10px'

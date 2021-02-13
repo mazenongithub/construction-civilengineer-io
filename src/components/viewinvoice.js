@@ -526,82 +526,72 @@ class ViewInvoice extends Component {
 
     }
     showbiditem(item) {
-
         const dynamicstyles = new DynamicStyles();
+        const myuser = dynamicstyles.getuser.call(this)
+        if(myuser) {
+    
+        let providerid = myuser.providerid;
+        if(myuser.hasOwnProperty("company")) {
+        let companyid = myuser.company.url
+        let projectid = this.props.match.params.projectid;
+        let invoiceid = this.props.match.params.invoiceid;
         const styles = MyStylesheet();
         const regularFont = dynamicstyles.getRegularFont.call(this);
         const bidField = dynamicstyles.getbidfield.call(this)
         const csi = dynamicstyles.getcsibyid.call(this, item.csiid);
-
-
-        let bidprice = Number(this.getbidprice(item.csiid)).toFixed(2);
-        let unitprice = +Number(this.getunitprice(item.csiid)).toFixed(4);
-        let directcost = Number(this.getdirectcost(item.csiid)).toFixed(2);
-        let providerid = this.props.match.params.providerid;
-        let companyid = this.props.match.params.companyid;
-        let projectid = this.props.match.params.projectid;
-        let invoiceid = this.props.match.params.invoiceid;
-
         let profit = () => {
-
             return (
                 <input type="text"
-                    value={Number(this.getprofit(item.csiid)).toFixed(4)}
+                    value={Number(this.getprofit(csi.csiid)).toFixed(4)}
                     onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
                     style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                 />)
-
         }
-        const quantity = () => {
-
-            return (<div style={{ ...styles.generalContainer }}>
-
-                <input type="text"
-                    value={this.getquantity(csi.csiid)}
-                    onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
-                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
-            </div>)
-
-
-        }
-
+        let bidprice = `$${Number(this.getbidprice(item.csiid)).toFixed(2)}`;
+        let unitprice = `$${Number(this.getunitprice(item.csiid)).toFixed(2)}`;
+        let directcost = `$${Number(this.getdirectcost(item.csiid)).toFixed(2)}`;
+    
         const unit = () => {
-
             return (
                 <div style={{ ...styles.generalContainer }}>
-
+             
                     <input type="text"
                         value={this.getunit(csi.csiid)}
                         onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
                         style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
                     />
                 </div>)
-
-
         }
-
+        const quantity = () => {
+    
+            return (<div style={{ ...styles.generalContainer }}>
+            
+                <input type="text"
+                    value={this.getquantity(item.csiid)}
+                    onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
+                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
+            </div>)
+        }
+    
+    
         if (this.state.width > 1200) {
             return (
                 <tr>
-                    <td> <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/invoices/${invoiceid}/csi/${csi.csiid}`}> Line Item <br />
-                        {csi.csi}-{csi.title} </Link></td>
+                    <td><Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${projectid}/invoices/${invoiceid}/csi/${csi.csiid}`}>{csi.csi}-{csi.title}</Link></td>
                     <td style={{ ...styles.alignCenter }}>
-                        Quantity <br />
                         {quantity()}
                     </td>
-                    <td style={{ ...styles.alignCenter }}>
-                        Unit <br />{unit()}</td>
+                    <td style={{ ...styles.alignCenter }}>{unit()}</td>
                     <td style={{ ...styles.alignCenter }}>{directcost}</td>
                     <td style={{ ...styles.alignCenter }}>{profit()}</td>
                     <td style={{ ...styles.alignCenter }}>{bidprice}</td>
-                    <td style={{ ...styles.alignCenter }}> {`$${unitprice}/${this.getunit(csi.csiid)}`}</td>
+                    <td style={{ ...styles.alignCenter }}>  {`${unitprice}/${this.getunit(csi.csiid)}`}</td>
                 </tr>)
-
-
-
+    
+    
         } else {
             return (
-                <div style={{ ...styles.generalFlex }} key={item.csiid}>
+                <div style={{ ...styles.generalFlex }} key={csi.csiid}>
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont, ...styles.showBorder }}>
@@ -610,35 +600,50 @@ class ViewInvoice extends Component {
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Quantity <br />
-                                {quantity()}
+                                <input type="text"
+                                    value={this.getquantity(csi.csiid)}
+                                    onChange={event => { this.handlechangequantity(event.target.value, item.csiid) }}
+                                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }} />
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit <br />
-                                {unit()}
+                                <input type="text"
+                                    value={this.getunit(csi.csiid)}
+                                    onChange={event => { this.handlechangeunit(event.target.value, item.csiid) }}
+                                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
+                                />
                             </div>
                         </div>
-
+    
                         <div style={{ ...styles.generalFlex }}>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Direct Cost <br />
-                                ${directcost}
+                                {directcost}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Overhead And Profit % <br />
-                                {profit()}
-
+                                <input type="text"
+                                    value={Number(this.getprofit(csi.csiid)).toFixed(4)}
+                                    onChange={event => { this.handlechangeprofit(event.target.value, item.csiid) }}
+                                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalFont, ...bidField }}
+                                />
+    
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Bid Price <br />
-                                ${bidprice}
+                                {bidprice}
                             </div>
                             <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                                 Unit Price
-                                {`$${unitprice}/${this.getunit(csi.csiid)}`}
+                                {`${unitprice}/${this.getunit(csi.csiid)}`}
                             </div>
                         </div>
                     </div>
                 </div>)
+    
+            }
+    
+        }
         }
     }
     handlechangeprofit(profit, csiid) {

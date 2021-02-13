@@ -144,6 +144,12 @@ class ViewMaterial extends Component {
             if(material) {
         return (<div style={{ ...styles.generalContainer }}>
 
+        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                to={`/${myuser.profile}/company/${myuser.company.companyid}/materials`}
+                            > /materials</Link>
+                        </div>
+
             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
 
                 <Link to={`/${myuser.profile}/company/${myuser.company.url}/materials/${material.materialid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{material.material}</Link>

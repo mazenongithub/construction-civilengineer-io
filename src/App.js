@@ -18,10 +18,6 @@ import Projects from './components/projects';
 import Equipment from './components/equipment';
 import Employees from './components/employees';
 import Accounts from './components/accounts';
-import BidSchedule from './components/bidschedule';
-import ScheduleLineItem from './components/schedulelineitem';
-import Bid from './components/bid';
-import BidLineItem from './components/bidlineitem';
 import Materials from './components/materials';
 import Project from './components/project';
 import Proposals from './components/proposals';
@@ -52,7 +48,7 @@ class App extends Component {
 
     this.state = {
 
-      render: '', width: 0, height: 0, activeslideid: 'construction',
+      render: '', width: 0, height: 0, activeslideid: 'project',
       profilecheck: false,
       client: '',
       clientid: '',
@@ -219,10 +215,6 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/milestones" component={Milestones} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedule" component={Schedule} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/actual" component={Actual} />
-          <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule" component={BidSchedule} />
-          <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule/csi/:csiid" component={ScheduleLineItem} />
-          <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid" component={Bid} />
-          <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid/csi/:csiid" component={BidLineItem} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals" component={Proposals} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/estimate" component={Estimate} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/specifications" component={Specifications} />
@@ -434,11 +426,7 @@ class App extends Component {
                 
                   to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/proposals`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /proposals </Link>
               </div>
-              <div style={{ ...styles.generalContainer }}>
-                <Link
-                
-                  to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
-              </div>
+            
 
               <div style={{ ...styles.generalContainer }}>
                 <Link
@@ -449,11 +437,7 @@ class App extends Component {
                 <Link 
                   to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/invoices`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /invoices </Link>
               </div>
-              <div style={{ ...styles.generalContainer }}>
-                <Link
-                
-                  to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
-              </div>
+            
 
               <div style={{ ...styles.generalContainer }}>
                 <Link 

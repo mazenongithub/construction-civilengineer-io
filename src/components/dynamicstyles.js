@@ -674,81 +674,95 @@ class DynamicStyles {
         return myslide;
     }
     getmainslide() {
-        if (this.state.width > 1200) {
-            return ({ width: '1087px', height: '1035px' })
-        } else if (this.state.width > 800) {
-            return ({ width: '762px', height: '725px' })
-        } else {
-            return ({ width: '356px', height: '339px' })
+        const dynamicstyles = new DynamicStyles();
+        const navigation = dynamicstyles.getNavigation.call(this)
+        if (navigation) {
+            if (navigation.position === 'closed') {
+                if (this.state.width > 1200) {
+                    return ({ width: '1087px', height: 'auto' })
+                } else if (this.state.width > 800) {
+                    return ({ width: '762px', height: 'auto' })
+                } else {
+                    return ({ width: '356px', height: 'auto' })
+                }
+
+            } else if (navigation.position === 'open') {
+                if (this.state.width > 1200) {
+                    return ({ width: '800px', height: 'auto' })
+                } else if (this.state.width > 800) {
+                    return ({ width: '600px', height: 'auto' })
+                } else {
+                    return ({ width: '300px', height: 'auto' })
+                }
+
+            }
+
         }
     }
     getslides() {
         const slides = () => {
             return ([
+
+
                 {
-                    title: 'Construction by civilengineer.io',
-                    id: 'construction',
-                    url: 'http://civilengineer.io/construction/slides/construction.png',
-                    caption: `Construction Management by Civil Engineer.io. The most comprehensive construction management program for construction companies `
-                },
-                {
-                    title: 'Company',
-                    id: 'company',
-                    url: 'http://civilengineer.io/construction/slides/company.png',
-                    caption: `Company allows you to add your basic company info. It has links to other company components. This makes managing your company easier. `
-                },
-                {
-                    title: 'Employees/Benefits',
+                    title: 'Employees',
                     id: 'employees',
                     url: 'http://civilengineer.io/construction/slides/employees.png',
-                    caption: `Have your employees add your company. You can make them active and give them manager access. You can enter annual their benefits and working hours to determine their default Labor Rates    `
+                    caption: `Keeps track of the Employees that are part of your company    `
+                },
+                {
+                    title: 'View Employee',
+                    id: 'viewemployee',
+                    url: 'http://civilengineer.io/construction/slides/viewemployee.png',
+                    caption: `Adds benefits to the Employee to determine their labor rate. Adds accounts to benefits. Shows the percent distribution for the labor rate for each account.   `
                 },
                 {
                     title: 'Accounts',
                     id: 'accounts',
                     url: 'http://civilengineer.io/construction/slides/accounts.png',
-                    caption: `Accounts are created for your company to receive payment. Connect an account to a Employee Benefit, equipment, or material. The amount for each account is determined during payment for an Invoice.   `
+                    caption: `Create accounts for your employee benefits, equipment, and materials  `
 
                 },
                 {
                     title: 'View Account',
                     id: 'viewaccount',
                     url: 'http://civilengineer.io/construction/slides/viewaccount.png',
-                    caption: `View Account gives the account balance summary that includes charges and payments. It includes the link to Stripe so you can connect your account  `
+                    caption: `Shows the balance per account  `
                 },
 
                 {
                     title: 'Equipment',
                     id: 'equipment',
                     url: 'http://civilengineer.io/construction/slides/equipment.png',
-                    caption: `Equipment component was made to enter your equipment either by ownership or by rental. The Equipment component stores equipment costs for ownership and rental rates to determine default rates. `
+                    caption: `Add your company equipment `
                 },
                 {
-                    title: 'Equipment Ownership',
-                    id: 'ownershipcosts',
-                    url: 'http://civilengineer.io/construction/slides/equipment_1.png',
-                    caption: `Enter your equipment ownership costs and other variables to determine what the default equipment rate is. `
+                    title: 'View Equipment',
+                    id: 'viewequipment',
+                    url: 'http://civilengineer.io/construction/slides/viewequipment.png',
+                    caption: `Enter equipment ownership costs. Special cost formula determines the equipment rate. `
                 },
 
                 {
                     title: 'Materials',
                     id: 'materials',
                     url: 'http://civilengineer.io/construction/slides/materials.png',
-                    caption: `Materials component adds your company materials. This makes managing materials easier. This sets the default unit price for the material. `
+                    caption: `Add your material list for your company. `
                 },
                 {
-                    title: 'View Schedule',
-                    id: 'viewschedule',
-                    url: 'http://civilengineer.io/construction/slides/viewschedule.png',
-                    caption: ` View Schedule Component gives the employee their schedule in a calender. This makes communicating work between you and your employees better. The Employee can access their schedule for work.   `
+                    title: 'View Material',
+                    id: 'viewmaterial',
+                    url: 'http://civilengineer.io/construction/slides/viewmaterial.png',
+                    caption: `Update the unit and unit price for each material. Update the account id for each material `
                 },
+
 
 
                 {
                     title: 'Project',
                     id: 'project',
                     url: 'http://civilengineer.io/construction/slides/project.png',
-                    caption: `The Project Component was made to give you access to all of the project component and give the basic project information `
+                    caption: `Shows the location and the scope of work. Has links to the other project components. `
 
                 },
 
@@ -757,33 +771,33 @@ class DynamicStyles {
                     title: 'Schedule',
                     id: 'Schedule',
                     url: 'http://civilengineer.io/construction/slides/schedule.png',
-                    caption: `The schedule component is where you enter your schedule labor, equipment, and materials for the project. These costs get added into a Proposal for authorization from the PM. `
+                    caption: `Enter and View project schedule. Assigns schedule to employees, determines cost. `
                 },
 
                 {
                     title: 'Actual',
                     id: 'actual',
                     url: 'http://civilengineer.io/construction/slides/actual.png',
-                    caption: `Actual cost component works the same as your schedule but it for recording actual costs as they occur. Employees who clock in will use the actual component to enter their labor for the project.   `
+                    caption: `Enter your actual costs for the project.    `
                 },
                 {
                     title: 'Proposal',
                     id: 'proposals',
                     url: 'http://civilengineer.io/construction/slides/proposals.png',
-                    caption: `The proposal component was made to add your schedule items and send to the PM for apporval. The proposal is formatted as a Construction-Bid automatically when you enter the CSI-code for the work you are performing.   `
+                    caption: `TAdd your schedule items to the proposal. Items can be adjusted. Add your profit for each item.    `
                 },
                 {
                     title: 'View Proposal',
                     id: 'viewinvoice',
                     url: 'http://civilengineer.io/construction/slides/viewproposal.png',
-                    caption: `View Proposal allows you to view the final proposal sent to the PM after you add your items to it.   `
+                    caption: `View Proposal contains an itemized breakdown for each item in your work schedule  `
                 },
 
                 {
                     title: 'Invoices',
                     id: 'invoices',
                     url: 'http://civilengineer.io/construction/slides/invoices.png',
-                    caption: `Invoices works the same as the Proposal component except it is for adding your actual costs items into invoices   `
+                    caption: `Add your actual work items to the invoice. Adjust your actual costs add your profit factor for each item   `
                 },
 
 
@@ -791,61 +805,52 @@ class DynamicStyles {
                     title: 'View Invoice',
                     id: 'viewinvoice',
                     url: 'http://civilengineer.io/construction/slides/viewinvoice.png',
-                    caption: `View Invoice shows the invoice in construction-bid format. View Invoice also contains payment, transfer, and balance remaining details.   `
-                },
-
-                {
-                    title: 'Bid Schedule',
-                    id: 'bidschedule',
-                    url: 'http://civilengineer.io/construction/slides/bidschedule.png',
-                    caption: ` View Project level bid schedule in construction format. Add your unit and quantities to produce unit prices   `
-                },
-                {
-                    title: 'Actual Bid',
-                    id: 'bid',
-                    url: 'http://civilengineer.io/construction/slides/bid.png',
-                    caption: ` Bid puts together project level actual costs in construction format. Add your units and quantities to produce unit prices.   `
-                },
-                {
-                    title: 'Labor, Equipment, Materials',
-                    id: 'lem',
-                    url: 'http://civilengineer.io/construction/slides/lem.png',
-                    caption: `Labor, materials, equipment breakdowns are given for each for schedule and actual pay items.   `
+                    caption: `Itemized breakdown for the actual items. Add your unit and quantities to produce the unit price.   `
                 },
 
 
+                {
+                    title: 'Proposal Line Item',
+                    id: 'proposallineitem',
+                    url: 'http://civilengineer.io/construction/slides/proposallineitem.png',
+                    caption: `Labor, Equipment, and Materials breakdown for each line item in the proposal   `
+                },
+                {
+                    title: 'Invoice Line Item',
+                    id: 'invoicelineitem',
+                    url: 'http://civilengineer.io/construction/slides/invoicelineitem.png',
+                    caption: `Labor, Equipment, and Materials breakdown for each line item in the proposal.   `
+                }
 
-                {
-                    title: 'Quantity Take Off Schedule',
-                    id: 'takeoffschedule',
-                    url: 'http://civilengineer.io/construction/slides/costestimate.png',
-                    caption: `The Engineers provide the master quanitity take-off schedule for bid.  `
-                },
-                {
-                    title: 'Specification',
-                    id: 'specification',
-                    url: 'http://civilengineer.io/construction/slides/specification.png',
-                    caption: `Engineers create the specifications for the team to follow. This sets the quality standards for construction   `
-                },
-                {
-                    title: 'Milestones/Critical Path',
-                    id: 'milestones',
-                    url: 'http://civilengineer.io/construction/slides/criticalpath.png',
-                    caption: `Milestones and Critical Path calculations are provided to the Service Provider. The service provider uses these milestones when they enter schedule and cost. Critical Path methods give float and total project float for each milestone. This makes communicating schedule between the PM and service provider better .`
 
-                },
+
+
 
             ])
         }
         return slides();
     }
     getsmallslide() {
-        if (this.state.width > 1200) {
-            return ({ width: '362px', height: '345px' })
-        } else if (this.state.width > 800) {
-            return ({ width: '254px', height: '241px' })
-        } else {
-            return ({ width: '178px', height: '169px' })
+        const dynamicstyles = new DynamicStyles();
+        const navigation = dynamicstyles.getNavigation.call(this)
+        if (navigation.position === 'closed') {
+            if (this.state.width > 1200) {
+                return ({ width: '362px', height: 'auto' })
+            } else if (this.state.width > 800) {
+                return ({ width: '254px', height: 'auto' })
+            } else {
+                return ({ width: '178px', height: 'auto' })
+            }
+        } else if (navigation.position === 'open') {
+
+            if (this.state.width > 1200) {
+                return ({ width: '240px', height: 'auto' })
+            } else if (this.state.width > 800) {
+                return ({ width: '180px', height: 'auto' })
+            } else {
+                return ({ width: '120px', height: 'auto' })
+            }
+
         }
 
     }
@@ -2394,25 +2399,25 @@ class DynamicStyles {
                 console.log(response)
                 if (response.hasOwnProperty("invalid")) {
 
-                    if(myuser.hasOwnProperty("company")) {
+                    if (myuser.hasOwnProperty("company")) {
                         myuser.company.invalid = response.invalid;
                         this.props.reduxUser(myuser)
-                        this.setState({message:response.invalid})
+                        this.setState({ message: response.invalid })
                     } else {
                         this.setState({ urlcheck: false, message: response.invalid })
                     }
 
-                    
+
 
                 } else if (response.hasOwnProperty("valid")) {
 
-                    if(myuser.hasOwnProperty("company")) {
-                        if(myuser.company.hasOwnProperty("invalid")) {
-                           
+                    if (myuser.hasOwnProperty("company")) {
+                        if (myuser.company.hasOwnProperty("invalid")) {
+
                             delete myuser.company.invalid;
                             this.props.reduxUser(myuser)
-                            this.setState({message:''})
-                          
+                            this.setState({ message: '' })
+
                         }
                     } else {
 
@@ -2421,7 +2426,7 @@ class DynamicStyles {
 
                     }
 
-                   
+
 
                 }
 
@@ -3142,6 +3147,8 @@ class DynamicStyles {
 
 
 
+
+
     showbidtable() {
 
         const dynamicstyles = new DynamicStyles();
@@ -3151,7 +3158,7 @@ class DynamicStyles {
 
         if (this.state.width > 1200) {
             return (
-                <table width="100%" border="1" style={{ ...regularFont, ...styles.generalFont }}>
+                <table width="100%" border="1" style={{ ...regularFont, ...styles.generalFont, ...styles.generalTable }}>
                     <tr>
                         <td width="24%" style={{ ...styles.alignCenter }}>Line ID</td>
                         <td width="12%" style={{ ...styles.alignCenter }}>Quantity</td>
@@ -3997,7 +4004,7 @@ class DynamicStyles {
 
 
         return (
-            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont }} key={item.laborid}>
+            <div style={{ ...styles.generalFlex, ...styles.generalFont, ...smallFont, ...styles.bottomMargin15 }} key={item.laborid}>
 
                 <div style={{ ...styles.flex3, ...this.getactivebackground(item) }}>
                     <span onClick={() => { this.addItem(item) }}>{employee.firstname} {employee.lastname} TimeIn{inputUTCStringForLaborID(item.timein)}  TimeOut {inputUTCStringForLaborID(item.timeout)} CSI {csi.csi}-{csi.title}  Total Hours {totalhours.toFixed(2)} Hrs at  $</span>
@@ -4291,7 +4298,7 @@ class DynamicStyles {
         return material;
     }
 
-    
+
 
 
     getmilestonebyid(milestoneid) {
@@ -4322,11 +4329,11 @@ class DynamicStyles {
 
     touchtoedit() {
 
-        if(this.state.width>1200) {
-            return({width:'80px'})
+        if (this.state.width > 1200) {
+            return ({ width: '80px' })
         } else {
-            return({width:'60px'})
-        } 
+            return ({ width: '60px' })
+        }
     }
 
 
