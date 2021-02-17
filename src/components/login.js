@@ -1,19 +1,19 @@
 import React from 'react';
 import { MyStylesheet } from './styles';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import ClientID from './clientid';
 import Profile from './profile';
 
 class Login  {
 
     showLogin() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet();
-        const headerFont = dynamicstyles.getHeaderFont.call(this);
+        const headerFont = construction.getHeaderFont.call(this);
         const clientid = new ClientID();
         const profile = new Profile();
 
-        const myuser= dynamicstyles.getuser.call(this)
+        const myuser= construction.getuser.call(this)
         if(myuser) {
      
             return(profile.showProfile.call(this))

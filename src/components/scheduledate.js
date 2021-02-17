@@ -1,6 +1,6 @@
 import React from 'react';
 import { MyStylesheet } from './styles'
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import MaterialCalender from './scheduledatecalender'
 import { validateMonth, validateDate, validateYear } from './functions';
 
@@ -10,26 +10,26 @@ class MaterialDate {
 
     handleyear(year) {
         this.setState({ materialdateyear: year })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+            const project = construction.getprojectbytitle.call(this, this.props.match.params.projectid)
             if (project) {
 
                 const projectid = project.projectid
 
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getprojectkeybyid.call(this, projectid);
                 if (year.length === 4) {
 
                     if(validateYear(year)) {
 
 
                         if (this.state.activematerialid) {
-                            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,  this.state.activematerialid);
+                            const mymaterial = construction.getschedulematerialbyid.call(this,  this.state.activematerialid);
                             if (mymaterial) {
 
-                                const j = dynamicstyles.getschedulematerialkeybyid.call(this,  this.state.activematerialid)
+                                const j = construction.getschedulematerialkeybyid.call(this,  this.state.activematerialid)
                                 let day = this.state.materialdateday;
                                 let month = this.state.materialdatemonth;
                                 const timein = `${year}-${month}-${day}`
@@ -57,26 +57,26 @@ class MaterialDate {
     handleday(day) {
         day = day.toString();
         this.setState({ materialdateday: day })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+            const project = construction.getprojectbytitle.call(this, this.props.match.params.projectid)
             if (project) {
 
                 const projectid = project.projectid
 
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getprojectkeybyid.call(this, projectid);
                 if (day.length === 2) {
 
             
                         if(validateDate(day)) {
 
                         if (this.state.activematerialid) {
-                            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,  this.state.activematerialid);
+                            const mymaterial = construction.getschedulematerialbyid.call(this,  this.state.activematerialid);
                             if (mymaterial) {
 
-                                const j = dynamicstyles.getschedulematerialkeybyid.call(this,this.state.activematerialid)
+                                const j = construction.getschedulematerialkeybyid.call(this,this.state.activematerialid)
                                 let year = this.state.materialdateyear;
                                 let month = this.state.materialdatemonth;
                                 const timein = `${year}-${month}-${day}`
@@ -103,16 +103,16 @@ class MaterialDate {
 
     handlemonth(month) {
         this.setState({ materialdatemonth: month })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+            const project = construction.getprojectbytitle.call(this, this.props.match.params.projectid)
             if (project) {
 
                 const projectid = project.projectid
 
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getprojectkeybyid.call(this, projectid);
                 if (month.length === 2) {
 
                     if(validateMonth(month)) {
@@ -122,10 +122,10 @@ class MaterialDate {
 
 
                         if (this.state.activematerialid) {
-                            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this,  this.state.activematerialid);
+                            const mymaterial = construction.getschedulematerialbyid.call(this,  this.state.activematerialid);
                             if (mymaterial) {
 
-                                const j = dynamicstyles.getschedulematerialkeybyid.call(this,  this.state.activematerialid)
+                                const j = construction.getschedulematerialkeybyid.call(this,  this.state.activematerialid)
                                 let day = this.state.materialdateday;
                                 let year = this.state.materialdateyear;
                                 const timein = `${year}-${month}-${day}`
@@ -156,9 +156,9 @@ class MaterialDate {
 
     showmaterialdate() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const materialdate = new MaterialDate();
         const calender = new MaterialCalender();
         return (

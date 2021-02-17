@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { removeIconSmall, goToIcon, TouchtoEdit } from './svg';
 import { CreateMaterial } from './functions';
 import { Link } from 'react-router-dom';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import MakeID from './makeids';
 
 class Materials extends Component {
@@ -20,12 +20,12 @@ class Materials extends Component {
 
     showmaterialid(material) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        const removeIcon = dynamicstyles.getremoveicon.call(this);
-        const myuser = dynamicstyles.getuser.call(this)
-        const buttonSize = dynamicstyles.buttonSize.call(this)
-        const touchtoedit = dynamicstyles.touchtoedit.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
+        const removeIcon = construction.getremoveicon.call(this);
+        const myuser = construction.getuser.call(this)
+        const buttonSize = construction.buttonSize.call(this)
+        const touchtoedit = construction.touchtoedit.call(this)
         const materials = new Materials();
         const getactivematerialbackground = (materialid) => {
             if (this.state.activematerialid === materialid) {
@@ -64,9 +64,9 @@ class Materials extends Component {
 
 
     showmaterialids() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const materials = new Materials();
-        let mymaterial = dynamicstyles.getmymaterials.call(this)
+        let mymaterial = construction.getmymaterials.call(this)
         let materialids = [];
         if (mymaterial) {
             // eslint-disable-next-line
@@ -83,8 +83,8 @@ class Materials extends Component {
 
     createnewmaterial(newMaterial) {
 
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
 
@@ -103,15 +103,15 @@ class Materials extends Component {
     }
 
     handlematerial(material) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const makeID = new MakeID();
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
             if (this.state.activematerialid) {
-                const mymaterial = dynamicstyles.getmymaterialfromid.call(this, this.state.activematerialid)
+                const mymaterial = construction.getmymaterialfromid.call(this, this.state.activematerialid)
                 if (mymaterial) {
-                    let i = dynamicstyles.getmaterialkeybyid.call(this, this.state.activematerialid)
+                    let i = construction.getmaterialkeybyid.call(this, this.state.activematerialid)
                     myuser.company.materials.mymaterial[i].material = material;
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render', material: '' })
@@ -134,10 +134,10 @@ class Materials extends Component {
     }
 
     getmaterial() {
-        const dynamicstyles = new DynamicStyles()
+        const construction = new Construction()
         let getmaterial = "";
         if (this.state.activematerialid) {
-            const material = dynamicstyles.getmymaterialfromid.call(this, this.state.activematerialid)
+            const material = construction.getmymaterialfromid.call(this, this.state.activematerialid)
             if (material) {
 
                 getmaterial = material.material
@@ -148,8 +148,8 @@ class Materials extends Component {
     }
 
     validatematerial(material) {
-        const dynamicstyles = new DynamicStyles();
-        const myprojects = dynamicstyles.getmyprojects.call(this);
+        const construction = new Construction();
+        const myprojects = construction.getmyprojects.call(this);
         let validate = true;
         let validatemessage = "";
         const materialid = material.materialid;
@@ -186,15 +186,15 @@ class Materials extends Component {
 
     removematerial(material) {
         const materials = new Materials()
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
 
         if (window.confirm(`Are you sure you want to delete ${material.material}?`)) {
             const validate = materials.validatematerial.call(this, material);
             if (validate.validate) {
-                let myuser = dynamicstyles.getuser.call(this);
-                const mymaterial = dynamicstyles.getmymaterialfromid.call(this, material.materialid)
+                let myuser = construction.getuser.call(this);
+                const mymaterial = construction.getmymaterialfromid.call(this, material.materialid)
                 if (mymaterial) {
-                    const i = dynamicstyles.getmaterialkeybyid.call(this, material.materialid);
+                    const i = construction.getmaterialkeybyid.call(this, material.materialid);
                     myuser.company.materials.mymaterial.splice(i, 1);
                     this.props.reduxUser(myuser);
                     this.setState({ activematerialid: false, message: '' })
@@ -210,12 +210,12 @@ class Materials extends Component {
 
 
     showMaterials() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        const maxWidth = dynamicstyles.getMaxWidth.call(this)
-        const myuser = dynamicstyles.getuser.call(this)
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
+        const maxWidth = construction.getMaxWidth.call(this)
+        const myuser = construction.getuser.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
         const materials = new Materials();
         if (myuser) {
 
@@ -243,7 +243,7 @@ class Materials extends Component {
 
                         {materials.showmaterialids.call(this)}
 
-                        {dynamicstyles.showsavecompany.call(this)}
+                        {construction.showsavecompany.call(this)}
 
                     </div>
                 </div>

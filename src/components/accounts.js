@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { MyStylesheet } from './styles';
 import { removeIconSmall, goToIcon, TouchtoEdit } from './svg';
 import { CreateAccount } from './functions';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import MakeID from './makeids';
 import { Link } from 'react-router-dom';
 
 class Accounts {
 
     handleaccountname(accountname) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         const makeID = new MakeID();
 
         if (myuser) {
 
             if (this.state.activeaccountid) {
-                const account = dynamicstyles.getaccountbyid.call(this, this.state.activeaccountid)
+                const account = construction.getaccountbyid.call(this, this.state.activeaccountid)
                 if (account) {
-                    let i = dynamicstyles.getaccountkeybyid.call(this, this.state.activeaccountid)
-                    myuser.company.office.accounts.account[i].accountname = accountname;
+                    let i = construction.getaccountkeybyid.call(this, this.state.activeaccountid)
+                    myuser.company.office.accounts[i].accountname = accountname;
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 }
@@ -31,7 +31,7 @@ class Accounts {
                 let newaccount = CreateAccount(accountid, accountname, myuser.providerid)
 
                 if (myuser.company.office.hasOwnProperty("accounts")) {
-                    myuser.company.office.accounts.account.push(newaccount)
+                    myuser.company.office.accounts.push(newaccount)
                 } else {
                     let accounts = { account: [newaccount] }
                     myuser.company.office.accounts = accounts;
@@ -46,10 +46,10 @@ class Accounts {
 
     }
     getaccountname() {
-        const dynamicstyles = new DynamicStyles()
+        const construction = new Construction()
         let accountname = "";
         if (this.state.activeaccountid) {
-            let account = dynamicstyles.getaccountbyid.call(this, this.state.activeaccountid)
+            let account = construction.getaccountbyid.call(this, this.state.activeaccountid)
             accountname = account.accountname;
         }
         return accountname;
@@ -59,8 +59,8 @@ class Accounts {
     }
     showaccount() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles()
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction()
+        const regularFont = construction.getRegularFont.call(this)
         const accounts = new Accounts();
 
         return (
@@ -99,13 +99,13 @@ class Accounts {
 
     }
     validateDeleteAccount(account) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let deleteaccount = true;
         let deletemessage = "";
         const accountid = account.accountid;
-        const myuser = dynamicstyles.getuser.call(this);
+        const myuser = construction.getuser.call(this);
         if (myuser) {
-            const myemployees = dynamicstyles.getmyemployees.call(this);
+            const myemployees = construction.getmyemployees.call(this);
             if (myemployees.hasOwnProperty("length")) {
                 // eslint-disable-next-line
                 myemployees.map(employee => {
@@ -122,7 +122,7 @@ class Accounts {
             }
 
         }
-        let mymaterials = dynamicstyles.getmymaterials.call(this);
+        let mymaterials = construction.getmymaterials.call(this);
         if (mymaterials.hasOwnProperty("length")) {
             // eslint-disable-next-line
             mymaterials.map(mymaterial => {
@@ -134,7 +134,7 @@ class Accounts {
             })
 
         }
-        let myequipment = dynamicstyles.getmyequipment.call(this);
+        let myequipment = construction.getmyequipment.call(this);
         if (myequipment.hasOwnProperty("length")) {
             // eslint-disable-next-line
             myequipment.map(equipment => {
@@ -149,17 +149,17 @@ class Accounts {
     }
     removeaccount(account) {
         const accounts = new Accounts();
-        let dynamicstyles = new DynamicStyles();
+        let construction = new Construction();
 
         if (window.confirm(`Are you sure you want to delete ${account.accountname}?`)) {
             let validate = accounts.validateDeleteAccount.call(this, account);
             if (validate.deleteaccount) {
-                const myuser = dynamicstyles.getuser.call(this);
+                const myuser = construction.getuser.call(this);
                 if (myuser) {
-                    const myaccount = dynamicstyles.getaccountbyid.call(this, account.accountid)
+                    const myaccount = construction.getaccountbyid.call(this, account.accountid)
                     if (myaccount) {
-                        const i = dynamicstyles.getaccountkeybyid.call(this, account.accountid)
-                        myuser.company.office.accounts.account.splice(i, 1);
+                        const i = construction.getaccountkeybyid.call(this, account.accountid)
+                        myuser.company.office.accounts.splice(i, 1);
                         this.props.reduxUser(myuser)
                         this.setState({ activeaccountid: false })
 
@@ -180,14 +180,14 @@ class Accounts {
 
     }
     showmyaccounts() {
-        const dynamicstyles = new DynamicStyles();
-        const myaccounts = dynamicstyles.getmyaccounts.call(this);
+        const construction = new Construction();
+        const myaccounts = construction.getmyaccounts.call(this);
         const accounts = new Accounts();
         let getaccounts = [];
         let styles = MyStylesheet();
-        let regularFont = dynamicstyles.getRegularFont.call(this);
-        const buttonSize = dynamicstyles.getButtonSize.call(this)
-        const removeIcon = dynamicstyles.getremoveicon.call(this)
+        let regularFont = construction.getRegularFont.call(this);
+        const buttonSize = construction.getButtonSize.call(this)
+        const removeIcon = construction.getremoveicon.call(this)
         const touchtoedit = () => {
 
             if (this.state.width > 1200) {
@@ -197,7 +197,7 @@ class Accounts {
             }
         }
 
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = construction.getuser.call(this)
 
 
         if (myuser) {
@@ -244,10 +244,10 @@ class Accounts {
     }
     showAccounts() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
+        const regularFont = construction.getRegularFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
         const accounts = new Accounts();
         if (myuser) {
 
@@ -266,7 +266,7 @@ class Accounts {
 
                         {accounts.showmyaccounts.call(this)}
 
-                        {dynamicstyles.showsavecompany.call(this)}
+                        {construction.showsavecompany.call(this)}
 
                     </div>
                 </div>

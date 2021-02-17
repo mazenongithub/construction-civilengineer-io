@@ -1,24 +1,23 @@
 import React from 'react';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { MyStylesheet } from './styles';
 
 class EmployeeID {
 
     loademployees() {
 
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
 
         let options = [];
-        const myuser = dynamicstyles.getuser.call(this);
+        const myuser = construction.getuser.call(this);
         if (myuser) {
-            const checkmanager = dynamicstyles.checkmanager.call(this);
-            if (checkmanager) {
-                const company = dynamicstyles.getcompany.call(this);
+          
+                const company = construction.getcompany.call(this);
                 if (company) {
-                    if (company.office.hasOwnProperty("employees")) {
+                    if (company.hasOwnProperty("employees")) {
                         // eslint-disable-next-line
-                        company.office.employees.employee.map(employee => {
-                            let myemployee = dynamicstyles.getemployeebyid.call(this, employee.providerid)
+                        company.employees.map(employee => {
+                            let myemployee = construction.getemployeebyid.call(this, employee.providerid)
                       
                             options.push(<option key={`option${myemployee.providerid}`} value={myemployee.providerid}>{myemployee.firstname} {myemployee.lastname}</option>)
                         })
@@ -26,10 +25,7 @@ class EmployeeID {
                     }
                 }
 
-            } else {
-                options.push(<option value={myuser.providerid}>{myuser.firstname} {myuser.lastname}</option>) 
-            }
-
+           
         } 
             return options;
         }
@@ -37,8 +33,8 @@ class EmployeeID {
         showemployeeid() {
             const styles = MyStylesheet();
             const employeeid = new EmployeeID();
-            const dynamicstyles = new DynamicStyles();
-            const regularFont = dynamicstyles.getRegularFont.call(this)
+            const construction = new Construction();
+            const regularFont = construction.getRegularFont.call(this)
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>

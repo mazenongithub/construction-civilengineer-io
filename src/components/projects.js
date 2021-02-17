@@ -1,14 +1,14 @@
 import React from 'react';
 import { MyStylesheet } from './styles';
 import { Link } from 'react-router-dom';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 class Projects {
 
 
     showprojectids() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const projects = new Projects()
-        const myprojects = dynamicstyles.getmyprojects.call(this)
+        const myprojects = construction.getmyprojects.call(this)
 
         let projectids = [];
         if (myprojects) {
@@ -23,12 +23,12 @@ class Projects {
     }
     projectmenus(myproject) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
 
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
 
         const projectid = myproject.title
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = construction.getuser.call(this)
         if (myuser) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={myproject.projectid}>
                 <div style={{ ...styles.flex1 }}>
@@ -47,19 +47,12 @@ class Projects {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /proposals
+                                    <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                        /bidschedule
                                     </Link>
                                 </div>
                             </div>
-                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${myuser.profile}/company/${myuser.company.url}/projects/${projectid}/estimate`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /estimate
-                                            </Link>
-                                </div>
-                            </div>
-
+                         
 
 
                         </div>
@@ -77,8 +70,8 @@ class Projects {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /invoices
+                                    <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                        /bid
                                     </Link>
                                 </div>
                             </div>
@@ -87,14 +80,7 @@ class Projects {
 
 
 
-                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-
-                                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${projectid}/milestones`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                        /milestones
-                                    </Link>
-                                </div>
-                            </div>
+                         
 
                         </div>
                     </div>
@@ -108,11 +94,11 @@ class Projects {
     }
     showprojectid(myproject) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this)
 
         const projects = new Projects();
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = construction.getuser.call(this)
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 return (
@@ -141,18 +127,11 @@ class Projects {
     }
     showprojects() {
         const styles = MyStylesheet();
-
-
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const myuser = dynamicstyles.getuser.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const projects = new Projects();
-        const company = () => {
-            if (myuser.hasOwnProperty("company")) {
-                return (myuser.company.url)
-            }
-        }
+      
         if (myuser) {
 
             return (

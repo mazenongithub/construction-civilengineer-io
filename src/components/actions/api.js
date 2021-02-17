@@ -328,6 +328,7 @@ export async function CheckProviderID(profile) {
                     throw err;
                 }
             }
+            return resp.json();
 
         })
 }
@@ -399,8 +400,8 @@ export async function SaveCompany(values) {
 }
 
 export async function SaveProject(values) {
-    const providerid = values.newuser.providerid;
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/saveproject`;
+    const projectid = values.projectid;
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${projectid}/saveproject`;
     console.log(APIURL)
     return fetch(APIURL, {
         method: 'post',

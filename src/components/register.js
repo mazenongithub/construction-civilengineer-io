@@ -2,17 +2,17 @@ import React from 'react'
 import Profile from './profile';
 import ProviderID from './providerid';
 import ClientID from './clientid';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { MyStylesheet } from './styles'
 class Register  {
 
    
 
     showRegister() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet();
-        const headerFont = dynamicstyles.getHeaderFont.call(this);
-        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const headerFont = construction.getHeaderFont.call(this);
+        const regularFont = construction.getRegularFont.call(this);
         const clientid = new ClientID();
         const providerid = new ProviderID();
         const profile = new Profile();
@@ -49,7 +49,7 @@ class Register  {
                 </div>
             </div>)
         }
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = construction.getuser.call(this)
         if (myuser) {
              return(profile.showProfile.call(this))
         } else {

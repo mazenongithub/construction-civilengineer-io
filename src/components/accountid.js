@@ -1,11 +1,11 @@
 import React from 'react'
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { MyStylesheet } from './styles';
 
 class AccountID {
     loadaccounts() {
-        const dynamicstyles = new DynamicStyles();
-        let accounts =dynamicstyles.getaccounts.call(this)
+        const construction = new Construction();
+        let accounts =construction.getaccounts.call(this)
         let options = [<option key={`selectanaccount`} value=""> Select Account ID</option>];
         if (accounts) {
             // eslint-disable-next-line
@@ -17,10 +17,10 @@ class AccountID {
     }
 
     showaccountmenu() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const accountid = new AccountID();
         const styles = MyStylesheet();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const regularFont = construction.getRegularFont.call(this);
 
         return (
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>

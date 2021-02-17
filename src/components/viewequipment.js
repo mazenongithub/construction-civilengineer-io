@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { radioOpen, radioClosed, removeIconSmall, CheckedBox, EmptyBox } from './svg'
 import { EquipmentOwnership, formatDateStringDisplay, CreateCostID } from './functions';
 import PurchaseDate from './purchasedate';
@@ -60,8 +60,8 @@ class ViewEquipment extends Component {
     
 
     removeequipmentcost(cost) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
 
         if (myuser) {
 
@@ -70,13 +70,13 @@ class ViewEquipment extends Component {
                 if (equipment) {
 
 
-                    const i = dynamicstyles.getequipmentkeybyid.call(this, equipment.equipmentid)
-                    const mycost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, cost.costid);
+                    const i = construction.getequipmentkeybyid.call(this, equipment.equipmentid)
+                    const mycost = construction.getcostbyid.call(this, equipment.equipmentid, cost.costid);
 
                     if (mycost) {
-                        const j = dynamicstyles.getequipmentcostskeybyid.call(this, equipment.eequipmentid, cost.costid)
+                        const j = construction.getequipmentcostskeybyid.call(this, equipment.eequipmentid, cost.costid)
 
-                        myuser.company.equipment.myequipment[i].ownership.cost.splice(j, 1);
+                        myuser.company.equipment[i].ownership.cost.splice(j, 1);
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render', activecostid: false })
 
@@ -94,9 +94,9 @@ class ViewEquipment extends Component {
 
     showequipmentcost(cost) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        const removeIcon = dynamicstyles.getremoveicon.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
+        const removeIcon = construction.getremoveicon.call(this)
 
         const reoccurring = (cost) => {
             if(cost.hasOwnProperty("reoccurring")) {
@@ -148,22 +148,22 @@ class ViewEquipment extends Component {
     }
 
     handledetail(detail) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
 
             const equipment = this.getequipment()
 
             if (equipment) {
-                let i = dynamicstyles.getequipmentkeybyid.call(this, equipment.equipmentid);
+                let i = construction.getequipmentkeybyid.call(this, equipment.equipmentid);
 
                 if (this.state.activecostid) {
-                    const mycost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                    const mycost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
                     if (mycost) {
 
-                        let j = dynamicstyles.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
-                        myuser.company.equipment.myequipment[i].ownership.cost[j].detail = detail;
+                        let j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
+                        myuser.company.equipment[i].ownership.cost[j].detail = detail;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
 
@@ -180,10 +180,10 @@ class ViewEquipment extends Component {
 
 
                     if (equipment.ownership.hasOwnProperty("cost")) {
-                        myuser.company.equipment.myequipment[i].ownership.cost.push(newcost)
+                        myuser.company.equipment[i].ownership.cost.push(newcost)
                     } else {
 
-                        myuser.company.equipment.myequipment[i].ownership.cost = [newcost]
+                        myuser.company.equipment[i].ownership.cost = [newcost]
                     }
 
                     this.props.reduxUser(myuser)
@@ -200,22 +200,22 @@ class ViewEquipment extends Component {
 
 
     handlecost(cost) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
 
             const equipment = this.getequipment()
 
             if (equipment) {
-                let i = dynamicstyles.getequipmentkeybyid.call(this, equipment.equipmentid);
+                let i = construction.getequipmentkeybyid.call(this, equipment.equipmentid);
 
                 if (this.state.activecostid) {
-                    const mycost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                    const mycost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
                     if (mycost) {
 
-                        let j = dynamicstyles.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
-                        myuser.company.equipment.myequipment[i].ownership.cost[j].cost = cost;
+                        let j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
+                        myuser.company.equipment[i].ownership.cost[j].cost = cost;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
 
@@ -233,10 +233,10 @@ class ViewEquipment extends Component {
 
 
                     if (equipment.ownership.hasOwnProperty("cost")) {
-                        myuser.company.equipment.myequipment[i].ownership.cost.push(newcost)
+                        myuser.company.equipment[i].ownership.cost.push(newcost)
                     } else {
 
-                        myuser.company.equipment.myequipment[i].ownership.cost = [newcost]
+                        myuser.company.equipment[i].ownership.cost = [newcost]
                     }
 
                     this.props.reduxUser(myuser)
@@ -256,10 +256,10 @@ class ViewEquipment extends Component {
 
     showaccountcost(equipment) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
         const equipmentdate = new EquipmentDate();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
         const frequency = new Frequency();
 
         const buttonWidth = () => {
@@ -280,7 +280,7 @@ class ViewEquipment extends Component {
         const getreoccuring = (equipment) => {
 
             if (this.state.activecostid) {
-                const cost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
 
                 if (cost) {
                     if (cost.hasOwnProperty("reoccurring")) {
@@ -301,7 +301,7 @@ class ViewEquipment extends Component {
         const showfrequency = (equipment) => {
             if (this.state.activecostid) {
 
-                const cost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
 
                 if (cost.hasOwnProperty("reoccurring")) {
                     return (frequency.showFrequency.call(this))
@@ -381,13 +381,13 @@ class ViewEquipment extends Component {
 
 
     handleworkinghours(workinghours) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         if (myuser) {
-            const equipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
+            const equipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
             if (equipment) {
-                let i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
-                myuser.company.equipment.myequipment[i].ownership.workinghours = workinghours;
+                let i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                myuser.company.equipment[i].ownership.workinghours = workinghours;
                 this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
 
@@ -398,23 +398,20 @@ class ViewEquipment extends Component {
     }
 
     handleloaninterest(loaninterest) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
 
         if (myuser) {
             if (this.props.match.params.equipmentid) {
-                const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+                const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
                 if (myequipment) {
 
-                    const checkmanager = dynamicstyles.checkmanager.call(this)
-                    if (checkmanager) {
-                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                    
+                        const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
 
 
-                        myuser.company.equipment.myequipment[i].ownership.loaninterest = loaninterest;
-                    } else {
-                        alert(`Only Managers can modify equipment loan values `)
-                    }
+                        myuser.company.equipment[i].ownership.loaninterest = loaninterest;
+                   
 
 
                     this.props.reduxUser(myuser)
@@ -436,8 +433,8 @@ class ViewEquipment extends Component {
     }
 
     getaccountid() {
-        const dynamicstyles = new DynamicStyles();
-        const equipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
+        const construction = new Construction();
+        const equipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
         let accountid = "";
         if (equipment) {
             if (equipment.accountid) {
@@ -449,17 +446,17 @@ class ViewEquipment extends Component {
     }
 
     handleaccountid(accountid) {
-        const dynamicstyles = new DynamicStyles();
-        const checkmanager = dynamicstyles.checkmanager.call(this);
+        const construction = new Construction();
+        const checkmanager = construction.checkmanager.call(this);
         if (checkmanager) {
-            let myuser = dynamicstyles.getuser.call(this);
+            let myuser = construction.getuser.call(this);
             if (myuser) {
                 if (this.props.match.params.equipmentid) {
-                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
+                    const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
                     if (myequipment) {
 
-                        let i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
-                        myuser.company.equipment.myequipment[i].accountid = accountid;
+                        let i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                        myuser.company.equipment[i].accountid = accountid;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
 
@@ -473,13 +470,13 @@ class ViewEquipment extends Component {
         }
     }
     getequipment() {
-        const dynamicstyles = new DynamicStyles();
-        return dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
+        const construction = new Construction();
+        return construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
 
     }
 
     makeequipmentcostactive(costid) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const equipment = this.getequipment()
 
         if (equipment) {
@@ -490,7 +487,7 @@ class ViewEquipment extends Component {
                 this.equipmentdatedefault()
             } else {
 
-                const cost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, costid)
+                const cost = construction.getcostbyid.call(this, equipment.equipmentid, costid)
                 if (cost) {
                     const equipmentdateyear = cost.timein.substring(0, 4)
                     const equipmentdatemonth = cost.timein.substring(5, 7);
@@ -522,12 +519,12 @@ class ViewEquipment extends Component {
 
     equipmentdetail(equipment) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const bidField = dynamicstyles.getbidfield.call(this);
+        const construction = new Construction();
+        const bidField = construction.getbidfield.call(this);
         const purchasedate = new PurchaseDate();
         const saledate = new SaleDate();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this);
+        const headerFont = construction.getHeaderFont.call(this)
 
         const getsaledate = () => {
             if (this.state.width > 1200) {
@@ -637,18 +634,18 @@ class ViewEquipment extends Component {
     }
 
     handlepurchasevalue(purchasevalue) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         if (myuser) {
 
-            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+            const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
             if (myequipment) {
                 console.log(myequipment)
 
 
-                const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
 
-                myuser.company.equipment.myequipment[i].ownership.purchase = purchasevalue;
+                myuser.company.equipment[i].ownership.purchase = purchasevalue;
 
 
 
@@ -665,15 +662,15 @@ class ViewEquipment extends Component {
     }
 
     handleresalevalue(resalevalue) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         if (myuser) {
             if (this.props.match.params.equipmentid) {
-                const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+                const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
                 if (myequipment) {
 
-                    const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
-                    myuser.company.equipment.myequipment[i].ownership.resalevalue = resalevalue;
+                    const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                    myuser.company.equipment[i].ownership.resalevalue = resalevalue;
 
 
 
@@ -699,12 +696,12 @@ class ViewEquipment extends Component {
     }
 
     handleownership(type, add) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
-            const equipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
+            const equipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
             if (equipment) {
-                const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
 
                 if (type === 'owned') {
 
@@ -712,13 +709,13 @@ class ViewEquipment extends Component {
 
                         if (!equipment.hasOwnProperty("ownership")) {
 
-                            myuser.company.equipment.myequipment[i].ownership = this.createOwnership()
+                            myuser.company.equipment[i].ownership = this.createOwnership()
                             
                             
                         }
 
                         if (equipment.hasOwnProperty("rented")) {
-                            delete myuser.company.equipment.myequipment[i].rented
+                            delete myuser.company.equipment[i].rented
                         }
 
                     }
@@ -732,7 +729,7 @@ class ViewEquipment extends Component {
                     if (equipment.hasOwnProperty("ownership")) {
 
 
-                        myuser.company.equipment.myequipment[i].rented = true;
+                        myuser.company.equipment[i].rented = true;
 
                     }
 
@@ -741,7 +738,7 @@ class ViewEquipment extends Component {
                 } else {
 
                     if (equipment.hasOwnProperty("rented")) {
-                        delete myuser.company.equipment.myequipment[i].rented
+                        delete myuser.company.equipment[i].rented
                     }
 
                 }
@@ -782,10 +779,10 @@ class ViewEquipment extends Component {
     }
 
     getdetail(equipment) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let detail = "";
         if (this.state.activecostid) {
-            const cost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+            const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
             if (cost) {
                 detail = cost.detail;
             }
@@ -796,10 +793,10 @@ class ViewEquipment extends Component {
     }
 
     getcost(equipment) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let getcost = "";
         if (this.state.activecostid) {
-            const cost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+            const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
             if (cost) {
                 getcost = cost.cost;
             }
@@ -810,19 +807,19 @@ class ViewEquipment extends Component {
     }
 
     handleFrequency(amount) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
             const equipment = this.getequipment()
             if (equipment) {
-                const i = dynamicstyles.getequipmentkeybyid.call(this, equipment.equipmentid)
+                const i = construction.getequipmentkeybyid.call(this, equipment.equipmentid)
                 if (this.state.activecostid) {
-                    const cost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                    const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
                     if (cost) {
                         if (cost.hasOwnProperty("reoccurring")) {
-                            const j = dynamicstyles.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
-                            myuser.company.equipment.myequipment[i].ownership.cost[j].reoccurring.frequency = amount;
+                            const j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
+                            myuser.company.equipment[i].ownership.cost[j].reoccurring.frequency = amount;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
 
@@ -841,11 +838,11 @@ class ViewEquipment extends Component {
 
     getfrequency() {
 
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const equipment = this.getequipment()
         if (equipment) {
             if (this.state.activecostid) {
-                const cost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
 
                 if (cost.hasOwnProperty("reoccurring")) {
                     return cost.reoccurring.frequency;
@@ -857,22 +854,22 @@ class ViewEquipment extends Component {
     }
 
     handlereoccurring() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
 
         if (myuser) {
             const equipment = this.getequipment()
             if (equipment) {
-                const i = dynamicstyles.getequipmentkeybyid.call(this, equipment.equipmentid)
+                const i = construction.getequipmentkeybyid.call(this, equipment.equipmentid)
                 if (this.state.activecostid) {
-                    const cost = dynamicstyles.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                    const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
                     if (cost) {
-                        const j = dynamicstyles.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
+                        const j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
                         if (cost.hasOwnProperty("reoccurring")) {
-                            delete myuser.company.equipment.myequipment[i].ownership.cost[j].reoccurring
+                            delete myuser.company.equipment[i].ownership.cost[j].reoccurring
                         } else {
 
-                            myuser.company.equipment.myequipment[i].ownership.cost[j].reoccurring = { frequency: '' }
+                            myuser.company.equipment[i].ownership.cost[j].reoccurring = { frequency: '' }
                         }
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
@@ -896,8 +893,8 @@ class ViewEquipment extends Component {
 
     }
     validatematerial(material) {
-        const dynamicstyles = new DynamicStyles();
-        const myprojects = dynamicstyles.getmyprojects.call(this);
+        const construction = new Construction();
+        const myprojects = construction.getmyprojects.call(this);
         let validate = true;
         let validatemessage = "";
         const materialid = material.materialid;
@@ -933,15 +930,15 @@ class ViewEquipment extends Component {
     }
     
     removematerial(material) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
   
         if (window.confirm(`Are you sure you want to delete ${material.material}?`)) {
             const validate = this.validatematerial(material);
             if (validate.validate) {
-                let myuser = dynamicstyles.getuser.call(this);
-                const mymaterial = dynamicstyles.getmymaterialfromid.call(this,material.materialid)
+                let myuser = construction.getuser.call(this);
+                const mymaterial = construction.getmymaterialfromid.call(this,material.materialid)
                 if(mymaterial) {
-                const i = dynamicstyles.getmaterialkeybyid.call(this, material.materialid);
+                const i = construction.getmaterialkeybyid.call(this, material.materialid);
                 myuser.company.materials.mymaterial.splice(i, 1);
                 this.props.reduxUser(myuser);
                 this.setState({ activematerialid: false, message: '' })
@@ -990,10 +987,10 @@ class ViewEquipment extends Component {
 
     render() {
         const accountid = new AccountID();
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
+        const regularFont = construction.getRegularFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
 
         const styles = MyStylesheet();
         const buttonWidth = () => {
@@ -1013,7 +1010,7 @@ class ViewEquipment extends Component {
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 const equipmentid = this.props.match.params.equipmentid;
-                const equipment = dynamicstyles.getmyequipmentbyid.call(this, equipmentid)
+                const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
                 if (equipment) {
 
                     const ownershipbox = (equipment) => {
@@ -1064,7 +1061,7 @@ class ViewEquipment extends Component {
                     const equipmentrate =(equipment) => {
 
                         if(equipment.hasOwnProperty("ownership")) {
-                            let equipmentrate =  dynamicstyles.calculateequipmentratebyownership.call(this, equipment.equipmentid) 
+                            let equipmentrate =  construction.calculateequipmentratebyownership.call(this, equipment.equipmentid) 
                             if(equipmentrate) {
                                 return(<div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
                                     <span style={{...styles.generalFont,...regularFont}}>Equipment Rate is ${Number(equipmentrate).toFixed(2)}/hr</span>
@@ -1097,7 +1094,7 @@ class ViewEquipment extends Component {
                             {this.showaccountcost(equipment)}
                             {equipmentrate(equipment)}
 
-                            {dynamicstyles.showsavecompany.call(this)}
+                            {construction.showsavecompany.call(this)}
 
 
                         </div>

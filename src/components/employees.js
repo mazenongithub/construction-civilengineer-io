@@ -1,6 +1,6 @@
 import React from 'react';
 import { MyStylesheet } from './styles';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { Link } from 'react-router-dom';
 import { goToIcon } from './svg';
 
@@ -8,13 +8,13 @@ class Employees {
 
 
     showmyemployees() {
-        const dynamicstyles = new DynamicStyles()
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction()
+        const myuser = construction.getuser.call(this)
         const employees = new Employees();
         let myemployees = [];
         if (myuser) {
 
-            let getemployees = dynamicstyles.getmyemployees.call(this)
+            let getemployees = construction.getmyemployees.call(this)
 
             if (getemployees) {
                 // eslint-disable-next-line
@@ -33,9 +33,9 @@ class Employees {
 
 
     removeemployee(employee) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
-        let myemployee = dynamicstyles.getemployeebyid.call(this, employee.providerid);
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
+        let myemployee = construction.getemployeebyid.call(this, employee.providerid);
 
 
 
@@ -46,11 +46,11 @@ class Employees {
                     if (myemployee.hasOwnProperty("benefits")) {
                         this.setState({ message: `${employee.firstname} ${employee.lastname} has benefits to remove prior to removing from the company` })
                     } else {
-                        let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid);
-                        myuser.company.office.employees.employee.splice(i, 1)
-                        if (myuser.company.office.employees.employee.length === 0) {
-                            delete myuser.company.office.employees.employee
-                            delete myuser.company.office.employees
+                        let i = construction.getemployeekeybyid.call(this, employee.providerid);
+                        myuser.company.employees.employee.splice(i, 1)
+                        if (myuser.company.employees.employee.length === 0) {
+                            delete myuser.company.employees.employee
+                            delete myuser.company.employees
                         }
                         this.setState({ activeemployeeid: false })
                     }
@@ -62,11 +62,11 @@ class Employees {
 
     }
     showmyemployee(providerid) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet();
-        const employee = dynamicstyles.getemployeebyid.call(this, providerid)
-        const regularFont = dynamicstyles.getRegularFont.call(this);
-        const myuser = dynamicstyles.getuser.call(this)
+        const employee = construction.getemployeebyid.call(this, providerid)
+        const regularFont = construction.getRegularFont.call(this);
+        const myuser = construction.getuser.call(this)
 
 
         if (myuser) {
@@ -109,13 +109,12 @@ class Employees {
 
 
     showEmployees() {
-        const dynamicstyles = new DynamicStyles();
-
+        const construction = new Construction();
         const styles = MyStylesheet();
-        const myuser = dynamicstyles.getuser.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const myuser = construction.getuser.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const employees = new Employees();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
         if (myuser) {
 
             return (

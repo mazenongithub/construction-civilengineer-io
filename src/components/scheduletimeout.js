@@ -37,7 +37,7 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = timeout;
+                                    myuser.company.projects[i].schedule.labor[j].timeout = timeout;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
 
@@ -113,7 +113,7 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = timeout;
+                                    myuser.company.projects[i].schedule.labor[j].timeout = timeout;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
 
@@ -188,7 +188,7 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = timeout;
+                                    myuser.company.projects[i].schedule.labor[j].timeout = timeout;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
 
@@ -260,7 +260,7 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = timeout;
+                                    myuser.company.projects[i].schedule.labor[j].timeout = timeout;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
 
@@ -331,7 +331,7 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = timeout;
+                                    myuser.company.projects[i].schedule.labor[j].timeout = timeout;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
 
@@ -408,7 +408,7 @@ class TimeOut {
                             console.log(timeout)
                             timeout = UTCTimeStringfromTime(timeout);
                             console.log(timeout)
-                            myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = timeout;
+                            myuser.company.projects[i].schedule.labor[j].timeout = timeout;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
 

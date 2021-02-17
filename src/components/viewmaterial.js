@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { Link } from 'react-router-dom';
 import AccountID from './accountid';
 
@@ -59,17 +59,17 @@ class ViewMaterial extends Component {
   
 
     handleunitcost(unitcost) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
        
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = construction.getuser.call(this)
     
         if (myuser) {
          
             
                 const mymaterial = this.getMaterial()
                 if(mymaterial) {
-                let i = dynamicstyles.getmaterialkeybyid.call(this,mymaterial.materialid)
-                myuser.company.materials.mymaterial[i].unitcost = unitcost;
+                let i = construction.getmaterialkeybyid.call(this,mymaterial.materialid)
+                myuser.company.materials[i].unitcost = unitcost;
                 this.props.reduxUser(myuser);
                 this.setState({ render: 'render' })
     
@@ -81,17 +81,17 @@ class ViewMaterial extends Component {
     }
 
     handleunit(unit) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
     
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = construction.getuser.call(this)
 
         if (myuser) {
        
               
                     const mymaterial = this.getMaterial()
                     if (mymaterial) {
-                        let i = dynamicstyles.getmaterialkeybyid.call(this, mymaterial.materialid)
-                        myuser.company.materials.mymaterial[i].unit = unit;
+                        let i = construction.getmaterialkeybyid.call(this, mymaterial.materialid)
+                        myuser.company.materials[i].unit = unit;
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
 
@@ -104,16 +104,16 @@ class ViewMaterial extends Component {
     }
 
     handleaccountid(accountid) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
 
         if (myuser) {
           
             
                     const mymaterial = this.getMaterial()
                     if (mymaterial) {
-                        const i = dynamicstyles.getmaterialkeybyid.call(this, mymaterial.materialid)
-                        myuser.company.materials.mymaterial[i].accountid = accountid;
+                        const i = construction.getmaterialkeybyid.call(this, mymaterial.materialid)
+                        myuser.company.materials[i].accountid = accountid;
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     }
@@ -126,17 +126,17 @@ class ViewMaterial extends Component {
 
 
     getMaterial() {
-        const dynamicstyles = new DynamicStyles();
-        const material = dynamicstyles.getmymaterialfromid.call(this,this.props.match.params.materialid)
+        const construction = new Construction();
+        const material = construction.getmymaterialfromid.call(this,this.props.match.params.materialid)
         return material;
     }
 
     render() {
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this)
         const styles = MyStylesheet();
-        const myuser =dynamicstyles.getuser.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const myuser =construction.getuser.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const accountid  = new AccountID()
         if(myuser) {
 
@@ -174,7 +174,7 @@ class ViewMaterial extends Component {
 
                         {accountid.showaccountmenu.call(this)}
 
-                        {dynamicstyles.showsavecompany.call(this)}
+                        {construction.showsavecompany.call(this)}
 
 
 

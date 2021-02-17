@@ -1,6 +1,6 @@
 import React from 'react';
 import { MyStylesheet } from './styles'
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import MaterialCalender from './purchasedatecalender'
 import { validateMonth, validateDate, validateYear, trailingZeros } from './functions';
 
@@ -10,8 +10,8 @@ class PurchaseDate {
 
     handleyear(year) {
 
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
             
                 this.setState({ purchasedateyear: year })
@@ -21,11 +21,11 @@ class PurchaseDate {
 
 
                    
-                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+                            const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
                             if (myequipment) {
 
 
-                                const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                                const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
                                 let day = this.state.purchasedateday;
                                 let month = this.state.purchasedatemonth;
                                 const timein = `${year}-${month}-${day}`
@@ -55,16 +55,16 @@ class PurchaseDate {
     handleday(day) {
         day = day.toString();
 
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
                 this.setState({ purchasedateday: day })
                 
-                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+                    const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
                     if (myequipment) {
 
-                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                        const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
 
                         if (day.length === 2) {
 
@@ -110,16 +110,16 @@ class PurchaseDate {
 
     handlemonth(month) {
 
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
        
                 this.setState({ purchasedatemonth: month })
 
                
-                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+                    const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
                     if (myequipment) {
-                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                        const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
 
                         if (month.length === 2) {
 
@@ -175,9 +175,9 @@ class PurchaseDate {
 
     showpurchasedate() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const purchasedate = new PurchaseDate();
         const calender = new MaterialCalender();
         return (

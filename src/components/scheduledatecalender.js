@@ -1,5 +1,5 @@
 import React from 'react';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { MyStylesheet } from './styles';
 import { removeIconSmall, dropDateIcon } from './svg';
 import {  monthstring, getFirstIsOnDate, check_29_feb_leapyear_date, check_30_date, check_31_date, getDayString } from './functions'
@@ -17,9 +17,9 @@ class MaterialCalender {
 
     showicon() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const removeIcon = dynamicstyles.getremoveicon.call(this);
-        const dropIcon = dynamicstyles.getdropicon.call(this)
+        const construction = new Construction();
+        const removeIcon = construction.getremoveicon.call(this);
+        const dropIcon = construction.getdropicon.call(this)
         if (this.state.materialcalender) {
             return (
                 <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.setState({ materialcalender: false }) }}>{removeIconSmall()} </button>
@@ -32,8 +32,8 @@ class MaterialCalender {
 
     }
     showlabel() {
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this);
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this);
         const styles = MyStylesheet();
         if (this.state.materialcalender) {
             let day = this.state.materialdateday;
@@ -63,8 +63,8 @@ class MaterialCalender {
 
     showCalender() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
         const calendertimein = new MaterialCalender();
         let day = this.state.materialdateday;
         let year = this.state.materialdateyear;

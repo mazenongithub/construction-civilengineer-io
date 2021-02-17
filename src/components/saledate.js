@@ -1,6 +1,6 @@
 import React from 'react';
 import { MyStylesheet } from './styles'
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import MaterialCalender from './saledatecalender'
 import { validateMonth, validateDate, validateYear, trailingZeros } from './functions';
 
@@ -10,8 +10,8 @@ class SaleDate {
 
     handleyear(year) {
 
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
             this.setState({ saledateyear: year })
@@ -21,12 +21,12 @@ class SaleDate {
 
 
 
-                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+                    const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
                     if (myequipment) {
 
 
 
-                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                        const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
                         let day = this.state.saledateday;
                         let month = this.state.saledatemonth;
                         const timein = `${year}-${month}-${day}`
@@ -56,19 +56,19 @@ class SaleDate {
     handleday(day) {
         day = day.toString();
 
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
 
             this.setState({ saledateday: day })
 
 
-            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+            const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
 
             if (myequipment) {
 
-                const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
                 if (day.length === 2) {
 
 
@@ -110,15 +110,15 @@ class SaleDate {
 
     handlemonth(month) {
 
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
             this.setState({ saledatemonth: month })
 
-            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+            const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
             if (myequipment) {
-                const i = dynamicstyles.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
                 if (month.length === 2) {
 
                     if (validateMonth(month)) {
@@ -168,9 +168,9 @@ class SaleDate {
 
     showsaledate() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const saledate = new SaleDate();
         const calender = new MaterialCalender();
         return (

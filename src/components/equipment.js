@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { MyStylesheet } from './styles';
 import { removeIconSmall, goToIcon, TouchtoEdit } from './svg'
 import { CreateEquipment } from './functions';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { Link } from 'react-router-dom';
 
 import MakeID from './makeids';
@@ -11,10 +11,10 @@ class Equipment extends Component {
 
 
     getequipment() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let getequipment = "";
         if (this.state.activeequipmentid) {
-            let equipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+            let equipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid)
             getequipment = equipment.equipment
         }
         return getequipment
@@ -22,16 +22,16 @@ class Equipment extends Component {
 
 
     handleequipment(equipment) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         const makeID = new MakeID();
 
         if (myuser) {
             if (this.state.activeequipmentid) {
-                const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+                const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid)
                 if (myequipment) {
-                    let i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
-                    myuser.company.equipment.myequipment[i].equipment = equipment;
+                    let i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                    myuser.company.equipment[i].equipment = equipment;
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
 
@@ -48,7 +48,7 @@ class Equipment extends Component {
                 let newEquipment = CreateEquipment(equipmentid, equipment, ownership, accountid)
 
                 if (myuser.company.hasOwnProperty("equipment")) {
-                    myuser.company.equipment.myequipment.push(newEquipment);
+                    myuser.company.equipment.push(newEquipment);
                 } else {
                     let equipment = { myequipment: [newEquipment] };
                     myuser.company.equipment = equipment;
@@ -64,8 +64,8 @@ class Equipment extends Component {
 
     showequipment() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
         const equipment = new Equipment();
 
         return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
@@ -80,8 +80,8 @@ class Equipment extends Component {
     }
 
     showequipmentids() {
-        const dynamicstyles = new DynamicStyles()
-        let myequipment = dynamicstyles.getmyequipment.call(this)
+        const construction = new Construction()
+        let myequipment = construction.getmyequipment.call(this)
         let equipmentids = [];
         const equipment = new Equipment();
         if (myequipment) {
@@ -95,9 +95,9 @@ class Equipment extends Component {
     }
 
     makequipmentactive(equipmentid) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         if (this.state.activeequipmentid !== equipmentid) {
-            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, equipmentid)
+            const myequipment = construction.getmyequipmentbyid.call(this, equipmentid)
             if (myequipment) {
                 if (myequipment.hasOwnProperty("ownership")) {
 
@@ -120,8 +120,8 @@ class Equipment extends Component {
         }
     }
     checkremoveequipment(equipmentid) {
-        const dynamicstyles = new DynamicStyles();
-        const company = dynamicstyles.getcompany.call(this)
+        const construction = new Construction();
+        const company = construction.getcompany.call(this)
         let validate = {};
         validate.validate = true;
         validate.message = "";
@@ -130,7 +130,7 @@ class Equipment extends Component {
             company.projects.myproject.map(myproject => {
                 if (myproject.hasOwnProperty("scheduleequipment")) {
                     // eslint-disable-next-line
-                    myproject.scheduleequipment.myequipment.map(myequipment => {
+                    myproject.schedule.equipment.map(myequipment => {
                         if (myequipment.myequipmentid === equipmentid) {
                             validate.validate = false;
                             validate.message += `Could not delete equipment. Check Schedule Equipment for Project ID ${myproject.projectid}  `;
@@ -140,8 +140,8 @@ class Equipment extends Component {
                 }
                 if (myproject.hasOwnProperty("actualequipment")) {
                     // eslint-disable-next-line
-                    myproject.actualequipment.myequipment.map(myequipment => {
-                        if (myequipment.myequipmentid === equipmentid) {
+                    myproject.actual.equipment.map(myequipment => {
+                        if (myequipment.equipmentid === equipmentid) {
                             validate.validate = false;
                             validate.message += `Could not delete equipment. Check Actual Equipment for Project ID ${myproject.projectid}  `;
                         }
@@ -154,16 +154,16 @@ class Equipment extends Component {
     }
     removeequipment(myequipment) {
         const equipment = new Equipment();
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         if (window.confirm(`Are you sure you want to remove ${myequipment.equipment}?`)) {
-            const myuser = dynamicstyles.getuser.call(this)
+            const myuser = construction.getuser.call(this)
             const validate = equipment.checkremoveequipment.call(this, myequipment.equipmentid);
 
             if (validate.validate) {
-                const i = dynamicstyles.getequipmentkeybyid.call(this, myequipment.equipmentid)
-                myuser.company.equipment.myequipment.splice(i, 1);
-                if (myuser.company.equipment.myequipment.length === 0) {
-                    delete myuser.company.equipment.myequipment
+                const i = construction.getequipmentkeybyid.call(this, myequipment.equipmentid)
+                myuser.company.equipment.splice(i, 1);
+                if (myuser.company.equipment.length === 0) {
+                    delete myuser.company.equipment
                     delete myuser.company.equipment
                 }
                 this.props.reduxUser(myuser);
@@ -177,12 +177,12 @@ class Equipment extends Component {
     }
     showequipmentid(getequipment) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        const removeIcon = dynamicstyles.getremoveicon.call(this);
-        const myuser = dynamicstyles.getuser.call(this)
-        const buttonSize = dynamicstyles.buttonSize.call(this)
-        const touchtoedit = dynamicstyles.touchtoedit.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
+        const removeIcon = construction.getremoveicon.call(this);
+        const myuser = construction.getuser.call(this)
+        const buttonSize = construction.buttonSize.call(this)
+        const touchtoedit = construction.touchtoedit.call(this)
         const equipment = new Equipment()
         const getactiveequipmentbackground = (equipmentid) => {
             if (this.state.activeequipmentid === equipmentid) {
@@ -220,12 +220,12 @@ class Equipment extends Component {
     }
 
     showEquipment() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet();
-        const myuser = dynamicstyles.getuser.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const myuser = construction.getuser.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const equipment = new Equipment()
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
 
         if (myuser) {
 
@@ -240,7 +240,7 @@ class Equipment extends Component {
                         </div>
                         {equipment.showequipment.call(this)}
                         {equipment.showequipmentids.call(this)}
-                        {dynamicstyles.showsavecompany.call(this)}
+                        {construction.showsavecompany.call(this)}
                     </div>
                 </div>
             )

@@ -1,23 +1,31 @@
 import React from 'react'
 import { MyStylesheet } from './styles'
-import DynamicStyles from './dynamicstyles'
+import Construction from './construction'
 import { scrollImageDown, goCheckIcon } from './svg';
 import { validateCompanyID } from './functions';
 
 
 class ViewCompany {
-
+    getcompany() {
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
+        if(myuser.hasOwnProperty("company")) {
+            return myuser.company;
+        }
+    }
     getaddress() {
-        const dynamicstyles = new DynamicStyles();
-        let company = dynamicstyles.getcompany.call(this)
+   
+     
+        const viewcompany = new ViewCompany();
+const company = viewcompany.getcompany.call(this)
         if (company) {
             return company.address;
         }
 
     }
     handleaddress(address) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 myuser.company.address = address;
@@ -27,16 +35,17 @@ class ViewCompany {
         }
     }
     getcity() {
-        const dynamicstyles = new DynamicStyles();
-        let company = dynamicstyles.getcompany.call(this)
+ 
+        const viewcompany = new ViewCompany();
+const company = viewcompany.getcompany.call(this)
         if (company) {
             return company.city;
         }
 
     }
     handlecity(city) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction()
+        const myuser = construction.getuser.call(this)
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 myuser.company.city = city;
@@ -46,8 +55,9 @@ class ViewCompany {
         }
     }
     getcontactstate() {
-        const dynamicstyles = new DynamicStyles();
-        let company = dynamicstyles.getcompany.call(this)
+ 
+        const viewcompany = new ViewCompany();
+const company = viewcompany.getcompany.call(this)
         let contactstate = "";
         if (company) {
             contactstate = company.contactstate;
@@ -56,8 +66,8 @@ class ViewCompany {
 
     }
     handlecontactstate(contactstate) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 myuser.company.contactstate = contactstate;
@@ -67,16 +77,17 @@ class ViewCompany {
         }
     }
     getzipcode() {
-        const dynamicstyles = new DynamicStyles();
-        let company = dynamicstyles.getcompany.call(this)
+
+        const viewcompany = new ViewCompany();
+const company = viewcompany.getcompany.call(this)
         if (company) {
             return company.zipcode;
         }
 
     }
     handlezipcode(zipcode) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 myuser.company.zipcode = zipcode;
@@ -87,16 +98,17 @@ class ViewCompany {
     }
 
     getmycompany() {
-        const dynamicstyles = new DynamicStyles();
-        let company = dynamicstyles.getcompany.call(this)
+  
+        const viewcompany = new ViewCompany();
+const company = viewcompany.getcompany.call(this)
         if (company) {
             return company.company;
         }
 
     }
     handlemycompany(company) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
                 myuser.company.company = company;
@@ -107,8 +119,9 @@ class ViewCompany {
     }
 
     getmyurl() {
-        const dynamicstyles = new DynamicStyles();
-        let company = dynamicstyles.getcompany.call(this)
+    
+        const viewcompany = new ViewCompany();
+const company = viewcompany.getcompany.call(this)
         if (company) {
             return company.url;
         }
@@ -116,9 +129,9 @@ class ViewCompany {
     }
 
     handlemyurl(url) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
 
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
             if (myuser.hasOwnProperty("company")) {
@@ -148,11 +161,11 @@ class ViewCompany {
 
     showViewCompany() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        const myuser = dynamicstyles.getuser.call(this)
-        const arrowHeight = dynamicstyles.getArrowHeight.call(this)
-        const goIcon = dynamicstyles.getgocheckheight.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
+        const myuser = construction.getuser.call(this)
+        const arrowHeight = construction.getArrowHeight.call(this)
+        const goIcon = construction.getgocheckheight.call(this)
         const viewcompany = new ViewCompany()
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
@@ -188,7 +201,7 @@ class ViewCompany {
                                     <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
                                         value={viewcompany.getmyurl.call(this)}
                                         onChange={event => { viewcompany.handlemyurl.call(this, event.target.value) }}
-                                        onBlur={event => { dynamicstyles.validatecompanyid.call(this, event.target.value) }} />
+                                        onBlur={event => { construction.validatecompanyid.call(this, event.target.value) }} />
 
                                     {urlicon()}
                                 </div>
@@ -225,7 +238,7 @@ class ViewCompany {
                                 </div>
                             </div>
 
-                            {dynamicstyles.showsavecompany.call(this)}
+                            {construction.showsavecompany.call(this)}
 
 
                         </div>

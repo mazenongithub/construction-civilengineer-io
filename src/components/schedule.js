@@ -19,7 +19,7 @@ import {
     CreateMyMaterial,
     isNumeric
 } from './functions'
-import DynamicStyles from './dynamicstyles'
+import Construction from './construction'
 import TimeIn from './scheduletimein';
 import TimeOut from './scheduletimeout'
 import MaterialDate from './scheduledate'
@@ -45,12 +45,12 @@ class Schedule extends Component {
         this.timeindefault()
         this.timeoutdefault();
         this.materialdatedefault();
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
 
 
-        const csicodes = dynamicstyles.getcsis.call(this)
+        const csicodes = construction.getcsis.call(this)
         if (!csicodes) {
-            dynamicstyles.loadcsis.call(this)
+            construction.loadcsis.call(this)
         }
 
     }
@@ -180,11 +180,11 @@ class Schedule extends Component {
     }
 
     getcsiid() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         if (this.state.activelaborid && this.state.active === 'labor') {
-            const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+            const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid)
             if (mylabor) {
-                let csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid)
+                let csi = construction.getcsibyid.call(this, mylabor.csiid)
                 if (csi) {
 
                     return `${csi.csi}-${csi.title}`
@@ -192,18 +192,18 @@ class Schedule extends Component {
 
             }
         } else if (this.state.activematerialid && this.state.active === 'materials') {
-            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
+            const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid)
             if (mymaterial) {
-                let csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid);
+                let csi = construction.getcsibyid.call(this, mymaterial.csiid);
                 if (csi) {
                     return `${csi.csi}-${csi.title}`
                 }
             }
         } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
-            const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+            const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
 
             if (myequipment) {
-                let csi = dynamicstyles.getcsibyid.call(this, myequipment.csiid);
+                let csi = construction.getcsibyid.call(this, myequipment.csiid);
                 if (csi) {
                     return `${csi.csi}-${csi.title}`
                 }
@@ -211,7 +211,7 @@ class Schedule extends Component {
 
         } else if (this.state.csiid) {
 
-            let csi = dynamicstyles.getcsibyid.call(this, this.state.csiid);
+            let csi = construction.getcsibyid.call(this, this.state.csiid);
             if (csi) {
                 return `${csi.csi}-${csi.title}`
             }
@@ -220,29 +220,27 @@ class Schedule extends Component {
     }
 
     getmilestoneid() {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
-        let milestoneid = this.state.milestoneid;
+        const construction = new Construction();
+        const project = construction.getproject.call(this);
+        let milestoneid = ""
         if (project) {
 
             if (this.state.active === 'labor') {
                 if (this.state.activelaborid) {
-                    const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid);
+                    const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
                     milestoneid = mylabor.milestoneid;
-                } else {
-                    milestoneid = this.state.milestoneid;
-                }
+                } 
 
             } else if (this.state.active === 'equipment') {
                 if (this.state.activeequipmentid) {
-                    const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
+                    const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
                     milestoneid = myequipment.milestoneid;
                 }
 
             } else if (this.state.active === 'materials') {
 
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid);
+                    const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
                     milestoneid = mymaterial.milestoneid;
                 }
 
@@ -254,10 +252,10 @@ class Schedule extends Component {
     }
 
     handlecsiid(csiid) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
-            const csi = dynamicstyles.getcsibyid.call(this, csiid);
+            const csi = construction.getcsibyid.call(this, csiid);
             if (csi) {
 
                 const csi_1 = csi.csi.substring(0, 2)
@@ -268,17 +266,17 @@ class Schedule extends Component {
                     csi_4 = csi.csi.substring(7, 9);
                 }
                 this.setState({ csi_4, csi_3, csi_2, csi_1 })
-                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                const project = construction.getproject.call(this)
                 if (project) {
                     const projectid = project.projectid;
-                    const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                    const i = construction.getprojectkeybyid.call(this, projectid)
                     if (this.state.active === 'labor') {
 
                         if (this.state.activelaborid) {
-                            const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid);
+                            const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
                             if (mylabor) {
-                                const j = dynamicstyles.getschedulelaborkeybyid.call(this, this.state.activelaborid)
-                                myuser.company.projects.myproject[i].schedulelabor.mylabor[j].csiid = csiid;
+                                const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                                myuser.company.projects[i].schedule.labor[j].csiid = csiid;
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
                             }
@@ -290,10 +288,10 @@ class Schedule extends Component {
                     } else if (this.state.active === 'materials') {
 
                         if (this.state.activematerialid) {
-                            const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid);
+                            const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
                             if (mymaterial) {
-                                const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
-                                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].csiid = csiid;
+                                const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                                myuser.company.projects[i].schedule.materials[j].csiid = csiid;
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
                             }
@@ -304,10 +302,10 @@ class Schedule extends Component {
                     } else if (this.state.active === 'equipment') {
 
                         if (this.state.activeequipmentid) {
-                            const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
+                            const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
                             if (myequipment) {
-                                const j = dynamicstyles.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
-                                myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].csiid = csiid;
+                                const j = construction.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
+                                myuser.company.projects[i].schedule.equipment[j].csiid = csiid;
                                 this.props.reduxUser(myuser)
                                 this.setState({ render: 'render' })
                             }
@@ -328,20 +326,20 @@ class Schedule extends Component {
     }
 
     handlemilestoneid(milestoneid) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+            const project = construction.getproject.call(this)
             if (project) {
                 const projectid = project.projectid;
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                const i = construction.getprojectkeybyid.call(this, projectid)
                 if (this.state.active === 'labor') {
 
                     if (this.state.activelaborid) {
-                        const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid);
+                        const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
                         if (mylabor) {
-                            const j = dynamicstyles.getschedulelaborkeybyid.call(this, this.state.activelaborid)
-                            myuser.company.projects.myproject[i].schedulelabor.mylabor[j].milestoneid = milestoneid;
+                            const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                            myuser.company.projects[i].schedule.labor[j].milestoneid = milestoneid;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
@@ -353,10 +351,10 @@ class Schedule extends Component {
                 } else if (this.state.active === 'materials') {
 
                     if (this.state.activematerialid) {
-                        const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid);
+                        const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
                         if (mymaterial) {
-                            const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
-                            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].milestoneid = milestoneid;
+                            const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                            myuser.company.projects[i].schedule.materials[j].milestoneid = milestoneid;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
@@ -367,10 +365,10 @@ class Schedule extends Component {
                 } else if (this.state.active === 'equipment') {
 
                     if (this.state.activeequipmentid) {
-                        const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
+                        const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
                         if (myequipment) {
-                            const j = dynamicstyles.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
-                            myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].milestoneid = milestoneid;
+                            const j = construction.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
+                            myuser.company.projects[i].schedule.equipment[j].milestoneid = milestoneid;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
@@ -393,13 +391,13 @@ class Schedule extends Component {
 
 
     getequipmentid() {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const construction = new Construction();
+        const project = construction.getproject.call(this)
         let equipmentid = "";
         if (project) {
 
             if (this.state.activeequipmentid) {
-                const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
                 if (myequipment) {
                     equipmentid = myequipment.myequipmentid;
                 }
@@ -413,18 +411,18 @@ class Schedule extends Component {
 
 
     removelaborid(labor) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
         if (window.confirm(`Are you sure you want to delete labor for ${labor.providerid}`)) {
             if (myuser) {
-                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                const project = construction.getproject.call(this)
                 if (project) {
                     const projectid = project.projectid;
-                    const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
-                    const mylabor = dynamicstyles.getschedulelaborbyid.call(this, labor.laborid);
+                    const i = construction.getprojectkeybyid.call(this, projectid)
+                    const mylabor = construction.getschedulelaborbyid.call(this, labor.laborid);
                     if (mylabor) {
-                        const j = dynamicstyles.getschedulelaborkeybyid.call(this, mylabor.laborid);
-                        myuser.company.projects.myproject[i].schedulelabor.mylabor.splice(j, 1);
+                        const j = construction.getschedulelaborkeybyid.call(this, mylabor.laborid);
+                        myuser.company.projects[i].schedule.labor.splice(j, 1);
                         this.props.reduxUser(myuser)
                         this.reset();
                     }
@@ -435,12 +433,12 @@ class Schedule extends Component {
 
     }
     getemployeeid() {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const construction = new Construction();
+        const project = construction.getproject.call(this)
         if (project) {
 
             if (this.state.activelaborid) {
-                const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+                const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid)
                 if (mylabor) {
 
                     return mylabor.providerid;
@@ -453,8 +451,8 @@ class Schedule extends Component {
     }
 
     makematerialactive(materialid) {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const construction = new Construction();
+        const project = construction.getproject.call(this)
         if (project) {
 
             if (this.state.activematerialid === materialid) {
@@ -464,13 +462,13 @@ class Schedule extends Component {
 
             } else {
 
-                const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, materialid)
+                const mymaterial = construction.getschedulematerialbyid.call(this, materialid)
                 if (mymaterial) {
                     const materialdateyear = mymaterial.timein.substring(0, 4)
                     const materialdatemonth = mymaterial.timein.substring(5, 7);
                     const materialdateday = mymaterial.timein.substring(8, 10);
 
-                    const csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid);
+                    const csi = construction.getcsibyid.call(this, mymaterial.csiid);
                     const csi_1 = csi.csi.substring(0, 2)
                     const csi_2 = csi.csi.substring(2, 4);
                     const csi_3 = csi.csi.substring(4, 6);
@@ -491,8 +489,8 @@ class Schedule extends Component {
 
     makeequipmentactive(equipmentid) {
 
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const construction = new Construction();
+        const project = construction.getproject.call(this)
         if (project) {
 
             if (this.state.activeequipmentid === equipmentid) {
@@ -501,7 +499,7 @@ class Schedule extends Component {
                 this.reset();
             } else {
 
-                const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, equipmentid)
+                const myequipment = construction.getscheduleequipmentbyid.call(this, equipmentid)
 
                 if (myequipment) {
 
@@ -519,7 +517,7 @@ class Schedule extends Component {
                     const timeoutminutes = getMinutesfromTimein(myequipment.timeout)
                     const timeoutampm = getAMPMfromTimeIn(myequipment.timeout);
 
-                    const csi = dynamicstyles.getcsibyid.call(this, myequipment.csiid);
+                    const csi = construction.getcsibyid.call(this, myequipment.csiid);
                     let csi_1 = "";
                     let csi_2 = "";
                     let csi_3 = "";
@@ -543,8 +541,8 @@ class Schedule extends Component {
 
     makelaboractive(laborid) {
 
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const construction = new Construction();
+        const project = construction.getproject.call(this)
         if (project) {
 
             if (this.state.activelaborid === laborid) {
@@ -552,7 +550,7 @@ class Schedule extends Component {
                 this.setState({ activelaborid: false })
             } else {
 
-                const mylabor = dynamicstyles.getschedulelaborbyid.call(this, laborid)
+                const mylabor = construction.getschedulelaborbyid.call(this, laborid)
 
                 if (mylabor) {
 
@@ -570,7 +568,7 @@ class Schedule extends Component {
                     const timeoutminutes = getMinutesfromTimein(mylabor.timeout)
                     const timeoutampm = getAMPMfromTimeIn(mylabor.timeout);
 
-                    const csi = dynamicstyles.getcsibyid.call(this, mylabor.csiid);
+                    const csi = construction.getcsibyid.call(this, mylabor.csiid);
                     let csi_1 = "";
                     let csi_2 = "";
                     let csi_3 = "";
@@ -595,24 +593,24 @@ class Schedule extends Component {
     }
 
     getSchedule() {
-        const dynamicstyles = new DynamicStyles();
-        const schedule = dynamicstyles.getAllSchedule.call(this);
+        const construction = new Construction();
+        const schedule = construction.getAllSchedule.call(this);
         return schedule;
 
     }
 
     showlaborid(labor) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet();
-        const removeIcon = dynamicstyles.getremoveicon.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this);
-        const csi = dynamicstyles.getcsibyid.call(this, labor.csiid);
-        let employee = dynamicstyles.getemployeebyid.call(this, labor.providerid)
+        const removeIcon = construction.getremoveicon.call(this)
+        const regularFont = construction.getRegularFont.call(this);
+        const csi = construction.getcsibyid.call(this, labor.csiid);
+        let employee = construction.getemployeebyid.call(this, labor.providerid)
         let hourlyrate = labor.laborrate;
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const project = construction.getproject.call(this)
         if (project) {
 
-            const milestone = dynamicstyles.getmilestonebyid.call(this, labor.milestoneid)
+            const milestone = construction.getmilestonebyid.call(this, labor.milestoneid)
 
 
             const getbutton = () => {
@@ -634,7 +632,7 @@ class Schedule extends Component {
             if (this.state.active === 'labor') {
 
                 return (
-                    <div key={labor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+                    <div key={labor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont,...styles.bottomMargin10, }}>
                         <span style={{ ...getactivelaborbackground(labor.laborid) }} onClick={() => { this.makelaboractive(labor.laborid) }}>
                             {employee.firstname} {employee.lastname}: {labor.description} Milestone {milestone.milestone} CSI:{csi.csi}-{csi.title}<br />
                 From {inputUTCStringForLaborID(labor.timein)} to {inputUTCStringForLaborID(labor.timeout)}
@@ -649,21 +647,20 @@ class Schedule extends Component {
 
     }
     showlaborids() {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const construction = new Construction();
+        const project = construction.getproject.call(this)
         let laborids = [];
-        const myuser = dynamicstyles.getuser.call(this);
+        const myuser = construction.getuser.call(this);
         if (myuser) {
             if (project) {
-                const labors = dynamicstyles.getschedulelabor.call(this)
+                const labors = construction.getschedulelabor.call(this)
                 if (labors) {
                     // eslint-disable-next-line
                     labors.map(labor => {
-                        const checkmanager = dynamicstyles.checkmanager.call(this)
-                        if (checkmanager || labor.providerid === myuser.providerid) {
+                   
+                   
                             laborids.push(this.showlaborid(labor))
-                        }
-
+                        
 
                     })
                 }
@@ -676,19 +673,19 @@ class Schedule extends Component {
     }
 
     removematerial(mymaterial) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
-        const material = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
+        const material = construction.getmymaterialfromid.call(this, mymaterial.mymaterialid)
         if (window.confirm(`Are you sure you want to delete material for ${material.material}`)) {
             if (myuser) {
-                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                const project = construction.getproject.call(this)
                 if (project) {
                     const projectid = project.projectid;
-                    const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
-                    const material = dynamicstyles.getschedulematerialbyid.call(this, mymaterial.materialid)
+                    const i = construction.getprojectkeybyid.call(this, projectid)
+                    const material = construction.getschedulematerialbyid.call(this, mymaterial.materialid)
                     if (material) {
-                        const j = dynamicstyles.getschedulematerialkeybyid.call(this, material.materialid)
-                        myuser.company.projects.myproject[i].schedulematerials.mymaterial.splice(j, 1)
+                        const j = construction.getschedulematerialkeybyid.call(this, material.materialid)
+                        myuser.company.projects[i].schedule.materials.splice(j, 1)
                         this.props.reduxUser(myuser)
                         this.reset();
 
@@ -711,12 +708,12 @@ class Schedule extends Component {
 
     showmaterialid(mymaterial) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        const removeIcon = dynamicstyles.getremoveicon.call(this)
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-        const csi = dynamicstyles.getcsibyid.call(this, mymaterial.csiid);
-        const material = dynamicstyles.getmymaterialfromid.call(this, mymaterial.mymaterialid)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
+        const removeIcon = construction.getremoveicon.call(this)
+        const project = construction.getproject.call(this)
+        const csi = construction.getcsibyid.call(this, mymaterial.csiid);
+        const material = construction.getmymaterialfromid.call(this, mymaterial.mymaterialid)
         const getbutton = () => {
             if (this.state.activematerialid === mymaterial.materialid) {
                 return (styles.activeButton);
@@ -735,9 +732,9 @@ class Schedule extends Component {
         if (this.state.active === 'materials') {
             if (project) {
 
-                const milestone = dynamicstyles.getmilestonebyid.call(this, mymaterial.milestoneid)
+                const milestone = construction.getmilestonebyid.call(this, mymaterial.milestoneid)
 
-                return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...activebackground(mymaterial.materialid) }} key={mymaterial.materialid}>
+                return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...activebackground(mymaterial.materialid), ...styles.bottomMargin10 }} key={mymaterial.materialid}>
                     <span onClick={() => { this.makematerialactive(mymaterial.materialid) }} key={mymaterial.materialid}>{formatDateStringDisplay(mymaterial.timein)} <br />
                         {material.material} CSI: {csi.csi}-{csi.title} Milestone: {milestone.milestone} <br />
                         {mymaterial.quantity}  x ${mymaterial.unitcost}/{mymaterial.unit} = ${(mymaterial.quantity * mymaterial.unitcost).toFixed(2)}
@@ -751,12 +748,12 @@ class Schedule extends Component {
     }
 
     showmaterialids() {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const construction = new Construction();
+        const project = construction.getproject.call(this)
         let materialids = [];
         if (project) {
 
-            const materials = dynamicstyles.getschedulematerials.call(this)
+            const materials = construction.getschedulematerials.call(this)
             if (materials) {
                 // eslint-disable-next-line
                 materials.map(material => {
@@ -769,19 +766,19 @@ class Schedule extends Component {
 
     }
     removeequipment(equipment) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
-        const myequipment = dynamicstyles.getmyequipmentbyid.call(this, equipment.myequipmentid)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
+        const myequipment = construction.getmyequipmentbyid.call(this, equipment.myequipmentid)
         if (window.confirm(`Are you sure you want to delete material for ${myequipment.equipment}`)) {
             if (myuser) {
-                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                const project = construction.getproject.call(this)
                 if (project) {
                     const projectid = project.projectid;
-                    const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
-                    const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, equipment.equipmentid);
+                    const i = construction.getprojectkeybyid.call(this, projectid)
+                    const myequipment = construction.getscheduleequipmentbyid.call(this, equipment.equipmentid);
                     if (myequipment) {
-                        const j = dynamicstyles.getscheduleequipmentkeybyid.call(this, equipment.equipmentid);
-                        myuser.company.projects.myproject[i].scheduleequipment.myequipment.splice(j, 1)
+                        const j = construction.getscheduleequipmentkeybyid.call(this, equipment.equipmentid);
+                        myuser.company.projects[i].schedule.equipment.splice(j, 1)
                         this.props.reduxUser(myuser)
                         this.reset();
                     }
@@ -798,13 +795,13 @@ class Schedule extends Component {
 
     showequipmentid(equipment) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-        const csi = dynamicstyles.getcsibyid.call(this, equipment.csiid)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
+        const project = construction.getproject.call(this)
+        const csi = construction.getcsibyid.call(this, equipment.csiid)
         const totalhours = +Number(calculatetotalhours(equipment.timeout, equipment.timein)).toFixed(2)
         const equipmentrate = `$${+Number(equipment.equipmentrate).toFixed(2)}/hr`
-        const removeIcon = dynamicstyles.getremoveicon.call(this)
+        const removeIcon = construction.getremoveicon.call(this)
         const amount = (calculatetotalhours(equipment.timeout, equipment.timein) * Number(equipment.equipmentrate))
         const getbutton = () => {
             if (this.state.activeequipmentid === equipment.equipmentid) {
@@ -822,10 +819,10 @@ class Schedule extends Component {
         }
         if (project) {
 
-            const milestone = dynamicstyles.getmilestonebyid.call(this, equipment.milestoneid)
-            const myequipment = dynamicstyles.getequipmentfromid.call(this, equipment.myequipmentid);
+            const milestone = construction.getmilestonebyid.call(this, equipment.milestoneid)
+            const myequipment = construction.getequipmentfromid.call(this, equipment.equipmentid);
 
-            return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }} key={equipment.equipmentid}>
+            return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin10 }} key={equipment.equipmentid}>
                 <span style={{ ...activeequipment(equipment.equipmentid) }} onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>
                     {myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
                  CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone}
@@ -840,13 +837,13 @@ class Schedule extends Component {
     }
 
     showequipmentids() {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+        const construction = new Construction();
+        const project = construction.getproject.call(this);
         let equipmentids = [];
         if (this.state.active === 'equipment') {
             if (project) {
 
-                const equipments = dynamicstyles.getscheduleequipment.call(this)
+                const equipments = construction.getscheduleequipment.call(this)
 
                 if (equipments) {
                     // eslint-disable-next-line
@@ -863,19 +860,19 @@ class Schedule extends Component {
 
     }
     handleequipmentid(myequipmentid) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
         const makeid = new MakeID();
         if (myuser) {
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+            const project = construction.getproject.call(this);
             if (project) {
                 const projectid = project.projectid;
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                const i = construction.getprojectkeybyid.call(this, projectid)
                 if (this.state.activeequipmentid) {
-                    const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                    const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
                     if (myequipment) {
-                        const j = dynamicstyles.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
-                        myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].myequipmentid = myequipmentid;
+                        const j = construction.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
+                        myuser.company.projects[i].schedule.equipment[j].myequipmentid = myequipmentid;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
                     }
@@ -900,18 +897,18 @@ class Schedule extends Component {
                     const timetimeout = this.state.timeoutampm;
                     let timeout = makeTimeString(yearout, monthout, dayout, hoursout, minutesout, timetimeout);
                     timeout = UTCTimeStringfromTime(timeout);
-                    const equipmentrate = dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout) > 0 ? Number(dynamicstyles.calculateequipmentratebyid.call(this, myequipmentid, timein, timeout)).toFixed(2) : 0;
+                    const equipmentrate = construction.calculateequipmentratebyownership.call(this, myequipmentid) > 0 ? Number(construction.calculateequipmentratebyownership.call(this, myequipmentid)).toFixed(2) : 0;
                     const engineerid = myuser.providerid;
 
 
                     const newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, engineerid, csiid, milestoneid, timein, timeout, equipmentrate, '', 0)
 
-                    const equipments = dynamicstyles.getscheduleequipment.call(this)
+                    const equipments = construction.getscheduleequipment.call(this)
                     if (equipments) {
-                        myuser.company.projects.myproject[i].scheduleequipment.myequipment.push(newEquipment)
+                        myuser.company.projects[i].schedule.equipment.push(newEquipment)
                     } else {
-                        const scheduleequipment = { myequipment: [newEquipment] }
-                        myuser.company.projects.myproject[i].scheduleequipment = scheduleequipment;
+                   
+                        myuser.company.projects[i].schedule.equipment = [newEquipment]
                     }
                     this.props.reduxUser(myuser)
                     this.setState({ activeequipmentid: equipmentid })
@@ -923,19 +920,19 @@ class Schedule extends Component {
     }
 
     handleemployeeid(providerid) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const makeid = new MakeID();
-        const myuser = dynamicstyles.getuser.call(this);
+        const myuser = construction.getuser.call(this);
         if (myuser) {
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+            const project = construction.getproject.call(this);
             if (project) {
                 const projectid = project.projectid;
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                const i = construction.getprojectkeybyid.call(this, projectid)
                 if (this.state.activelaborid) {
-                    const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+                    const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid)
                     if (mylabor) {
-                        const j = dynamicstyles.getschedulelaborkeybyid.call(this, this.state.activelaborid)
-                        myuser.company.projects.myproject[i].schedulelabor.mylabor[j].providerid = providerid;
+                        const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                        myuser.company.projects[i].schedule.labor[j].providerid = providerid;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
                     }
@@ -950,7 +947,6 @@ class Schedule extends Component {
                     const timetimein = this.state.timeinampm;
                     const minutesin = this.state.timeinminutes;
                     let timein = makeTimeString(yearin, monthin, dayin, hoursin, minutesin, timetimein);
-                    console.log(timein)
                     timein = UTCTimeStringfromTime(timein);
                     const dayout = this.state.timeoutday;
                     const yearout = this.state.timeoutyear;
@@ -960,18 +956,18 @@ class Schedule extends Component {
                     const timetimeout = this.state.timeoutampm;
                     let timeout = makeTimeString(yearout, monthout, dayout, hoursout, minutesout, timetimeout);
                     timeout = UTCTimeStringfromTime(timeout);
-                    const laborrate = dynamicstyles.gethourlyrate.call(this, providerid).toFixed(2)
+                    const laborrate = construction.gethourlyrate.call(this, providerid).toFixed(2)
                     const profit = 0;
                     const engineerid = providerid;
 
                     const newLabor = CreateScheduleLabor(laborid, engineerid, milestoneid, csiid, timein, timeout, laborrate, '', '', profit)
 
-                    const labors = dynamicstyles.getschedulelabor.call(this)
+                    const labors = construction.getschedulelabor.call(this)
                     if (labors) {
-                        myuser.company.projects.myproject[i].schedulelabor.mylabor.push(newLabor)
+                        myuser.company.projects[i].schedule.labor.push(newLabor)
                     } else {
-                        const schedulelabor = { mylabor: [newLabor] }
-                        myuser.company.projects.myproject[i].schedulelabor = schedulelabor;
+                   
+                        myuser.company.projects[i].schedule.labor = [newLabor]
                     }
                     this.props.reduxUser(myuser)
                     this.setState({ activelaborid: laborid })
@@ -981,18 +977,17 @@ class Schedule extends Component {
     }
 
     getequipmentrate() {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-        let equipmentrate = "";
+        const construction = new Construction();
+        const project = construction.getproject.call(this)
+        let equipmentrate = 0;
         if (project) {
 
             if (this.state.activeequipmentid) {
-                const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
+                const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
                 if (myequipment) {
                     equipmentrate = myequipment.equipmentrate;
                 }
-            } else {
-                equipmentrate = this.state.equipmentrate;
+            
             }
 
         }
@@ -1005,13 +1000,13 @@ class Schedule extends Component {
 
 
     getlaborrate() {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const construction = new Construction();
+        const project = construction.getproject.call(this)
         let laborrate = "";
         if (project) {
 
             if (this.state.activelaborid) {
-                const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid);
+                const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
                 if (mylabor) {
                     laborrate = mylabor.laborrate;
                 }
@@ -1023,19 +1018,19 @@ class Schedule extends Component {
     }
 
     handleequipmentrate(equipmentrate) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
         if (isNumeric(equipmentrate)) {
             if (myuser) {
-                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                const project = construction.getproject.call(this)
                 if (project) {
                     const projectid = project.projectid;
-                    const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                    const i = construction.getprojectkeybyid.call(this, projectid)
                     if (this.state.activeequipmentid) {
-                        const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                        const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
                         if (myequipment) {
-                            const j = dynamicstyles.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
-                            myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].equipmentrate = equipmentrate;
+                            const j = construction.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
+                            myuser.company.projects[i].schedule.equipment[j].equipmentrate = equipmentrate;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
@@ -1052,19 +1047,19 @@ class Schedule extends Component {
     }
 
     handlelaborrate(laborrate) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
         if (isNumeric(laborrate)) {
             if (myuser) {
-                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                const project = construction.getproject.call(this)
                 if (project) {
                     const projectid = project.projectid;
-                    const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                    const i = construction.getprojectkeybyid.call(this, projectid)
                     if (this.state.activelaborid) {
-                        const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid)
+                        const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid)
                         if (mylabor) {
-                            const j = dynamicstyles.getschedulelaborkeybyid.call(this, this.state.activelaborid)
-                            myuser.company.projects.myproject[i].schedulelabor.mylabor[j].laborrate = laborrate;
+                            const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                            myuser.company.projects[i].schedule.labor[j].laborrate = laborrate;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
@@ -1080,13 +1075,13 @@ class Schedule extends Component {
         }
     }
     getquantity() {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+        const construction = new Construction();
+        const project = construction.getproject.call(this);
         let quantity = this.state.quantity;
         if (project) {
 
             if (this.state.activematerialid) {
-                const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid);
+                const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
                 quantity = mymaterial.quantity;
 
             }
@@ -1096,13 +1091,13 @@ class Schedule extends Component {
 
     }
     getunit() {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+        const construction = new Construction();
+        const project = construction.getproject.call(this);
         let unit = this.state.unit;
         if (project) {
 
             if (this.state.activematerialid) {
-                const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid);
+                const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
                 unit = mymaterial.unit;
 
             }
@@ -1112,13 +1107,13 @@ class Schedule extends Component {
 
     }
     getunitcost() {
-        const dynamicstyles = new DynamicStyles();
-        const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid);
+        const construction = new Construction();
+        const project = construction.getproject.call(this);
         let unitcost = this.state.unitcost;
         if (project) {
 
             if (this.state.activematerialid) {
-                const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid);
+                const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
                 unitcost = mymaterial.unitcost;
 
             }
@@ -1128,19 +1123,19 @@ class Schedule extends Component {
 
     }
     handlequantity(quantity) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (isNumeric(quantity)) {
             if (myuser) {
-                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                const project = construction.getproject.call(this)
                 if (project) {
                     const projectid = project.projectid;
-                    const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                    const i = construction.getprojectkeybyid.call(this, projectid);
                     if (this.state.activematerialid) {
-                        const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
+                        const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid)
                         if (mymaterial) {
-                            const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
-                            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].quantity = quantity;
+                            const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                            myuser.company.projects[i].schedule.materials[j].quantity = quantity;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
@@ -1157,18 +1152,18 @@ class Schedule extends Component {
 
     }
     handleunit(unit) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+            const project = construction.getproject.call(this)
             if (project) {
                 const projectid = project.projectid;
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getprojectkeybyid.call(this, projectid);
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
+                    const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid)
                     if (mymaterial) {
-                        const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
-                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unit = unit;
+                        const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                        myuser.company.projects[i].schedule.materials[j].unit = unit;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
                     }
@@ -1180,19 +1175,19 @@ class Schedule extends Component {
 
     }
     handleunitcost(unitcost) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (isNumeric(unitcost)) {
             if (myuser) {
-                const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+                const project = construction.getproject.call(this)
                 if (project) {
                     const projectid = project.projectid;
-                    const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                    const i = construction.getprojectkeybyid.call(this, projectid);
                     if (this.state.activematerialid) {
-                        const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
+                        const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid)
                         if (mymaterial) {
-                            const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid);
-                            myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].unitcost = unitcost;
+                            const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                            myuser.company.projects[i].schedule.materials[j].unitcost = unitcost;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
@@ -1211,19 +1206,19 @@ class Schedule extends Component {
 
     handlemymaterialid(mymaterialid) {
 
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
         const makeid = new MakeID();
         if (myuser) {
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+            const project = construction.getproject.call(this)
             if (project) {
                 const projectid = project.projectid;
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid)
+                const i = construction.getprojectkeybyid.call(this, projectid)
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid);
+                    const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
                     if (mymaterial) {
-                        const j = dynamicstyles.getschedulematerialkeybyid.call(this, this.state.activematerialid)
-                        myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].mymaterialid = mymaterialid;
+                        const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid)
+                        myuser.company.projects[i].schedule.materials[j].mymaterialid = mymaterialid;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
                     }
@@ -1231,7 +1226,7 @@ class Schedule extends Component {
                 } else {
                     const materialid = makeid.materialid.call(this)
                     const milestoneid = this.state.milestoneid;
-                    const mymaterial = dynamicstyles.getmymaterialfromid.call(this, mymaterialid)
+                    const mymaterial = construction.getmymaterialfromid.call(this, mymaterialid)
                     const csiid = this.state.csiid;
                     const year = this.state.materialdateyear;
                     const day = this.state.materialdateday;
@@ -1242,13 +1237,13 @@ class Schedule extends Component {
                     const unit = mymaterial.unit;
                     const engineerid = myuser.providerid;
                     const newMaterial = CreateMyMaterial(materialid, mymaterialid, engineerid, milestoneid, csiid, timein, quantity, unit, unitcost, '', 0);
-                    const materials = dynamicstyles.getschedulematerials.call(this);
+                    const materials = construction.getschedulematerials.call(this);
                     if (materials) {
-                        myuser.company.projects.myproject[i].schedulematerials.mymaterial.push(newMaterial)
+                        myuser.company.projects[i].schedule.materials.push(newMaterial)
 
                     } else {
-                        const schedulematerials = { mymaterial: [newMaterial] }
-                        myuser.company.projects.myproject[i].schedulematerials = schedulematerials;
+                  
+                        myuser.company.projects[i].schedule.materials = [newMaterial];
                     }
 
                     this.props.reduxUser(myuser)
@@ -1261,16 +1256,16 @@ class Schedule extends Component {
     }
 
     getmymaterialid() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        let materialid = this.state.mymaterialid;
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
+        let materialid = this.stateid;
         if (myuser) {
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+            const project = construction.getproject.call(this)
             if (project) {
 
 
                 if (this.state.activematerialid) {
-                    const mymaterial = dynamicstyles.getschedulematerialbyid.call(this, this.state.activematerialid)
+                    const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid)
                     if (mymaterial) {
                         materialid = mymaterial.mymaterialid;
                     }
@@ -1286,20 +1281,20 @@ class Schedule extends Component {
 
     render() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this);
-        const buttonheight = dynamicstyles.getbuttonheight.call(this)
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this);
+        const buttonheight = construction.getbuttonheight.call(this)
         const timein = new TimeIn();
         const timeout = new TimeOut();
         const milestoneid = new MilestoneID();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const csi = new CSI();
         const materialdate = new MaterialDate();
         const employeeid = new EmployeeID();
         const equipmentid = new EquipmentID();
         const materialid = new MaterialID();
         const scheduleview = new ScheduleView();
-        const menu = dynamicstyles.getNavigation.call(this)
+        const menu = construction.getNavigation.call(this)
 
 
 
@@ -1500,8 +1495,6 @@ class Schedule extends Component {
         const showequipmentid = () => {
             if (this.state.active === 'equipment') {
                 return (equipmentid.showEquipmentID.call(this))
-            } else {
-                return;
             }
 
         }
@@ -1509,15 +1502,13 @@ class Schedule extends Component {
         const showmaterialid = () => {
             if (this.state.active === 'materials') {
                 return (materialid.showmaterialid.call(this))
-            } else {
-                return;
-            }
+            } 
 
         }
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
-            const project = dynamicstyles.getproject.call(this)
+            const project = construction.getproject.call(this)
             if (project) {
 
 
@@ -1570,7 +1561,7 @@ class Schedule extends Component {
                             {showmaterialquantity()}
 
 
-                            {dynamicstyles.showsaveproject.call(this)}
+                            {construction.showsaveproject.call(this)}
 
 
                             {scheduleview.showschedule.call(this, "schedule")}

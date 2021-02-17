@@ -1,7 +1,7 @@
 import React from 'react'
 import { MyStylesheet } from './styles'
 import { convertDegresstoRadians, getPieColor } from './functions'
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 
 class PieChart {
 
@@ -54,8 +54,8 @@ class PieChart {
     }
 
     getSlices(employeeid) {
-        const dynamicstyles = new DynamicStyles();
-        const benefits = dynamicstyles.getemployeebenefitinterval.call(this, employeeid)
+        const construction = new Construction();
+        const benefits = construction.getemployeebenefitinterval.call(this, employeeid)
         const slices = [];
 
         const getamountbyaccountid = (accountid) => {
@@ -84,7 +84,7 @@ class PieChart {
             benefits.map(benefit => {
 
                 if (checkslices(slices, benefit.accountid)) {
-                    const account = dynamicstyles.getaccountbyid.call(this, benefit.accountid)
+                    const account = construction.getaccountbyid.call(this, benefit.accountid)
                     slices.push({ accountid: benefit.accountid, account: account.accountname })
                 }
 
@@ -132,8 +132,8 @@ class PieChart {
     showLegend(employeeid) {
         let getlegend = [];
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
 
         const getBackground = (color) => {
             return { backgroundColor: color }
@@ -192,10 +192,10 @@ class PieChart {
     }
 
     showpiechart(providerid) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet();
         const piechart = new PieChart();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
         const maxWidth = () => {
             return ({ maxWidth: '80%' })
         }

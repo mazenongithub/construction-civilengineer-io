@@ -1,15 +1,21 @@
 import React from 'react';
 import { MyStylesheet } from './styles';
 import { GoogleSignIcon, AppleSignIcon } from './svg';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import Spinner from './spinner'
 class ClientID {
 
     showclientid(type) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const loginButton = dynamicstyles.getLoginButton.call(this);
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const loginButton = () => {
+            if (this.state.width > 1200) {
+                return ({ width: '276px', height: 'auto' })
+            } else {
+                return ({ width: '181px', height: 'auto' })
+            }
+        } 
+        const regularFont = construction.getRegularFont.call(this)
         const signinmessage = () => {
             if (this.state.client && this.state.clientid) {
                 return `Your Signin is secure with ${this.state.client}`
@@ -20,7 +26,7 @@ class ClientID {
         const apple = () => {
             if(!this.state.client || !this.state.clientid) {
                 return( <div style={{...styles.flex1}}>
-                    <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.appleSignIn.call(this, type) }}>
+                    <button style={{ ...styles.generalButton, ...loginButton() }} onClick={() => { construction.appleSignIn.call(this, type) }}>
                         {AppleSignIcon()}
                     </button>
                 </div>
@@ -30,7 +36,7 @@ class ClientID {
         const google = () => {
             if(!this.state.client || !this.state.clientid) {
                 return( <div style={{...styles.flex1}}>
-                    <button style={{ ...styles.generalButton, ...loginButton }} onClick={() => { dynamicstyles.googleSignIn.call(this, type) }}>
+                    <button style={{ ...styles.generalButton, ...loginButton() }} onClick={() => { construction.googleSignIn.call(this, type) }}>
                         {GoogleSignIcon()}
                     </button>
                 </div>)

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { MyStylesheet } from './styles'
 import MakeID from './makeids';
 import { CreateBenefit,getBenefitInterval } from './functions';
@@ -31,22 +31,22 @@ class ViewEmployee extends Component {
     }
 
     handleaccountid(accountid) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
 
             let employee = this.getemployee()
             if (employee) {
-                let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid)
+                let i = construction.getemployeekeybyid.call(this, employee.providerid)
                 if (this.state.activebenefitid) {
 
-                    const getbenefit = dynamicstyles.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
 
                     if (getbenefit) {
-                        let j = dynamicstyles.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
 
-                        myuser.company.office.employees.employee[i].benefits.benefit[j].accountid = accountid;
+                        myuser.company.employees[i].benefits[j].accountid = accountid;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
 
@@ -69,12 +69,12 @@ class ViewEmployee extends Component {
     }
     getaccountid() {
         const employee = this.getemployee();
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let accountid = "";
         if (employee) {
 
             if (this.state.activebenefitid) {
-                let benefit = dynamicstyles.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                let benefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
                 if (benefit) {
                     accountid = benefit.accountid;
                 }
@@ -89,28 +89,28 @@ class ViewEmployee extends Component {
 
     getemployee() {
 
-        const dynamicstyles = new DynamicStyles();
-        return dynamicstyles.getemployeebyprofile.call(this, this.props.match.params.employeeid)
+        const construction = new Construction();
+        return construction.getemployeebyprofile.call(this, this.props.match.params.employeeid)
 
     }
 
     handleAmount(amount) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
 
             let employee = this.getemployee()
             if (employee) {
-                let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid)
+                let i = construction.getemployeekeybyid.call(this, employee.providerid)
                 if (this.state.activebenefitid) {
 
-                    const getbenefit = dynamicstyles.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
 
                     if (getbenefit) {
-                        let j = dynamicstyles.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
 
-                        myuser.company.office.employees.employee[i].benefits.benefit[j].amount = amount;
+                        myuser.company.employees[i].benefits[j].amount = amount;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
 
@@ -134,12 +134,12 @@ class ViewEmployee extends Component {
 
     getamount() {
         const employee = this.getemployee();
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let getamount = "";
         if (employee) {
 
             if (this.state.activebenefitid) {
-                let benefit = dynamicstyles.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                let benefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
                 if (benefit) {
                     getamount = benefit.amount;
                 }
@@ -162,15 +162,15 @@ class ViewEmployee extends Component {
 
     }
     handleworkinghours(workinghours) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
 
         if (myuser) {
 
             let employee = this.getemployee()
             if (employee) {
-                let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid)
-                myuser.company.office.employees.employee[i].workinghours = workinghours;
+                let i = construction.getemployeekeybyid.call(this, employee.providerid)
+                myuser.company.employees[i].workinghours = workinghours;
                 this.props.reduxUser(myuser)
                 this.setState({ render: 'render' })
             }
@@ -183,18 +183,18 @@ class ViewEmployee extends Component {
     }
 
     createNewBenefit(benefitid, benefit, accountid, amount, frequency) {
-        const dynamicstyles = new DynamicStyles()
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction()
+        const myuser = construction.getuser.call(this)
         if (myuser) {
             let employee = this.getemployee()
             if (employee) {
-                let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid)
+                let i = construction.getemployeekeybyid.call(this, employee.providerid)
                 let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount, frequency);
                 if (employee.hasOwnProperty("benefits")) {
-                    myuser.company.office.employees.employee[i].benefits.benefit.push(newBenefit)
+                    myuser.company.employees[i].benefits.push(newBenefit)
                 } else {
                     let benefits = { benefit: [newBenefit] }
-                    myuser.company.office.employees.employee[i].benefits = benefits;
+                    myuser.company.employees[i].benefits = benefits;
 
                 }
                 this.props.reduxUser(myuser)
@@ -206,22 +206,22 @@ class ViewEmployee extends Component {
     }
 
     handleBenefit(benefit) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
 
             let employee = this.getemployee()
             if (employee) {
-                let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid)
+                let i = construction.getemployeekeybyid.call(this, employee.providerid)
                 if (this.state.activebenefitid) {
 
-                    const getbenefit = dynamicstyles.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
 
                     if (getbenefit) {
-                        let j = dynamicstyles.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
 
-                        myuser.company.office.employees.employee[i].benefits.benefit[j].benefit = benefit;
+                        myuser.company.employees[i].benefits[j].benefit = benefit;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
 
@@ -244,12 +244,12 @@ class ViewEmployee extends Component {
     }
     getbenefit() {
         const employee = this.getemployee();
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let getbenefit = "";
         if (employee) {
 
             if (this.state.activebenefitid) {
-                let benefit = dynamicstyles.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                let benefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
                 if (benefit) {
                     getbenefit = benefit.benefit;
                 }
@@ -262,12 +262,12 @@ class ViewEmployee extends Component {
 
     getfrequency() {
         const employee = this.getemployee();
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let getfrequency = "";
         if (employee) {
 
             if (this.state.activebenefitid) {
-                let benefit = dynamicstyles.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                let benefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
                 if (benefit) {
                     getfrequency = benefit.frequency;
                 }
@@ -280,22 +280,22 @@ class ViewEmployee extends Component {
     }
 
     handleFrequency(frequency) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         const makeID = new MakeID();
         if (myuser) {
 
             let employee = this.getemployee()
             if (employee) {
-                let i = dynamicstyles.getemployeekeybyid.call(this, employee.providerid)
+                let i = construction.getemployeekeybyid.call(this, employee.providerid)
                 if (this.state.activebenefitid) {
 
-                    const getbenefit = dynamicstyles.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
 
                     if (getbenefit) {
-                        let j = dynamicstyles.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
 
-                        myuser.company.office.employees.employee[i].benefits.benefit[j].frequency = frequency;
+                        myuser.company.employees[i].benefits[j].frequency = frequency;
                         this.props.reduxUser(myuser)
                         this.setState({ render: 'render' })
 
@@ -322,7 +322,7 @@ class ViewEmployee extends Component {
         let showbenefit = [];
         if (employee.hasOwnProperty("benefits")) {
             // eslint-disable-next-line
-            employee.benefits.benefit.map(benefit => {
+            employee.benefits.map(benefit => {
                 showbenefit.push(this.showbenefit(benefit))
 
             })
@@ -340,22 +340,22 @@ class ViewEmployee extends Component {
     }
 
     removebenefit(benefit) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         if (window.confirm(`Are you sure you want to remove ${benefit.benefit}?`)) {
-            const myuser = dynamicstyles.getuser.call(this)
+            const myuser = construction.getuser.call(this)
 
             if (myuser) {
                 const employee = this.getemployee();
 
                 if (employee) {
-                    const i = dynamicstyles.getemployeekeybyid.call(this,employee.providerid)
+                    const i = construction.getemployeekeybyid.call(this,employee.providerid)
 
-                    const getbenefit = dynamicstyles.getbenefitbyid.call(this,employee.providerid, benefit.benefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this,employee.providerid, benefit.benefitid)
 
                     if(getbenefit) {
-                        const j =  dynamicstyles.getbenefitkeybyid.call(this,employee.providerid, benefit.benefitid)
+                        const j =  construction.getbenefitkeybyid.call(this,employee.providerid, benefit.benefitid)
                     
-                        myuser.company.office.employees.employee[i].benefits.benefit.splice(j,1)
+                        myuser.company.employees[i].benefits.splice(j,1)
                         this.props.reduxUser(myuser)
                         this.setState({activebenefitid:false})
                     }
@@ -371,7 +371,7 @@ class ViewEmployee extends Component {
 
 
     showbenefit(benefit) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const removeIcon = () => {
             if (this.state.width > 1200) {
                 return ({ width: '40px' })
@@ -382,8 +382,8 @@ class ViewEmployee extends Component {
             }
         }
         const styles = MyStylesheet();
-        const account = dynamicstyles.getaccountbyid.call(this, benefit.accountid)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const account = construction.getaccountbyid.call(this, benefit.accountid)
+        const regularFont = construction.getRegularFont.call(this)
 
         const activebenefit = (benefitid) => {
             if (this.state.activebenefitid === benefitid) {
@@ -435,7 +435,7 @@ class ViewEmployee extends Component {
         if(employee) {
             if(employee.hasOwnProperty("benefits")) {
                 // eslint-disable-next-line
-                employee.benefits.benefit.map(benefit=> {
+                employee.benefits.map(benefit=> {
                     let interval = getBenefitInterval(benefit.frequency,Number(benefit.amount),benefit.benefit, benefit.accountid)
                     benefits = [...benefits,...interval]
                 })
@@ -448,9 +448,9 @@ class ViewEmployee extends Component {
 
     showlaborRate() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const laborrate = this.calculateLaborRate();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         return(<div style={{...styles.generalContainer, ...styles.bottomMargin15}}>
             <span style={{...styles.generalFont,...regularFont}}>Calculated Labor Rate is ${Number(laborrate).toFixed(2)}</span>
         </div>)
@@ -458,11 +458,11 @@ class ViewEmployee extends Component {
 
 
     render() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         const styles = MyStylesheet();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const accountid = new AccountID();
         const frequency = new Frequency();
         const piechart = new PieChart();
@@ -531,7 +531,7 @@ class ViewEmployee extends Component {
                             {piechart.showpiechart.call(this,employee.providerid)}
                             
 
-                            {dynamicstyles.showsavecompany.call(this)}
+                            {construction.showsavecompany.call(this)}
 
                         </div>
                     </div>

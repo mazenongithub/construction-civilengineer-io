@@ -89,6 +89,9 @@ export function MyStylesheet() {
         bottomMargin15: {
             marginBottom: '15px',
         },
+        bottomMargin10: {
+            marginBottom: '10px',
+        },
         generalContainer: {
             fontFamily: "'Nunito Sans', sans-serif"
         },

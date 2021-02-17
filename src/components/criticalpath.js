@@ -1,6 +1,6 @@
 import React from 'react'
 import { MyStylesheet } from './styles';
-import DynamicStyles from './dynamicstyles'
+import Construction from './construction'
 import { getDateInterval, trailingZeros, getOffsetDate, monthString, increaseCalendarDayOneMonth, calculatemonth, milestoneformatdatestring, getScale, calculateyear, increasedatebyoneday, calculateday,getRandomColor} from './functions'
 
 class CriticalPath {
@@ -10,12 +10,12 @@ class CriticalPath {
 
     showenddates() {
 
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const jsx = [];
         const styles = MyStylesheet();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const regularFont = construction.getRegularFont.call(this);
         if (this.state.activemilestoneid) {
-            const milestone = dynamicstyles.getmilestonebyid.call(this, this.state.activemilestoneid);
+            const milestone = construction.getmilestonebyid.call(this, this.state.activemilestoneid);
             if (milestone.hasOwnProperty("predessors")) {
           
                 // eslint-disable-next-line
@@ -23,7 +23,7 @@ class CriticalPath {
                     let milestoneid = predessor.predessor;
                     let type = predessor.type;
                     if (type === 'start-to-finish') {
-                        let mymilestone = dynamicstyles.getmilestonebyid.call(this, milestoneid)
+                        let mymilestone = construction.getmilestonebyid.call(this, milestoneid)
                         jsx.push(<div style={{ ...styles.generalContainer }} key={`predessor${milestoneid}`}>
                             <span style={{ ...regularFont, ...styles.generalFont }}>{mymilestone.milestone}</span> 
                         </div>)
@@ -37,15 +37,15 @@ class CriticalPath {
     }
 
     showoptionvalues() {
-        const dynamicstyles = new DynamicStyles();
-        const milestones = dynamicstyles.getmilestones.call(this);
+        const construction = new Construction();
+        const milestones = construction.getmilestones.call(this);
 
         const validatemilestone = (milestoneid) => {
             let validate = true;
             if (this.state.activemilestoneid === milestoneid) {
                 validate = false;
             } else if (this.state.activemilestoneid) {
-                const milestone = dynamicstyles.getmilestonebyid.call(this, this.state.activemilestoneid)
+                const milestone = construction.getmilestonebyid.call(this, this.state.activemilestoneid)
                 if (milestone) {
                     if (milestone.hasOwnProperty("predessors")) {
                         // eslint-disable-next-line
@@ -94,11 +94,11 @@ class CriticalPath {
 
 
     showmilestones() {
-        const dynamicstyles = new DynamicStyles();
-        const milestones = dynamicstyles.getmilestones.call(this);
-        const projectinterval = dynamicstyles.getprojectinterval.call(this)
+        const construction = new Construction();
+        const milestones = construction.getmilestones.call(this);
+        const projectinterval = construction.getprojectinterval.call(this)
         const styles = MyStylesheet();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         let mymilestones = [];
         if (projectinterval) {
             let ypos = 40;
@@ -155,9 +155,9 @@ class CriticalPath {
     }
 
     showpaths() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const criticalpath = new CriticalPath();
-        const paths = dynamicstyles.getpaths.call(this)
+        const paths = construction.getpaths.call(this)
         let getpaths = [];
 
         for(let myprop in paths) {
@@ -187,11 +187,11 @@ class CriticalPath {
 
     showpath() {
         const criticalpath = new CriticalPath();
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet();
 
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        const milestones = dynamicstyles.getmilestones.call(this);
+        const regularFont = construction.getRegularFont.call(this)
+        const milestones = construction.getmilestones.call(this);
         let yext = 200;
         if (milestones) {
             if (milestones.length) {
@@ -203,7 +203,7 @@ class CriticalPath {
   
 
 
-        const projectinterval = dynamicstyles.getprojectinterval.call(this);
+        const projectinterval = construction.getprojectinterval.call(this);
         let interval = '1202.88'
         let grid = [];
         let scale = "";
@@ -240,10 +240,10 @@ class CriticalPath {
 
         const activemilestone = () => {
             if (this.state.activemilestoneid) {
-                const milestone = dynamicstyles.getmilestonebyid.call(this, this.state.activemilestoneid);
-                const float = dynamicstyles.getfloatbymilestoneid.call(this,this.state.activemilestoneid) 
-                const projectfloat = dynamicstyles.calcTotalProjectFloat.call(this,this.state.activemilestoneid)
-                const lag = dynamicstyles.getlagbymilestoneid.call(this,this.state.activemilestoneid)
+                const milestone = construction.getmilestonebyid.call(this, this.state.activemilestoneid);
+                const float = construction.getfloatbymilestoneid.call(this,this.state.activemilestoneid) 
+                const projectfloat = construction.calcTotalProjectFloat.call(this,this.state.activemilestoneid)
+                const lag = construction.getlagbymilestoneid.call(this,this.state.activemilestoneid)
             
                 return (
                     <div style={{ ...styles.generalContainer }}>

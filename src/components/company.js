@@ -4,7 +4,7 @@ import { registerCompanyIcon, goCheckIcon, goToIcon } from './svg';
 import { Link } from 'react-router-dom';
 import { RegisterNewCompany } from './actions/api';
 import { validateCompanyID } from './functions';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 
 class Company {
 
@@ -37,8 +37,8 @@ class Company {
 
     async registernewcompany() {
         const company = new Company();
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this)
         let validate = company.validatenewcompany.call(this);
         if (myuser) {
             if (validate.validate) {
@@ -72,15 +72,15 @@ class Company {
     }
 
     handleCompany() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet()
-        const myuser = dynamicstyles.getuser.call(this)
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const myuser = construction.getuser.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const company = new Company()
-        const goIcon = dynamicstyles.getgocheckheight.call(this)
-        const registerIcon = dynamicstyles.getRegisterIcon.call(this);
-        const buttonSize = dynamicstyles.buttonSize.call(this)
+        const goIcon = construction.getgocheckheight.call(this)
+        const registerIcon = construction.getRegisterIcon.call(this);
+        const buttonSize = construction.buttonSize.call(this)
 
         const urlicon = (myuser) => {
             if (this.state.urlcheck && !myuser.hasOwnProperty("company")) {
@@ -122,7 +122,7 @@ class Company {
                             <input type="text"
                                 value={this.state.url}
                                 onChange={event => { company.handleurl.call(this, event.target.value) }}
-                                onBlur={event => { dynamicstyles.validatecompanyid.call(this, event.target.value) }}
+                                onBlur={event => { construction.validatecompanyid.call(this, event.target.value) }}
                                 style={{ ...styles.addLeftMargin, ...regularFont, ...styles.generalFont, ...styles.generalField }} />
                             {urlicon(myuser)}
                         </div>
@@ -145,11 +145,10 @@ class Company {
 
 
     showCompany() {
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
         const styles = MyStylesheet();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = construction.getuser.call(this)
         const company = new Company();
 
 

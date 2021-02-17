@@ -1,19 +1,19 @@
 import React from 'react'
 import { MyStylesheet } from './styles'
-import DynamicStyles from './dynamicstyles'
+import Construction from './construction'
 import { Link } from 'react-router-dom';
 
 class Header {
 
     showactiveproject(myuser) {
-        const dynamicstyles = new DynamicStyles();
-        const navigation = dynamicstyles.getNavigation.call(this)
+        const construction = new Construction();
+        const navigation = construction.getNavigation.call(this)
         const styles = MyStylesheet();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
         const header = new Header()
         if (navigation.hasOwnProperty("project")) {
 
-            const project = dynamicstyles.getprojectbyid.call(this, navigation.project.projectid)
+            const project = construction.getprojectbyid.call(this, navigation.project.projectid)
             if (project) {
                 return (
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
@@ -26,8 +26,8 @@ class Header {
     }
 
     handleHeader(obj) {
-        const dynamicstyles = new DynamicStyles();
-        const navigation = dynamicstyles.getNavigation.call(this)
+        const construction = new Construction();
+        const navigation = construction.getNavigation.call(this)
         if (obj.hasOwnProperty("companyid")) {
             if (navigation.hasOwnProperty("project")) {
                 delete navigation.project;
@@ -62,9 +62,9 @@ class Header {
 
     showHeader() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
 
         const header = new Header();
 

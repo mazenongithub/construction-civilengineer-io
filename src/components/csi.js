@@ -1,5 +1,5 @@
 import React from 'react';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { MyStylesheet } from './styles';
 import { removeIconSmall } from './svg';
 import { sortcode } from './functions';
@@ -19,7 +19,7 @@ class CSI {
         return validate;
     }
     getsearchresults() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let csi_1 = this.state.csi_1;
         let csi_2 = this.state.csi_2;
         let csi_3 = this.state.csi_3;
@@ -53,7 +53,7 @@ class CSI {
         }
 
         if (searchcsi) {
-            const codes = dynamicstyles.getcsis.call(this)
+            const codes = construction.getcsis.call(this)
 
             if (codes) {
                 if (codes.hasOwnProperty("length")) {
@@ -96,9 +96,9 @@ class CSI {
     showcsiid(csi) {
 
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
-        const removeIconWidth = dynamicstyles.getremoveicon.call(this);
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
+        const removeIconWidth = construction.getremoveicon.call(this);
         const csibackground = () => {
             if (this.state.activecsiid === csi.csiid) {
                 return ({ backgroundColor: '#F2C4D2' })
@@ -108,7 +108,7 @@ class CSI {
         }
         const checkcsi = () => {
             let csicheck = false;
-            const mycsis = dynamicstyles.getmycsicodes.call(this);
+            const mycsis = construction.getcsis.call(this);
 
             if (mycsis.hasOwnProperty("length")) {
                 // eslint-disable-next-line
@@ -157,8 +157,8 @@ class CSI {
 
     showCSI() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
         const csi = new CSI();
         const heightLimit = () => {
             if (this.state.width > 1200) {

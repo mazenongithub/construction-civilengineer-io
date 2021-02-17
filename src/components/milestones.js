@@ -4,7 +4,7 @@ import * as actions from './actions';
 import { connect } from 'react-redux';
 import { MyStylesheet } from './styles';
 import { milestoneformatdatestring } from './functions';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import CriticalPath from './criticalpath'
 import { Link } from 'react-router-dom';
 
@@ -41,8 +41,8 @@ class Milestones extends Component {
 
 
     loadmilestoneids() {
-        const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getproject.call(this)
+        const construction = new Construction();
+        const myproject = construction.getproject.call(this)
         let ids = [];
         if (myproject) {
 
@@ -69,8 +69,8 @@ class Milestones extends Component {
 
     showmilestone(mymilestone) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
 
         const activebackground = (milestoneid) => {
             if (milestoneid === this.state.activemilestoneid) {
@@ -91,15 +91,15 @@ class Milestones extends Component {
     }
 
     render() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
-        const headerFont = dynamicstyles.getHeaderFont.call(this);
+        const regularFont = construction.getRegularFont.call(this);
+        const headerFont = construction.getHeaderFont.call(this);
         const criticalpath = new CriticalPath();
-        const myuser = dynamicstyles.getuser.call(this)
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
-            const project = dynamicstyles.getproject.call(this)
+            const project = construction.getproject.call(this)
             if (project) {
                 return (
                     <div style={{ ...styles.generalFlex, ...styles.addLeftMargin15 }}>

@@ -1,11 +1,11 @@
 import React from 'react';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { MyStylesheet } from './styles';
 
 class EquipmentID {
     loadequipment() {
-        const dynamicstyles = new DynamicStyles();
-        let myequipment = dynamicstyles.getmyequipment.call(this)
+        const construction = new Construction();
+        let myequipment = construction.getmyequipment.call(this)
         let options = [];
         if (myequipment) {
             // eslint-disable-next-line
@@ -19,8 +19,8 @@ class EquipmentID {
    
     showEquipmentID() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
         const equipmentid = new EquipmentID();
         return(<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
             <div style={{ ...styles.flex1 }}>

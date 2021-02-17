@@ -1,25 +1,25 @@
 import React from 'react'
 import { MyStylesheet } from './styles';
-import { folderIcon, scrollImageDown, goCheckIcon } from './svg';
-import DynamicStyles from './dynamicstyles';
+import { folderIcon, scrollImageDown, goCheckIcon, saveProfileIcon } from './svg';
+import Construction from './construction';
 import { UploadProfileImage, CheckProviderID, CheckEmailAddress } from './actions/api';
 import { returnCompanyList, inputUTCStringForLaborID, validateProviderID, validateEmail } from './functions';
-
+import Spinner from './spinner'
 
 class Profile  {
 
 
     getprofileurl() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
         return myuser.profileurl;
 
 
     }
     handleprofileurl(profileurl) {
 
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         if (myuser) {
             let errmsg = "";
             errmsg = validateProviderID(profileurl);
@@ -43,8 +43,8 @@ class Profile  {
     }
 
     async checkprofile(profile) {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
 
         if (myuser) {
             let validate = validateProviderID(profile)
@@ -73,8 +73,8 @@ class Profile  {
     showprofileurl() {
         
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
         const profile = new Profile()
    
             return (<div style={{ ...styles.generalFlex }}>
@@ -94,13 +94,13 @@ class Profile  {
     }
    
     getfirstname() {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         return myuser.firstname;
     }
     handlefirstname(firstname) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         if (myuser) {
             myuser.firstname = firstname;
             this.props.reduxUser(myuser);
@@ -109,13 +109,13 @@ class Profile  {
 
     }
     getemailaddress() {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         return myuser.emailaddress;
     }
     handleemailaddress(emailaddress) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         if (myuser) {
             myuser.emailaddress = emailaddress;
             let errmsg = "";
@@ -139,13 +139,13 @@ class Profile  {
 
     }
     getlastname() {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         return myuser.lastname;
     }
     handlelastname(lastname) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         if (myuser) {
             myuser.lastname = lastname;
             this.props.reduxUser(myuser);
@@ -155,13 +155,13 @@ class Profile  {
     }
 
     getphonenumber() {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         return myuser.phonenumber;
     }
     handlephonenumber(phonenumber) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
         if (myuser) {
             myuser.phonenumber = phonenumber;
             this.props.reduxUser(myuser);
@@ -171,8 +171,8 @@ class Profile  {
     }
 
     async checkemailaddress() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
         const errmsg = validateEmail(myuser.emailaddress);
 
         if (!errmsg) {
@@ -199,10 +199,10 @@ class Profile  {
     }
     showlogininfo() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
-        const goIcon = dynamicstyles.getgocheckheight.call(this)
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
+        const goIcon = construction.getgocheckheight.call(this)
+        const myuser = construction.getuser.call(this)
         const profile = new Profile()
         const showemailicon = () => {
             if (myuser) {
@@ -237,8 +237,8 @@ class Profile  {
     }
     showadditional() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
         const profile = new Profile()
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
@@ -277,11 +277,34 @@ class Profile  {
     }
    
     showprofileimage() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
-        const profileImage = dynamicstyles.getprofiledimensions.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
+        const profileImage = () => {
+            if (this.state.width > 1200) {
+                return (
+                    {
+                        width: '392px',
+                        height: 'auto'
+                    })
+    
+            } else if (this.state.width > 600) {
+                return (
+                    {
+                        width: '285px',
+                        height: 'auto'
+                    })
+    
+            } else {
+                return (
+                    {
+                        width: '167px',
+                        height: 'auto'
+                    })
+            }
+        }
+
         if (myuser.profileurl) {
-            return (<img src={myuser.profileurl} style={{ ...profileImage }} alt={`${myuser.firstname} ${myuser.lastname}`} />)
+            return (<img src={myuser.profileurl} style={{ ...profileImage() }} alt={`${myuser.firstname} ${myuser.lastname}`} />)
         } else {
             return;
         }
@@ -289,12 +312,12 @@ class Profile  {
     }
 
     async uploadprofileimage() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
 
         if (myuser) {
             let formData = new FormData();
-            let params = dynamicstyles.getCompanyParams.call(this)
+            let params = construction.getCompanyParams.call(this)
             let myfile = document.getElementById("profile-image");
             console.log(params.myuser)
             formData.append("profilephoto", myfile.files[0]);
@@ -327,10 +350,10 @@ class Profile  {
     }
 
     handleprofile(profile) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let errmsg = "";
         errmsg = validateProviderID(profile);
-        let myuser = dynamicstyles.getuser.call(this);
+        let myuser = construction.getuser.call(this);
         if (errmsg) {
             myuser.invalid = errmsg;
 
@@ -346,16 +369,82 @@ class Profile  {
 
     }
 
+    showsaveprofile() {
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
+        const saveprojecticon = construction.getsaveprojecticon.call(this);
+        const styles = MyStylesheet();
+        if (!this.state.spinner) {
+            return (
+                <div style={{ ...styles.generalContainer }}>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.topMargin15, ...styles.bottomMargin15 }}>
+                        {this.state.message}
+                    </div>
+
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                        <button style={{ ...styles.generalButton, ...saveprojecticon }} onClick={() => { construction.savemyprofile.call(this) }}>{saveProfileIcon()}</button>
+                    </div>
+                </div>)
+
+        } else {
+            return (<Spinner />)
+        }
+    }
+
     showProfile() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        let myuser = dynamicstyles.getuser.call(this)
-        const profileDimensions = dynamicstyles.getprofiledimensions.call(this);
-        const folderSize = dynamicstyles.getFolderSize.call(this);
-        const arrowHeight = dynamicstyles.getArrowHeight.call(this);
-        const goIcon = dynamicstyles.getgocheckheight.call(this);
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
+        let myuser = construction.getuser.call(this)
+        const profileDimensions = () => {
+            if (this.state.width > 1200) {
+                return (
+                    {
+                        width: '392px',
+                        height: '327px'
+                    })
+    
+            } else if (this.state.width > 800) {
+                return (
+                    {
+                        width: '285px',
+                        height: '249px'
+                    })
+    
+            } else {
+                return (
+                    {
+                        width: '167px',
+                        height: '145px'
+                    })
+            }
+        } 
+        const folderSize = () => {
+            if (this.state.width > 1200) {
+                return (
+                    {
+                        width: '142px',
+                        height: 'auto'
+                    })
+    
+            } else if (this.state.width > 800) {
+                return (
+                    {
+                        width: '93px',
+                        height: 'auto'
+                    })
+    
+            } else {
+                return (
+                    {
+                        width: '88px',
+                        height: 'auto'
+                    })
+            }
+        } 
+        const arrowHeight = construction.getArrowHeight.call(this);
+        const goIcon = construction.getgocheckheight.call(this);
         const profile = new Profile()
 
         const showButton = () => {
@@ -386,13 +475,13 @@ class Profile  {
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex2 }}>
-                            <div style={{ ...styles.generalContainer, ...profileDimensions, ...styles.showBorder, ...styles.margin10, ...styles.alignRight }}>
+                            <div style={{ ...styles.generalContainer, ...profileDimensions(), ...styles.showBorder, ...styles.margin10, ...styles.alignRight }}>
                                 {profile.showprofileimage.call(this)}
                             </div>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignBottom, ...styles.margin10 }}>
                             <input type="file" id="profile-image" />
-                            <button style={{ ...styles.generalButton, ...folderSize }} onClick={() => { profile.uploadprofileimage.call(this)}}>
+                            <button style={{ ...styles.generalButton, ...folderSize() }} onClick={() => { profile.uploadprofileimage.call(this)}}>
                                 {folderIcon()}
                             </button>
                         </div>
@@ -422,7 +511,7 @@ class Profile  {
 
 
 
-                    {dynamicstyles.showsaveprofile.call(this)}
+                    {profile.showsaveprofile.call(this)}
 
 
                 </div>

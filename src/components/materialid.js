@@ -1,11 +1,11 @@
 import React from 'react';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { MyStylesheet } from './styles';
 
 class MaterialID {
     showmymaterials() {
-        const dynamicstyles = new DynamicStyles();
-        const materials = dynamicstyles.getmymaterials.call(this)
+        const construction = new Construction();
+        const materials = construction.getmymaterials.call(this)
 
         let options = [];
         if (materials) {
@@ -26,8 +26,8 @@ class MaterialID {
     }
     showmaterialid() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
         const materialid = new MaterialID();
         return( <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
             <div style={{ ...styles.flex1 }}>

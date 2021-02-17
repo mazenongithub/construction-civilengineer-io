@@ -37,7 +37,7 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = timein;
+                                    myuser.company.projects[i].schedule.labor[j].timein = timein;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
 
@@ -113,7 +113,7 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = timein;
+                                    myuser.company.projects[i].schedule.labor[j].timein = timein;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
 
@@ -188,7 +188,7 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = timein;
+                                    myuser.company.projects[i].schedule.labor[j].timein = timein;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
 
@@ -260,7 +260,7 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = timein;
+                                    myuser.company.projects[i].schedule.labor[j].timein = timein;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
 
@@ -331,7 +331,7 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = timein;
+                                    myuser.company.projects[i].schedule.labor[j].timein = timein;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
 
@@ -408,7 +408,7 @@ class TimeIn {
                             console.log(timein)
                             timein = UTCTimeStringfromTime(timein);
                             console.log(timein)
-                            myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = timein;
+                            myuser.company.projects[i].schedule.labor[j].timein = timein;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
 

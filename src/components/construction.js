@@ -1,641 +1,2570 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import * as actions from './actions';
+import React from 'react'
 import { MyStylesheet } from './styles';
-import { removeIconSmall } from './svg';
-import { CreateCSI, makeID} from './functions';
-import DynamicStyles from './dynamicstyles';
-import CSI from './csi'
+import { updateTimes, sorttimes } from './functions'
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import { calculateTotalMonths, UTCTimefromCurrentDate, validateLoanPayment, getRepaymentCosts, getInterval, newCost, convertUTCTime, formatTimeString, getBenefitInterval, validateProviderID, getDateTime, getDateInterval, getScale, calculatemonth, calculateyear, calculateday, calculateFloat } from './functions'
+import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin,  LoadCSIs, ValidateCompanyID } from './actions/api';
+import { saveCompanyIcon, saveProjectIcon } from './svg';
+import Spinner from './spinner'
 
-class Construction extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { render: '', width: 0, height: 0, activecsiid: '', csi_1: '', csi_2: '', csi_3: '', csi_4:'', title: '' }
-        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
-    }
-    componentDidMount() {
-        window.addEventListener('resize', this.updateWindowDimensions);
-        this.updateWindowDimensions();
-    }
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
-    }
-    updateWindowDimensions() {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
+class Construction {
+
+    getfloatbymilestoneid(milestoneid) {
+        const construction = new Construction();
+        const paths = construction.getpaths.call(this)
+        let float = 0;
+        let i = 0;
+        for (let mypath in paths[milestoneid]['paths']) {
+
+            let floatcheck = paths[milestoneid]['paths'][mypath]['float']
+
+            if (floatcheck < float || i === 0) {
+                float = floatcheck
+
+            }
+
+            i += 1;
+        }
+        return float;
+
     }
 
-    gettitlefont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font60)
+    getlagbymilestoneid(milestoneid) {
+        const construction = new Construction();
+        const milestones = construction.getmilestones.call(this);
+        let lag = 0;
+
+        const checklag = (startdate, enddate, i, lag) => {
+            let replacelag = false;
+
+
+            const check = Math.round((startdate - enddate) * (1 / (1000 * 60 * 60 * 24)))
+
+
+            if (i === 0 && check > 0) {
+                replacelag = true;
+            } else if (check < lag) {
+                replacelag = true;
+            }
+
+
+
+            return replacelag;
+        }
+
+        if (milestones) {
+            const mymilestone = construction.getmilestonebyid.call(this, milestoneid);
+            if (mymilestone) {
+
+                const startdate = getDateTime(mymilestone.start);
+
+                if (mymilestone.hasOwnProperty("predessors")) {
+                    // eslint-disable-next-line
+                    mymilestone.predessors.map((predessor, i) => {
+
+                        const enddate = getDateTime(construction.getmilestonebyid.call(this, predessor.predessor).completion)
+
+                        if (startdate >= enddate && checklag(startdate, enddate, i, lag)) {
+                            lag = Math.round((startdate - enddate) * (1 / (1000 * 60 * 60 * 24)))
+                        }
+
+                    })
+                }
+
+            }
+        }
+        return lag;
+    }
+
+    calcTotalProjectFloat(milestoneid) {
+        const construction = new Construction();
+        const paths = construction.getpaths.call(this)
+        let checkcalc = true
+        let i = 0;
+        let activemilestoneid = milestoneid;
+        while (checkcalc) {
+
+
+            window[`checkfloat_${i.toString()}`] = 0;
+
+
+            let j = 0;
+            checkcalc = false;
+            for (window[`mypath_${i.toString()}`] in paths[activemilestoneid]['paths']) {
+
+                if (!construction.checkemptypathsbymilestoneid.call(this, window[`mypath_${i.toString()}`])) {
+                    checkcalc = true
+                }
+
+
+                if (j === 0 || window[`checkfloat_${i.toString()}`] > construction.getfloatbymilestoneid.call(this, window[`mypath_${i.toString()}`])) {
+                    window[`checkfloat_${i.toString()}`] = construction.getfloatbymilestoneid.call(this, window[`mypath_${i.toString()}`])
+                    activemilestoneid = window[`mypath_${i.toString()}`]
+                }
+                j += 1
+            }
+
+            i += 1;
+
+        }
+        let float = construction.getfloatbymilestoneid.call(this, milestoneid)
+        let projectfloat = 0;
+        for (let k = 0; k < i; k++) {
+            projectfloat += Number(window[`checkfloat_${k.toString()}`])
+        }
+        return float + projectfloat
+    }
+
+
+    getprojectinterval() {
+        const construction = new Construction();
+        const milestones = construction.getmilestones.call(this)
+        let interval = false;
+        if (milestones) {
+            milestones.sort((a, b) => {
+                return sorttimes(a.start, b.start)
+            }
+            )
+            const start = milestones[0].start;
+            const completion = milestones[milestones.length - 1].completion;
+            interval = { start, completion }
+        }
+        return interval;
+
+    }
+
+    getpaths() {
+        const construction = new Construction();
+        const milestones = construction.getmilestones.call(this)
+        const projectinterval = construction.getprojectinterval.call(this);
+        let paths = {}
+
+
+        const getmilestonebyid = (paths, milestoneid) => {
+            let mymilestone = false;
+            if (paths.hasOwnProperty(milestoneid)) {
+
+                mymilestone = paths[milestoneid]
+            }
+
+            return mymilestone;
+
+        }
+
+        const getPathsbyMilestoneID = (milestones, milestoneid) => {
+
+            let path = {};
+            // eslint-disable-next-line
+            milestones.map(milestone => {
+                if (milestone.hasOwnProperty("predessors")) {
+                    // eslint-disable-next-line
+                    milestone.predessors.map(predessor => {
+                        if (predessor.predessor === milestoneid) {
+                            path[`${milestone.milestoneid}`] = {};
+                            path[`${milestone.milestoneid}`]['type'] = predessor.type
+
+
+
+                        }
+
+
+                    })
+
+
+
+                }
+
+
+            })
+
+            return path;
+        }
+        if (milestones) {
+            // eslint-disable-next-line
+            milestones.map(milestone => {
+                paths[`${milestone.milestoneid}`] = {};
+                paths[`${milestone.milestoneid}`]['milestone'] = milestone.milestone
+                paths[`${milestone.milestoneid}`]['start'] = milestone.start
+                paths[`${milestone.milestoneid}`]['completion'] = milestone.completion;
+                paths[`${milestone.milestoneid}`]['paths'] = getPathsbyMilestoneID(milestones, milestone.milestoneid)
+
+            })
+
+
+
+
+            let interval = getDateInterval(projectinterval.start, projectinterval.completion)
+            let scale = getScale(interval)
+            let mymilestones = [];
+
+            // eslint-disable-next-line
+            Object.getOwnPropertyNames(paths).map(path => {
+                mymilestones.push(path)
+            })
+
+            // eslint-disable-next-line
+            mymilestones.map((milestoneid, i) => {
+
+                if ((paths[milestoneid]).hasOwnProperty("paths")) {
+
+
+
+                    if (Object.getOwnPropertyNames(paths[milestoneid].paths).length > 0) {
+
+                        // eslint-disable-next-line
+                        Object.getOwnPropertyNames(paths[milestoneid].paths).map(prop => {
+
+                            const milestone_2 = getmilestonebyid(paths, prop)
+                            let params = {};
+                            let params_2 = {};
+                            if (milestone_2) {
+
+                                if (scale === 'month') {
+                                    params = calculatemonth(projectinterval.start, projectinterval.completion, paths[milestoneid]['start'], paths[milestoneid]['completion'])
+                                    params_2 = calculatemonth(projectinterval.start, projectinterval.completion, milestone_2['start'], milestone_2['completion'])
+                                } else if (scale === 'year') {
+                                    params = calculateyear(projectinterval.start, projectinterval.completion, paths[milestoneid]['start'], paths[milestoneid]['completion'])
+                                    params_2 = calculateyear(projectinterval.start, projectinterval.completion, milestone_2['start'], milestone_2['completion'])
+                                } else if (scale === 'day') {
+                                    params = calculateday(projectinterval.start, projectinterval.completion, paths[milestoneid]['start'], paths[milestoneid]['completion'])
+                                    params_2 = calculateday(projectinterval.start, projectinterval.completion, milestone_2['start'], milestone_2['completion'])
+                                }
+                            }
+                            const y1 = 80 + 100 * (construction.getmilestonekeybyid.call(this, milestoneid));
+                            const y2 = 80 + 100 * (construction.getmilestonekeybyid.call(this, prop));
+                            let x1 = "";
+                            if (paths[milestoneid].paths[prop].type === 'start-to-finish') {
+                                x1 = params.xo + params.width;
+                            } else if (paths[milestoneid].paths[prop].type === 'start-to-start') {
+                                x1 = params.xo;
+                            }
+                            paths[milestoneid].paths[prop]['x1'] = x1;
+                            paths[milestoneid].paths[prop]['y1'] = y1
+                            paths[milestoneid].paths[prop]['y2'] = y2
+                            paths[milestoneid].paths[prop]['x2'] = params_2.xo
+                            paths[milestoneid].paths[prop]['float'] = 'float';
+
+
+                        })
+
+                    }
+
+
+                }
+
+
+            })
+        }
+
+
+        let milestone_1 = "";
+        let milestone_2 = "";
+        for (let myprop in paths) {
+            milestone_1 = getmilestonebyid(paths, myprop)
+
+
+
+            for (let mypath in paths[myprop]['paths']) {
+                milestone_2 = getmilestonebyid(paths, mypath)
+                let float = calculateFloat(milestone_1.completion, milestone_2.start)
+                paths[myprop]['paths'][mypath]['float'] = float
+            }
+
+        }
+
+        return paths;
+    }
+
+    getdropicon() {
+        if (this.state.width > 1200) {
+            return (
+                {
+                    width: '93x',
+                    height: 'auto'
+                })
+
+        } else if (this.state.width > 800) {
+            return (
+                {
+                    width: '78px',
+                    height: 'auto'
+                })
+
         } else {
-            return (styles.font40)
+            return (
+                {
+                    width: '62px',
+                    height: 'auto'
+                })
+        }
+    }
+
+    getprojectbyid(projectid) {
+
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
+        let projects = false;
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("projects")) {
+                    // eslint-disable-next-line
+                    myuser.company.projects.map(myproject => {
+
+                        if (myproject.projectid === projectid) {
+                            projects = myproject;
+                        }
+                    })
+                }
+            }
+        }
+        return projects;
+    }
+
+
+    showlinedetail() {
+        const construction = new Construction();
+        const styles = MyStylesheet();
+        const regularFont = construction.getRegularFont.call(this);
+        const totallabor = `$${Number(this.getlabortotal()).toFixed(2)}`
+        const totalmaterials = `$${Number(this.getmaterialtotal()).toFixed(2)}`
+        const totalequipment = `$${Number(this.getequipmenttotal()).toFixed(2)}`
+        const totalamount = `$${Number(this.getitemtotal()).toFixed(2)}`
+        const responsiveLayouts = () => {
+            if (this.state.width > 800) {
+                return (<div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Labor
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getlaboritems()}
+                                </div>
+
+
+                            </div>
+                            <div style={{ ...styles.flex1 }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Materials
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getmaterialitems()}
+                                </div>
+
+                            </div>
+                        </div>
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Equipment
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getequipmentitems()}
+                                </div>
+
+
+                            </div>
+                            <div style={{ ...styles.flex1, ...styles.showBorder }}>
+
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Labor {totallabor}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Materials {totalmaterials}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Equipment {totalequipment}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total {totalamount}
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>)
+
+            } else {
+                return (
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
+
+                            <div style={{ ...styles.generalContainer }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Labor
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getlaboritems()}
+                                </div>
+
+                            </div>
+
+                            <div style={{ ...styles.generalContainer }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Materials
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getmaterialitems()}
+                                </div>
+
+
+                            </div>
+                            <div style={{ ...styles.generalContainer }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignCenter }}>
+                                    Equipment
+                                </div>
+                                <div style={{ ...styles.generalContainer, ...styles.showBorder }}>
+                                    {this.getequipmentitems()}
+                                </div>
+
+                            </div>
+                            <div style={{ ...styles.generalContainer }}>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Labor {totallabor}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Materials {totalmaterials}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total Equipment {totalequipment}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    Total {totalamount}
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                )
+
+            }
+        }
+        return responsiveLayouts();
+
+    }
+
+    getactualmaterials() {
+        const construction = new Construction();
+        let actualmaterials = false;
+        let myproject = construction.getproject.call(this);
+        if (myproject.hasOwnProperty("actual")) {
+            if (myproject.actual.hasOwnProperty("materials")) {
+                actualmaterials = myproject.actual.materials;
+            }
+
+        }
+        return actualmaterials;
+    }
+
+    getactualequipment() {
+        const construction = new Construction();
+        let actualequipment = false;
+        let myproject = construction.getproject.call(this);
+        if (myproject.hasOwnProperty("actual")) {
+            if (myproject.actual.hasOwnProperty("equipment")) {
+                actualequipment = myproject.actual.equipment;
+            }
+
+        }
+        return actualequipment;
+    }
+
+    getactualequipmentkeybyid(equipmentid) {
+        const construction = new Construction();
+        let key = false;
+        let myequipments = construction.getactualequipment.call(this);
+        if (myequipments) {
+            // eslint-disable-next-line
+            myequipments.map((myequipment, i) => {
+                if (myequipment.equipmentid === equipmentid) {
+                    key = i;
+                }
+            })
+
+        }
+
+
+        return key;
+    }
+
+    getschedulematerials() {
+        const construction = new Construction();
+        let schedulematerials = false;
+        let myproject = construction.getproject.call(this);
+        if (myproject.hasOwnProperty("schedule")) {
+
+            if (myproject.schedule.hasOwnProperty("materials")) {
+                schedulematerials = myproject.schedule.materials;
+            }
+
+        }
+
+
+        return schedulematerials;
+    }
+
+    getmilestones() {
+        const construction = new Construction();
+        let myproject = construction.getproject.call(this);
+        let milestones = false;
+        if (myproject) {
+            if (myproject.hasOwnProperty("projectmilestones")) {
+                milestones = myproject.projectmilestones.mymilestone;
+
+            }
+        }
+        return milestones;
+
+    }
+
+    
+    getmilestonebyid(milestoneid) {
+        let construction = new Construction();
+        let milestones = construction.getmilestones.call(this)
+        let milestone = false;
+        if (milestones) {
+            // eslint-disable-next-line
+            milestones.map(mymilestone => {
+                if (mymilestone.milestoneid === milestoneid) {
+                    milestone = mymilestone;
+                }
+            })
+        }
+        return milestone;
+    }
+
+    getschedulelabor() {
+        const construction = new Construction();
+        let schedulelabor = false;
+        let myproject = construction.getproject.call(this);
+        if (myproject.hasOwnProperty("schedule")) {
+            if (myproject.schedule.hasOwnProperty("labor")) {
+                return myproject.schedule.labor;
+            }
+
+
+        }
+
+
+        return schedulelabor;
+    }
+
+    getproject() {
+
+        const construction = new Construction();
+        let projectid = this.props.match.params.projectid;
+        let projects = false;
+        let myproject = construction.getprojectbytitle.call(this, projectid);
+
+        if (myproject) {
+            projects = myproject;
+        }
+        return projects;
+    }
+
+    getcompany() {
+        let construction = new Construction();
+        let myuser = construction.getuser.call(this);
+        let company = false;
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                company = myuser.company;
+            }
+        }
+
+        return company;
+    }
+
+    getmymaterials() {
+        const construction = new Construction();
+        const company = construction.getcompany.call(this);
+        let materials = false;
+        if (company.hasOwnProperty("materials")) {
+            materials = company.materials;
+
+        }
+        return materials;
+    }
+
+    getmyemployees() {
+        const construction = new Construction()
+        let myuser = construction.getuser.call(this);
+        let employees = false;
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("employees")) {
+                    employees = myuser.company.employees;
+                }
+            }
+        }
+        return employees;
+    }
+
+    showsavecompany() {
+        const styles = MyStylesheet();
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
+        const savecompanyicon = construction.getsaveprojecticon.call(this)
+        if (!this.state.spinner) {
+            return (<div style={{ ...styles.generalContainer }}>
+
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
+                    {this.state.message}
+                </div>
+
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...savecompanyicon }} onClick={() => { construction.saveCompany.call(this) }}>{saveCompanyIcon()}</button>
+                </div>
+
+            </div>
+            )
+
+        } else {
+            return (<Spinner />)
+        }
+    }
+
+    getsaveprojecticon() {
+        if (this.state.width > 1200) {
+            return ({
+                width: '273px'
+            })
+
+        } else if (this.state.width > 800) {
+            return ({
+                width: '235px'
+            })
+        } else {
+            return ({
+                width: '197px'
+            })
         }
 
     }
-    getHeaderFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font40)
+
+    getgocheckheight() {
+        if (this.state.width > 1200) {
+            return ({
+                width: '69px',
+                height: 'auto'
+            })
+        } else if (this.state.width > 800) {
+            return ({
+                width: '59px',
+                height: 'auto'
+            })
         } else {
-            return (styles.font30)
+            return ({
+                width: '49px',
+                height: 'auto'
+            })
         }
 
     }
-    getRegularFont() {
-        const styles = MyStylesheet();
-        if (this.state.width > 800) {
-            return (styles.font30)
-        } else {
-            return (styles.font24)
+
+    async validatecompanyid(url) {
+        const construction = new Construction()
+        const myuser = construction.getuser.call(this)
+        if (myuser) {
+
+            try {
+
+                let response = await ValidateCompanyID(url);
+                console.log(response)
+                if (response.hasOwnProperty("invalid")) {
+
+                    if (myuser.hasOwnProperty("company")) {
+                        myuser.company.invalid = response.invalid;
+                        this.props.reduxUser(myuser)
+                        this.setState({ message: response.invalid })
+                    } else {
+                        this.setState({ urlcheck: false, message: response.invalid })
+                    }
+
+
+
+                } else if (response.hasOwnProperty("valid")) {
+
+                    if (myuser.hasOwnProperty("company")) {
+                        if (myuser.company.hasOwnProperty("invalid")) {
+
+                            delete myuser.company.invalid;
+                            this.props.reduxUser(myuser)
+                            this.setState({ message: '' })
+
+                        }
+                    } else {
+
+                        let message = `Your Company Will be Hosted at ${process.env.REACT_APP_CLIENT_API}/company/${url}`
+                        this.setState({ urlcheck: true, message })
+
+                    }
+
+
+
+                }
+
+            }
+
+            catch (err) {
+                alert(err)
+
+            }
+
         }
 
     }
+
+    async clientlogin(type) {
+        let emailaddress = this.state.emailaddress;
+        let client = this.state.client;
+        let clientid = this.state.clientid;
+        let firstname = this.state.firstname;
+        let lastname = this.state.lastname;
+        let profile = this.state.profile;
+        let phonenumber = this.state.phonenumber;
+        let profileurl = this.state.profileurl;
+
+
+        let values = { emailaddress, client, clientid, firstname, lastname, profile, phonenumber, profileurl, type }
+
+        try {
+            this.setState({ spinner: true })
+            let response = await AppleLogin(values)
+            this.setState({ spinner: false })
+            console.log(response)
+
+            if (response.hasOwnProperty("myuser")) {
+                this.props.reduxUser(response.myuser)
+                this.setState({ client: '', clientid: '', emailaddress: '', message: '', emailaddresscheck: false, profilecheck: false, profile: '', firstname: '', lastname: '', profileurl: '' })
+            } else if (response.hasOwnProperty("message")) {
+                this.setState({ message: response.message })
+            }
+        } catch (err) {
+            alert(err)
+        }
+    }
+
+    getprojects() {
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
+        let projects = false;
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("projects")) {
+                    projects = myuser.company.projects;
+
+                }
+
+            }
+        }
+        return projects;
+    }
+
+    getmyequipmentbyid(equipmentid) {
+
+        const construction = new Construction();
+        let equipments = false;
+
+        let myequipment = construction.getmyequipment.call(this)
+
+        // eslint-disable-next-line
+        myequipment.map((equipment) => {
+
+            if (equipment.equipmentid === equipmentid) {
+                equipments = equipment
+            }
+        })
+
+
+        return equipments;
+    }
+
+
+    getremoveicon() {
+        if (this.state.width > 800) {
+            return ({ width: '37px' })
+        } else {
+            return ({ width: '30px' })
+        }
+    }
+
+
+
+    async googleSignIn(type) {
+        const construction = new Construction()
+
+
+        try {
+
+
+            let provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('email');
+            provider.addScope('profile');
+            let result = await firebase.auth().signInWithPopup(provider)
+            var user = result.user;
+            let client = 'google';
+            let clientid = user.providerData[0].uid;
+            let firstname = '';
+            if (user.providerData[0].displayName) {
+                firstname = user.providerData[0].displayName.split(' ')[0]
+            }
+
+            let lastname = '';
+            if (user.providerData[0].displayName) {
+                lastname = user.providerData[0].displayName.split(' ')[1]
+            }
+            let emailaddress = user.providerData[0].email;
+            let emailaddresscheck = false;
+            if (emailaddress) {
+                emailaddresscheck = true;
+            }
+            let profileurl = user.providerData[0].photoURL;
+            let phonenumber = user.phoneNumber;
+            let profile = this.state.profile;
+            this.setState({ client, clientid, emailaddress, firstname, lastname, profileurl, phonenumber, emailaddresscheck })
+
+
+            this.setState({ client, clientid, profile, firstname, lastname, profileurl, phonenumber, emailaddress })
+            construction.clientlogin.call(this, type)
+
+
+
+
+
+
+
+
+
+        } catch (error) {
+            alert(error)
+        }
+
+
+    }
+
+    async verifyProviderID() {
+        let profile = this.state.profile;
+        let errmsg = validateProviderID(profile);
+        if (errmsg) {
+            this.setState({ profilecheck: false, message: errmsg })
+        } else {
+            this.setState({ profilecheck: true, message: "" })
+        }
+        if (!errmsg) {
+            try {
+                let response = await CheckProviderID(profile)
+                console.log(response)
+                if (response.hasOwnProperty("valid")) {
+                    this.setState({ profilecheck: true });
+                }
+                else {
+                    this.setState({ profilecheck: false, message: response.message });
+                }
+
+            } catch (err) {
+
+                alert(err)
+            }
+
+        }
+
+
+    }
+
+
+    async savemyproject() {
+
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
+        if (myuser) {
+
+            const project = construction.getproject.call(this)
+            if (project) {
+
+                const projectid = project.projectid;
+                // let validatecompany = construction.validateCompany.call(this);
+                // let validateproject = construction.validateProject.call(this)
+
+                try {
+                    this.setState({ spinner: true })
+                    let response = await SaveProject({ myuser, projectid })
+
+                    // construction.handlecompanyids.call(this, response)
+                    // construction.handleprojectids.call(this, response)
+                    response = updateTimes(response)
+                    console.log(response)
+
+                    if (response.hasOwnProperty("myuser")) {
+
+
+                        this.props.reduxUser(response.myuser)
+                    }
+
+                    let message = "";
+
+                    if (response.hasOwnProperty("message")) {
+                        let lastupdated = formatTimeString(convertUTCTime(response.lastupdated))
+                        message = `${response.message} Last updated ${lastupdated}`
+
+                    }
+
+                    this.setState({ message, spinner: false })
+
+
+                } catch (err) {
+                    alert(err)
+                    this.setState({ spinner: false })
+
+                }
+
+
+
+            }
+
+
+
+        }
+
+
+    }
+
+
+    sumOfTransfersByLaborID(laborid) {
+        const construction = new Construction();
+        const transfers = construction.getActualTransfersByLaborID.call(this, laborid)
+        let amount = 0;
+        if (transfers) {
+            // eslint-disable-next-line
+            transfers.map(transfer => {
+                amount += Number(transfer.amount)
+
+            })
+        }
+        return amount;
+    }
+
+
+
+    getActualTransfersByLaborID(laborid) {
+        const construction = new Construction();
+        let gettransfers = false;
+        const labor = construction.getactuallaborbyid.call(this, laborid)
+        if (labor.hasOwnProperty("actualtransfers")) {
+            gettransfers = labor.actualtransfers;
+
+        }
+        return gettransfers;
+
+    }
+
+    sumOfTransfersByEquipmentID(equipmentid) {
+        const construction = new Construction();
+        const transfers = construction.getActualTransfersByEquipmentID.call(this, equipmentid)
+        let amount = 0;
+        if (transfers) {
+            // eslint-disable-next-line
+            transfers.map(transfer => {
+                amount += Number(transfer.amount)
+
+            })
+        }
+        return amount;
+
+    }
+
+    getActualTransfersByEquipmentID(equipmentid) {
+        const construction = new Construction();
+        let gettransfers = false;
+        const equipment = construction.getactualequipmentbyid.call(this, equipmentid)
+        if (equipment.hasOwnProperty("actualtransfers")) {
+            gettransfers = equipment.actualtransfers;
+
+        }
+        return gettransfers;
+    }
+
+
+
+    sumOfTransfersByMaterialID(materialid) {
+        const construction = new Construction();
+        const transfers = construction.getActualTransfersByMaterialID.call(this, materialid)
+        let amount = 0;
+        if (transfers) {
+            // eslint-disable-next-line
+            transfers.map(transfer => {
+                amount += Number(transfer.amount)
+
+            })
+        }
+        return amount;
+
+    }
+
+    getActualTransfersByMaterialID(materialid) {
+        const construction = new Construction();
+        let gettransfers = false;
+        let material = construction.getactualmaterialbyid.call(this, materialid)
+        if (material.hasOwnProperty("actualtransfers")) {
+            gettransfers = material.actualtransfers;
+
+        }
+        return gettransfers;
+
+    }
+
+    async loadcsis() {
+        try {
+            let response = await LoadCSIs();
+            if (response.hasOwnProperty("csis")) {
+                this.props.reduxCSIs(response.csis);
+
+            }
+
+        } catch (err) {
+            alert(err)
+        }
+    }
+
+    getRegisterIcon() {
+        if (this.state.width > 1200) {
+            return ({
+                width: '404px',
+                height: '68px'
+            })
+        } else if (this.state.width > 800) {
+            return ({
+                width: '264px',
+                height: '53px'
+            })
+        } else {
+            return ({
+                width: '162px',
+                height: '42px'
+            })
+        }
+    }
+
+    getArrowHeight() {
+        if (this.state.width > 800) {
+            return (
+                {
+                    width: '55px',
+                    height: '48px'
+                })
+
+        } else {
+            return (
+                {
+                    width: '45px',
+                    height: '34px'
+                })
+        }
+
+    }
+
+    getbenefitbyid(providerid, benefitid) {
+        const construction = new Construction();
+        const benefits = construction.getemployeebenefitsbyid.call(this, providerid)
+        let mybenefit = false;
+        if (benefits) {
+            // eslint-disable-next-line
+            benefits.map(benefit => {
+                if (benefit.benefitid === benefitid) {
+                    mybenefit = benefit;
+                }
+            })
+        }
+        return mybenefit;
+    }
+
+    getemployeebyid(providerid) {
+        const construction = new Construction()
+        let myemployees = construction.getmyemployees.call(this)
+        let employees = false;
+        if (myemployees) {
+            // eslint-disable-next-line
+            myemployees.map(employee => {
+                if (employee.providerid === providerid) {
+                    employees = employee;
+                }
+            })
+        }
+        return employees;
+    }
+    getemployeebenefitsbyid(providerid) {
+        const construction = new Construction();
+        let benefits = false;
+        const employee = construction.getemployeebyid.call(this, providerid)
+        if (employee.hasOwnProperty("benefits")) {
+            benefits = employee.benefits;
+        }
+        return benefits;
+    }
+
+    getprojectbytitle(title) {
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
+        let projects = false;
+
+        if (myuser) {
+
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("projects")) {
+                    // eslint-disable-next-line
+                    myuser.company.projects.map(myproject => {
+
+                        if (myproject.title === title) {
+                            projects = myproject;
+                        }
+                    })
+                }
+            }
+        }
+        return projects;
+    }
+
     getuser() {
         let user = false;
         if (this.props.myusermodel) {
             if (this.props.myusermodel.hasOwnProperty("providerid")) {
                 user = this.props.myusermodel;
             }
+
         }
         return user;
     }
-    getsavecompanyicon() {
-        if (this.state.width > 1200) {
-            return ({
-                width: '413px',
-                height: '79px'
-            })
 
-        } else if (this.state.width > 800) {
-            return ({
-                width: '309px',
-                height: '67px'
-            })
-        } else {
-            return ({
-                width: '222px',
-                height: '46px'
-            })
+    getNavigation() {
+        let navigation = false;
+        if (this.props.hasOwnProperty("navigation")) {
+            navigation = this.props.navigation;
+        }
+        return navigation;
+    }
+
+    async appleSignIn(type) {
+        const construction = new Construction();
+        let provider = new firebase.auth.OAuthProvider('apple.com');
+        provider.addScope('email');
+        provider.addScope('name');
+        try {
+            let result = await firebase.auth().signInWithPopup(provider)
+            // The signed-in user info.
+            var user = result.user;
+
+            let firstname = "";
+            let lastname = "";
+            if (user.providerData[0].displayName) {
+                firstname = user.providerData[0].displayName.split(' ')[0]
+                lastname = user.providerData[0].displayName.split(' ')[1]
+            }
+            let phonenumber = user.providerData[0].phoneNumber
+            let profileurl = user.providerData[0].photoURL;
+            let client = 'apple';
+            let clientid = user.providerData[0].uid;
+            let emailaddress = user.providerData[0].email;
+
+            let profile = this.state.profile;
+            this.setState({ client, clientid, profile, firstname, lastname, profileurl, phonenumber, emailaddress })
+            construction.clientlogin.call(this, type)
+
+        } catch (err) {
+            alert(err)
         }
 
     }
-    getactivecsikey() {
 
+
+    getequipmentcostskeybyid(equipmentid, costid) {
+        const construction = new Construction();
         let key = false;
-        if (this.props.myusermodel) {
+        const myequipment = construction.getmyequipmentbyid.call(this, equipmentid)
 
-            if (this.state.activecsiid) {
-                let csiid = this.state.activecsiid;
-                let mycsicodes = this.getmycsicodes();
+        if (myequipment.hasOwnProperty("ownership")) {
+            // eslint-disable-next-line
+            myequipment.ownership.cost.map((cost, i) => {
+                if (cost.costid === costid) {
+                    key = i
+                }
+
+            })
+
+        }
+
+        return key;
+    }
+
+    getbenefitkeybyid(providerid, benefitid) {
+        const construction = new Construction();
+        let key = false;
+        let employee = construction.getemployeebyid.call(this, providerid);
+        // eslint-disable-next-line
+
+
+        if (employee) {
+
+            if (employee.hasOwnProperty("benefits")) {
                 // eslint-disable-next-line
-                mycsicodes.map((code, i) => {
-                    if (code.csiid === csiid) {
+                employee.benefits.map((benefit, i) => {
+                    if (benefit.benefitid === benefitid) {
                         key = i;
                     }
                 })
+            }
+        }
 
+
+
+        return key
+    }
+
+    calculateLaborRatebyID(providerid) {
+        const construction = new Construction();
+        const employee = construction.getemployeebyid.call(this, providerid)
+        let sum = 0;
+        if (employee) {
+            const benefits = construction.getemployeebenefitinterval.call(this, providerid);
+
+            if (benefits.length > 0) {
+                // eslint-disable-next-line
+                benefits.map(benefit => {
+                    sum += Number(benefit.amount)
+                })
             }
 
-            return key;
+        }
+        const workinghours = Number(employee.workinghours)
+        const laborrate = workinghours > 0 ? sum / workinghours : 0;
+        return laborrate;
+    }
+
+    getButtonSize() {
+        if (this.state.width > 1200) {
+            return ({ width: '60px' })
+
+        } else if (this.state.width > 600) {
+            return ({ width: '50px' })
+
+        } else {
+            return ({ width: '40px' })
+
         }
     }
-    getactivecsi() {
-        let activecsi = false;
-        if (this.props.myusermodel) {
 
-            if (this.state.activecsiid) {
-                let csiid = this.state.activecsiid;
-                let mycsicodes = this.getmycsicodes();
+
+    getemployeebenefitinterval(providerid) {
+        const construction = new Construction();
+        let benefits = [];
+        const employee = construction.getemployeebyid.call(this, providerid)
+        if (employee) {
+            if (employee.hasOwnProperty("benefits")) {
                 // eslint-disable-next-line
-                mycsicodes.map(code => {
-                    if (code.csiid === csiid) {
-                        activecsi = code;
-                    }
+                employee.benefits.map(benefit => {
+                    let interval = getBenefitInterval(benefit.frequency, Number(benefit.amount), benefit.benefit, benefit.accountid)
+                    benefits = [...benefits, ...interval]
+                })
+            }
+        }
+
+        return benefits;
+    }
+
+    getAllActual() {
+        const construction = new Construction();
+
+        let actuals = [];
+        let myproject = construction.getproject.call(this)
+        if (myproject.hasOwnProperty("actual")) {
+
+            if (myproject.actual.hasOwnProperty("labor")) {
+                // eslint-disable-next-line
+                myproject.actual.labor.map(mylabor => {
+                    actuals.push(mylabor)
+                })
+            }
+            if (myproject.actual.hasOwnProperty("equipment")) {
+                // eslint-disable-next-line
+                myproject.actual.equipment.map(myequipment => {
+                    actuals.push(myequipment)
+                })
+            }
+            if (myproject.actual.hasOwnProperty("materials")) {
+                // eslint-disable-next-line
+                myproject.actual.materials.map(mymaterial => {
+                    actuals.push(mymaterial)
                 })
 
             }
+
         }
-        return activecsi;
-    }
-    handlecsititle(title) {
-        const dynamicstyles = new DynamicStyles();
-        let myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
-            if (this.state.activecsiid) {
-
-
-
-                let i = this.getactivecsikey();
-
-                myuser.company.construction.csicodes.code[i].title = title;
-                this.props.reduxUser(myuser)
-                this.setState({ render: 'render' })
-
-            } else {
-                this.setState({ title });
-                let csiid = makeID(16);
-                let csi_1 = (this.state.csi_1).substr(0, 2)
-                let csi_2 = (this.state.csi_2).substr(0, 2)
-                let csi_3 = (this.state.csi_3).substr(0, 2)
-                let csi = `${csi_1}${csi_2}${csi_3}`
-                let newcode = CreateCSI(csiid, csi, title);
-
-                if (myuser.company.construction.hasOwnProperty("csicodes")) {
-                    myuser.company.construction.csicodes.code.push(newcode)
-                } else {
-                    let csicodes = { code: [newcode] }
-                    myuser.company.construction.csicodes = csicodes;
-                }
-                this.props.reduxUser(myuser);
-                this.setState({ activecsiid: csiid })
+        // eslint-disable-next-line
+        actuals.map((myactual, i) => {
+            if (myactual.hasOwnProperty("csiid")) {
+                let csi = construction.getcsibyid.call(this, myactual.csiid)
+                myactual.csi = csi.csi
+                actuals[i] = myactual;
             }
+        })
 
-        }
+        actuals.sort((a, b) => {
+            return sorttimes(a.timein, b.timein)
+        })
+
+
+
+
+
+
+
+        return actuals;
 
     }
-    getcsititle() {
 
-        if (this.state.activecsiid) {
-            let code = this.getactivecsi();
-            return (code.title);
+    getAllSchedule() {
+        const construction = new Construction();
 
-        } else {
-            return (this.state.title)
-        }
-    }
+        const schedule = () => {
+            let schedules = [];
+            let myproject = construction.getproject.call(this)
 
-    getmycsicodes() {
-        let mycodes = false;
-        if (this.props.myusermodel) {
-            let myuser = this.props.myusermodel;
-            if (myuser.hasOwnProperty("company")) {
-                if (myuser.company.hasOwnProperty("construction")) {
-                    if (myuser.company.construction.hasOwnProperty("csicodes")) {
-                        mycodes = myuser.company.construction.csicodes.code;
-                    }
+
+            if (myproject.hasOwnProperty("schedule")) {
+
+                if (myproject.schedule.hasOwnProperty("labor")) {
+                    // eslint-disable-next-line
+                    myproject.schedule.labor.map(mylabor => {
+                        schedules.push(mylabor)
+                    })
                 }
+
+                if (myproject.schedule.hasOwnProperty("equipment")) {
+                    // eslint-disable-next-line
+                    myproject.schedule.equipment.map(myequipment => {
+                        schedules.push(myequipment)
+                    })
+                }
+                if (myproject.schedule.hasOwnProperty("materials")) {
+                    // eslint-disable-next-line
+                    myproject.schedule.materials.map(mymaterial => {
+                        schedules.push(mymaterial)
+                    })
+
+                }
+
             }
-        }
-        return mycodes;
-    }
-    showmycsicodes() {
-
-        let mycodes = this.getmycsicodes();
-
-        let csi = [];
-        if (mycodes) {
             // eslint-disable-next-line
-            mycodes.map(code => {
-                csi.push(this.showcsiid(code))
+            schedules.map((myschedule, i) => {
+                if (myschedule.hasOwnProperty("csiid")) {
+                    let csi = construction.getcsibyid.call(this, myschedule.csiid)
+                    myschedule.csi = csi.csi
+                    schedules[i] = myschedule;
+                }
+            })
+
+            schedules.sort((a, b) => {
+                return sorttimes(a.timein, b.timein)
+            })
+
+
+            return schedules;
+
+        }
+
+        let MySchedule = schedule();
+
+        return MySchedule
+
+    }
+
+    getprojectkeybyid(projectid) {
+
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
+        let key = false;
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("projects")) {
+                    // eslint-disable-next-line
+                    myuser.company.projects.map((myproject, i) => {
+
+                        if (myproject.projectid === projectid) {
+                            key = i;
+                        }
+                    })
+                }
+            }
+        }
+        return key;
+    }
+
+    gettransfers() {
+        const construction = new Construction();
+        const projects = construction.getmyprojects.call(this)
+
+        let transfers = [];
+        if (projects) {
+            // eslint-disable-next-line
+            projects.map(myproject => {
+                if (myproject.hasOwnProperty("actual")) {
+
+                    if (myproject.actual.hasOwnProperty("labor")) {
+                        // eslint-disable-next-line
+                        myproject.actual.labor.map(mylabor => {
+                            if (mylabor.hasOwnProperty("actualtransfers")) {
+                                // eslint-disable-next-line
+                                mylabor.actualtransfers.map(transfer => {
+                                    transfers.push(transfer)
+                                })
+
+                            }
+                        })
+
+                    }
+
+                    if (myproject.hasOwnProperty("actualmaterials")) {
+                        // eslint-disable-next-line
+                        myproject.actual.materials.map(mymaterial => {
+                            if (mymaterial.hasOwnProperty("actualtransfers")) {
+                                // eslint-disable-next-line
+                                mymaterial.actualtransfers.map(transfer => {
+                                    transfers.push(transfer)
+                                })
+
+                            }
+                        })
+
+                    }
+
+                    if (myproject.actual.hasOwnProperty("equipment")) {
+                        // eslint-disable-next-line
+                        myproject.actual.equipment.map(myequipment => {
+                            if (myequipment.hasOwnProperty("actualtransfers")) {
+                                // eslint-disable-next-line 
+                                myequipment.actualtransfers.map(transfer => {
+                                    transfers.push(transfer)
+                                })
+
+                            }
+                        })
+
+                    }
+
+
+                }
+
+
             })
         }
-
-        return csi;
+        return transfers;
     }
-    getremoveicon() {
-        if (this.state.width > 800) {
-            return ({ width: '47px', height: '47px' })
-        } else {
-            return ({ width: '36px', height: '36px' })
-        }
-    }
-    getactivebackground(csiid) {
-        if (this.state.activecsiid === csiid) {
-            return ({ backgroundColor: '#F2C4D2' })
-        } else {
-            return;
+
+    async checkemailaddress(emailaddress) {
+        if (emailaddress) {
+            try {
+                let response = await CheckEmailAddress(emailaddress);
+                console.log(response)
+                if (response.hasOwnProperty("invalid")) {
+                    this.setState({ emailcheck: false, message: response.message })
+                } else if (response.hasOwnProperty("valid")) {
+                    this.setState({ emailcheck: true, message: "" })
+                }
+            } catch (err) {
+                alert(err)
+            }
+
         }
 
+    }
+
+    getcsis() {
+        let csis = false;
+        if (this.props.csis) {
+            if (this.props.csis.hasOwnProperty("length")) {
+                csis = this.props.csis;
+            }
+        }
+        return csis;
     }
     getcsibyid(csiid) {
-        let mycodes = this.getmycsicodes();
         let csi = false;
-        if (mycodes) {
+        let construction = new Construction();
+        const csis = construction.getcsis.call(this)
+        if (csis) {
             // eslint-disable-next-line
-            mycodes.map(code => {
+            csis.map(code => {
                 if (code.csiid === csiid) {
                     csi = code;
+
                 }
             })
+
         }
+
         return csi;
     }
 
+    getschedulematerialkeybyid(materialid) {
+        const construction = new Construction();
+        let mymaterials = construction.getschedulematerials.call(this);
+        let key = false;
+        if (mymaterials) {
 
-
-    makecsiactive(csiid) {
-
-        const dynamicstyles = new DynamicStyles()
-        if (this.state.activecsiid !== csiid) {
-            let code = dynamicstyles.getcsibyid.call(this, csiid);
-            let csi = code.csi;
-            let csi_1 = csi.substr(0, 2)
-            let csi_2 = csi.substr(2, 2)
-            let csi_3 = csi.substr(4, 2)
-
-            this.setState({ activecsiid: csiid, csi_1, csi_2, csi_3 })
-
-        } else {
-            this.setState({ activecsiid: '', csi_1: '', csi_2: '', csi_3: '', title: '' })
-        }
-
-
-    }
-    showcsiid(code) {
-        const styles = MyStylesheet();
-        const regularFont = this.getRegularFont();
-        const removeIcon = this.getremoveicon()
-        return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...this.getactivebackground(code.csiid) }} key={code.csiid}>
-            <span onClick={() => { this.makecsiactive(code.csiid) }}>{code.csi}  - {code.title}</span> <button style={{ ...styles.generalButton, ...removeIcon }}>{removeIconSmall()} </button>
-        </div>)
-    }
-    getcsiid() {
-        const dynamicstyles = new DynamicStyles();
-        const styles = MyStylesheet();
-        if (this.state.activecsiid) {
-            let csiid = this.state.activecsiid;
-            let csi = dynamicstyles.getcsibyid.call(this, csiid)
-            return (<div style={{ ...styles.generalContainer, ...styles.activecsi, ...styles.showBorder }}>{csi.csi} {csi.title}</div>)
-        } else {
-            return;
-        }
-
-
-    }
-    handlecsiid(csiid) {
-        this.makecsiactive(csiid)
-
-    }
-    validatenewcsi() {
-        const csi_1 = this.state.csi_1;
-        const csi_2 = this.state.csi_2;
-        const csi_3 = this.state.csi_3;
-        const title = this.state.title;
-        let validate = false;
-        if (csi_1 && csi_2 && csi_3 && title) {
-            validate = true;
-        }
-        return validate;
-
-    }
-    handlecsi_1(csi_1) {
-        if (csi_1.length === 0) {
-            csi_1 = '00';
-        }
-        this.setState({ csi_1 })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
-
-        if (myuser) {
-
-            if (this.state.activecsiid) {
-                let mycsi = this.getactivecsi();
-                let csi = mycsi.csi;
-                csi = `${csi_1.substr(0, 2)}${csi.substr(2, 2)}${csi.substr(4, 2)}`
-                let i = this.getactivecsikey();
-                myuser.company.construction.csicodes.code[i].csi = csi;
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
-
-
-            } else {
-                const validate = this.validatenewcsi();
-                if (validate) {
-                    const csi_2 = this.state.csi_2.substring(0, 2)
-                    const csi_3 = this.state.csi_3.substring(0, 2)
-                    csi_1 = csi_1.substring(0, 2);
-                    const csiid = makeID(16);
-                    const csi = `${csi_1}${csi_2}${csi_3}`;
-                    const title = this.state.title;
-                    const newcsi = CreateCSI(csiid, csi, title);
-                    const mycsis = dynamicstyles.getmycsicodes.call(this)
-                    if (mycsis) {
-                        myuser.company.construction.csicodes.code.push(newcsi);
-
-                    } else {
-                        const csicodes = { code: [newcsi] }
-                        myuser.company.construction.csicodes = csicodes;
-
-
-                    }
-                    this.props.reduxUser(myuser);
-                    this.setState({ activecsiid: csiid })
-
-                }
-            }
-
-        }
-    }
-    handlecsi_2(csi_2) {
-        this.setState({ csi_2 })
-        if (csi_2.length === 0) {
-            csi_2 = '00';
-        }
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
-
-        if (myuser) {
-
-            if (this.state.activecsiid) {
-                let mycsi = this.getactivecsi();
-                let csi = mycsi.csi;
-                csi = `${csi.substr(0, 2)}${csi_2.substr(0, 2)}${csi.substr(4, 2)}`
-                let i = this.getactivecsikey();
-                myuser.company.construction.csicodes.code[i].csi = csi;
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
-
-
-            } else {
-
-                const validate = this.validatenewcsi();
-                if (validate) {
-                    const csi_1 = this.state.csi_1.substring(0, 2)
-                    const csi_3 = this.state.csi_3.substring(0, 2)
-                    csi_2 = csi_2.substring(0, 2);
-                    const csiid = makeID(16);
-                    const csi = `${csi_1}${csi_2}${csi_3}`;
-                    const title = this.state.title;
-                    const newcsi = CreateCSI(csiid, csi, title);
-                    const mycsis = dynamicstyles.getmycsicodes.call(this)
-                    if (mycsis) {
-                        myuser.company.construction.csicodes.code.push(newcsi);
-
-                    } else {
-                        const csicodes = { code: [newcsi] }
-                        myuser.company.construction.csicodes = csicodes;
-
-
-                    }
-                    this.props.reduxUser(myuser);
-                    this.setState({ activecsiid: csiid })
-
-                }
-            }
-
-        }
-    }
-    handlecsi_3(csi_3) {
-        if (csi_3.length === 0) {
-            csi_3 = '00';
-        }
-        this.setState({ csi_3 })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this);
-
-        if (myuser) {
-
-            if (this.state.activecsiid) {
-                let mycsi = this.getactivecsi();
-                let csi = mycsi.csi;
-                csi = `${csi.substr(0, 2)}${csi.substr(2, 2)}${csi_3.substr(0, 2)}`
-                let i = this.getactivecsikey();
-                myuser.company.construction.csicodes.code[i].csi = csi;
-                this.props.reduxUser(myuser);
-                this.setState({ render: 'render' })
-
-
-            } else {
-
-                const validate = this.validatenewcsi();
-                if (validate) {
-                    const csi_1 = this.state.csi_1.substring(0, 2)
-                    const csi_2 = this.state.csi_2.substring(0, 2)
-                    csi_3 = csi_3.substring(0, 2);
-                    const csiid = makeID(16);
-                    const csi = `${csi_1}${csi_2}${csi_3}`;
-                    const title = this.state.title;
-                    const newcsi = CreateCSI(csiid, csi, title);
-                    const mycsis = dynamicstyles.getmycsicodes.call(this)
-                    if (mycsis) {
-                        myuser.company.construction.csicodes.code.push(newcsi);
-
-                    } else {
-                        const csicodes = { code: [newcsi] }
-                        myuser.company.construction.csicodes = csicodes;
-
-
-                    }
-                    this.props.reduxUser(myuser);
-                    this.setState({ activecsiid: csiid })
-
-                }
-            }
-
-        }
-    }
-    getcsi_1() {
-        if (this.state.activecsiid) {
-            const mycsi = this.getactivecsi();
-            return (mycsi.csi.substr(0, 2))
-
-
-        } else {
-            return (this.state.csi_1.substr(0, 2))
-        }
-    }
-    getcsi_2() {
-        if (this.state.activecsiid) {
-            const mycsi = this.getactivecsi();
-            return (mycsi.csi.substr(2, 2))
-
-
-        } else {
-            return (this.state.csi_2.substr(0, 2))
-        }
-    }
-    getcsi_3() {
-        if (this.state.activecsiid) {
-            const mycsi = this.getactivecsi();
-            return (mycsi.csi.substr(4, 2))
-        } else {
-            return (this.state.csi_3.substr(0, 2))
-        }
-    }
-    validateremovecsi(csiid) {
-        const dynamicstyles = new DynamicStyles();
-        const myprojects = dynamicstyles.getmyprojects.call(this);
-        let validate = {};
-        validate.validate = true;
-        validate.message = '';
-        if (myprojects.hasOwnProperty("length")) {
             // eslint-disable-next-line
-            myprojects.map(myproject => {
-                if (myproject.hasOwnProperty("schedulelabor")) {
-                    // eslint-disable-next-line
-                    myproject.schedulelabor.mylabor.map(mylabor => {
-                        if (mylabor.csiid === csiid) {
-                            validate.validate = false;
-                            validate.message += `CSI ID found schedule labor `
-                        }
-                    })
+            mymaterials.map((mymaterial, i) => {
+                if (mymaterial.materialid === materialid) {
+                    key = i;
                 }
-                if (myproject.hasOwnProperty("schedulematerials")) {
-                    // eslint-disable-next-line
-                    myproject.schedulematerials.mymaterial.map(mymaterial => {
-                        if (mymaterial.csiid === csiid) {
-                            validate.validate = false;
-                            validate.message += `CSI ID found schedule material `
-                        }
-                    })
-                }
+            })
 
-                if (myproject.hasOwnProperty("scheduleequipment")) {
-                    // eslint-disable-next-line
-                    myproject.scheduleequipment.myequipment.map(myequipment => {
-                        if (myequipment.csiid === csiid) {
-                            validate.validate = false;
-                            validate.message += `CSI ID found schedule equipment `
-                        }
-                    })
-                }
 
-                if (myproject.hasOwnProperty("actuallabor")) {
-                    // eslint-disable-next-line
-                    myproject.actuallabor.mylabor.map(mylabor => {
-                        if (mylabor.csiid === csiid) {
-                            validate.validate = false;
-                            validate.message += `CSI ID found actual labor `
-                        }
-                    })
-                }
-                if (myproject.hasOwnProperty("actualmaterials")) {
-                    // eslint-disable-next-line
-                    myproject.actualmaterials.mymaterial.map(mymaterial => {
-                        if (mymaterial.csiid === csiid) {
-                            validate.validate = false;
-                            validate.message += `CSI ID found actual material `
-                        }
-                    })
-                }
-
-                if (myproject.hasOwnProperty("actualequipment")) {
-                    // eslint-disable-next-line
-                    myproject.actualequipment.myequipment.map(myequipment => {
-                        if (myequipment.csiid === csiid) {
-                            validate.validate = false;
-                            validate.message += `CSI ID found actual equipment `
-                        }
-                    })
+        }
+        return key;
+    }
+    getschedulematerialbyid(materialid) {
+        const construction = new Construction();
+        let material = false;
+        let mymaterials = construction.getschedulematerials.call(this)
+        if (mymaterials) {
+            // eslint-disable-next-line
+            mymaterials.map((mymaterial, i) => {
+                if (mymaterial.materialid === materialid) {
+                    material = mymaterial;
                 }
 
             })
         }
-        return validate;
+        return material;
+
     }
-    removecsi(csi) {
-        if (window.confirm(`Are you sure you want to delete CSI ${csi.csi} ${csi.title}?`)) {
-            const dynamicstyles = new DynamicStyles();
-            const myuser = dynamicstyles.getuser.call(this);
-            if (myuser) {
 
-                const validatecsi = this.validateremovecsi(csi.csiid)
-                if (validatecsi.validate) {
-                    const i = this.getactivecsikey();
-                    myuser.company.construction.csicodes.code.splice(i, 1);
-                    if (myuser.company.construction.csicodes.code.length === 0) {
-                        delete myuser.company.construction.csicodes.code;
-                        delete myuser.company.construction.csicodes
+    updateinvoice(invoiceid) {
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
+
+
+        if (myuser) {
+            const myproject = construction.getproject.call(this);
+            if (myproject) {
+                const i = construction.getprojectkeybyid.call(this, myproject.projectid)
+                const myinvoice = construction.getinvoicebyid.call(this, invoiceid)
+                if (myinvoice) {
+
+               
+
+                    myuser.company.projects[i].actual.updated = UTCTimefromCurrentDate();
+                    this.props.reduxUser(myuser)
+                    this.setState({ render: 'render' })
+                }
+            }
+
+
+        }
+
+    }
+
+    updateproposal(proposalid) {
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
+
+        if (myuser) {
+            const myproject = construction.getproject.call(this);
+            if (myproject) {
+                const i = construction.getprojectkeybyid.call(this, myproject.projectid)
+                const myproposal = construction.getproposalbyid.call(this, proposalid)
+                if (myproposal) {
+
+                    myuser.company.projects[i].schedule.updated = UTCTimefromCurrentDate();
+                    this.props.reduxUser(myuser)
+                    this.setState({ render: 'render' })
+                }
+            }
+
+
+        }
+
+    }
+
+    getactualmaterialbyid(materialid) {
+        const construction = new Construction();
+        let material = false;
+        const mymaterials = construction.getactualmaterials.call(this)
+        if (mymaterials) {
+            // eslint-disable-next-line
+            mymaterials.map((mymaterial, i) => {
+                if (mymaterial.materialid === materialid) {
+                    material = mymaterial;
+                }
+            })
+        }
+
+
+        return material;
+    }
+
+    getscheduleequipment() {
+        const construction = new Construction();
+        let scheduleequipment = false;
+        let myproject = construction.getproject.call(this);
+        if (myproject.hasOwnProperty("schedule")) {
+            if (myproject.schedule.hasOwnProperty("equipment")) {
+                scheduleequipment = myproject.schedule.equipment;
+            }
+
+        }
+        return scheduleequipment;
+    }
+
+    getscheduleequipmentkeybyid(equipmentid) {
+        const construction = new Construction();
+        let myequipments = construction.getscheduleequipment.call(this)
+        let key = false;
+        if (myequipments) {
+            // eslint-disable-next-line
+            myequipments.map((myequipment, i) => {
+                if (myequipment.equipmentid === equipmentid) {
+                    key = i
+                }
+            })
+
+
+        }
+        return key;
+    }
+    getscheduleequipmentbyid(equipmentid) {
+        const construction = new Construction();
+        let equipment = false;
+        const myequipment = construction.getscheduleequipment.call(this)
+        if (myequipment) {
+// eslint-disable-next-line
+            myequipment.map((myequipment, i) => {
+                if (myequipment.equipmentid === equipmentid) {
+                    equipment = myequipment;
+                }
+            })
+        }
+
+
+        return equipment;
+    }
+
+    calculateequipmentratebyownership(equipmentid) {
+        let equipmentrate = 0;
+        let totalamount = 0;
+        const construction = new Construction();
+        const myequipment = construction.getmyequipmentbyid.call(this, equipmentid)
+        if (myequipment) {
+            const costs = construction.gettransformedcostsbyequimentid.call(this, equipmentid);
+
+            if (costs.length > 0) {
+
+                const Period = () => {
+                    let purchasedate = myequipment.ownership.purchasedate;
+                    let saledate = myequipment.ownership.saledate;
+                    if (purchasedate && saledate) {
+                        let totalmonths = calculateTotalMonths(purchasedate, saledate)
+                        return (totalmonths)
+                    } else {
+                        return 0;
                     }
-                    this.props.reduxUser(myuser);
-                    this.setState({ activecsiid: false })
+                }
+
+
+                const totalworkinghours = () => {
+                    let annual = Number(myequipment.ownership.workinghours);
+                    let years = Period() / 12;
+
+                    return (Math.round(annual * years))
+                }
+                // eslint-disable-next-line
+                costs.map(cost => {
+
+                    totalamount += Number(cost.amount);
+                })
+
+
+                if (totalworkinghours() > 0) {
+                    equipmentrate = totalamount / totalworkinghours()
+
+                }
+
+
+
+            }
+
+
+        }
 
 
 
 
+        return equipmentrate;
+    }
+    getcostbyid(equipmentid, costid) {
 
-                } else {
-                    this.setState({ message: validatecsi.message })
+        const construction = new Construction();
+        let costs = false;
+        const myequipment = construction.getmyequipmentbyid.call(this, equipmentid)
+
+        if (myequipment.hasOwnProperty("ownership")) {
+            // eslint-disable-next-line
+            myequipment.ownership.cost.map((cost, i) => {
+                if (cost.costid === costid) {
+                    costs = cost;
+                }
+
+            })
+
+        }
+
+        return costs
+    }
+    getequipmentcostsbyid(equipmentid) {
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this);
+        let costs = false;
+        if (myuser) {
+
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("equipment")) {
+                    // eslint-disable-next-line
+                    myuser.company.equipment.map(myequipment => {
+                        if (myequipment.equipmentid === equipmentid) {
+
+                            if (myequipment.hasOwnProperty("ownership")) {
+
+                                costs = myequipment.ownership.cost
+                            }
+
+                        }
+                    })
+
+                }
+
+
+
+            }
+
+        }
+        return costs;
+    }
+
+    getactualequipmentbyid(equipmentid) {
+        const construction = new Construction();
+        let equipment = false;
+        const myequipment = construction.getactualequipment.call(this)
+        if (myequipment) {
+// eslint-disable-next-line
+            myequipment.map((myequipment, i) => {
+                if (myequipment.equipmentid === equipmentid) {
+                    equipment = myequipment;
+                }
+            })
+
+
+        }
+        return equipment;
+    }
+    getbidactual() {
+        const construction = new Construction();
+        const project = construction.getproject.call(this)
+        let actual = false;
+        if (project.hasOwnProperty("actual")) {
+            if (project.actual.hasOwnProperty("bid")) {
+                actual = project.actual.bid;
+            }
+
+        }
+        return actual;
+
+    }
+    
+    getbidschedule() {
+        const construction = new Construction();
+        const project = construction.getproject.call(this)
+        let schedule = false;
+        if (project.hasOwnProperty("schedule")) {
+
+            if (project.schedule.hasOwnProperty("bidschedule")) {
+                schedule  = project.schedule.bidschedule;
+            }
+
+        }
+        return schedule ;
+
+    }
+
+    getbidschedulekeybyid(csiid) {
+        const construction = new Construction();
+        const schedule = construction.getbidschedule.call(this)
+        let key = false;
+        if (schedule) {
+            // eslint-disable-next-line
+            schedule.map((item, i) => {
+                if (item.csiid === csiid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+
+    }
+
+
+    getbidactualkeybyid(csiid) {
+        const construction = new Construction();
+        const actual = construction.getbidactual.call(this)
+        let key = false;
+        if (actual) {
+            // eslint-disable-next-line
+            actual.map((item, i) => {
+                if (item.csiid === csiid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+
+    }
+
+    showbidtable() {
+
+        const construction = new Construction();
+        const styles = MyStylesheet();
+        const regularFont = construction.getRegularFont.call(this);
+
+
+        if (this.state.width > 1200) {
+            return (
+                <table width="100%" border="1" style={{ ...regularFont, ...styles.generalFont, ...styles.generalTable }}>
+                    <tr>
+                        <td width="24%" style={{ ...styles.alignCenter }}>Line ID</td>
+                        <td width="12%" style={{ ...styles.alignCenter }}>Quantity</td>
+                        <td width="13%" style={{ ...styles.alignCenter }}>Unit</td>
+                        <td width="13%" style={{ ...styles.alignCenter }}>Direct Cost</td>
+                        <td width="13%" style={{ ...styles.alignCenter }}> Overhead and Profit %</td>
+                        <td width="13%" style={{ ...styles.alignCenter }}>Bid Price</td>
+                        <td width="12%" style={{ ...styles.alignCenter }}>Unit Price</td>
+                    </tr>
+                    {this.showbiditems()}
+                </table>
+
+            )
+        } else {
+            return (
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.flex1 }}>
+
+                        {this.showbiditems()}
+
+                    </div>
+                </div>
+            )
+        }
+    }
+
+    getbidactualbyid(csiid) {
+        const construction = new Construction();
+        const actual = construction.getbidactual.call(this)
+        let myitem = false;
+        if (actual) {
+            // eslint-disable-next-line
+            actual.map(item => {
+                if (item.csiid === csiid) {
+                    myitem = item;
+                }
+            })
+        }
+        return myitem;
+
+    }
+
+    getactuallabor() {
+        const construction = new Construction();
+        let actuallabor = false;
+        let myproject = construction.getproject.call(this);
+        if (myproject.hasOwnProperty("actual")) {
+            if (myproject.actual.hasOwnProperty("labor")) {
+                return myproject.actual.labor;
+            }
+
+
+        }
+
+
+        return actuallabor;
+    }
+
+
+    getactuallaborbyid(laborid) {
+        const construction = new Construction();
+        let mylabors = construction.getactuallabor.call(this)
+        let labor = false
+
+        if (mylabors) {
+
+            // eslint-disable-next-line
+            mylabors.map((mylabor, i) => {
+                if (mylabor.laborid === laborid) {
+                    labor = mylabor;
+                }
+            })
+
+        }
+
+        return labor;
+    }
+    getschedulelaborbyid(laborid) {
+        const construction = new Construction();
+        let mylabors = construction.getschedulelabor.call(this)
+        let labor = false
+
+        if (mylabors) {
+
+            // eslint-disable-next-line
+            mylabors.map((mylabor, i) => {
+                if (mylabor.laborid === laborid) {
+                    labor = mylabor;
+                }
+            })
+
+        }
+
+        return labor;
+    }
+
+    getschedulelaborkeybyid(laborid) {
+        const construction = new Construction();
+        let mylabors = construction.getschedulelabor.call(this)
+        let key = false;
+
+        if (mylabors) {
+
+            // eslint-disable-next-line
+            mylabors.map((mylabor, i) => {
+
+                if (mylabor.laborid === laborid) {
+                    key = i;
+                }
+            })
+
+        }
+
+        return key;
+    }
+
+    getactuallaborkeybyid(laborid) {
+        const construction = new Construction();
+        let mylabors = construction.getactuallabor.call(this)
+        let key = false;
+
+        if (mylabors) {
+
+            // eslint-disable-next-line
+            mylabors.map((mylabor, i) => {
+
+                if (mylabor.laborid === laborid) {
+                    key = i;
+                }
+            })
+
+        }
+
+        return key;
+    }
+
+    getmymaterialfromid(materialid) {
+
+        const construction = new Construction();
+        let company = construction.getcompany.call(this);
+        let material = false;
+        if (company) {
+            if (company.hasOwnProperty("materials")) {
+                // eslint-disable-next-line
+                company.materials.map(mymaterial => {
+                    if (mymaterial.materialid === materialid) {
+                        material = mymaterial;
+                    }
+                })
+            }
+        }
+        return material;
+    }
+
+
+    getmyaccounts() {
+        const construction = new Construction();
+        let myaccounts = false;
+        const mycompany = construction.getcompany.call(this);
+        if (mycompany) {
+            if (mycompany.hasOwnProperty("accounts")) {
+                myaccounts = mycompany.accounts;
+            }
+        }
+        return myaccounts;
+    }
+
+    touchtoedit() {
+
+        if (this.state.width > 1200) {
+            return ({ width: '80px' })
+        } else {
+            return ({ width: '60px' })
+        }
+    }
+
+    getaccountbyid(accountid) {
+        const construction = new Construction();
+        const myaccounts = construction.getmyaccounts.call(this);
+        let myaccount = false;
+        if (myaccounts.hasOwnProperty("length")) {
+            // eslint-disable-next-line
+            myaccounts.map((account, i) => {
+                if (account.accountid === accountid) {
+                    myaccount = account;
+                }
+            })
+        }
+        return myaccount;
+    }
+
+    getmaterialkeybyid(materialid) {
+        const construction = new Construction();
+        const company = construction.getcompany.call(this);
+        let key = false;
+        if (company) {
+            if (company.hasOwnProperty("materials")) {
+                // eslint-disable-next-line
+                company.materials.map((mymaterial, i) => {
+                    if (mymaterial.materialid === materialid) {
+                        key = i;
+
+                    }
+                })
+            }
+        }
+        return key;
+
+    }
+    getmyprojects() {
+        const construction = new Construction();
+        const company = construction.getcompany.call(this);
+        let projects = false;
+        if (company) {
+            if (company.hasOwnProperty("projects")) {
+                projects = company.projects
+            }
+        }
+        return projects;
+    }
+    getaccountkeybyid(accountid) {
+        const construction = new Construction();
+        const myaccounts = construction.getmyaccounts.call(this);
+        let key = false;
+        if (myaccounts.hasOwnProperty("length")) {
+            // eslint-disable-next-line
+            myaccounts.map((account, i) => {
+                if (account.accountid === accountid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    }
+
+
+    getmyequipment() {
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
+        let equipment = false;
+        if (myuser) {
+            if (myuser.hasOwnProperty("company")) {
+                if (myuser.company.hasOwnProperty("equipment")) {
+                    equipment = myuser.company.equipment;
+                }
+            }
+        }
+        return equipment;
+    }
+
+    getequipmentfromid(equipmentid) {
+        let construction = new Construction();
+        let myequipment = construction.getmyequipment.call(this)
+        let equipment = false;
+        if (myequipment) {
+            // eslint-disable-next-line
+            myequipment.map(equipments => {
+                if (equipments.equipmentid === equipmentid) {
+                    equipment = equipments;
+                }
+            })
+        }
+        return equipment;
+    }
+
+
+    buttonSize() {
+        if (this.state.width > 1200) {
+            return ({ width: '60px' })
+
+        } else if (this.state.width > 600) {
+            return ({ width: '50px' })
+
+        } else {
+            return ({ width: '40px' })
+
+        }
+    }
+
+
+
+
+    getactualmaterialkeybyid(materialid) {
+        const construction = new Construction();
+        let mymaterials = construction.getactualmaterials.call(this)
+        let key = false;
+        if (mymaterials) {
+
+            // eslint-disable-next-line
+            mymaterials.map((mymaterial, i) => {
+                if (mymaterial.materialid === materialid) {
+                    key = i;
+                }
+            })
+
+
+        }
+        return key
+    }
+
+    showsaveproject() {
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
+        const saveprojecticon = construction.getsaveprojecticon.call(this);
+        const styles = MyStylesheet();
+        if (!this.state.spinner) {
+            return (
+                <div style={{ ...styles.generalContainer }}>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.topMargin15, ...styles.bottomMargin15 }}>
+                        {this.state.message}
+                    </div>
+
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                        <button style={{ ...styles.generalButton, ...saveprojecticon }} onClick={() => { construction.savemyproject.call(this) }}>{saveProjectIcon()}</button>
+                    </div>
+                </div>)
+
+        } else {
+            return (<Spinner />)
+        }
+    }
+
+    getbuttonheight() {
+        if (this.state.width > 1200) {
+            return ({ height: '75px' })
+        } else if (this.state.width > 800) {
+            return ({ height: '58px' })
+        } else {
+            return ({ height: '40px' })
+        }
+    }
+
+
+    handlecompanyids(response) {
+        const construction = new Construction();
+        let myuser = construction.getuser.call(this);
+        if (myuser) {
+            if (response.hasOwnProperty("replaceids")) {
+                if (response.replaceids.hasOwnProperty("accounts")) {
+                    // eslint-disable-next-line
+                    response.replaceids.accounts.map(replaceids => {
+
+                        let oldaccountid = replaceids.oldaccountid;
+
+                        let i = construction.getaccountkeybyid.call(this, oldaccountid);
+                        myuser.company.accounts[i].accountid = replaceids.accountid;
+                        if (this.state.activeaccountid === oldaccountid) {
+                            this.setState({ activeaccountid: replaceids.accountid })
+                        }
+                    })
+
+                }
+                if (response.replaceids.hasOwnProperty("mymaterial")) {
+                    // eslint-disable-next-line
+                    response.replaceids.mymaterial.map(material => {
+                        let oldmaterialid = material.oldmaterialid;
+                        let materialid = material.materialid;
+                        let j = construction.getmaterialkeybyid.call(this, oldmaterialid)
+                        myuser.company.materials[j].materialid = material.materialid;
+                        if (this.state.activematerialid === oldmaterialid) {
+                            this.setState({ activematerialid: materialid })
+                        }
+                    })
+
+                }
+                if (response.replaceids.hasOwnProperty("equipment")) {
+                    // eslint-disable-next-line
+                    response.replaceids.equipment.map(equipment => {
+
+                        let oldequipmentid = equipment.oldequipmentid;
+                        let equipmentid = equipment.equipmentid;
+                        let k = construction.getequipmentkeybyid.call(this, oldequipmentid)
+                        myuser.company.equipment[k].equipmentid = equipmentid;
+                        if (this.state.activeequipmentid === oldequipmentid) {
+                            this.setState({ activeequipmentid: equipmentid })
+                        }
+                    })
+
+                }
+
+                if (response.replaceids.hasOwnProperty("costid")) {
+                    // eslint-disable-next-line
+                    response.replaceids.costid.map(cost => {
+                        let oldcostid = cost.oldcostid;
+                        let costid = cost.costid;
+                        let equipmentid = cost.equipmentid;
+                        let l = construction.getequipmentkeybyid.call(this, equipmentid)
+                        let m = construction.getequipmentcostskeybyid.call(this, equipmentid, oldcostid)
+
+                        myuser.company.equipment[l].ownership.cost[m].costid = costid;
+                        if (this.state.activecostid === oldcostid) {
+                            this.setState({ activecostid: costid })
+                        }
+
+                    })
+                }
+                if (response.replaceids.hasOwnProperty("benefits")) {
+                    // eslint-disable-next-line
+                    response.replaceids.benefits.map(benefit => {
+                        let providerid = benefit.providerid;
+                        let oldbenefitid = benefit.oldbenefitid;
+                        let benefitid = benefit.benefitid;
+                        let n = construction.getemployeekeybyid.call(this, providerid);
+                        let o = construction.getbenefitkeybyid.call(this, providerid, oldbenefitid)
+                        myuser.company.employees[n].benefits[o].benefitid = benefitid;
+                        if (this.state.activebenefitid === oldbenefitid) {
+                            this.setState({ activebenefitid: benefitid })
+                        }
+                    })
+                }
+                this.props.reduxUser(myuser)
+            }
+
+        }
+    }
+    validateCompany(params) {
+        let validate = {};
+
+        validate.validate = true;
+        validate.message = '';
+        const company = params.company;
+        const myuser = params.myuser;
+
+        if (myuser.hasOwnProperty("invalid")) {
+            validate.validate = false;
+            validate.message += myuser.invalid;
+        }
+        if (company.hasOwnProperty("equipment")) {
+            // eslint-disable-next-line
+            company.equipment.map(myequipment => {
+                if (!myequipment.accountid) {
+                    validate.validate = false;
+                    validate.message += `${myequipment.equipment} is missing AccountID `
+                }
+
+            })
+        }
+        if (company.hasOwnProperty("materials")) {
+            // eslint-disable-next-line
+            company.materials.map(mymaterial => {
+                if (!mymaterial.accountid) {
+                    validate.validate = false;
+                    validate.message += `${mymaterial.material} is missing AccountID `
+                }
+            })
+        }
+        if (company.hasOwnProperty("employees")) {
+            // eslint-disable-next-line
+            company.employees.map(employee => {
+
+                if (employee.hasOwnProperty("benefits")) {
+                    // eslint-disable-next-line
+                    employee.benefits.map(benefit => {
+                        if (!benefit.accountid) {
+                            validate.validate = false;
+                            validate.message += `${benefit.benefit} is missing AccountID `
+                        }
+                    })
+                }
+            })
+        }
+        return validate;
+
+    }
+
+    getaccounts() {
+        const construction = new Construction();
+        let company = construction.getcompany.call(this);
+        let accounts = false;
+
+        if (company.hasOwnProperty("accounts")) {
+            accounts = company.accounts;
+        }
+
+        return accounts;
+    }
+
+
+    getMaxWidth() {
+        if (this.state.width > 1200) {
+            return ({ maxWidth: '900px' })
+        } else if (this.state.width > 800) {
+            return ({ maxWidth: '600px' })
+        } else {
+            return ({ maxWidth: '400px' })
+        }
+    }
+
+    getemployeebyprofile(profile) {
+        const construction = new Construction()
+        let myemployees = construction.getmyemployees.call(this)
+        let employees = false;
+        if (myemployees) {
+            // eslint-disable-next-line
+            myemployees.map(employee => {
+                if (employee.profile === profile) {
+                    employees = employee;
+                }
+            })
+        }
+        return employees;
+    }
+
+    getemployeekeybyid(providerid) {
+        const construction = new Construction()
+        let myemployees = construction.getmyemployees.call(this)
+        let key = false;
+        if (myemployees) {
+            // eslint-disable-next-line
+            myemployees.map((employee, i) => {
+                if (employee.providerid === providerid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    }
+
+    getbidfield() {
+        if (this.state.width > 1200) {
+            return ({ maxWidth: '100px' })
+
+        } else if (this.state.width > 600) {
+            return ({ maxWidth: '80px' })
+
+        } else {
+
+            return ({ maxWidth: '60px' })
+
+        }
+    }
+
+    getequipmentkeybyid(equipmentid) {
+        const construction = new Construction();
+        let key = false;
+
+        let myequipment = construction.getmyequipment.call(this)
+        // eslint-disable-next-line
+        myequipment.map((equipment, i) => {
+            if (equipment.equipmentid === equipmentid) {
+                key = i;
+            }
+        })
+
+
+        return key;
+    }
+    gettransformedcostsbyequimentid(equipmentid) {
+        const construction = new Construction();
+        const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
+
+        let costarray = [];
+        if (equipment) {
+
+            if (equipment.hasOwnProperty("ownership")) {
+                const purchase = Number(equipment.ownership.purchase);
+                const purchasedate = equipment.ownership.purchasedate;
+                const salvage = Number(equipment.ownership.resalevalue);
+                const saledate = equipment.ownership.saledate;
+                const apr = Number(equipment.ownership.loaninterest);
+                // validate
+                const validate = validateLoanPayment(purchase, purchasedate, salvage, saledate, apr)
+                let payments = [];
+                if (validate) {
+
+                    payments = getRepaymentCosts(purchase, purchasedate, salvage, saledate, apr);
+                    costarray = [...costarray, ...payments]
+
+                } else if (purchase && !apr) {
+
+                    payments = getInterval(saledate, purchasedate, 'monthly', ((purchase - salvage) / calculateTotalMonths(purchasedate, saledate)), 'ownership')
+                    costarray = [...costarray, ...payments]
+
+                }
+
+
+                if (equipment.ownership.hasOwnProperty("cost")) {
+
+                    // eslint-disable-next-line
+                    equipment.ownership.cost.map(cost => {
+
+
+                        if (cost.hasOwnProperty("reoccurring")) {
+
+
+
+                            if (equipment.hasOwnProperty("ownership")) {
+
+
+                                const reoccurringcosts = getInterval(equipment.ownership.saledate, equipment.ownership.purchasedate, cost.reoccurring.frequency, cost.cost, cost.detail)
+
+                                costarray = [...costarray, ...reoccurringcosts]
+
+                            }
+
+
+                        } else {
+
+                            costarray.push(newCost(cost.costid, cost.detail, cost.purchasedate, cost.cost))
+
+                        }
+
+
+                    })
+
+
+
+
                 }
 
             }
+
+            //
+
+        }
+        return costarray;
+    }
+
+    async saveCompany() {
+        const construction = new Construction()
+        const myuser = construction.getuser.call(this);
+        if (myuser) {
+            const checkmanager = construction.checkmanager.call(this, myuser.getemployeebyproviderid);
+            if (checkmanager) {
+                let params = construction.getCompanyParams.call(this)
+
+                const validate = construction.validateCompany(params);
+                if (validate.validate) {
+                    try {
+                        this.setState({ spinner: true })
+                        let response = await SaveCompany(params);
+                        console.log(response)
+                        construction.handlecompanyids.call(this, response)
+                     
+                        if (response.hasOwnProperty("myuser")) {
+                            this.props.reduxUser(response.myuser)
+                        }
+                        let message = "";
+                        if (response.hasOwnProperty("message")) {
+                            let dateupdated = formatTimeString(convertUTCTime(response.lastupdated))
+                            message = `${response.message} Last Updated ${dateupdated}`
+                        }
+                        this.setState({ message, spinner: false })
+
+                    } catch (err) {
+                        alert(err)
+                        this.setState({ spinner: false })
+                    }
+                } else {
+                    this.setState({ message: validate.message })
+                }
+
+            } else {
+                alert(`Only Managers have access to this function `)
+            }
+
+        }
+    }
+    async savemyprofile() {
+        try {
+            let construction = new Construction();
+            let myuser = construction.getuser.call(this)
+            let user = { providerid: myuser.providerid, firstname: myuser.firstname, lastname: myuser.lastname, emailaddress: myuser.emailaddress, phonenumber: myuser.phonenumber, profileurl: myuser.profileurl, profile: myuser.profile }
+            this.setState({ spinner: true })
+            let response = await SaveProfile({ myuser: user })
+            console.log(response)
+         
+            if (response.hasOwnProperty("myuser")) {
+
+                this.props.reduxUser(response.myuser)
+            }
+
+            let message = "";
+            if (response.hasOwnProperty("message")) {
+                let lastupdated = formatTimeString(convertUTCTime(response.lastupdated))
+                message = `${response.message} Last updated ${lastupdated}`
+
+            }
+            this.setState({ message, spinner: false })
+
+        } catch (err) {
+            alert(err)
+            this.setState({ spinner: false })
         }
 
     }
-    createcsi() {
-        const dynamicstyles = new DynamicStyles();
+
+    getRegularFont() {
         const styles = MyStylesheet();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        const myuser =dynamicstyles.getuser.call(this)
-        if(myuser) {
-        return (<div style={{ ...styles.generalContainer }}>
-            <div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont }}>
-                Create A Construction Specification (xx xx xx)
-                    </div>
-
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
-                        value={this.getcsi_1()}
-                        onChange={event => { this.handlecsi_1(event.target.value) }}
-                    />
-                </div>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
-                        value={this.getcsi_2()}
-                        onChange={event => { this.handlecsi_2(event.target.value) }}
-                    />
-                </div>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                    <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
-                        value={this.getcsi_3()}
-                        onChange={event => { this.handlecsi_3(event.target.value) }} />
-                </div>
-            </div>
-
-
-            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                Title  <input type="text"
-                    value={this.getcsititle()}
-                    onChange={event => { this.handlecsititle(event.target.value) }}
-                    style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin15 }} />
-            </div>
-        </div>)
-
+        if (this.state.width > 1200) {
+            return (styles.font30)
+        }
+        if (this.state.width > 800) {
+            return (styles.font24)
         } else {
-            return(<div style={{...styles.generalContainer,...regularFont}}>
-                <span style={{...styles.generalFont,...regularFont}}>Please Login to View Construction </span>
-            </div>)
+            return (styles.font20)
         }
+
     }
-    render() {
+
+    getHeaderFont() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const titleFont = dynamicstyles.gettitlefont.call(this);
-        const csi = new CSI();
+        if (this.state.width > 1200) {
+            return (styles.font40)
+        } else if (this.state.wisth > 800) {
+            return (styles.font30)
+        } else {
+            return (styles.font24)
+        }
 
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
-
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.alignCenter, ...titleFont, ...styles.fontBold }}>
-                            /{this.props.match.params.companyid}/construction
-                        </div>
-                    </div>
-
-
-                    {csi.showCSI.call(this)}
-
-
-
-
-
-                    {dynamicstyles.showsavecompany.call(this)}
-
-                </div>
-            </div>
-        )
     }
+
+
 }
 
-function mapStateToProps(state) {
-    return {
-        myusermodel: state.myusermodel,
-        navigation: state.navigation,
-        csis:state.csis
-    }
-}
-
-export default connect(mapStateToProps, actions)(Construction);
+export default Construction

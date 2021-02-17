@@ -5,11 +5,11 @@ class MilestoneID {
 
     loadmilestoneids() {
         const dynamicstyles = new DynamicStyles();
-        let myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        let myproject = dynamicstyles.getproject.call(this)
         let options = [];
-        if (myproject.hasOwnProperty("projectmilestones")) {
+        if (myproject.hasOwnProperty("milestones")) {
             // eslint-disable-next-line
-            myproject.projectmilestones.mymilestone.map(mymilestone => {
+            myproject.milestones.map(mymilestone => {
                 options.push(<option
                     key={mymilestone.milestoneid}
                     value={mymilestone.milestoneid}>{mymilestone.milestone}</option>)

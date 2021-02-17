@@ -1,6 +1,6 @@
 import React from 'react';
 import { MyStylesheet } from './styles';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { goCheckIcon } from './svg'
 import { CheckEmailAddress } from './actions/api'
 import { validateEmail } from './functions'
@@ -52,9 +52,9 @@ class EmailAddress {
 
     showemailaddress() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
-        const goIcon = dynamicstyles.getgocheckheight.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
+        const goIcon = construction.getgocheckheight.call(this)
         const emailaddress = new EmailAddress();
         const goCheck = () => {
             if (this.state.emailaddress && this.state.emailaddresscheck) {

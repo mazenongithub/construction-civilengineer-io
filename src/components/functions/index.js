@@ -1129,81 +1129,65 @@ export function updateTimes(response) {
         if (response.myuser.hasOwnProperty("company")) {
             if (response.myuser.company.hasOwnProperty("projects")) {
                 // eslint-disable-next-line
-                response.myuser.company.projects.myproject.map((project, i) => {
-                    if (project.hasOwnProperty("schedulelabor")) {
-                        // eslint-disable-next-line
-                        project.schedulelabor.mylabor.map((mylabor, j) => {
+                response.myuser.company.projects.map((project, i) => {
 
-                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timein = convertUTCTime(mylabor.timein)
-                            response.myuser.company.projects.myproject[i].schedulelabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout)
-                        })
-                    }
+                    if (project.hasOwnProperty("schedule")) {
 
-                    if (project.hasOwnProperty("scheduleequipment")) {
-                        // eslint-disable-next-line
-                        project.scheduleequipment.myequipment.map((myequipment, j) => {
+                        response.myuser.company.projects[i].schedule.updated = convertUTCTime(project.schedule.updated);
+                        response.myuser.company.projects[i].schedule.approved = convertUTCTime(project.schedule.approved);
 
-                            response.myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timein = convertUTCTime(myequipment.timein)
-                            response.myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = convertUTCTime(myequipment.timeout)
-                        })
-                    }
+                        if (project.schedule.hasOwnProperty("labor")) {
+                            // eslint-disable-next-line
+                            project.schedule.labor.map((mylabor, j) => {
 
-                    if (project.hasOwnProperty("actuallabor")) {
-                        // eslint-disable-next-line
-                        project.actuallabor.mylabor.map((mylabor, j) => {
+                                response.myuser.company.projects[i].schedule.labor[j].timein = convertUTCTime(mylabor.timein)
+                                response.myuser.company.projects[i].schedule.labor[j].timeout = convertUTCTime(mylabor.timeout)
+                            })
+                        }
 
-                            response.myuser.company.projects.myproject[i].actuallabor.mylabor[j].timein = convertUTCTime(mylabor.timein)
-                            response.myuser.company.projects.myproject[i].actuallabor.mylabor[j].timeout = convertUTCTime(mylabor.timeout)
-                        })
-                    }
+                        if (project.schedule.hasOwnProperty("equipment")) {
+                            // eslint-disable-next-line
+                            project.schedule.equipment.map((myequipment, j) => {
 
-                    if (project.hasOwnProperty("actualequipment")) {
-                        // eslint-disable-next-line
-                        project.actualequipment.myequipment.map((myequipment, j) => {
-
-                            response.myuser.company.projects.myproject[i].actualequipment.myequipment[j].timein = convertUTCTime(myequipment.timein)
-                            response.myuser.company.projects.myproject[i].actualequipment.myequipment[j].timeout = convertUTCTime(myequipment.timeout)
-                        })
-                    }
-
-                    if (project.hasOwnProperty("proposals")) {
-
-                        // eslint-disable-next-line
-                        project.proposals.myproposal.map((proposal, j) => {
-
-                            let updated = response.myuser.company.projects.myproject[i].proposals.myproposal[j].updated
-                            let approved = response.myuser.company.projects.myproject[i].proposals.myproposal[j].approved;
-                            if (updated) {
-                                response.myuser.company.projects.myproject[i].proposals.myproposal[j].updated = convertUTCTime(proposal.updated)
-                            }
-                            if (approved) {
-                                response.myuser.company.projects.myproject[i].proposals.myproposal[j].approved = convertUTCTime(proposal.approved)
-                            }
-
-                        })
+                                response.myuser.company.projects[i].schedule.equipment[j].timein = convertUTCTime(myequipment.timein)
+                                response.myuser.company.projects[i].schedule.equipment[j].timeout = convertUTCTime(myequipment.timeout)
+                            })
+                        }
 
                     }
 
-                    if (project.hasOwnProperty("invoices")) {
+                    if (project.hasOwnProperty("actual")) {
+                        response.myuser.company.projects[i].actual.updated = convertUTCTime(project.actual.updated);
+                        response.myuser.company.projects[i].actual.approved = convertUTCTime(project.actual.approved);
 
-                        // eslint-disable-next-line
-                        project.invoices.myinvoice.map((invoice, j) => {
-                            let updated = response.myuser.company.projects.myproject[i].invoices.myinvoice[j].updated
-                            let approved = response.myuser.company.projects.myproject[i].invoices.myinvoice[j].approved
-                            if (updated) {
+                        if (project.actual.hasOwnProperty("labor")) {
+                            // eslint-disable-next-line
+                            project.actual.labor.map((mylabor, j) => {
 
-                                response.myuser.company.projects.myproject[i].invoices.myinvoice[j].updated = convertUTCTime(invoice.updated)
-                            }
-                            if (approved) {
-                                response.myuser.company.projects.myproject[i].invoices.myinvoice[j].approved = convertUTCTime(invoice.approved)
-                            }
+                                response.myuser.company.projects[i].actual.labor[j].timein = convertUTCTime(mylabor.timein)
+                                response.myuser.company.projects[i].actual.labor[j].timeout = convertUTCTime(mylabor.timeout)
+                            })
+                        }
 
-                        })
+                        if (project.actual.hasOwnProperty("equipment")) {
+
+                            // eslint-disable-next-line
+                            project.actual.equipment.map((myequipment, j) => {
+
+                                response.myuser.company.projects[i].actual.equipment[j].timein = convertUTCTime(myequipment.timein)
+                                response.myuser.company.projects[i].actual.equipment[j].timeout = convertUTCTime(myequipment.timeout)
+                            })
+                        }
+
+
 
                     }
+
+
 
 
                 })
+
             }
         }
     }
@@ -1211,6 +1195,7 @@ export function updateTimes(response) {
 }
 
 export function convertUTCTime(timein) {
+    if(timein) {
 
     let datein = new Date(`${timein.replace(/-/g, '/')} UTC`)
     const year = datein.getFullYear();
@@ -1222,6 +1207,7 @@ export function convertUTCTime(timein) {
     const offset = getOffsetTime(`${year}/${month}/${day} ${hours}:${minutes}:${seconds}`)
 
     return (`${year}/${month}/${day} ${hours}:${minutes}:${seconds}${offset}`)
+    } 
 
 }
 
@@ -2065,7 +2051,7 @@ export function DirectCostForLabor(item) {
 }
 export function DirectCostForEquipment(item) {
 
-    return (Number((item.timeout, item.timein)) * Number(item.equipmentrate))
+    return (Number(calculatetotalhours(item.timeout, item.timein)) * Number(item.equipmentrate))
 }
 export function ProfitForEquipment(item) {
 

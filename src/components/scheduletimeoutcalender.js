@@ -1,5 +1,5 @@
 import React from 'react';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { MyStylesheet } from './styles';
 import { removeIconSmall, dropDateIcon } from './svg';
 import { makeTimeString, monthstring, getFirstIsOnTime, check_29_feb_leapyear_time, check_30_time, check_31_time, UTCTimeStringfromTime, getDayString, trailingZeros } from './functions'
@@ -17,9 +17,9 @@ class CalenderTimeOut {
 
     showicon() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const removeIcon = dynamicstyles.getremoveicon.call(this);
-        const dropIcon = dynamicstyles.getdropicon.call(this)
+        const construction = new Construction();
+        const removeIcon = construction.getremoveicon.call(this);
+        const dropIcon = construction.getdropicon.call(this)
         if (this.state.calendertimeout) {
             return (
                 <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.setState({ calendertimeout: false }) }}>{removeIconSmall()} </button>
@@ -32,8 +32,8 @@ class CalenderTimeOut {
 
     }
     showlabel() {
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this);
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this);
         const styles = MyStylesheet();
         if (this.state.calendertimeout) {
             let day = trailingZeros(this.state.timeoutday);
@@ -67,8 +67,8 @@ class CalenderTimeOut {
 
     showCalender() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this);
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this);
         const calendertimeout = new CalenderTimeOut();
         let day = trailingZeros(this.state.timeoutday);
         let year = this.state.timeoutyear;

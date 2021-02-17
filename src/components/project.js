@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { Link } from 'react-router-dom';
-import DynamicStyles from './dynamicstyles'
+import Construction from './construction'
 class Project extends Component {
     constructor(props) {
         super(props);
@@ -14,8 +14,8 @@ class Project extends Component {
         window.addEventListener('resize', this.updateWindowDimensions);
 
         this.updateWindowDimensions();
-        const dynamicstyles = new DynamicStyles();
-        const myproject = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const construction = new Construction();
+        const myproject = construction.getprojectbytitle.call(this, this.props.match.params.projectid)
         if (myproject) {
 
             this.props.reduxProject({ projectid: myproject.projectid })
@@ -55,8 +55,8 @@ class Project extends Component {
 
                         <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                    /proposals
+                                <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                    /bidschedule
                                     </Link>
                             </div>
                         </div>
@@ -87,8 +87,8 @@ class Project extends Component {
 
                         <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                    /invoices
+                                <Link to={`/${providerid}/company/${companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                    /bid
                                     </Link>
                             </div>
                         </div>
@@ -124,8 +124,8 @@ class Project extends Component {
 
     }
     getproject() {
-        const dynamicstyles = new DynamicStyles();
-        return dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
+        const construction = new Construction();
+        return construction.getprojectbytitle.call(this, this.props.match.params.projectid)
 
     }
     gettitle() {
@@ -152,10 +152,10 @@ class Project extends Component {
 
     render() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
-        const myuser = dynamicstyles.getuser.call(this)
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
+        const myuser = construction.getuser.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
         if (myuser) {
             const project = this.getproject()
             if (project) {
@@ -201,20 +201,13 @@ class Project extends Component {
 
                                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                            <Link to={`/${myuser.profile}/company/${myuser.company.url}/projects/${projectid}/proposals`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                                /proposals
+                                            <Link to={`/${myuser.profile}/company/${myuser.company.url}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                                /bidschedule
                                     </Link>
                                         </div>
                                     </div>
-                                    
-                                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                            <Link to={`/${myuser.profile}/company/${myuser.company.url}/projects/${projectid}/estimate`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                                /estimate
-                                            </Link>
-                                        </div>
-                                    </div>
 
+                    
 
 
 
@@ -234,20 +227,13 @@ class Project extends Component {
 
                                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                         <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                            <Link to={`/${myuser.profile}/company/${myuser.company.url}/projects/${projectid}/invoices`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                                /invoices
+                                            <Link to={`/${myuser.profile}/company/${myuser.company.url}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                                /bid
                                     </Link>
                                         </div>
                                     </div>
 
-                                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-
-                                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                            <Link to={`/${myuser.profile}/company/${myuser.company.url}/projects/${projectid}/milestones`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
-                                                /milestones
-                                    </Link>
-                                        </div>
-                                    </div>
+                
 
                                 </div>
                             </div>

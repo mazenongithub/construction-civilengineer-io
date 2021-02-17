@@ -1,6 +1,6 @@
 import React from 'react';
 import { MyStylesheet } from './styles'
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import MaterialCalender from './equipmentdatecalender'
 import { validateMonth, validateDate, validateYear, trailingZeros } from './functions';
 
@@ -10,12 +10,11 @@ class EquipmentDate {
 
     handleyear(year) {
         this.setState({ equipmentdateyear: year })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
-            const checkmanager = dynamicstyles.checkmanager.call(this)
-            if (checkmanager) {
+        
 
                 if (year.length === 4) {
 
@@ -23,14 +22,14 @@ class EquipmentDate {
 
 
                         if (this.state.activeequipmentid) {
-                            const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+                            const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid);
                             if (myequipment) {
 
-                                const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                                const i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
                                 if (this.state.activecostid) {
-                                    const cost = dynamicstyles.getcostbyid.call(this, myequipment.equipmentid, this.state.activecostid)
+                                    const cost = construction.getcostbyid.call(this, myequipment.equipmentid, this.state.activecostid)
                                     if (cost) {
-                                        const j = dynamicstyles.getequipmentcostskeybyid.call(this, myequipment.equipmentid, cost.costid)
+                                        const j = construction.getequipmentcostskeybyid.call(this, myequipment.equipmentid, cost.costid)
                                         let day = this.state.equipmentdateday;
                                         let month = this.state.equipmentdatemonth;
                                         const timein = `${year}-${month}-${day}`
@@ -58,31 +57,28 @@ class EquipmentDate {
 
                 }
 
-            } else {
-                alert(`Only Managers can modify equipment year `)
-            }
+           
         }
     }
 
     handleday(day) {
         day = day.toString();
         this.setState({ equipmentdateday: day })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
-            const checkmanager = dynamicstyles.checkmanager.call(this)
-            if (checkmanager) {
+        
 
                 if (this.state.activeequipmentid) {
-                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+                    const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid);
                     if (myequipment) {
 
-                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                        const i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
                         if (this.state.activecostid) {
-                            const cost = dynamicstyles.getcostbyid.call(this, myequipment.equipmentid, this.state.activecostid)
+                            const cost = construction.getcostbyid.call(this, myequipment.equipmentid, this.state.activecostid)
                             if (cost) {
-                                const j = dynamicstyles.getequipmentcostskeybyid.call(this, myequipment.equipmentid, cost.costid)
+                                const j = construction.getequipmentcostskeybyid.call(this, myequipment.equipmentid, cost.costid)
 
                                 if (day.length === 2) {
 
@@ -129,31 +125,28 @@ class EquipmentDate {
                 }
 
 
-            } else {
-                alert(`Only managers can modify equipment day `)
-            }
+          
 
         }
     }
 
     handlemonth(month) {
         this.setState({ equipmentdatemonth: month })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
         if (myuser) {
 
-            const checkmanager = dynamicstyles.checkmanager.call(this)
-            if (checkmanager) {
+         
 
                 if (this.state.activeequipmentid) {
-                    const myequipment = dynamicstyles.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+                    const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid);
                     if (myequipment) {
 
-                        const i = dynamicstyles.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                        const i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
                         if (this.state.activecostid) {
-                            const cost = dynamicstyles.getcostbyid.call(this, myequipment.equipmentid, this.state.activecostid)
+                            const cost = construction.getcostbyid.call(this, myequipment.equipmentid, this.state.activecostid)
                             if (cost) {
-                                const j = dynamicstyles.getequipmentcostskeybyid.call(this, myequipment.equipmentid, cost.costid)
+                                const j = construction.getequipmentcostskeybyid.call(this, myequipment.equipmentid, cost.costid)
 
                                 if (month.length === 2) {
 
@@ -199,9 +192,6 @@ class EquipmentDate {
 
                 }
 
-            } else {
-                alert(`Only managers can update equipment month `)
-            }
 
 
         }
@@ -213,9 +203,9 @@ class EquipmentDate {
 
     showequipmentdate() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const equipmentdate = new EquipmentDate();
         const calender = new MaterialCalender();
         return (

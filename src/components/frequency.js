@@ -1,5 +1,5 @@
 import React from 'react'
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { MyStylesheet } from './styles'
 
 class Frequency {
@@ -7,8 +7,8 @@ class Frequency {
 
     showFrequency() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
         return(
             <div style={{...styles.generalContainer, ...styles.bottomMargin15}}>
         <select style={{ ...styles.generalField, ...regularFont, ...styles.generalFont }}

@@ -2,26 +2,26 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { StripeConnect } from './actions/api'
-import { inputUTCStringForLaborID, calculatetotalhours, sorttimes} from './functions'
+import { inputUTCStringForLaborID, calculatetotalhours, sorttimes } from './functions'
 import { Link } from 'react-router-dom';
 
 class ViewAccount extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, stripeconnect:false }
+        this.state = { render: '', width: 0, height: 0, stripeconnect: false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
 
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        const dynamicstyles = new DynamicStyles();
-        const csicodes = dynamicstyles.getcsis.call(this)
+        const construction = new Construction();
+        const csicodes = construction.getcsis.call(this)
         if (!csicodes) {
-            dynamicstyles.loadcsis.call(this)
+            construction.loadcsis.call(this)
         }
 
 
@@ -37,9 +37,9 @@ class ViewAccount extends Component {
     }
     checklaborid(providerid) {
         let accountid = this.props.match.params.accountid;
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let check = false;
-        const benefits = dynamicstyles.getemployeebenefitsbyid.call(this, providerid)
+        const benefits = construction.getemployeebenefitsbyid.call(this, providerid)
         if (benefits) {
             // eslint-disable-next-line
             benefits.map(benefit => {
@@ -54,10 +54,10 @@ class ViewAccount extends Component {
 
 
     checkmaterialid(mymaterialid) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         let check = false;
         const accountid = this.props.match.params.accountid;
-        const mymaterial = dynamicstyles.getmymaterialfromid.call(this, mymaterialid)
+        const mymaterial = construction.getmymaterialfromid.call(this, mymaterialid)
         if (mymaterial) {
             if (mymaterial.accountid === accountid) {
                 check = true;
@@ -69,8 +69,8 @@ class ViewAccount extends Component {
     }
 
     checkequipmentid(equipmentid) {
-        const dynamicstyles = new DynamicStyles();
-        const myequipment = dynamicstyles.getmyequipmentbyid.call(this, equipmentid)
+        const construction = new Construction();
+        const myequipment = construction.getmyequipmentbyid.call(this, equipmentid)
         const accountid = this.props.match.params.accountid;
         let check = false;
         if (myequipment) {
@@ -82,7 +82,7 @@ class ViewAccount extends Component {
     }
 
     getallitems() {
-        const dynamicstyles = new DynamicStyles()
+        const construction = new Construction()
         let items = [];
         const workItem = (itemid, timein, csiid, type, amount) => {
             return ({ itemid, timein, csiid, type, amount })
@@ -101,94 +101,97 @@ class ViewAccount extends Component {
         const addRunningBalance = (items) => {
             let runningbalance = 0;
             // eslint-disable-next-line
-            items.map((item,i)=> {
-                if(item.type === 'transfer') {
+            items.map((item, i) => {
+                if (item.type === 'transfer') {
                     runningbalance -= Number(item.amount)
                 } else {
-                    runningbalance +=Number(item.amount)
+                    runningbalance += Number(item.amount)
                 }
                 items[i].runningbalance = runningbalance;
-                
+
             })
             return items;
         }
-        const myprojects = dynamicstyles.getprojects.call(this)
+        const myprojects = construction.getprojects.call(this)
         if (myprojects) {
-// eslint-disable-next-line
+            // eslint-disable-next-line
             myprojects.map(project => {
 
 
+                if (project.hasOwnProperty("actual")) {
+                    if (project.actual.hasOwnProperty("labor")) {
+                        // eslint-disable-next-line
+                        project.actual.labor.map(mylabor => {
 
-                if (project.hasOwnProperty("actuallabor")) {
-                    // eslint-disable-next-line
-                    project.actuallabor.mylabor.map(mylabor => {
+                            if (this.checklaborid(mylabor.providerid)) {
 
-                        if (this.checklaborid(mylabor.providerid)) {
+                                let amount = calculatetotalhours(mylabor.timeout, mylabor.timein) * Number(mylabor.laborrate) * (1 + (Number(mylabor.profit) / 100))
+                                items.push(workItem(mylabor.laborid, mylabor.timein, mylabor.csiid, 'labor', amount))
 
-                            let amount = calculatetotalhours(mylabor.timeout, mylabor.timein) * Number(mylabor.laborrate) * (1 + (Number(mylabor.profit) / 100))
-                            items.push(workItem(mylabor.laborid, mylabor.timein, mylabor.csiid, 'labor', amount))
+                                if (mylabor.hasOwnProperty("actualtransfers")) {
+                                    // eslint-disable-next-line
+                                    mylabor.actualtransfers.map(transfer => {
 
-                            if (mylabor.hasOwnProperty("actualtransfers")) {
-                                // eslint-disable-next-line
-                                mylabor.actualtransfers.map(transfer => {
+                                        items.push(workItem(transfer.transferid, transfer.created, mylabor.csiid, 'transfer', transfer.amount))
+                                    })
+                                }
 
-                                    items.push(workItem(transfer.transferid, transfer.created, mylabor.csiid, 'transfer', transfer.amount))
-                                })
+
+                            }
+
+                        })
+
+                    }
+
+
+
+                    if (project.actual.hasOwnProperty("materials")) {
+                        // eslint-disable-next-line
+                        project.actual.materials.map(mymaterial => {
+
+                            if (this.checkmaterialid(mymaterial.mymaterialid)) {
+
+                                let amount = Number(mymaterial.quantity) * Number(mymaterial.unitcost) * (1 + (Number(mymaterial.profit) / 100))
+                                items.push(workItem(mymaterial.materialid, mymaterial.timein, mymaterial.csiid, 'material', amount))
+
+                                if (mymaterial.hasOwnProperty("actualtransfers")) {
+                                    // eslint-disable-next-line
+                                    mymaterial.actualtransfers.map(transfer => {
+
+                                        items.push(workItem(transfer.transferid, transfer.created, mymaterial.csiid, 'transfer', transfer.amount))
+                                    })
+                                }
+
+                            }
+
+                        })
+
+                    }
+
+                    if (project.actual.hasOwnProperty("equipment")) {
+                        // eslint-disable-next-line
+                        project.actual.equipment.map(myequipment => {
+
+                            if (this.checkequipmentid(myequipment.myequipmentid)) {
+
+                                let amount = calculatetotalhours(myequipment.timeout, myequipment.timein) * Number(myequipment.equipmentrate) * (1 + (Number(myequipment.profit) / 100))
+                                items.push(workItem(myequipment.equipmentid, myequipment.timein, myequipment.csiid, 'equipment', amount))
+
+                                if (myequipment.hasOwnProperty("actualtransfers")) {
+                                    // eslint-disable-next-line
+                                    myequipment.actualtransfers.map(transfer => {
+
+                                        items.push(workItem(transfer.transferid, transfer.created, myequipment.csiid, 'transfer', transfer.amount))
+                                    })
+                                }
+
                             }
 
 
-                        }
-
-                    })
-
-                }
+                        })
+                    }
 
 
-
-                if (project.hasOwnProperty("actualmaterials")) {
-                    // eslint-disable-next-line
-                    project.actualmaterials.mymaterial.map(mymaterial => {
-
-                        if (this.checkmaterialid(mymaterial.mymaterialid)) {
-
-                            let amount = Number(mymaterial.quantity) * Number(mymaterial.unitcost) * (1 + (Number(mymaterial.profit) / 100))
-                            items.push(workItem(mymaterial.materialid, mymaterial.timein, mymaterial.csiid, 'material', amount))
-
-                            if (mymaterial.hasOwnProperty("actualtransfers")) {
-                                // eslint-disable-next-line
-                                mymaterial.actualtransfers.map(transfer => {
-
-                                    items.push(workItem(transfer.transferid, transfer.created, mymaterial.csiid, 'transfer', transfer.amount))
-                                })
-                            }
-
-                        }
-
-                    })
-
-                }
-
-                if (project.hasOwnProperty("actualequipment")) {
-// eslint-disable-next-line
-                    project.actualequipment.myequipment.map(myequipment => {
-
-                        if (this.checkequipmentid(myequipment.myequipmentid)) {
-
-                            let amount = calculatetotalhours(myequipment.timeout, myequipment.timein) * Number(myequipment.equipmentrate) * (1 + (Number(myequipment.profit) / 100))
-                            items.push(workItem(myequipment.equipmentid, myequipment.timein, myequipment.csiid, 'equipment', amount))
-
-                            if (myequipment.hasOwnProperty("actualtransfers")) {
-                                // eslint-disable-next-line
-                                myequipment.actualtransfers.map(transfer => {
-
-                                    items.push(workItem(transfer.transferid, transfer.created, myequipment.csiid, 'transfer', transfer.amount))
-                                })
-                            }
-
-                        }
-
-
-                    })
                 }
 
 
@@ -209,26 +212,26 @@ class ViewAccount extends Component {
     }
 
     async loadstripeconnect(myuser, stripe) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
 
         try {
 
             let response = await StripeConnect(stripe)
             console.log(response)
-            let i = dynamicstyles.getaccountkeybyid.call(this, this.props.match.params.accountid)
+            let i = construction.getaccountkeybyid.call(this, this.props.match.params.accountid)
             if (response.url) {
-                myuser.company.office.accounts.account[i].stripedashboard = response.url;
+                myuser.company.accounts[i].stripedashboard = response.url;
                 this.props.reduxUser(myuser)
-                this.setState({ stripeconnect:true })
+                this.setState({ stripeconnect: true })
 
             } else {
-                this.setState({ stripeconnect:true })
+                this.setState({ stripeconnect: true })
 
             }
 
 
         } catch (err) {
-            this.setState({stripeconnect:true})
+            this.setState({ stripeconnect: true })
             alert(err)
         }
 
@@ -237,8 +240,8 @@ class ViewAccount extends Component {
 
     default() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
         return (<div style={{ ...styles.generalContainer }}>
             <span style={{ ...styles.generalFont, ...regularFont }}>
                 Please Login to View Account
@@ -247,9 +250,9 @@ class ViewAccount extends Component {
     }
     showitem(item) {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const csi = dynamicstyles.getcsibyid.call(this, item.csiid)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const csi = construction.getcsibyid.call(this, item.csiid)
+        const regularFont = construction.getRegularFont.call(this)
 
         const showamount = (item) => {
             if (item.type === 'transfer') {
@@ -260,9 +263,9 @@ class ViewAccount extends Component {
             }
         }
 
-        const transferitem =(item) => {
+        const transferitem = (item) => {
             let transfer = "";
-            if(item.type === 'transfer') {
+            if (item.type === 'transfer') {
                 transfer = `(transfer)`
             }
             return transfer;
@@ -318,20 +321,20 @@ class ViewAccount extends Component {
 
 
     render() {
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const myuser = construction.getuser.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const styles = MyStylesheet();
         const items = this.getallitems();
         console.log(items)
         if (myuser) {
             if (myuser.hasOwnProperty("company")) {
 
-                if (myuser.company.office.hasOwnProperty("accounts")) {
+                if (myuser.company.hasOwnProperty("accounts")) {
 
                     const accountid = this.props.match.params.accountid;
-                    const account = dynamicstyles.getaccountbyid.call(this, accountid)
+                    const account = construction.getaccountbyid.call(this, accountid)
                     if (account.stripe && !account.stripedashboard && !this.state.stripeconnect) {
                         this.loadstripeconnect(myuser, account.stripe)
 
@@ -342,7 +345,7 @@ class ViewAccount extends Component {
                             if (account.stripedashboard) {
                                 return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
 
-                                        <span style={{...styles.generalFont,...styles.boldFont,...headerFont}}>Account Status</span> <br/>
+                                    <span style={{ ...styles.generalFont, ...styles.boldFont, ...headerFont }}>Account Status</span> <br />
 
                                     <a style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink, ...styles.blueLink }}
                                         href={account.stripedashboard}>{account.stripedashboard}</a>
@@ -351,7 +354,7 @@ class ViewAccount extends Component {
                             } else {
                                 return (
                                     <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                                    <span style={{...styles.generalFont,...styles.boldFont,...headerFont}}>Account Status</span> <br/>
+                                        <span style={{ ...styles.generalFont, ...styles.boldFont, ...headerFont }}>Account Status</span> <br />
                                         <a style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink, ...styles.blueLink }}
                                             href={`https://connect.stripe.com/express/oauth/authorize?response_type=code&redirect_uri=${process.env.REACT_APP_SERVER_API}/construction/stripe/accounts&client_id=${process.env.REACT_APP_STRIPE_CONNECT}&state=${this.props.match.params.accountid}&scope=read_write`}>Connect Your Account to Stripe To Get Started and Accept Payments</a>
                                     </div>)
@@ -361,29 +364,29 @@ class ViewAccount extends Component {
                         return (
 
                             <div style={{ ...styles.generalContainer }}>
-                            
 
-                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                to={`/${myuser.profile}/company/${myuser.company.companyid}/accounts`}
-                            > /accounts</Link>
-                        </div>
 
-                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                to={`/${myuser.profile}/company/${myuser.company.companyid}/accounts/${account.accountid}`}
-                            > /{account.accountname}</Link>
-                        </div>
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/accounts`}
+                                    > /accounts</Link>
+                                </div>
+
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/accounts/${account.accountid}`}
+                                    > /{account.accountname}</Link>
+                                </div>
 
 
                                 {stripeconnect(account)}
 
-                                <div style={{...styles.generalContainer}}>
-                                <span style={{...styles.generalFont,...styles.boldFont,...headerFont}}>Account Summary </span> <br/>
-                                {this.showallworkitems()}
+                                <div style={{ ...styles.generalContainer }}>
+                                    <span style={{ ...styles.generalFont, ...styles.boldFont, ...headerFont }}>Account Summary </span> <br />
+                                    {this.showallworkitems()}
                                 </div>
 
-                               
+
 
 
 
