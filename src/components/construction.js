@@ -887,6 +887,164 @@ class Construction {
 
     }
 
+    validateProject(project) {      
+        let message = "";
+        if(project.hasOwnProperty("schedule")) {
+
+        if (project.schedule.hasOwnProperty("labor")) {
+          
+                // eslint-disable-next-line
+                project.schedule.labor.map(mylabor => {
+                    if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
+                        ;
+                        if (!mylabor.csiid) {
+                            message += `Schedule labor ${mylabor.laborid} is missing CSIID `
+                        }
+                        if (!mylabor.milestoneid) {
+                            message += `Schedule labor ${mylabor.laborid} is missing MilestoneID `
+                        }
+                        if (!mylabor.providerid) {
+                            message += `Schedule labor ${mylabor.laborid} is missing ProviderID `
+                        }
+
+                    }
+                })
+
+            
+        }
+
+        if (project.schedule.hasOwnProperty("equipment")) {
+
+        
+                // eslint-disable-next-line
+                project.schedule.equipment.map(equipment => {
+                    if (!equipment.csiid || !equipment.milestoneid || !equipment.myequipment) {
+                        
+                        if (!equipment.csiid) {
+                            message += `Schedule Equipment ${equipment.equipmentid} is missing CSIID `
+                        }
+                        if (!equipment.milestoneid) {
+                            message += `Schedule Equipment ${equipment.equipmentid} is missing MilestoneID `
+                        }
+                        if (!equipment.myequipmentid) {
+                            message += `Schedule Equipment ${equipment.equipmentid} is missing Equipment `
+                        }
+
+                    }
+                })
+
+            }
+        
+
+        if (project.schedule.hasOwnProperty("materials")) {
+         
+                // eslint-disable-next-line
+                project.schedule.materials.map(mymaterial => {
+                    
+                    let material = "";
+               
+                    if (!mymaterial.mymaterialid || !mymaterial.csiid || !mymaterial.milestoneid) {
+                        
+                        if (!mymaterial.mymaterialid) {
+                            message += `Schedule Material is missing materialid `
+                        }
+                        if (!mymaterial.csiid) {
+                            message += `Schedule Material ${material} is missing csiid `
+                        }
+                        if (!mymaterial.milestoneid) {
+                            message += `Schedule Material ${material} is missing milestoneid `
+                        }
+
+                    }
+                })
+
+            
+        }
+
+    }
+
+    if(project.hasOwnProperty("actual")) {
+
+        if (project.actual.hasOwnProperty("labor")) {
+          
+            // eslint-disable-next-line
+            project.actual.labor.map(mylabor => {
+                if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
+                    ;
+                    if (!mylabor.csiid) {
+                        message += `Schedule labor ${mylabor.laborid} is missing CSIID `
+                    }
+                    if (!mylabor.milestoneid) {
+                        message += `Schedule labor ${mylabor.laborid} is missing MilestoneID `
+                    }
+                    if (!mylabor.providerid) {
+                        message += `Schedule labor ${mylabor.laborid} is missing ProviderID `
+                    }
+
+                }
+            })
+
+        
+    }
+
+
+        if (project.actual.hasOwnProperty("materials")) {
+        
+                // eslint-disable-next-line
+                project.actual.materials.map(mymaterial => {
+                  
+                    if (!mymaterial.mymaterialid || !mymaterial.csiid || !mymaterial.milestoneid) {
+                        
+                        if (!mymaterial.mymaterialid) {
+
+                            message += `Actual Material is missing materialid `
+                        }
+                        if (!mymaterial.csiid) {
+
+                            message += `Actual Material ${mymaterial.materialid} is missing csiid `
+                        }
+                        if (!mymaterial.milestoneid) {
+                            message += `Actual Material ${mymaterial.materialid} is missing milestoneid `
+                        }
+                    }
+                })
+
+            
+        }
+      
+        if (project.actual.hasOwnProperty("equipment")) {
+        
+                // eslint-disable-next-line
+                project.actual.equipment.map(myequipment => {
+                 
+                    if (!myequipment.myequipmentid || !myequipment.csiid || !myequipment.milestoneid) {
+                        
+                        if (!myequipment.myequipmentid) {
+                            message += `Actual Equipment is missing Equipment ID `;
+                        }
+                        if (!myequipment.csiid) {
+                            message += `Actual Equipment ${myequipment.equipmentid} is missing CSIID `;
+                        }
+
+                        if (!myequipment.milestoneid) {
+                            message += `Actual Equipment ${myequipment.equipmentid} is missing MilestoneID `;
+                        }
+
+                    }
+
+                })
+
+            
+
+        
+
+
+        }
+
+    }
+        return message;
+    }
+
 
     async savemyproject() {
 
@@ -898,9 +1056,10 @@ class Construction {
             if (project) {
 
                 const projectid = project.projectid;
-                // let validatecompany = construction.validateCompany.call(this);
-                // let validateproject = construction.validateProject.call(this)
-
+                let validate = "";
+                validate += construction.validateCompany.call(this, myuser);
+                validate += construction.validateProject.call(this, project)
+                if(!validate) {
                 try {
                     this.setState({ spinner: true })
                     let response = await SaveProject({ myuser, projectid })
@@ -932,6 +1091,11 @@ class Construction {
                     this.setState({ spinner: false })
 
                 }
+
+
+            } else {
+                this.setState({message:validate})
+            }
 
 
 
@@ -2267,52 +2431,51 @@ class Construction {
 
         }
     }
-    validateCompany(params) {
-        let validate = {};
-
-        validate.validate = true;
-        validate.message = '';
-        const company = params.company;
-        const myuser = params.myuser;
+    validateCompany(myuser) {
+        let validate = "";
 
         if (myuser.hasOwnProperty("invalid")) {
-            validate.validate = false;
-            validate.message += myuser.invalid;
+
+            validate  += myuser.invalid;
         }
-        if (company.hasOwnProperty("equipment")) {
+        if(myuser.hasOwnProperty("company")) {
+
+        if (myuser.company.hasOwnProperty("equipment")) {
             // eslint-disable-next-line
-            company.equipment.map(myequipment => {
+            myuser.company.equipment.map(myequipment => {
                 if (!myequipment.accountid) {
-                    validate.validate = false;
-                    validate.message += `${myequipment.equipment} is missing AccountID `
+                    
+                    validate += `${myequipment.equipment} is missing AccountID `
                 }
 
             })
         }
-        if (company.hasOwnProperty("materials")) {
+        if (myuser.company.hasOwnProperty("materials")) {
             // eslint-disable-next-line
-            company.materials.map(mymaterial => {
+            myuser.company.materials.map(mymaterial => {
                 if (!mymaterial.accountid) {
-                    validate.validate = false;
-                    validate.message += `${mymaterial.material} is missing AccountID `
+            
+                    validate += `${mymaterial.material} is missing AccountID `
                 }
             })
         }
-        if (company.hasOwnProperty("employees")) {
+        if (myuser.company.hasOwnProperty("employees")) {
             // eslint-disable-next-line
-            company.employees.map(employee => {
+            myuser.company.employees.map(employee => {
 
                 if (employee.hasOwnProperty("benefits")) {
                     // eslint-disable-next-line
                     employee.benefits.map(benefit => {
                         if (!benefit.accountid) {
-                            validate.validate = false;
-                            validate.message += `${benefit.benefit} is missing AccountID `
+                          
+                            validate += `${benefit.benefit} is missing AccountID `
                         }
                     })
                 }
             })
         }
+
+    }
         return validate;
 
     }
@@ -2474,15 +2637,14 @@ class Construction {
         const construction = new Construction()
         const myuser = construction.getuser.call(this);
         if (myuser) {
-            const checkmanager = construction.checkmanager.call(this, myuser.getemployeebyproviderid);
-            if (checkmanager) {
-                let params = construction.getCompanyParams.call(this)
+       
+               
 
-                const validate = construction.validateCompany(params);
-                if (validate.validate) {
+                const validate = construction.validateCompany.call(this,myuser);
+                if (!validate) {
                     try {
                         this.setState({ spinner: true })
-                        let response = await SaveCompany(params);
+                        let response = await SaveCompany({myuser});
                         console.log(response)
                         construction.handlecompanyids.call(this, response)
                      
@@ -2501,12 +2663,10 @@ class Construction {
                         this.setState({ spinner: false })
                     }
                 } else {
-                    this.setState({ message: validate.message })
+                    this.setState({ message: validate })
                 }
 
-            } else {
-                alert(`Only Managers have access to this function `)
-            }
+          
 
         }
     }

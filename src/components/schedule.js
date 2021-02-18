@@ -956,7 +956,7 @@ class Schedule extends Component {
                     const timetimeout = this.state.timeoutampm;
                     let timeout = makeTimeString(yearout, monthout, dayout, hoursout, minutesout, timetimeout);
                     timeout = UTCTimeStringfromTime(timeout);
-                    const laborrate = construction.gethourlyrate.call(this, providerid).toFixed(2)
+                    const laborrate = construction.calculateLaborRatebyID.call(this, providerid).toFixed(2)
                     const profit = 0;
                     const engineerid = providerid;
 

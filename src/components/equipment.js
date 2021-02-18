@@ -127,7 +127,7 @@ class Equipment extends Component {
         validate.message = "";
         if (company.hasOwnProperty("projects")) {
             // eslint-disable-next-line
-            company.projects.myproject.map(myproject => {
+            company.projects.map(myproject => {
                 if (myproject.hasOwnProperty("scheduleequipment")) {
                     // eslint-disable-next-line
                     myproject.schedule.equipment.map(myequipment => {

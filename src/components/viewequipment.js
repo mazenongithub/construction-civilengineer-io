@@ -447,8 +447,7 @@ class ViewEquipment extends Component {
 
     handleaccountid(accountid) {
         const construction = new Construction();
-        const checkmanager = construction.checkmanager.call(this);
-        if (checkmanager) {
+
             let myuser = construction.getuser.call(this);
             if (myuser) {
                 if (this.props.match.params.equipmentid) {
@@ -465,9 +464,7 @@ class ViewEquipment extends Component {
 
             }
 
-        } else {
-            alert(`Only Managers can access this function`)
-        }
+       
     }
     getequipment() {
         const construction = new Construction();

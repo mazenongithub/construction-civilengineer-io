@@ -19,7 +19,7 @@ class Accounts {
                 const account = construction.getaccountbyid.call(this, this.state.activeaccountid)
                 if (account) {
                     let i = construction.getaccountkeybyid.call(this, this.state.activeaccountid)
-                    myuser.company.office.accounts[i].accountname = accountname;
+                    myuser.company.accounts[i].accountname = accountname;
                     this.props.reduxUser(myuser)
                     this.setState({ render: 'render' })
                 }
@@ -30,11 +30,11 @@ class Accounts {
 
                 let newaccount = CreateAccount(accountid, accountname, myuser.providerid)
 
-                if (myuser.company.office.hasOwnProperty("accounts")) {
-                    myuser.company.office.accounts.push(newaccount)
+                if (myuser.company.hasOwnProperty("accounts")) {
+                    myuser.company.accounts.push(newaccount)
                 } else {
                     let accounts = { account: [newaccount] }
-                    myuser.company.office.accounts = accounts;
+                    myuser.company.accounts = accounts;
                 }
                 this.props.reduxUser(myuser)
                 this.setState({ activeaccountid: accountid })
@@ -111,7 +111,7 @@ class Accounts {
                 myemployees.map(employee => {
                     if (employee.hasOwnProperty("benefits")) {
                         // eslint-disable-next-line
-                        employee.benefits.benefit.map(benefit => {
+                        employee.benefits.map(benefit => {
                             if (benefit.accountid === accountid) {
                                 deleteaccount = false;
                                 deletemessage += `Account ID is associated to employee ${employee.providerid}`
@@ -159,7 +159,7 @@ class Accounts {
                     const myaccount = construction.getaccountbyid.call(this, account.accountid)
                     if (myaccount) {
                         const i = construction.getaccountkeybyid.call(this, account.accountid)
-                        myuser.company.office.accounts.splice(i, 1);
+                        myuser.company.accounts.splice(i, 1);
                         this.props.reduxUser(myuser)
                         this.setState({ activeaccountid: false })
 

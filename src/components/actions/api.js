@@ -365,8 +365,8 @@ export async function RegisterUser(values) {
 }
 
 
-export async function SaveCompany(values) {
-    const providerid = values.myuser.providerid;
+export async function SaveCompany(myuser) {
+    const providerid = myuser.providerid;
     let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/savecompany
     `;
     console.log(APIURL);
@@ -377,7 +377,7 @@ export async function SaveCompany(values) {
             'Content-Type': 'application/json',
         }),
 
-        body: JSON.stringify(values)
+        body: JSON.stringify(myuser)
     })
         .then(resp => {
 

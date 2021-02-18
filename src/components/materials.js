@@ -89,7 +89,7 @@ class Materials extends Component {
             if (myuser.hasOwnProperty("company")) {
 
                 if (myuser.company.hasOwnProperty("materials")) {
-                    myuser.company.materials.mymaterial.push(newMaterial)
+                    myuser.company.materials.push(newMaterial)
                 } else {
                     let materials = { mymaterial: [newMaterial] }
                     myuser.company.materials = materials;
@@ -106,13 +106,14 @@ class Materials extends Component {
         const construction = new Construction();
         const makeID = new MakeID();
         const myuser = construction.getuser.call(this)
+        const materials = new Materials();
         if (myuser) {
 
             if (this.state.activematerialid) {
                 const mymaterial = construction.getmymaterialfromid.call(this, this.state.activematerialid)
                 if (mymaterial) {
                     let i = construction.getmaterialkeybyid.call(this, this.state.activematerialid)
-                    myuser.company.materials.mymaterial[i].material = material;
+                    myuser.company.materials[i].material = material;
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render', material: '' })
 
@@ -127,7 +128,7 @@ class Materials extends Component {
                 let unitcost = "";
                 let providerid = "";
                 let newMaterial = CreateMaterial(materialid, material, providerid, accountid, csiid, unit, unitcost)
-                this.createnewmaterial(newMaterial)
+                materials.createnewmaterial.call(this,newMaterial)
             }
 
         }
@@ -158,7 +159,7 @@ class Materials extends Component {
             myprojects.map(myproject => {
                 if (myproject.hasOwnProperty("schedulematerials")) {
                     // eslint-disable-next-line
-                    myproject.schedulematerials.mymaterial.map(mymaterial => {
+                    myproject.schedulematerials.map(mymaterial => {
                         if (mymaterial.mymaterialid === materialid) {
                             validate = false;
                             validatemessage += `Could not delete material ${material.material}, exists inside schedule materials Project ID ${myproject.projectid}`
@@ -170,7 +171,7 @@ class Materials extends Component {
 
                 if (myproject.hasOwnProperty("actualmaterials")) {
                     // eslint-disable-next-line
-                    myproject.actualmaterials.mymaterial.map(mymaterial => {
+                    myproject.actualmaterials.map(mymaterial => {
                         if (mymaterial.mymaterialid === materialid) {
                             validate = false;
                             validatemessage += `Could not delete material ${material.material}, exists inside actual materials Project ID ${myproject.projectid}`
@@ -195,7 +196,7 @@ class Materials extends Component {
                 const mymaterial = construction.getmymaterialfromid.call(this, material.materialid)
                 if (mymaterial) {
                     const i = construction.getmaterialkeybyid.call(this, material.materialid);
-                    myuser.company.materials.mymaterial.splice(i, 1);
+                    myuser.company.materials.splice(i, 1);
                     this.props.reduxUser(myuser);
                     this.setState({ activematerialid: false, message: '' })
 

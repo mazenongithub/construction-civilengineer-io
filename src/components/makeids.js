@@ -12,7 +12,7 @@ class MakeID {
                     while (benefitid === false) {
                         benefitid = makeID(16);
                         // eslint-disable-next-line
-                        employee.benefits.benefit.map(benefit => {
+                        employee.benefits.map(benefit => {
                             if (benefit.benefitid === benefitid) {
                                 benefitid = false;
                             }
