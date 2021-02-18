@@ -118,56 +118,41 @@ class Landing  {
                     caption: `Enter and View project schedule. Assigns schedule to employees, determines cost. `
                 },
 
+               
+                {
+                    title: 'Bid Schedule',
+                    id: 'proposals',
+                    url: 'http://civilengineer.io/construction/slides/bidschedule.png',
+                    caption: `Your Project Bid Schedule Broken Down Per Line Item Per Code Simply Enter your Units to Create your Unit Price    `
+                },
+                {
+                    title: 'Bid Schedule Line Item',
+                    id: 'bidschedulelineitem',
+                    url: 'http://civilengineer.io/construction/slides/bidschedulelineitem.png',
+                    caption: `View Each Bid Schedule Line Item. Adjust rates and Profit Factor to create the bid amount  `
+                },
+
                 {
                     title: 'Actual',
                     id: 'actual',
                     url: 'http://civilengineer.io/construction/slides/actual.png',
                     caption: `Enter your actual costs for the project.    `
                 },
-                {
-                    title: 'Proposal',
-                    id: 'proposals',
-                    url: 'http://civilengineer.io/construction/slides/proposals.png',
-                    caption: `TAdd your schedule items to the proposal. Items can be adjusted. Add your profit for each item.    `
-                },
-                {
-                    title: 'View Proposal',
-                    id: 'viewinvoice',
-                    url: 'http://civilengineer.io/construction/slides/viewproposal.png',
-                    caption: `View Proposal contains an itemized breakdown for each item in your work schedule  `
-                },
 
                 {
-                    title: 'Invoices',
-                    id: 'invoices',
-                    url: 'http://civilengineer.io/construction/slides/invoices.png',
-                    caption: `Add your actual work items to the invoice. Adjust your actual costs add your profit factor for each item   `
+                    title: 'View Bid',
+                    id: 'bid',
+                    url: 'http://civilengineer.io/construction/slides/bid.png',
+                    caption: `Your actual Construction Bid to Be Send to the PM for Payment. Produces Itemized Construction Invoice using your Actual Costs.   `
                 },
 
 
                 {
-                    title: 'View Invoice',
-                    id: 'viewinvoice',
-                    url: 'http://civilengineer.io/construction/slides/viewinvoice.png',
-                    caption: `Itemized breakdown for the actual items. Add your unit and quantities to produce the unit price.   `
-                },
-
-
-                {
-                    title: 'Proposal Line Item',
-                    id: 'proposallineitem',
-                    url: 'http://civilengineer.io/construction/slides/proposallineitem.png',
-                    caption: `Labor, Equipment, and Materials breakdown for each line item in the proposal   `
-                },
-                {
-                    title: 'Invoice Line Item',
-                    id: 'invoicelineitem',
-                    url: 'http://civilengineer.io/construction/slides/invoicelineitem.png',
-                    caption: `Labor, Equipment, and Materials breakdown for each line item in the proposal.   `
+                    title: 'Bid Line Item',
+                    id: 'bidlineitem',
+                    url: 'http://civilengineer.io/construction/slides/bidlineitem.png',
+                    caption: `View Each Line Item in your Bid. Adjust any rates and add your profit to produce the actual bid price.    `
                 }
-
-
-
 
 
             ])

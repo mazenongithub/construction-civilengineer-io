@@ -172,7 +172,7 @@ class Project extends Component {
                             </div>
 
 
-                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.generalContainer }}>
                                     Title: {this.gettitle()}
                                 </div>
