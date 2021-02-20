@@ -919,7 +919,7 @@ class Actual extends Component {
                     const timetimeout = this.state.timeoutampm;
                     let timeout = makeTimeString(yearout, monthout, dayout, hoursout, minutesout, timetimeout);
                     timeout = UTCTimeStringfromTime(timeout);
-                    const equipmentrate = construction.calculateequipmentratebyownership.call(this, myequipmentid) > 0 ? Number(construction.calculateequipmentratebyownership.call(this, myequipmentid)).toFixed(2) : 0;
+                    const equipmentrate = Number(construction.calculateequipmentratebyownership.call(this, myequipmentid)).toFixed(2)
                     const engineerid = myuser.providerid;
 
 
@@ -929,8 +929,8 @@ class Actual extends Component {
                     if (equipments) {
                         myuser.company.projects[i].actual.equipment.push(newEquipment)
                     } else {
-                        const actualequipment = { myequipment: [newEquipment] }
-                        myuser.company.projects[i].actual.equipment = actualequipment;
+                     
+                        myuser.company.projects[i].actual.equipment = [newEquipment]
                     }
                     this.props.reduxUser(myuser)
                     this.setState({ activeequipmentid: equipmentid })

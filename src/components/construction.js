@@ -1834,7 +1834,7 @@ class Construction {
         const myequipment = construction.getmyequipmentbyid.call(this, equipmentid)
         if (myequipment) {
             const costs = construction.gettransformedcostsbyequimentid.call(this, equipmentid);
-
+            console.log(costs)
             if (costs.length > 0) {
 
                 const Period = () => {
@@ -1847,6 +1847,7 @@ class Construction {
                         return 0;
                     }
                 }
+                console.log(Period())
 
 
                 const totalworkinghours = () => {
@@ -1855,6 +1856,7 @@ class Construction {
 
                     return (Math.round(annual * years))
                 }
+                console.log(totalworkinghours())
                 // eslint-disable-next-line
                 costs.map(cost => {
 
@@ -1932,6 +1934,7 @@ class Construction {
         const construction = new Construction();
         let equipment = false;
         const myequipment = construction.getactualequipment.call(this)
+
         if (myequipment) {
 // eslint-disable-next-line
             myequipment.map((myequipment, i) => {
@@ -2613,7 +2616,7 @@ class Construction {
 
                         } else {
 
-                            costarray.push(newCost(cost.costid, cost.detail, cost.purchasedate, cost.cost))
+                            costarray.push(newCost(cost.costid, cost.detail, cost.timein, cost.cost))
 
                         }
 

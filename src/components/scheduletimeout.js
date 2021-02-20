@@ -63,7 +63,7 @@ class TimeOut {
                                         let time = this.state.timeoutampm;
                                         let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                         timeout = UTCTimeStringfromTime(timeout);
-                                        myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = timeout;
+                                        myuser.company.projects[i].schedule.equipment[j].timeout = timeout;
                                         this.props.reduxUser(myuser)
                                         this.setState({ render: 'render' })
                                     }
@@ -137,7 +137,7 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = timeout;
+                                    myuser.company.projects[i].schedule.equipment[j].timeout = timeout;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
 
@@ -210,7 +210,7 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = timeout;
+                                    myuser.company.projects[i].schedule.equipment[j].timeout = timeout;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
                                 }
@@ -282,7 +282,7 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = timeout;
+                                    myuser.company.projects[i].schedule.equipment[j].timeout = timeout;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
                                 }
@@ -352,7 +352,7 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = timeout;
+                                    myuser.company.projects[i].schedule.equipment[j].timeout = timeout;
                                     this.props.reduxUser(myuser)
                                     this.setState({ render: 'render' })
                                 }
@@ -431,7 +431,7 @@ class TimeOut {
                             let time = ampm
                             let timeout = makeTimeString(year, month, day, hours, minutes, time);
                             timeout = UTCTimeStringfromTime(timeout);
-                            myuser.company.projects.myproject[i].scheduleequipment.myequipment[j].timeout = timeout;
+                            myuser.company.projects[i].schedule.equipment[j].timeout = timeout;
                             this.props.reduxUser(myuser)
                             this.setState({ render: 'render' })
                         }
