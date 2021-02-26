@@ -3,7 +3,7 @@ import { MyStylesheet } from './styles';
 import { folderIcon, scrollImageDown, goCheckIcon, saveProfileIcon } from './svg';
 import Construction from './construction';
 import { UploadProfileImage, CheckProviderID, CheckEmailAddress } from './actions/api';
-import { returnCompanyList, inputUTCStringForLaborID, validateProviderID, validateEmail } from './functions';
+import {inputUTCStringForLaborID, validateProviderID, validateEmail } from './functions';
 import Spinner from './spinner'
 
 class Profile  {
@@ -275,36 +275,38 @@ class Profile  {
             </div>
         </div>)
     }
+    getProfileDimensions() {
+        if (this.state.width > 1200) {
+            return (
+                {
+                    width: '240px',
+                    height: 'auto'
+                })
+
+        } else if (this.state.width > 600) {
+            return (
+                {
+                    width: '185px',
+                    height: 'auto'
+                })
+
+        } else {
+            return (
+                {
+                    width: '132px',
+                    height: 'auto'
+                })
+        }
+    }
    
     showprofileimage() {
         const construction = new Construction();
         const myuser = construction.getuser.call(this);
-        const profileImage = () => {
-            if (this.state.width > 1200) {
-                return (
-                    {
-                        width: '392px',
-                        height: 'auto'
-                    })
-    
-            } else if (this.state.width > 600) {
-                return (
-                    {
-                        width: '285px',
-                        height: 'auto'
-                    })
-    
-            } else {
-                return (
-                    {
-                        width: '167px',
-                        height: 'auto'
-                    })
-            }
-        }
+        const profile = new Profile();
+        const profileImage = profile.getProfileDimensions.call(this)
 
         if (myuser.profileurl) {
-            return (<img src={myuser.profileurl} style={{ ...profileImage() }} alt={`${myuser.firstname} ${myuser.lastname}`} />)
+            return (<img src={myuser.profileurl} style={{ ...profileImage }} alt={`${myuser.firstname} ${myuser.lastname}`} />)
         } else {
             return;
         }
@@ -317,20 +319,14 @@ class Profile  {
 
         if (myuser) {
             let formData = new FormData();
-            let params = construction.getCompanyParams.call(this)
+         
             let myfile = document.getElementById("profile-image");
-            console.log(params.myuser)
             formData.append("profilephoto", myfile.files[0]);
-            formData.append("myuser", JSON.stringify(params.myuser))
+            formData.append("myuser", JSON.stringify(myuser))
             try {
-                let response = await UploadProfileImage(params.myuser.providerid, formData);
+                let response = await UploadProfileImage(myuser.providerid, formData);
                 console.log(response)
-                if (response.hasOwnProperty("allusers")) {
-                    let companys = returnCompanyList(response.allusers);
-                    this.props.reduxAllCompanys(companys)
-                    this.props.reduxAllUsers(response.allusers);
-
-                }
+              
                 if (response.hasOwnProperty("myuser")) {
 
                     this.props.reduxUser(response.myuser)
@@ -397,29 +393,8 @@ class Profile  {
         const headerFont = construction.getHeaderFont.call(this)
         const regularFont = construction.getRegularFont.call(this)
         let myuser = construction.getuser.call(this)
-        const profileDimensions = () => {
-            if (this.state.width > 1200) {
-                return (
-                    {
-                        width: '392px',
-                        height: '327px'
-                    })
-    
-            } else if (this.state.width > 800) {
-                return (
-                    {
-                        width: '285px',
-                        height: '249px'
-                    })
-    
-            } else {
-                return (
-                    {
-                        width: '167px',
-                        height: '145px'
-                    })
-            }
-        } 
+        const profile = new Profile();
+        const profileDimensions = profile.getProfileDimensions.call(this)
         const folderSize = () => {
             if (this.state.width > 1200) {
                 return (
@@ -445,7 +420,7 @@ class Profile  {
         } 
         const arrowHeight = construction.getArrowHeight.call(this);
         const goIcon = construction.getgocheckheight.call(this);
-        const profile = new Profile()
+      
 
         const showButton = () => {
 
@@ -456,11 +431,46 @@ class Profile  {
             }
         }
 
+        const showImage = () => {
+            if(this.state.width>1200) {
+                return( <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex2 }}>
+                        <div style={{ ...styles.generalContainer, ...profileDimensions,  ...styles.marginAuto }}>
+                            {profile.showprofileimage.call(this)}
+                        </div>
+                    </div>
+                    <div style={{ ...styles.flex1,  ...styles.alignBottom, ...styles.margin10 }}>
+                        <input type="file" id="profile-image" />
+                        <button style={{ ...styles.generalButton, ...folderSize() }} onClick={() => { profile.uploadprofileimage.call(this)}}>
+                            {folderIcon()}
+                        </button>
+                    </div>
+                </div>)
+            } else {
+
+                return( <div style={{ ...styles.generalContainer }}>
+                    <div style={{ ...styles.generalContainer}}>
+
+                        <div style={{ ...styles.generalContainer, ...profileDimensions, ...styles.showBorder, ...styles.marginAuto}}>
+                            {profile.showprofileimage.call(this)}
+                        </div>
+                    </div>
+                    <div style={{ ...styles.generalContainer, ...styles.showBorder, ...styles.alignBottom, ...styles.margin10 }}>
+                        <input type="file" id="profile-image" />
+                        <button style={{ ...styles.generalButton, ...folderSize() }} onClick={() => { profile.uploadprofileimage.call(this)}}>
+                            {folderIcon()}
+                        </button>
+                    </div>
+                </div>)
+
+            }
+        }
+
         if (myuser) {
             return (<div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
 
-                    <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }}>
                         <div style={{ ...styles.flex5, ...regularFont, ...headerFont, ...styles.fontBold, ...styles.alignCenter }}>
                             /<input type="text" value={myuser.profile}
                                 onChange={event => { profile.handleprofile.call(this,event.target.value) }}
@@ -473,19 +483,7 @@ class Profile  {
                         </div>
                     </div>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex2 }}>
-                            <div style={{ ...styles.generalContainer, ...profileDimensions(), ...styles.showBorder, ...styles.margin10, ...styles.alignRight }}>
-                                {profile.showprofileimage.call(this)}
-                            </div>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.showBorder, ...styles.alignBottom, ...styles.margin10 }}>
-                            <input type="file" id="profile-image" />
-                            <button style={{ ...styles.generalButton, ...folderSize() }} onClick={() => { profile.uploadprofileimage.call(this)}}>
-                                {folderIcon()}
-                            </button>
-                        </div>
-                    </div>
+                   {showImage()}
 
                     {profile.showprofileurl.call(this)}
 

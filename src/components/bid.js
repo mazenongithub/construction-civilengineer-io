@@ -276,14 +276,14 @@ class Bid extends Component {
 
                     } else {
                         let newItem = { csiid, quantity, unit: '', providerid: myuser.providerid }
-                        myuser.company.projects.myproject[i].actual.bid.push(newItem)
+                        myuser.company.projects[i].actual.bid.push(newItem)
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     }
 
                 } else {
                     let newItem = { csiid, quantity, unit: '', providerid: myuser.providerid }
-                    myuser.company.projects.myproject[i].actual.bid = [newItem]
+                    myuser.company.projects[i].actual.bid = [newItem]
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 }
@@ -318,14 +318,14 @@ class Bid extends Component {
 
                     } else {
                         let newItem = { csiid, quantity: '', unit, providerid: myuser.providerid }
-                        myuser.company.projects.myproject[i].actual.bid.push(newItem)
+                        myuser.company.projects[i].actual.bid.push(newItem)
                         this.props.reduxUser(myuser);
                         this.setState({ render: 'render' })
                     }
 
                 } else {
                     let newItem = { csiid, quantity: '', unit, providerid: myuser.providerid }
-                    myuser.company.projects.myproject[i].bid = [newItem]
+                    myuser.company.projects[i].bid = [newItem]
                     this.props.reduxUser(myuser);
                     this.setState({ render: 'render' })
                 }
