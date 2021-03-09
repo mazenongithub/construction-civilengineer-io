@@ -16,13 +16,16 @@ class ViewAccount extends Component {
     }
 
     componentDidMount() {
-        window.addEventListener('resize', this.updateWindowDimensions);
+        
         this.updateWindowDimensions();
         const construction = new Construction();
+     
         const csicodes = construction.getcsis.call(this)
         if (!csicodes) {
             construction.loadcsis.call(this)
         }
+
+    
 
 
     }
@@ -30,7 +33,7 @@ class ViewAccount extends Component {
 
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
+      
     }
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
@@ -50,6 +53,13 @@ class ViewAccount extends Component {
         }
         return check;
 
+    }
+
+    getaccount() {
+        const construction = new Construction();
+        
+        const account = construction.getaccountbyid.call(this,this.props.match.params.accountid)
+        return account
     }
 
 
@@ -215,19 +225,16 @@ class ViewAccount extends Component {
         const construction = new Construction();
 
         try {
-
+            this.setState({ checkstripe:true  })
             let response = await StripeConnect(stripe)
             console.log(response)
             let i = construction.getaccountkeybyid.call(this, this.props.match.params.accountid)
             if (response.url) {
                 myuser.company.accounts[i].stripedashboard = response.url;
                 this.props.reduxUser(myuser)
-                this.setState({ checkstripe:true  })
+                
 
-            } else {
-                this.setState({ checkstripe:true  })
-
-            }
+            } 
 
 
         } catch (err) {
@@ -335,10 +342,7 @@ class ViewAccount extends Component {
 
                     const accountid = this.props.match.params.accountid;
                     const account = construction.getaccountbyid.call(this, accountid)
-                    if (account.stripe && !account.stripedashboard && !this.state.checkstripe) {
-                        this.loadstripeconnect(myuser, account.stripe)
-
-                    }
+         
                     if (account) {
 
                         const stripeconnect = (account) => {
@@ -351,24 +355,26 @@ class ViewAccount extends Component {
                                         href={account.stripedashboard}>{account.stripedashboard}</a>
 
                                 </div>)
-                            } else if(this.state.checkstripe) {
+                            
+                            
+                        } else if (!account.stripe) {
+                             
 
-                                return (
-                                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                                        <span style={{ ...styles.generalFont, ...styles.boldFont, ...headerFont }}>Connect Your Account to Accept Payments </span> <br />
-                                        <a style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink, ...styles.blueLink }}
-                                            href={`https://connect.stripe.com/express/oauth/authorize?response_type=code&redirect_uri=${process.env.REACT_APP_SERVER_API}/construction/stripe/accounts&client_id=${process.env.REACT_APP_STRIPE_CONNECT}&state=${this.props.match.params.accountid}&scope=read_write`}>Connect Your Account to Stripe To Get Started and Accept Payments</a>
-                                    </div>)
-                            } else {
-
-                                return (
-                                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                                        <span style={{ ...styles.generalFont, ...styles.boldFont, ...headerFont }}>Account Stripe Connect</span> <br/>  
-                                        <span style={{ ...styles.generalFont, ...regularFont }}>checking connect please wait..</span>      
-                                    </div>)
-
-                            }
+                                    return (
+                                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                                            <span style={{ ...styles.generalFont, ...styles.boldFont, ...headerFont }}>Stripe Payments </span> <br />
+                                            <a style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink, ...styles.blueLink }}
+                                                href={`https://connect.stripe.com/express/oauth/authorize?response_type=code&redirect_uri=${process.env.REACT_APP_SERVER_API}/construction/stripe/accounts&client_id=${process.env.REACT_APP_STRIPE_CONNECT}&state=${this.props.match.params.accountid}&scope=read_write`}>Connect Your Account to Stripe To Get Started and Accept Payments</a>
+                                        </div>)
+                            
                         }
+
+                    }
+
+                    if(account.stripe && !account.stripedashboard && !this.state.checkstripe) {
+                        this.loadstripeconnect(myuser,account.stripe)
+                    }
+
 
                         return (
 

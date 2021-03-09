@@ -97,7 +97,7 @@ export async function StripeConnect(stripe) {
         if (!resp.ok) {
             if (resp.status >= 400 && resp.status < 500) {
                 return resp.json().then(data => {
-                    throw data;
+                    throw data.message;
                 })
             }
             else {
