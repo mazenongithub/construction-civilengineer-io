@@ -415,7 +415,7 @@ class BidLineItem extends Component {
         const regularFont = construction.getRegularFont.call(this);
         const material = construction.getmymaterialfromid.call(this, mymaterial.mymaterialid)
         const bidField = construction.getbidfield.call(this)
-        const bidprice = Number(mymaterial.quantity) * Number(mymaterial.unitcost) + (1 + (Number(mymaterial.profit)))
+        const bidprice = Number(mymaterial.quantity) * Number(mymaterial.unitcost) * (1 + (Number(mymaterial.profit)/100))
         
         
         return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }} key={mymaterial.materialid}>
@@ -477,7 +477,7 @@ class BidLineItem extends Component {
 
         if (myuser) {
             const project = construction.getproject.call(this)
-            console.log(project,this.props.match.params.projectid)
+    
             if (project) {
                 return (
                     <div style={{ ...styles.generalFlex }}>

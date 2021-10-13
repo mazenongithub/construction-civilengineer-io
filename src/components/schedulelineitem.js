@@ -122,7 +122,9 @@ class BidScheduleLineItem extends Component {
         if (items.length > 0) {
             // eslint-disable-next-line
             items.map(item => {
+                console.log(DirectCostForMaterial(item),(Number(item.profit)/100))
                 cost += DirectCostForMaterial(item) * (1 + (Number(item.profit)/100))
+                console.log(cost)
             })
         }
         return cost;
@@ -416,8 +418,8 @@ class BidScheduleLineItem extends Component {
         const regularFont = construction.getRegularFont.call(this);
         const material = construction.getmymaterialfromid.call(this, mymaterial.mymaterialid)
         const bidField = construction.getbidfield.call(this)
-        const bidprice = Number(mymaterial.quantity) * Number(mymaterial.unitcost) + (1 + (Number(mymaterial.profit)))
-        
+        const bidprice = Number(mymaterial.quantity) * Number(mymaterial.unitcost) * (1 + (Number(mymaterial.profit)/100))
+       
         
         return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }} key={mymaterial.materialid}>
             {material.material}        {formatDateStringDisplay(mymaterial.timein)}

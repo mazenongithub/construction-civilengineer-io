@@ -45,11 +45,16 @@ export function MyStylesheet() {
             border: '1px solid',
             borderRadius: '5px'
         },
+        redBorder:{
+            color:'red',
+            border:'3px solid',
+            borderRadius:'0.5em'
+        },
         addPadding: {
             padding: '5px'
         },
         generalField: {
-            width: '95%',
+            width: '99%',
             padding: '3px'
         },
         addMargin: {
@@ -289,7 +294,8 @@ export function MyStylesheet() {
             width: '54px'
         },
         generalFont: {
-            fontFamily: "'Nunito Sans', sans-serif"
+            fontFamily: "'Nunito Sans', sans-serif",
+            color:'black'
         },
         showBorder: {
             border: '1px solid'

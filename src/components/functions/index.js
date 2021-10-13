@@ -295,7 +295,7 @@ export function getBenefitInterval(reoccurring, amount, detail, accountid) {
     switch (reoccurring) {
         case 'daily':
             period = calculateTotalDays(purchasedate, salvagedate)
-            console.log(period, purchasedate, salvagedate)
+        
             for (x = 0; x < period; x++) {
                 benefit = newBenefit(makeID(16), detail, purchasedate, amount, accountid)
                 benefitArray.push(benefit)
@@ -2924,6 +2924,37 @@ export function leadingZero(str) {
 
     }
     return str;
+}
+
+export function findString  (search,string)  {
+    string = string.toLowerCase().replace(/\s/g, "");
+    search = search.toLowerCase().replace(/\s/g, "");
+    let result = false;
+    if(search.length>0) {
+    if(string.indexOf(search)>=0) {
+      result = true;
+    }
+      
+    }
+    
+    return result;
+  }
+  
+
+export function validatecode (results, code) {
+
+    let validate = true;
+    if (results.length>0) {
+      
+        // eslint-disable-next-line
+        results.map(result => {
+          validate =code.csiid
+            if (result.csiid === code.csiid) {
+                validate = false;
+            }
+        })
+    }
+    return validate;
 }
 
 export function sortcode(codeb, codea) {
