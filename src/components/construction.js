@@ -1700,6 +1700,33 @@ class Construction {
         }
         return key;
     }
+    getmaterialbyid(materialid) {
+        const construction = new Construction();
+        let material = false;
+        let mymaterials = construction.getschedulematerials.call(this)
+        if (mymaterials) {
+            // eslint-disable-next-line
+            mymaterials.map((mymaterial, i) => {
+                if (mymaterial.materialid === materialid) {
+                    material = mymaterial;
+                }
+
+            })
+        }
+
+        if(!material) {
+            let actuals = construction.getactualmaterials.call(this)
+            if(actuals) {
+                actuals.map(actual=> {
+                    if(actual.materialid === materialid) {
+                        material = actual;
+                    }
+                })
+            }
+        }
+        return material;
+
+    }
     getschedulematerialbyid(materialid) {
         const construction = new Construction();
         let material = false;
@@ -1810,6 +1837,34 @@ class Construction {
         }
         return key;
     }
+    getequipmentbyid(equipmentid) {
+        const construction = new Construction();
+        let equipment = false;
+        const myequipment = construction.getscheduleequipment.call(this)
+        if (myequipment) {
+// eslint-disable-next-line
+            myequipment.map((myequipment, i) => {
+                if (myequipment.equipmentid === equipmentid) {
+                    equipment = myequipment;
+                }
+            })
+        }
+
+        if(!equipment) {
+            const actuals = construction.getactualequipment.call(this);
+            if(actuals) {
+                actuals.map(actual=> {
+                    if(actual.equipmentid === equipmentid) {
+                        equipment = actual;
+                    }
+                })
+            }
+        }
+
+
+        return equipment;
+    }
+
     getscheduleequipmentbyid(equipmentid) {
         const construction = new Construction();
         let equipment = false;
@@ -2096,6 +2151,36 @@ class Construction {
 
         return labor;
     }
+    getlaborbyid(laborid) {
+        const construction = new Construction();
+        let mylabors = construction.getschedulelabor.call(this)
+        let labor = false
+
+        if (mylabors) {
+
+            // eslint-disable-next-line
+            mylabors.map((mylabor, i) => {
+                if (mylabor.laborid === laborid) {
+                    labor = mylabor;
+                }
+            })
+
+        }
+
+        if(!labor) {
+            const actuals = construction.getactuallabor.call(this)
+            if(actuals) {
+                actuals.map(actual=> {
+                    if(actual.laborid === laborid) {
+                        labor = actual;
+                    }
+                })
+            }
+        }
+
+        return labor;
+    }
+
     getschedulelaborbyid(laborid) {
         const construction = new Construction();
         let mylabors = construction.getschedulelabor.call(this)

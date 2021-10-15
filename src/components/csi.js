@@ -170,7 +170,7 @@ class CSI {
             let _csiid = "";
 
             if (this.state.activelaborid && this.state.active === 'labor') {
-                const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid)
+                const mylabor = construction.getlaborbyid.call(this, this.state.activelaborid)
                 if (mylabor) {
                     let csi = construction.getcsibyid.call(this, mylabor.csiid)
 
@@ -182,7 +182,7 @@ class CSI {
 
                 }
             } else if (this.state.activematerialid && this.state.active === 'materials') {
-                const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid)
+                const mymaterial = construction.getmaterialbyid.call(this, this.state.activematerialid)
                 if (mymaterial) {
                     let csi = construction.getcsibyid.call(this, mymaterial.csiid);
                     if (csi) {
@@ -190,7 +190,7 @@ class CSI {
                     }
                 }
             } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
-                const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                const myequipment = construction.getequipmentbyid.call(this, this.state.activeequipmentid)
 
                 if (myequipment) {
                     let csi = construction.getcsibyid.call(this, myequipment.csiid);
