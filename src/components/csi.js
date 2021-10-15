@@ -221,11 +221,11 @@ class CSI {
         }
         const pointer = () => {
             if (this.state.width > 1200) {
-                return ({ width: '80px', height: 'auto' })
+                return ({ width: '40px', height: 'auto' })
             } else if (this.state.width>600) {
-                return ({ width: '60px', height: 'auto' })
+                return ({ width: '30px', height: 'auto' })
             } else {
-             return ({ width: '40px', height: 'auto' })
+             return ({ width: '20px', height: 'auto' })
             }
 
         }
