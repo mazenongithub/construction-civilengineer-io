@@ -53,9 +53,11 @@ export function MyStylesheet() {
         addPadding: {
             padding: '5px'
         },
+        csiWidth:{
+            width:'90%'
+        },
         generalField: {
             width: '99%',
-            padding: '3px'
         },
         addMargin: {
             margin: '3px'

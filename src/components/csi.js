@@ -53,7 +53,7 @@ class CSI {
 
                     if (searchcsi) {
 
-                        if (code.csi.startsWith(searchcsi)) {
+                        if (code.csi.replace(".", "").startsWith(searchcsi)) {
 
                             if (title.length > 1) {
 
@@ -260,6 +260,9 @@ class CSI {
 
         }
 
+        const csiField = () => {
+
+        }
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -271,25 +274,25 @@ class CSI {
                     </div>
 
                     <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
+                        <div style={{ ...styles.flex1}}>
+                            <input style={{ ...styles.csiWidth, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.addMargin }}
                                 value={this.state.csi_1}
                                 onChange={event => { this.setState({ csi_1: event.target.value }) }}
                             />
                         </div>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
+                        <div style={{ ...styles.flex1 }}>
+                            <input style={{ ...styles.csiWidth, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.addMargin }}
                                 value={this.state.csi_2}
                                 onChange={event => { this.setState({ csi_2: event.target.value }) }}
                             />
                         </div>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin, ...styles.bottomMargin15 }}>
-                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
+                        <div style={{ ...styles.flex1, ...styles.bottomMargin15 }}>
+                            <input style={{ ...styles.csiWidth, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.addMargin }}
                                 value={this.state.csi_3}
                                 onChange={event => { this.setState({ csi_3: event.target.value }) }} />
                         </div>
-                        <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont, ...styles.addMargin }}>
-                            <input style={{ ...styles.generalField, ...regularFont, ...styles.generalFont, ...styles.csiField, ...styles.addMargin }}
+                        <div style={{ ...styles.flex1 }}>
+                            <input style={{ ...styles.csiWidth, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.addMargin }}
                                 value={this.state.csi_4}
                                 onChange={event => { this.setState({ csi_4: event.target.value }) }} />
                         </div>
