@@ -471,6 +471,8 @@ class Actual extends Component {
                     let csi_2 = "";
                     let csi_3 = "";
                     let csi_4 = "";
+                    let title = "";
+                    
                     if (csi) {
                         csi_1 = csi.csi.substring(0, 2)
                         csi_2 = csi.csi.substring(2, 4);
@@ -479,9 +481,10 @@ class Actual extends Component {
                         if (csi.csi.length > 6) {
                             csi_4 = csi.csi.substring(7, 9);
                         }
+                        title = csi.title
                     }
 
-                    this.setState({ materialdatemonth, materialdateday, materialdateyear, activematerialid: materialid, csi_1, csi_2, csi_3, csi_4 })
+                    this.setState({ materialdatemonth, materialdateday, materialdateyear, activematerialid: materialid, csi_1, csi_2, csi_3, csi_4, title})
 
                 }
 
@@ -526,6 +529,7 @@ class Actual extends Component {
                     let csi_2 = "";
                     let csi_3 = "";
                     let csi_4 = "";
+                    let title = "";
                     if (csi) {
                         csi_1 = csi.csi.substring(0, 2)
                         csi_2 = csi.csi.substring(2, 4);
@@ -534,8 +538,9 @@ class Actual extends Component {
                         if (csi.csi.length > 6) {
                             csi_4 = csi.csi.substring(7, 9);
                         }
+                        title = csi.title
                     }
-                    this.setState({ activeequipmentid: equipmentid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4 })
+                    this.setState({ activeequipmentid: equipmentid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4, title })
 
                 }
             }
@@ -577,20 +582,19 @@ class Actual extends Component {
                     let csi_2 = "";
                     let csi_3 = "";
                     let csi_4 = "";
+                    let title = "";
                     if (csi) {
                         csi_1 = csi.csi.substring(0, 2)
                         csi_2 = csi.csi.substring(2, 4);
                         csi_3 = csi.csi.substring(4, 6);
 
-
                         if (csi.csi.length > 6) {
                             csi_4 = csi.csi.substring(7, 9);
                         }
-
+                        title = csi.title
                     }
 
-
-                    this.setState({ activelaborid: laborid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4 })
+                    this.setState({ activelaborid: laborid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4, title })
 
                 }
             }

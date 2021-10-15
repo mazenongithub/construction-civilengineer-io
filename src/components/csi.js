@@ -1,7 +1,6 @@
 import React from 'react';
 import Construction from './construction';
 import { MyStylesheet } from './styles';
-import { removeIconSmall } from './svg';
 import { sortcode, validatecode, findString } from './functions';
 
 
@@ -56,7 +55,7 @@ class CSI {
 
                         if (code.csi.startsWith(searchcsi)) {
 
-                            if(title.length>1) {
+                            if (title.length > 1) {
 
                                 if (findString(title, code.title)) {
 
@@ -80,7 +79,7 @@ class CSI {
 
                     }
 
-                    if(title.length>1) {
+                    if (title.length > 1) {
 
                         if (findString(title, code.title)) {
 
@@ -124,53 +123,23 @@ class CSI {
 
         return results;
     }
-    showcsiid(csi) {
+    showcsiid(csi,i) {
 
         const styles = MyStylesheet();
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this);
-        const removeIconWidth = construction.getremoveicon.call(this);
-        const csibackground = () => {
-            if (this.state.activecsiid === csi.csiid) {
-                return ({ backgroundColor: '#F2C4D2' })
-            } else {
-                return;
+
+        const csibackground = (i) => {
+            if (i % 2 === 0) {
+                return ({ backgroundColor: '#E6E6E6' })
             }
         }
-        const checkcsi = () => {
-            let csicheck = false;
-            const mycsis = construction.getcsis.call(this);
-
-            if (mycsis.hasOwnProperty("length")) {
-                // eslint-disable-next-line
-                mycsis.map(mycsi => {
-
-                    if (mycsi.csiid === csi.csiid) {
-                        csicheck = true;
-                    }
-                })
-            }
-            return csicheck;
-        }
-
-        const removeIcon = () => {
-
-            if (this.state.activecsiid === csi.csiid && checkcsi()) {
-                return (
-                    <div style={{ ...styles.flex1 }}>
-                        <button style={{ ...styles.generalButton, ...removeIconWidth }} onClick={() => { this.removecsi(csi) }}>{removeIconSmall()} </button>
-                    </div>
-                )
-            } else {
-                return;
-            }
-
-        }
-        return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont, ...csibackground() }} key={csi.csiid}>
+      
+        return (<div style={{ ...styles.generalFlex, ...styles.generalFont, ...regularFont, ...csibackground(i), ...styles.generalRadius, ...styles.generalPadding, ...styles.bottomMargin10 }} key={csi.csiid}>
             <div style={{ ...styles.flex5 }} onClick={() => { this.handlecsiid(csi.csiid) }}>
                 {csi.csi} - {csi.title}
             </div>
-            {removeIcon()}
+        
         </div>)
     }
     showsearchresults() {
@@ -179,8 +148,8 @@ class CSI {
 
         let csiids = [];
         // eslint-disable-next-line
-        results.map(code => {
-            csiids.push(csi.showcsiid.call(this, code))
+        results.map((code,i) => {
+            csiids.push(csi.showcsiid.call(this, code, i))
 
         })
         return csiids;
@@ -250,12 +219,47 @@ class CSI {
                 return ({ maxHeight: '150px', overflow: 'scroll' })
             }
         }
+        const pointer = () => {
+            if (this.state.width > 1200) {
+                return ({ width: '80px', height: 'auto' })
+            } else if (this.state.width>600) {
+                return ({ width: '60px', height: 'auto' })
+            } else {
+             return ({ width: '40px', height: 'auto' })
+            }
+
+        }
 
         const results = csi.getsearchresults.call(this)
 
         if (results) {
             getnumber = results.length;
         }
+
+
+        const pointicon = (getnumber) => {
+            if (getnumber > 0) {
+                return (<img src="https://civilengineer.io/appbaseddriver/icons/pointicon.jpg" alt="touch to select" style={{ ...pointer() }} />)
+            }
+        }
+
+        const action = () => {
+            if(this.state.activelaborid || this.state.activematerialid || this.state.activeequipmentid) {
+                return(`Update`)
+            } else {
+                return(`Select`)
+            }
+        }
+
+        const pointmessage = (getnumber) => {
+            if (getnumber > 0) {
+                return(<span style={{...styles.generalFont, ...regularFont}}> Touch to {action()} </span>)
+
+
+            }
+
+        }
+
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>
@@ -304,13 +308,13 @@ class CSI {
 
                     <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
                         <span style={{ ...regularFont, ...styles.generalFont }}>
-                            Search Results: There are {getnumber} Results
+                            Search Results: There are {getnumber} Results {pointicon(getnumber)} {pointmessage(getnumber)}
                         </span>
 
                     </div>
 
 
-                    <div style={{ ...styles.generalContainer, ...heightLimit() }} className="hidescroll">
+                    <div style={{ ...styles.generalContainer, ...heightLimit(), ...styles.bottomMargin15 }} className="hidescroll">
                         {csi.showsearchresults.call(this)}
                     </div>
 

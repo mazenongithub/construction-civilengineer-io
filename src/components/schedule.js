@@ -262,10 +262,11 @@ class Schedule extends Component {
                 const csi_2 = csi.csi.substring(2, 4);
                 const csi_3 = csi.csi.substring(4, 6);
                 let csi_4 = "";
+                let title = csi.title;
                 if (csi.csi.length > 6) {
                     csi_4 = csi.csi.substring(7, 9);
                 }
-                this.setState({ csi_4, csi_3, csi_2, csi_1 })
+                this.setState({ csi_4, csi_3, csi_2, csi_1, title })
                 const project = construction.getproject.call(this)
                 if (project) {
                     const projectid = project.projectid;
@@ -469,15 +470,24 @@ class Schedule extends Component {
                     const materialdateday = mymaterial.timein.substring(8, 10);
 
                     const csi = construction.getcsibyid.call(this, mymaterial.csiid);
-                    const csi_1 = csi.csi.substring(0, 2)
-                    const csi_2 = csi.csi.substring(2, 4);
-                    const csi_3 = csi.csi.substring(4, 6);
+                    let csi_1 = "";
+                    let csi_2 = "";
+                    let csi_3 = "";
                     let csi_4 = "";
-                    if (csi.csi.length > 6) {
-                        csi_4 = csi.csi.substring(7, 9);
+                    let title = "";
+                    if (csi) {
+                        csi_1 = csi.csi.substring(0, 2)
+                        csi_2 = csi.csi.substring(2, 4);
+                        csi_3 = csi.csi.substring(4, 6);
+
+                        if (csi.csi.length > 6) {
+                            csi_4 = csi.csi.substring(7, 9);
+                        }
+                        title = csi.title
                     }
 
-                    this.setState({ materialdatemonth, materialdateday, materialdateyear, activematerialid: materialid, csi_1, csi_2, csi_3, csi_4 })
+
+                    this.setState({ materialdatemonth, materialdateday, materialdateyear, activematerialid: materialid, csi_1, csi_2, csi_3, csi_4, title })
 
                 }
 
@@ -522,6 +532,7 @@ class Schedule extends Component {
                     let csi_2 = "";
                     let csi_3 = "";
                     let csi_4 = "";
+                    let title = "";
                     if (csi) {
                         csi_1 = csi.csi.substring(0, 2)
                         csi_2 = csi.csi.substring(2, 4);
@@ -530,8 +541,10 @@ class Schedule extends Component {
                         if (csi.csi.length > 6) {
                             csi_4 = csi.csi.substring(7, 9);
                         }
+                        title = csi.title
                     }
-                    this.setState({ activeequipmentid: equipmentid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4 })
+
+                    this.setState({ activeequipmentid: equipmentid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4, title })
 
                 }
             }
@@ -573,6 +586,7 @@ class Schedule extends Component {
                     let csi_2 = "";
                     let csi_3 = "";
                     let csi_4 = "";
+                    let title = "";
                     if (csi) {
                         csi_1 = csi.csi.substring(0, 2)
                         csi_2 = csi.csi.substring(2, 4);
@@ -581,10 +595,12 @@ class Schedule extends Component {
                         if (csi.csi.length > 6) {
                             csi_4 = csi.csi.substring(7, 9);
                         }
+                        title = csi.title
                     }
 
 
-                    this.setState({ activelaborid: laborid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4 })
+
+                    this.setState({ activelaborid: laborid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4, title })
 
                 }
             }

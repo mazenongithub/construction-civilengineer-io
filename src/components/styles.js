@@ -318,6 +318,9 @@ export function MyStylesheet() {
         addBorderRadius: {
             borderRadius: '18px'
         },
+        generalRadius: {
+            borderRadius: '5px'
+        },
         extraThickBorder: {
             border: '3px solid'
         },
