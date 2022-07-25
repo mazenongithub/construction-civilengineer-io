@@ -57,7 +57,8 @@ class App extends Component {
       activeaccountid: false,
       activematerialid: false,
       activeequipmentid: false,
-      activeemployeeid: false
+      activeemployeeid: false,
+      register:false
     }
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)

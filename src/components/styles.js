@@ -50,8 +50,29 @@ export function MyStylesheet() {
             border:'3px solid',
             borderRadius:'0.5em'
         },
+        numberLabel:{
+            width:'131px'
+        },
+        googleWidth:{
+            width:'333px'
+
+        },
+        appleWidth:{
+
+            width:'347px'
+
+        },
+        registerNow:{
+            width:'347px'
+        },
+        greenCheck:{
+            width:'91px'
+        },
         addPadding: {
             padding: '5px'
+        },
+        headerFont:{
+            fontSize:'36px'
         },
         csiWidth:{
             width:'90%'
@@ -200,7 +221,8 @@ export function MyStylesheet() {
             margin: 'auto'
         },
         regularFont: {
-            fontFamily: "'Nunito Sans', sans-serif"
+            fontFamily: "'Nunito Sans', sans-serif",
+            fontSize:'30px'
         },
         logoBorder: {
             borderRight: '5px solid',

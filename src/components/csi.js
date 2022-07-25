@@ -260,9 +260,7 @@ class CSI {
 
         }
 
-        const csiField = () => {
-
-        }
+       
         return (
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex1 }}>

@@ -730,7 +730,8 @@ class Construction {
 
     }
 
-    async clientlogin(type) {
+    async clientlogin() {
+    
         let emailaddress = this.state.emailaddress;
         let client = this.state.client;
         let clientid = this.state.clientid;
@@ -741,8 +742,8 @@ class Construction {
         let profileurl = this.state.profileurl;
 
 
-        let values = { emailaddress, client, clientid, firstname, lastname, profile, phonenumber, profileurl, type }
-
+        let values = { emailaddress, client, clientid, firstname, lastname, profile, phonenumber, profileurl}
+        console.log(values)
         try {
             this.setState({ spinner: true })
             let response = await AppleLogin(values)
@@ -752,8 +753,13 @@ class Construction {
             if (response.hasOwnProperty("myuser")) {
                 this.props.reduxUser(response.myuser)
                 this.setState({ client: '', clientid: '', emailaddress: '', message: '', emailaddresscheck: false, profilecheck: false, profile: '', firstname: '', lastname: '', profileurl: '' })
-            } else if (response.hasOwnProperty("message")) {
+            }
+            if (response.hasOwnProperty("message")) {
                 this.setState({ message: response.message })
+            }
+
+            if(response.hasOwnProperty("register")) {
+                this.setState({register:response.register})
             }
         } catch (err) {
             alert(err)
@@ -806,7 +812,7 @@ class Construction {
 
 
 
-    async googleSignIn(type) {
+    async googleSignIn() {
         const construction = new Construction()
 
 
@@ -841,7 +847,7 @@ class Construction {
 
 
             this.setState({ client, clientid, profile, firstname, lastname, profileurl, phonenumber, emailaddress })
-            construction.clientlogin.call(this, type)
+            construction.clientlogin.call(this)
 
 
 
@@ -1322,7 +1328,7 @@ class Construction {
         return navigation;
     }
 
-    async appleSignIn(type) {
+    async appleSignIn() {
         const construction = new Construction();
         let provider = new firebase.auth.OAuthProvider('apple.com');
         provider.addScope('email');
@@ -1346,7 +1352,7 @@ class Construction {
 
             let profile = this.state.profile;
             this.setState({ client, clientid, profile, firstname, lastname, profileurl, phonenumber, emailaddress })
-            construction.clientlogin.call(this, type)
+            construction.clientlogin.call(this)
 
         } catch (err) {
             alert(err)
@@ -1717,6 +1723,7 @@ class Construction {
         if(!material) {
             let actuals = construction.getactualmaterials.call(this)
             if(actuals) {
+                // eslint-disable-next-line
                 actuals.map(actual=> {
                     if(actual.materialid === materialid) {
                         material = actual;
@@ -1853,6 +1860,7 @@ class Construction {
         if(!equipment) {
             const actuals = construction.getactualequipment.call(this);
             if(actuals) {
+                // eslint-disable-next-line
                 actuals.map(actual=> {
                     if(actual.equipmentid === equipmentid) {
                         equipment = actual;
@@ -2170,6 +2178,7 @@ class Construction {
         if(!labor) {
             const actuals = construction.getactuallabor.call(this)
             if(actuals) {
+                // eslint-disable-next-line
                 actuals.map(actual=> {
                     if(actual.laborid === laborid) {
                         labor = actual;

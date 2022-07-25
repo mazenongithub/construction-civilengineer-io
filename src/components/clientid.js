@@ -1,77 +1,103 @@
 import React from 'react';
 import { MyStylesheet } from './styles';
-import { GoogleSignIcon, AppleSignIcon } from './svg';
+import { GoogleSign, AppleID, NumberLabel, GreenCheck} from './svg'
 import Construction from './construction';
-import Spinner from './spinner'
+
 class ClientID {
 
-    showclientid(type) {
+    showclientid() {
         const styles = MyStylesheet();
         const construction = new Construction();
-        const loginButton = () => {
-            if (this.state.width > 1200) {
-                return ({ width: '276px', height: 'auto' })
-            } else {
-                return ({ width: '181px', height: 'auto' })
-            }
-        } 
-        const regularFont = construction.getRegularFont.call(this)
-        const signinmessage = () => {
-            if (this.state.client && this.state.clientid) {
-                return `Your Signin is secure with ${this.state.client}`
-            } else {
-                return `Secure your Sign in`
+
+
+        const verifyclientid = () => {
+            if (this.state.clientid) {
+                return (<button style={{ ...styles.generalButton, ...styles.noBorder, ...styles.greenCheck }}>
+                    {GreenCheck()}
+                </button>)
             }
         }
-        const apple = () => {
-            if(!this.state.client || !this.state.clientid) {
-                return( <div style={{...styles.flex1}}>
-                    <button style={{ ...styles.generalButton, ...loginButton() }} onClick={() => { construction.appleSignIn.call(this, type) }}>
-                        {AppleSignIcon()}
-                    </button>
-                </div>
-)
-            }
-        }
-        const google = () => {
-            if(!this.state.client || !this.state.clientid) {
-                return( <div style={{...styles.flex1}}>
-                    <button style={{ ...styles.generalButton, ...loginButton() }} onClick={() => { construction.googleSignIn.call(this, type) }}>
-                        {GoogleSignIcon()}
-                    </button>
+
+        const showids = () => {
+            if(!this.state.clientid) {
+
+                return(    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.flex1 }}>
+
+                        <button style={{ ...styles.generalButton, ...styles.noBorder, ...styles.googleWidth }}
+                            onClick={() => { construction.googleSignIn.call(this) }}>
+
+                            {GoogleSign()}
+
+                        </button>
+
+                    </div>
+
+
+                    <div style={{ ...styles.flex1 }}>
+
+                        <button style={{ ...styles.generalButton, ...styles.noBorder, ...styles.appleWidth }}
+                            onClick={() => { construction.appleSignIn.call(this) }}>
+                            {AppleID()}
+                        </button>
+
+                    </div>
+
                 </div>)
+
+            } else {
+
+                return(<div style={{...styles.generalContainer}}>
+                
+                    <span style={{...styles.generalFont, ...styles.regularFont}}> Your Client is {this.state.client} </span>
+
+                </div>)
+
             }
         }
-if(!this.state.spinner) {
-        return (
-            <div style={{ ...styles.generalFlex,...styles.bottomMargin15 }}>
-                <div style={{...styles.flex1}}>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1,...styles.generalFont,...regularFont }}>
-                            {signinmessage()}
-                        </div>
+
+
+        return (
+
+            <div style={{ ...styles.generalContainer }}>
+
+
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+
+                    <div style={{ ...styles.flex1 }}>
+
+                        <button style={{ ...styles.generalButton, ...styles.noBorder, ...styles.numberLabel }}>
+
+                            {NumberLabel()}
+
+                        </button>
+
                     </div>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1 }}>
+                    <div style={{ ...styles.flex2 }}>
 
-                            {apple()}
-                        </div>
-                        <div style={{ ...styles.flex1 }}>
-                            {google()}
-                        </div>
+                        <span style={{ ...styles.generalFont, ...styles.headerFont }}>
+                            Choose Your Client
+                        </span>
+
+                    </div>
+
+
+                    <div style={{ ...styles.flex3 }}>
+
+                        {verifyclientid()}
+
                     </div>
 
                 </div>
 
 
+
+
+            {showids()}
 
             </div>)
-
-        } else {
-            return (<Spinner/>)
-        }
     }
 
 }
