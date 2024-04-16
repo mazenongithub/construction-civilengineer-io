@@ -10,6 +10,7 @@ import AccountID from './accountid'
 import Frequency from './frequency';
 import { removeIconSmall } from './svg';
 import PieChart from './piechart';
+import EmployeeID from './employeeid';
 
 class ViewEmployee extends Component {
     constructor(props) {
@@ -32,22 +33,22 @@ class ViewEmployee extends Component {
 
     handleaccountid(accountid) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
+        let company = construction.getcompany.call(this)
         const makeID = new MakeID();
-        if (myuser) {
+        if(company) {
 
             let employee = this.getemployee()
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee.providerid)
+                let i = construction.getemployeekeybyid.call(this, employee._id)
                 if (this.state.activebenefitid) {
 
-                    const getbenefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
 
                     if (getbenefit) {
-                        let j = construction.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee._id, this.state.activebenefitid)
 
-                        myuser.company.employees[i].benefits[j].accountid = accountid;
-                        this.props.reduxUser(myuser)
+                        company.employees[i].benefits[j].accountid = accountid;
+                        this.props.reduxCompany(company)
                         this.setState({ render: 'render' })
 
                     }
@@ -74,7 +75,7 @@ class ViewEmployee extends Component {
         if (employee) {
 
             if (this.state.activebenefitid) {
-                let benefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                let benefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
                 if (benefit) {
                     accountid = benefit.accountid;
                 }
@@ -90,28 +91,30 @@ class ViewEmployee extends Component {
     getemployee() {
 
         const construction = new Construction();
-        return construction.getemployeebyprofile.call(this, this.props.match.params.employeeid)
+        const getemployee = construction.getuserbyid.call(this, this.props.match.params.employeeid)
+        const _id = getemployee._ID;
+        return construction.getemployeebyuserid.call(this, _id)
 
     }
 
     handleAmount(amount) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
+        let company = construction.getcompany.call(this)
         const makeID = new MakeID();
-        if (myuser) {
+        if(company) {
 
             let employee = this.getemployee()
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee.providerid)
+                let i = construction.getemployeekeybyid.call(this, employee._id)
                 if (this.state.activebenefitid) {
 
-                    const getbenefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
 
                     if (getbenefit) {
-                        let j = construction.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee._id, this.state.activebenefitid)
 
-                        myuser.company.employees[i].benefits[j].amount = amount;
-                        this.props.reduxUser(myuser)
+                        company.employees[i].benefits[j].amount = amount;
+                        this.props.reduxCompany(company)
                         this.setState({ render: 'render' })
 
                     }
@@ -139,7 +142,7 @@ class ViewEmployee extends Component {
         if (employee) {
 
             if (this.state.activebenefitid) {
-                let benefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                let benefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
                 if (benefit) {
                     getamount = benefit.amount;
                 }
@@ -163,15 +166,15 @@ class ViewEmployee extends Component {
     }
     handleworkinghours(workinghours) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
+        const company = construction.getcompany.call(this)
 
-        if (myuser) {
+        if (company) {
 
             let employee = this.getemployee()
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee.providerid)
-                myuser.company.employees[i].workinghours = workinghours;
-                this.props.reduxUser(myuser)
+                let i = construction.getemployeekeybyid.call(this, employee._id)
+                company.employees[i].workinghours = workinghours;
+                this.props.reduxCompany(company)
                 this.setState({ render: 'render' })
             }
 
@@ -184,45 +187,47 @@ class ViewEmployee extends Component {
 
     createNewBenefit(benefitid, benefit, accountid, amount, frequency) {
         const construction = new Construction()
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
+        const company = construction.getcompany.call(this)
+        if(company) {
             let employee = this.getemployee()
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee.providerid)
+                let i = construction.getemployeekeybyid.call(this, employee._id)
                 let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount, frequency);
                 if (employee.hasOwnProperty("benefits")) {
-                    myuser.company.employees[i].benefits.push(newBenefit)
+                    company.employees[i].benefits.push(newBenefit)
                 } else {
                     let benefits = { benefit: [newBenefit] }
-                    myuser.company.employees[i].benefits = benefits;
+                    company.employees[i].benefits = benefits;
 
                 }
-                this.props.reduxUser(myuser)
+                this.props.reduxCompany(company)
                 this.setState({ activebenefitid: benefitid })
 
             }
 
         }
+
+        
     }
 
     handleBenefit(benefit) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
+        let company = construction.getcompany.call(this)
         const makeID = new MakeID();
-        if (myuser) {
+        if(company) {
 
             let employee = this.getemployee()
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee.providerid)
+                let i = construction.getemployeekeybyid.call(this, employee._id)
                 if (this.state.activebenefitid) {
 
-                    const getbenefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
 
                     if (getbenefit) {
-                        let j = construction.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee._id, this.state.activebenefitid)
 
-                        myuser.company.employees[i].benefits[j].benefit = benefit;
-                        this.props.reduxUser(myuser)
+                        company.employees[i].benefits[j].benefit = benefit;
+                        this.props.reduxCompany(company)
                         this.setState({ render: 'render' })
 
                     }
@@ -247,9 +252,9 @@ class ViewEmployee extends Component {
         const construction = new Construction();
         let getbenefit = "";
         if (employee) {
-
+            console.log(employee)
             if (this.state.activebenefitid) {
-                let benefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                let benefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
                 if (benefit) {
                     getbenefit = benefit.benefit;
                 }
@@ -267,7 +272,7 @@ class ViewEmployee extends Component {
         if (employee) {
 
             if (this.state.activebenefitid) {
-                let benefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                let benefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
                 if (benefit) {
                     getfrequency = benefit.frequency;
                 }
@@ -281,22 +286,22 @@ class ViewEmployee extends Component {
 
     handleFrequency(frequency) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
+        let company = construction.getcompany.call(this)
         const makeID = new MakeID();
-        if (myuser) {
+        if(company) {
 
             let employee = this.getemployee()
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee.providerid)
+                let i = construction.getemployeekeybyid.call(this, employee._id)
                 if (this.state.activebenefitid) {
 
-                    const getbenefit = construction.getbenefitbyid.call(this, employee.providerid, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
 
                     if (getbenefit) {
-                        let j = construction.getbenefitkeybyid.call(this, employee.providerid, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee._id, this.state.activebenefitid)
 
-                        myuser.company.employees[i].benefits[j].frequency = frequency;
-                        this.props.reduxUser(myuser)
+                        company.employees[i].benefits[j].frequency = frequency;
+                        this.props.reduxCompany(company)
                         this.setState({ render: 'render' })
 
                     }
@@ -342,21 +347,21 @@ class ViewEmployee extends Component {
     removebenefit(benefit) {
         const construction = new Construction();
         if (window.confirm(`Are you sure you want to remove ${benefit.benefit}?`)) {
-            const myuser = construction.getuser.call(this)
+            const company = construction.getcompany.call(this)
 
-            if (myuser) {
+            if(company) {
                 const employee = this.getemployee();
 
                 if (employee) {
-                    const i = construction.getemployeekeybyid.call(this,employee.providerid)
+                    const i = construction.getemployeekeybyid.call(this,employee._id)
 
-                    const getbenefit = construction.getbenefitbyid.call(this,employee.providerid, benefit.benefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this,employee._id, benefit.benefitid)
 
                     if(getbenefit) {
-                        const j =  construction.getbenefitkeybyid.call(this,employee.providerid, benefit.benefitid)
+                        const j =  construction.getbenefitkeybyid.call(this,employee._id, benefit.benefitid)
                     
-                        myuser.company.employees[i].benefits.splice(j,1)
-                        this.props.reduxUser(myuser)
+                        company.employees[i].benefits.splice(j,1)
+                        this.props.reduxCompany(company)
                         this.setState({activebenefitid:false})
                     }
 
@@ -467,7 +472,10 @@ class ViewEmployee extends Component {
         const frequency = new Frequency();
         const piechart = new PieChart();
         if (myuser) {
+            const company = construction.getcompany.call(this)
             const employee = this.getemployee();
+            const employeeid = this.props.match.params.employeeid;
+            const getemployee = construction.getuserbyid.call(this,employeeid)
             if (employee) {
                 return (
 
@@ -478,8 +486,8 @@ class ViewEmployee extends Component {
 
                             <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                                 <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                    to={`/${myuser.profile}/company/${myuser.company.url}/employees/${employee.profile}`}
-                                > /{this.props.match.params.employeeid}</Link>
+                                    to={`/${myuser.UserID}/company/${company.companyid}/employees/${employee.user_id}`}
+                                > /{getemployee.FirstName} {getemployee.LastName}</Link>
                             </div>
 
                             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
@@ -528,7 +536,7 @@ class ViewEmployee extends Component {
 
                             {this.showlaborRate()}
 
-                            {piechart.showpiechart.call(this,employee.providerid)}
+                            {piechart.showpiechart.call(this,employee._id)}
                             
 
                             {construction.showsavecompany.call(this)}
@@ -559,6 +567,7 @@ function mapStateToProps(state) {
         project: state.project,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
+        mycompany:state.mycompany,
         csis: state.csis
     }
 }

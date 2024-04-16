@@ -38,6 +38,10 @@ export function getListNumber(listType, num, i) {
     return listnumber;
 }
 
+export function createRequest(requestid,providerid,companyid,datesent) {
+    return({request:{requestid,providerid,companyid,datesent}})
+}
+
 export function PartNumber(num) {
     return (`Part ${num}`)
 }

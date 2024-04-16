@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { CheckUserNode, LogoutUserNode, LoadCSIs } from './components/actions/api';
+import { CheckUserNode, LogoutUserNode, LoadCSIs, LoadAllUsers } from './components/actions/api';
 import * as actions from './components/actions';
 import { Link } from 'react-router-dom';
 import { firebaseConfig } from './firebaseconfig';
@@ -35,6 +35,7 @@ import BidSchedule from './components/bidschedule'
 import BidLineItem from './components/bidlineitem'
 import BidScheduleLineItem from './components/schedulelineitem'
 import Construction from './components/construction'
+import Proposals from './components/proposals'
 class App extends Component {
   constructor(props) {
     super(props);
@@ -58,7 +59,9 @@ class App extends Component {
       activematerialid: false,
       activeequipmentid: false,
       activeemployeeid: false,
-      register:false
+      register:false,
+      apple:'',
+      google:''
     }
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
@@ -98,7 +101,8 @@ class App extends Component {
     try {
       //let response = TestUser();
 
-      let response = await CheckUserNode();
+      let response = CheckUserNode();
+      response = await response;
 
       console.log(response)
 
@@ -106,7 +110,11 @@ class App extends Component {
 
       if (response.hasOwnProperty("myuser")) {
         let myuser = response.myuser;
+
+        const allusers = await LoadAllUsers();
+
         this.props.reduxUser(myuser)
+        this.props.reduxAllUsers(allusers)
 
       }
 
@@ -126,8 +134,6 @@ class App extends Component {
     const register = new Register()
     const login = new Login()
     const profile = new Profile()
-    const company = new Company();
-    const viewcompany = new ViewCompany();
     const accounts = new Accounts();
     const equipment = new Equipment()
     const employees = new Employees();
@@ -153,16 +159,14 @@ class App extends Component {
       return (login.showLogin.call(this))
     }
 
-    const showcompany = () => {
-      return (company.showCompany.call(this))
-    }
+    // const showcompany = () => {
+    //   return (company.showCompany.call(this))
+    // }
 
     const showprofile = () => {
       return (profile.showProfile.call(this))
     }
-    const showviewcompany = () => {
-      return (viewcompany.showViewCompany.call(this))
-    }
+   
     const showaccounts = () => {
       return (accounts.showAccounts.call(this))
     }
@@ -187,9 +191,10 @@ class App extends Component {
           <Route exact path="/" render={showlanding} />
           <Route exact path="/providers/register" render={showregister} />
           <Route exact path="/providers/login" render={showlogin} />
+          <Route exact path="/company/:companyid" component={Company} />
           <Route exact path="/:providerid/profile" render={showprofile} />
-          <Route exact path="/:providerid/company" render={showcompany} />
-          <Route exact path="/:providerid/company/:companyid" render={showviewcompany} />
+          <Route exact path="/:providerid/company" component={Company} />
+          <Route exact path="/:providerid/company/:companyid" component={ViewCompany} />
           <Route exact path="/:providerid/company/:companyid/accounts" render={showaccounts} />
           <Route exact path="/:providerid/company/:companyid/accounts/:accountid" component={ViewAccount} />
           <Route exact path="/:providerid/company/:companyid/equipment" render={showequipment} />
@@ -202,6 +207,7 @@ class App extends Component {
           <Route exact path="/:providerid/company/:companyid/projects/:projectid" component={Project} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/schedule" component={Schedule} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/actual" component={Actual} />
+          <Route exact path="/:providerid/company/:companyid/projects/:projectid/proposals" component={Proposals} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule" component={BidSchedule} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bidschedule/:csiid" component={BidScheduleLineItem} />
           <Route exact path="/:providerid/company/:companyid/projects/:projectid/bid" component={Bid} />
@@ -217,10 +223,12 @@ class App extends Component {
     const styles = MyStylesheet();
     const regularFont = construction.getRegularFont.call(this)
     if (myuser) {
-
-      if (myuser.hasOwnProperty("company")) {
-        const profile = myuser.profile;
-        const companyid = myuser.company.url;
+      console.log(myuser)
+      const company = construction.getcompany.call(this)
+      if (company) {
+        console.log(company)
+        const profile = myuser.UserID;
+        const companyid = company.companyid;
 
 
 
@@ -305,10 +313,10 @@ class App extends Component {
     let projectidlinks = [];
     const myuser = construction.getuser.call(this)
     if (myuser) {
-      let profile = myuser.profile;
+      let profile = myuser.UserID;
       const myproject = construction.getmyprojects.call(this)
       if (myproject) {
-        const companyid = myuser.company.url
+        const companyid = myuser.company.companyid
         // eslint-disable-next-line
         myproject.map(myproject => {
           let projectid = myproject.title;
@@ -334,7 +342,7 @@ class App extends Component {
         if (myuser.company.hasOwnProperty("projects")) {
           return (
             <div style={{ ...styles.generalContainer }}>
-              <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>
+              <Link to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>
             </div>)
         } else {
           return (<div style={{ ...styles.generalContainer }}>
@@ -354,21 +362,26 @@ class App extends Component {
   }
   handlecompanylink() {
     const construction = new Construction();
-    const user = construction.getuser.call(this)
+   
+
     const styles = MyStylesheet();
     const headerFont = construction.getHeaderFont.call(this)
-
-    if (user) {
-
-      if (user.hasOwnProperty("company")) {
-        return (<Link onClick={() => { this.handlenavigation({ companyid: user.company.companyid }) }}
-          to={`/${user.profile}/company/${user.company.url}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{user.company.url} </Link>)
+    const user = construction.getuser.call(this)
+ 
+    if(user) {
+      const company = construction.getcompany.call(this)
+      console.log(company)
+      if (company) {
+        return (<Link onClick={() => { this.handlenavigation({ companyid: company.companyid }) }}
+          to={`/${user.UserID}/company/${company.companyid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{company.companyid} </Link>)
       } else {
         return (<Link
-          to={`/${user.profile}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /company </Link>)
+          to={`/${user.UserID}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /company </Link>)
       }
 
     }
+
+    
 
   }
 
@@ -394,30 +407,30 @@ class App extends Component {
             <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
               <div style={{ ...styles.generalContainer }}>
                 <Link
-                  to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }} > /{project.title} </Link>
+                  to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects/${project.title}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }} > /{project.title} </Link>
               </div>
 
               <div style={{ ...styles.generalContainer }}>
                 <Link
 
 
-                  to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /schedule </Link>
+                  to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects/${project.title}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /schedule </Link>
               </div>
               <div style={{ ...styles.generalContainer }}>
                 <Link
 
-                  to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
+                  to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects/${project.title}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
               </div>
 
 
               <div style={{ ...styles.generalContainer }}>
                 <Link
                   onClick={() => { this.handlenavigation({ projectid: project.projectid, active: 'actual' }) }}
-                  to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /actual </Link>
+                  to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects/${project.title}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /actual </Link>
               </div>
               <div style={{ ...styles.generalContainer }}>
                 <Link
-                  to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
+                  to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects/${project.title}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
               </div>
 
 
@@ -496,6 +509,7 @@ class App extends Component {
       }
     }
     const myuser = construction.getuser.call(this)
+    const company = construction.getcompany.call(this)
     const headerFont = construction.getHeaderFont.call(this)
 
 
@@ -527,7 +541,7 @@ class App extends Component {
     }
     const link_1 = () => {
       if (myuser) {
-        return (<Link to={`/${myuser.profile}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{myuser.profile} </Link>)
+        return (<Link to={`/${myuser.UserID}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{myuser.UserID} </Link>)
       } else {
         return (<Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> / </Link>)
       }
@@ -577,8 +591,8 @@ class App extends Component {
     }
     const companylinks = () => {
 
-      if (myuser) {
-        if (myuser.hasOwnProperty("company")) {
+      console.log(company)
+        if (company) {
           return (
             <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
               {this.handlecompanylink()}
@@ -590,7 +604,7 @@ class App extends Component {
               {this.handlecompanylink()}
             </div>)
         }
-      }
+      
 
     }
 
@@ -628,7 +642,7 @@ class App extends Component {
 
     const submenulink_1 = () => {
       if (myuser) {
-        return (<Link to={`/${myuser.profile}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{myuser.profile} </Link>)
+        return (<Link to={`/${myuser.UserID}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{myuser.UserID} </Link>)
       } else {
         return (<Link to={`/`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> / </Link>)
       }
@@ -637,7 +651,7 @@ class App extends Component {
     const submenulink_2 = () => {
       if (myuser) {
         if (myuser.hasOwnProperty("company")) {
-          return (<Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>)
+          return (<Link to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>)
         }
       } else {
         return (<Link to={`/providers/register`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.boldFont }}>/register </Link>)
@@ -646,7 +660,7 @@ class App extends Component {
 
     const submenulink_3 = () => {
       if (myuser) {
-        return (<Link to={`/${myuser.profile}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /company </Link>)
+        return (<Link to={`/${myuser.UserID}/company`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /company </Link>)
       } else {
         return (<Link to={`/providers/login`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.boldFont }}>/login </Link>)
       }
@@ -748,7 +762,9 @@ function mapStateToProps(state) {
   return {
     myusermodel: state.myusermodel,
     navigation: state.navigation,
-    csis: state.csis
+    csis: state.csis,
+    mycompany:state.mycompany,
+    allusers:state.allusers
   }
 }
 

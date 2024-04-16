@@ -5,11 +5,13 @@ import project from './projectreducer';
 import allusers from './allusersreducer';
 import allcompanys from './allcompanysreducer';
 import csis from './csireducer'
+import mycompany from './mycompanyreducer'
 export default combineReducers({
     myusermodel,
     navigation,
     project,
     allusers,
     allcompanys,
-    csis
+    csis,
+    mycompany
 })

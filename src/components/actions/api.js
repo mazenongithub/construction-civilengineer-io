@@ -20,9 +20,31 @@ export async function LoadSpecifications(projectid) {
     })
 }
 
+export async function LoadAllCompanies() {
+
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/company/findallcompanys`
+
+    return fetch(APIURL, { credentials: 'include' }).then(resp => {
+
+        if (!resp.ok) {
+            if (resp.status >= 400 && resp.status < 500) {
+                return resp.json().then(data => {
+                    throw data.message
+                })
+            }
+            else {
+                let err = 'Request failed or Server is not responding' ;
+                throw err;
+            }
+        }
+
+        return resp.json();
+    })
+}
+
 export async function LoadAllUsers() {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/loadallusers`
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/myuser/showallusers`
 
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
 
@@ -110,9 +132,32 @@ export async function StripeConnect(stripe) {
     })
 }
 
+export async function FindMyCompany() {
+
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/company/findmycompany`
+
+    return fetch(APIURL, { credentials: 'include' }).then(resp => {
+
+        if (!resp.ok) {
+            if (resp.status >= 400 && resp.status < 500) {
+                return resp.json().then(data => {
+
+                    throw data.message;
+                })
+            }
+            else {
+                let err = 'Request failed or Server is not responding' ;
+                throw err;
+            }
+        }
+
+        return resp.json();
+    })
+}
+
 export async function CheckUserNode() {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/checkuser`
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/myuser/checkuser`
 
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
 
@@ -135,7 +180,7 @@ export async function CheckUserNode() {
 
 export async function LogoutUserNode(providerid) {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/logout`
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/myuser/logout`
     console.log(APIURL)
 
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
@@ -160,7 +205,7 @@ export async function LogoutUserNode(providerid) {
 
 export async function RegisterNewCompany(values) {
     let providerid = values.providerid;
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/createcompany`;
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/company/createcompany`;
     console.log(APIURL)
     return fetch(APIURL, {
         method: 'post',
@@ -254,7 +299,7 @@ export async function CheckEmailAddress(emailaddress) {
 
 export async function AppleLogin(values) {
    
-    var APIURL = `${process.env.REACT_APP_SERVER_API}/construction/applelogin`
+    var APIURL = `${process.env.REACT_APP_SERVER_API}/myuser/loginuser`
     return fetch(APIURL, {
         method: 'post',
         credentials: 'include',
@@ -365,9 +410,9 @@ export async function RegisterUser(values) {
 }
 
 
-export async function SaveCompany(myuser) {
-    const providerid = myuser.providerid;
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/savecompany
+export async function SendRequest(request) {
+    const providerid = request.providerid;
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/requests
     `;
     console.log(APIURL);
     return fetch(APIURL, {
@@ -377,7 +422,43 @@ export async function SaveCompany(myuser) {
             'Content-Type': 'application/json',
         }),
 
-        body: JSON.stringify(myuser)
+        body: JSON.stringify(request)
+    })
+        .then(resp => {
+
+            if (!resp.ok) {
+                if (resp.status >= 400 && resp.status < 500) {
+                    return resp.json().then(data => {
+
+                        throw data.message;
+                    })
+                }
+                else {
+                    let err = 'Request failed or Server is not responding' ;
+                    throw err;
+                }
+            }
+
+            return resp.json();
+        })
+
+}
+
+
+export async function SaveCompany(company) {
+    console.log(company)
+    const companyid = company.company._id;
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/company/${companyid}/updatecompany
+    `;
+    console.log(APIURL);
+    return fetch(APIURL, {
+        method: 'post',
+        credentials: 'include',
+        headers: new Headers({
+            'Content-Type': 'application/json',
+        }),
+
+        body: JSON.stringify(company)
     })
         .then(resp => {
 
@@ -435,7 +516,7 @@ export async function SaveProject(values) {
 export async function SaveProfile(values) {
 let providerid = values.myuser.providerid;
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${providerid}/saveprofile`;
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/myuser/saveuser`;
     console.log(APIURL);
     return fetch(APIURL, {
         method: 'post',

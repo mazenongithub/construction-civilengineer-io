@@ -12,7 +12,7 @@ class Profile  {
     getprofileurl() {
         const construction = new Construction();
         const myuser = construction.getuser.call(this);
-        return myuser.profileurl;
+        return myuser.ProfileURL;
 
 
     }
@@ -34,7 +34,7 @@ class Profile  {
 
             }
 
-            myuser.profileurl = profileurl;
+            myuser.ProfileURL = profileurl;
             this.props.reduxUser(myuser)
             this.setState({ render: 'render' })
 
@@ -83,7 +83,7 @@ class Profile  {
                     <input type="text" style={{ ...styles.addLeftMargin, ...styles.regularFont, ...regularFont, ...styles.generalField }}
                         value={profile.getprofileurl.call(this)}
                         onChange={event => { profile.handleprofileurl.call(this,event.target.value) }}
-                        onBlur={event => { profile.checkprofile.call(this,event.target.value) }}
+                      
 
                     />
 
@@ -93,16 +93,16 @@ class Profile  {
 
     }
    
-    getfirstname() {
+    getFirstName() {
         const construction = new Construction();
         let myuser = construction.getuser.call(this);
-        return myuser.firstname;
+        return myuser.FirstName;
     }
-    handlefirstname(firstname) {
+    handleFirstName(FirstName) {
         const construction = new Construction();
         let myuser = construction.getuser.call(this);
         if (myuser) {
-            myuser.firstname = firstname;
+            myuser.FirstName = FirstName;
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' })
         }
@@ -111,13 +111,13 @@ class Profile  {
     getemailaddress() {
         const construction = new Construction();
         let myuser = construction.getuser.call(this);
-        return myuser.emailaddress;
+        return myuser.EmailAddress;
     }
     handleemailaddress(emailaddress) {
         const construction = new Construction();
         let myuser = construction.getuser.call(this);
         if (myuser) {
-            myuser.emailaddress = emailaddress;
+            myuser.EmailAddress = emailaddress;
             let errmsg = "";
             errmsg = validateEmail(emailaddress)
 
@@ -141,13 +141,13 @@ class Profile  {
     getlastname() {
         const construction = new Construction();
         let myuser = construction.getuser.call(this);
-        return myuser.lastname;
+        return myuser.LastName;
     }
     handlelastname(lastname) {
         const construction = new Construction();
         let myuser = construction.getuser.call(this);
         if (myuser) {
-            myuser.lastname = lastname;
+            myuser.LastName = lastname;
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' })
         }
@@ -157,13 +157,13 @@ class Profile  {
     getphonenumber() {
         const construction = new Construction();
         let myuser = construction.getuser.call(this);
-        return myuser.phonenumber;
+        return myuser.PhoneNumber;
     }
     handlephonenumber(phonenumber) {
         const construction = new Construction();
         let myuser = construction.getuser.call(this);
         if (myuser) {
-            myuser.phonenumber = phonenumber;
+            myuser.PhoneNumber = phonenumber;
             this.props.reduxUser(myuser);
             this.setState({ render: 'render' })
         }
@@ -173,10 +173,10 @@ class Profile  {
     async checkemailaddress() {
         const construction = new Construction();
         const myuser = construction.getuser.call(this);
-        const errmsg = validateEmail(myuser.emailaddress);
+        const errmsg = validateEmail(myuser.EmailAddress);
 
         if (!errmsg) {
-            const response = await CheckEmailAddress(myuser.emailaddress)
+            const response = await CheckEmailAddress(myuser.EmailAddress)
             if (response.hasOwnProperty("invalid")) {
                 myuser.invalidemail = `${response.invalid}`
                 this.props.reduxUser(myuser)
@@ -191,7 +191,7 @@ class Profile  {
 
 
         } else {
-            myuser.invalidemail = myuser.emailaddress;
+            myuser.invalidemail = myuser.EmailAddress;
             this.props.reduxUser(myuser)
             this.setState({ render: 'render' })
         }
@@ -204,15 +204,7 @@ class Profile  {
         const goIcon = construction.getgocheckheight.call(this)
         const myuser = construction.getuser.call(this)
         const profile = new Profile()
-        const showemailicon = () => {
-            if (myuser) {
-                if (!myuser.hasOwnProperty("invalidemail")) {
-                    return (<button style={{ ...styles.generalButton, ...goIcon }}>{goCheckIcon()}</button>)
-                } else {
-                    return;
-                }
-            }
-        }
+      
 
         return (<div style={{ ...styles.generalFlex }}>
             <div style={{ ...styles.flex1 }}>
@@ -223,11 +215,11 @@ class Profile  {
                         <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
                             value={profile.getemailaddress.call(this)}
                             onChange={event => { profile.handleemailaddress.call(this,event.target.value) }}
-                            onBlur={() => { profile.checkemailaddress.call(this) }}
+                          
                         />
                     </div>
                     <div style={{ ...styles.flex1 }}>
-                        {showemailicon()}
+                     &nbsp;
                     </div>
                 </div>
 
@@ -247,8 +239,8 @@ class Profile  {
                     <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
                         First Name <br />
                         <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                            value={profile.getfirstname.call(this)}
-                            onChange={event => { profile.handlefirstname.call(this,event.target.value) }}
+                            value={profile.getFirstName.call(this)}
+                            onChange={event => { profile.handleFirstName.call(this,event.target.value) }}
                         />
                     </div>
                     <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
@@ -305,8 +297,8 @@ class Profile  {
         const profile = new Profile();
         const profileImage = profile.getProfileDimensions.call(this)
 
-        if (myuser.profileurl) {
-            return (<img src={myuser.profileurl} style={{ ...profileImage }} alt={`${myuser.firstname} ${myuser.lastname}`} />)
+        if (myuser.ProfileURL) {
+            return (<img src={myuser.ProfileURL} style={{ ...profileImage }} alt={`${myuser.FirstName} ${myuser.LastName}`} />)
         } else {
             return;
         }
@@ -359,7 +351,7 @@ class Profile  {
             }
         }
 
-        myuser.profile = profile;
+        myuser.UserID = profile;
         this.props.reduxUser(myuser);
         this.setState({ message: errmsg })
 
@@ -472,10 +464,10 @@ class Profile  {
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.topMargin15 }}>
                         <div style={{ ...styles.flex5, ...regularFont, ...headerFont, ...styles.fontBold, ...styles.alignCenter }}>
-                            /<input type="text" value={myuser.profile}
+                            /<input type="text" value={myuser.UserID}
                                 onChange={event => { profile.handleprofile.call(this,event.target.value) }}
                                 style={{ ...styles.generalFont, ...headerFont, ...styles.fontBold }}
-                                onBlur={event => { profile.checkprofile.call(this,event.target.value) }}
+                              
                             />
                         </div>
                         <div style={{ ...styles.flex1 }}>

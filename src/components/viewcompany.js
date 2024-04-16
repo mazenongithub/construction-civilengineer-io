@@ -1,23 +1,55 @@
-import React from 'react'
+import React, {Component} from 'react'
 import { MyStylesheet } from './styles'
 import Construction from './construction'
 import { scrollImageDown, goCheckIcon } from './svg';
 import { validateCompanyID } from './functions';
+import { connect } from 'react-redux';
+import * as actions from './actions';
+
+class ViewCompany extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+
+            render: '', width: 0, height: 0, companyselect: 'newcompany', newcompany: '', comapnysearch: '', companycheck: true, message: ''
+
+        }
+
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
+    }
+    componentDidMount() {
+        console.log("viewcompany")
+        window.addEventListener('resize', this.updateWindowDimensions);
+        this.updateWindowDimensions();
+        const construction = new Construction();
+        const mycompany = construction.getcompany.call(this)
+        console.log(mycompany)
+        if(!mycompany) {
+            construction.findMyCompany.call(this);
+        }
+        
+       // this.checkAllCompany();
+    }
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+    updateWindowDimensions() {
+        this.setState({ width: window.innerWidth, height: window.innerHeight, });
+    }
 
 
-class ViewCompany {
     getcompany() {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this);
-        if(myuser.hasOwnProperty("company")) {
-            return myuser.company;
-        }
+        const mycompany = construction.getcompany.call(this)
+        return mycompany;
     }
     getaddress() {
    
      
         const viewcompany = new ViewCompany();
-const company = viewcompany.getcompany.call(this)
+const company = this.getcompany.call(this)
         if (company) {
             return company.address;
         }
@@ -25,39 +57,39 @@ const company = viewcompany.getcompany.call(this)
     }
     handleaddress(address) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
-                myuser.company.address = address;
-                this.props.reduxUser(myuser);
+        const company = construction.getcompany.call(this)
+        if (company) {
+            
+               company.address = address;
+                this.props.reduxCompany(company)
                 this.setState({ render: 'render' })
-            }
+            
         }
     }
     getcity() {
  
         const viewcompany = new ViewCompany();
-const company = viewcompany.getcompany.call(this)
+const company = this.getcompany.call(this)
         if (company) {
             return company.city;
         }
 
     }
     handlecity(city) {
-        const construction = new Construction()
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
-                myuser.company.city = city;
-                this.props.reduxUser(myuser);
+        const construction = new Construction();
+        const company = construction.getcompany.call(this)
+        if (company) {
+            
+               company.city = city;
+                this.props.reduxCompany(company)
                 this.setState({ render: 'render' })
-            }
+            
         }
     }
     getcontactstate() {
  
         const viewcompany = new ViewCompany();
-const company = viewcompany.getcompany.call(this)
+const company = this.getcompany.call(this)
         let contactstate = "";
         if (company) {
             contactstate = company.contactstate;
@@ -67,19 +99,19 @@ const company = viewcompany.getcompany.call(this)
     }
     handlecontactstate(contactstate) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
-                myuser.company.contactstate = contactstate;
-                this.props.reduxUser(myuser);
+        const company = construction.getcompany.call(this)
+        if (company) {
+            
+               company.contactstate = contactstate;
+                this.props.reduxCompany(company)
                 this.setState({ render: 'render' })
-            }
+            
         }
     }
     getzipcode() {
 
         const viewcompany = new ViewCompany();
-const company = viewcompany.getcompany.call(this)
+const company = this.getcompany.call(this)
         if (company) {
             return company.zipcode;
         }
@@ -87,20 +119,20 @@ const company = viewcompany.getcompany.call(this)
     }
     handlezipcode(zipcode) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
-                myuser.company.zipcode = zipcode;
-                this.props.reduxUser(myuser);
+        const company = construction.getcompany.call(this)
+        if (company) {
+            
+               company.zipcode = zipcode;
+                this.props.reduxCompany(company)
                 this.setState({ render: 'render' })
-            }
+            
         }
     }
 
     getmycompany() {
   
         const viewcompany = new ViewCompany();
-const company = viewcompany.getcompany.call(this)
+const company = this.getcompany.call(this)
         if (company) {
             return company.company;
         }
@@ -108,58 +140,40 @@ const company = viewcompany.getcompany.call(this)
     }
     handlemycompany(company) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
-                myuser.company.company = company;
-                this.props.reduxUser(myuser);
+        const getcompany = construction.getcompany.call(this)
+        if (getcompany) {
+            
+               getcompany.company = company;
+                this.props.reduxCompany(getcompany)
                 this.setState({ render: 'render' })
-            }
+            
         }
     }
 
-    getmyurl() {
+    getmycompanyid() {
     
         const viewcompany = new ViewCompany();
-const company = viewcompany.getcompany.call(this)
+const company = this.getcompany.call(this)
         if (company) {
-            return company.url;
+            return company.companyid;
         }
 
     }
 
-    handlemyurl(url) {
+    handlemycompanyid(companyid) {
         const construction = new Construction();
-
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
-
-            if (myuser.hasOwnProperty("company")) {
-                myuser.company.url = url;
-                let validate = validateCompanyID(url);
-
-                if (!validate) {
-
-                    if (myuser.company.hasOwnProperty("invalid")) {
-                        delete myuser.company.invalid;
-                    }
-                    this.props.reduxUser(myuser);
-                    this.setState({ message: '' })
-
-
-
-                } else {
-                    myuser.company.invalid = validate;
-                    this.setState({ message: validate })
-                }
-
-            }
-
+        const company = construction.getcompany.call(this)
+        if (company) {
+            
+               company.companyid = companyid
+                this.props.reduxCompany(company)
+                this.setState({ render: 'render' })
+            
         }
     }
 
 
-    showViewCompany() {
+    render() {
         const styles = MyStylesheet();
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this)
@@ -168,13 +182,10 @@ const company = viewcompany.getcompany.call(this)
         const goIcon = construction.getgocheckheight.call(this)
         const viewcompany = new ViewCompany()
         if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
+            const company = construction.getcompany.call(this)
+            if (company) {
 
-                const urlicon = () => {
-                    if (!myuser.company.hasOwnProperty("invalid")) {
-                        return (<button style={{ ...styles.generalButton, ...goIcon }}>{goCheckIcon()}</button>)
-                    }
-                }
+              
                 return (
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
@@ -193,17 +204,17 @@ const company = viewcompany.getcompany.call(this)
                                 <div style={{ ...styles.flex1, ...styles.addMargin }}>
                                     <span style={{ ...styles.regularFont, ...regularFont }}> Company </span><br />
                                     <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                        value={viewcompany.getmycompany.call(this)}
-                                        onChange={event => { viewcompany.handlemycompany.call(this, event.target.value) }} />
+                                        value={this.getmycompany.call(this)}
+                                        onChange={event => { this.handlemycompany.call(this, event.target.value) }} />
                                 </div>
                                 <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
-                                    <span style={{ ...styles.regularFont, ...regularFont }}>URL </span> <br />
+                                    <span style={{ ...styles.regularFont, ...regularFont }}>CompanyID </span> <br />
                                     <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                        value={viewcompany.getmyurl.call(this)}
-                                        onChange={event => { viewcompany.handlemyurl.call(this, event.target.value) }}
-                                        onBlur={event => { construction.validatecompanyid.call(this, event.target.value) }} />
+                                        value={this.getmycompanyid.call(this)}
+                                        onChange={event => { this.handlemycompanyid.call(this, event.target.value) }}
+                                      />
 
-                                    {urlicon()}
+                                  
                                 </div>
                             </div>
 
@@ -211,14 +222,14 @@ const company = viewcompany.getcompany.call(this)
                                 <div style={{ ...styles.flex1, ...styles.addMargin }}>
                                     <span style={{ ...styles.regularFont, ...regularFont }}>Address </span> <br />
                                     <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                        value={viewcompany.getaddress.call(this)}
-                                        onChange={event => { viewcompany.handleaddress.call(this, event.target.value) }} />
+                                        value={this.getaddress.call(this)}
+                                        onChange={event => { this.handleaddress.call(this, event.target.value) }} />
                                 </div>
                                 <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
                                     <span style={{ ...styles.regularFont, ...regularFont }}> City </span> <br />
                                     <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                        value={viewcompany.getcity.call(this)}
-                                        onChange={event => { viewcompany.handlecity.call(this, event.target.value) }} />
+                                        value={this.getcity.call(this)}
+                                        onChange={event => { this.handlecity.call(this, event.target.value) }} />
                                 </div>
                             </div>
 
@@ -226,15 +237,15 @@ const company = viewcompany.getcompany.call(this)
                                 <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
                                     <span style={{ ...styles.regularFont, ...regularFont }}> State </span> <br />
                                     <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                        value={viewcompany.getcontactstate.call(this)}
-                                        onChange={event => { viewcompany.handlecontactstate.call(this, event.target.value) }}
+                                        value={this.getcontactstate.call(this)}
+                                        onChange={event => { this.handlecontactstate.call(this, event.target.value) }}
                                     />
                                 </div>
                                 <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
                                     <span style={{ ...styles.regularFont, ...regularFont }}> Zipcode  </span><br />
                                     <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                        value={viewcompany.getzipcode.call(this)}
-                                        onChange={event => { viewcompany.handlezipcode.call(this, event.target.value) }} />
+                                        value={this.getzipcode.call(this)}
+                                        onChange={event => { this.handlezipcode.call(this, event.target.value) }} />
                                 </div>
                             </div>
 
@@ -243,9 +254,29 @@ const company = viewcompany.getcompany.call(this)
 
                         </div>
                     </div>)
+            } else {
+
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Company Not Found </span>
+                </div>)
+
             }
+        } else {
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Company </span>
+            </div>)
         }
     }
 
 }
-export default ViewCompany;
+
+function mapStateToProps(state) {
+    return {
+        myusermodel: state.myusermodel,
+        navigation: state.navigation,
+        allcompanys: state.allcompanys,
+        mycompany:state.mycompany
+    }
+}
+
+export default connect(mapStateToProps, actions)(ViewCompany);

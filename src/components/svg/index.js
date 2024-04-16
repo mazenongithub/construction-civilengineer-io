@@ -186,6 +186,19 @@ export function closeDateMenu() {
 export function DateArrowUp() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40.84 31.42"><defs><style></style></defs><title>datearrowup</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><polygon className="datearrowup-1" points="20.42 0.92 0.92 30.92 39.92 30.92 20.42 0.92" /></g></g></svg>)
 }
+
+export function sentIcon () {
+    return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 226.82 71.5"><defs><style></style></defs><g id="titleText"><rect className="sent-1" x="1.5" y="1.5" width="223.82" height="68.5" rx="9.93" ry="9.93"/><text className="sent-2" transform="translate(69.23 47.03)"><tspan className="sent-4" x="0" y="0">S</tspan><tspan x="23.95" y="0">e</tspan><tspan className="sent-3" x="48" y="0">n</tspan><tspan x="74.45" y="0">t</tspan></text></g></svg>)
+}
+
+export function unsendIcon() {
+    return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 226.82 71.5"><defs><style></style></defs><g id="titleText"><rect className="unsend-2" x="1.5" y="1.5" width="223.82" height="68.5" rx="9.93" ry="9.93"/><text className="unsend-1" transform="translate(37.17 47.03)"><tspan x="0" y="0">Unsend</tspan></text></g></svg>)
+}
+
+export function addCompanyButton() {
+    return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 226.82 71.5"><defs><style></style></defs><g id="titleText"><rect className="addCompanyIcon-2" x="1.5" y="1.5" width="223.82" height="68.5" rx="9.93" ry="9.93"/><text className="addCompanyIcon-3" transform="translate(72.93 47.03)"><tspan className="addCompanyIcon-4" x="0" y="0">A</tspan><tspan className="addCompanyIcon-1" x="28.8" y="0">dd</tspan></text></g></svg>)
+
+}
 export function DateArrowDown() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40.75 34.48"><defs><style>
     </style></defs><title>datearrowdown</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><polygon className="datearrowdown-1" points="20.38 33.5 39.88 0.5 0.88 0.5 20.38 33.5" /></g></g></svg>)

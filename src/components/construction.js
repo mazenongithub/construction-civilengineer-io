@@ -4,11 +4,53 @@ import { updateTimes, sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { calculateTotalMonths, UTCTimefromCurrentDate, validateLoanPayment, getRepaymentCosts, getInterval, newCost, convertUTCTime, formatTimeString, getBenefitInterval, validateProviderID, getDateTime, getDateInterval, getScale, calculatemonth, calculateyear, calculateday, calculateFloat } from './functions'
-import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin,  LoadCSIs, ValidateCompanyID } from './actions/api';
+import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin,  LoadCSIs, ValidateCompanyID, FindMyCompany } from './actions/api';
 import { saveCompanyIcon, saveProjectIcon } from './svg';
 import Spinner from './spinner'
 
 class Construction {
+
+    getuserbyID(user_id) {
+        const construction = new Construction();
+        const allusers = construction.getallusers.call(this)
+        let getuser = false;
+        if(allusers) {
+            for(let user of allusers) {
+                console.log(user_id, user)
+                if(user._ID === user_id) {
+                    getuser = user;
+                }
+
+            }
+        }
+        return getuser;
+    }
+
+    getuserbyid(user_id) {
+        const construction = new Construction();
+        const allusers = construction.getallusers.call(this)
+        let getuser = false;
+        if(allusers) {
+            for(let user of allusers) {
+            
+                if(user.UserID === user_id) {
+                    getuser = user;
+                }
+
+            }
+        }
+ 
+        return getuser;
+    }
+
+    getallusers() {
+        let allusers = false;
+        if(this.props.allusers) {
+            allusers = this.props.allusers;
+        }
+
+        return allusers;
+    }
 
     getfloatbymilestoneid(milestoneid) {
         const construction = new Construction();
@@ -564,6 +606,20 @@ class Construction {
         return schedulelabor;
     }
 
+    async findMyCompany() {
+        try {
+
+            let response = await FindMyCompany();
+            if(response.hasOwnProperty("company")) {
+                this.props.reduxCompany(response.company)
+                this.setState({render:'render'})
+            }
+
+        } catch(err) {
+            alert(err)
+        }
+    }
+
     getproject() {
 
         const construction = new Construction();
@@ -578,12 +634,10 @@ class Construction {
     }
 
     getcompany() {
-        let construction = new Construction();
-        let myuser = construction.getuser.call(this);
         let company = false;
-        if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
-                company = myuser.company;
+        if(this.props.mycompany) {
+            if(this.props.mycompany.hasOwnProperty("_id")) {
+                company = this.props.mycompany;
             }
         }
 
@@ -603,14 +657,13 @@ class Construction {
 
     getmyemployees() {
         const construction = new Construction()
-        let myuser = construction.getuser.call(this);
+        let company = construction.getcompany.call(this)
         let employees = false;
-        if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
-                if (myuser.company.hasOwnProperty("employees")) {
-                    employees = myuser.company.employees;
+            if (company) {
+                if (company.hasOwnProperty("employees")) {
+                    employees = company.employees;
                 }
-            }
+            
         }
         return employees;
     }
@@ -652,6 +705,26 @@ class Construction {
         } else {
             return ({
                 width: '197px'
+            })
+        }
+
+    }
+
+    getcompanybutton() {
+        if (this.state.width > 1200) {
+            return ({
+                width: '221px',
+                height: 'auto'
+            })
+        } else if (this.state.width > 800) {
+            return ({
+                width: '160px',
+                height: 'auto'
+            })
+        } else {
+            return ({
+                width: '110px',
+                height: 'auto'
             })
         }
 
@@ -738,19 +811,22 @@ class Construction {
         let firstname = this.state.firstname;
         let lastname = this.state.lastname;
         let profile = this.state.profile;
+        let userid = profile;
         let phonenumber = this.state.phonenumber;
         let profileurl = this.state.profileurl;
+        let google = this.state.google;
+        let apple = this.state.apple;
 
-
-        let values = { emailaddress, client, clientid, firstname, lastname, profile, phonenumber, profileurl}
+        let values = { emailaddress, client, clientid, firstname, lastname, userid, profile, phonenumber, profileurl, apple, google}
         console.log(values)
         try {
             this.setState({ spinner: true })
             let response = await AppleLogin(values)
             this.setState({ spinner: false })
-            console.log(response)
+           
 
             if (response.hasOwnProperty("myuser")) {
+                console.log(response.myuser)
                 this.props.reduxUser(response.myuser)
                 this.setState({ client: '', clientid: '', emailaddress: '', message: '', emailaddresscheck: false, profilecheck: false, profile: '', firstname: '', lastname: '', profileurl: '' })
             }
@@ -801,6 +877,14 @@ class Construction {
         return equipments;
     }
 
+    getRadioIcon () {
+        if(this.state.width>600) {
+            return({width:'48px'})
+        } else {
+            return({width:'24px'})
+        }
+    }
+
 
     getremoveicon() {
         if (this.state.width > 800) {
@@ -826,6 +910,7 @@ class Construction {
             var user = result.user;
             let client = 'google';
             let clientid = user.providerData[0].uid;
+            let google = clientid;
             let firstname = '';
             if (user.providerData[0].displayName) {
                 firstname = user.providerData[0].displayName.split(' ')[0]
@@ -843,10 +928,11 @@ class Construction {
             let profileurl = user.providerData[0].photoURL;
             let phonenumber = user.phoneNumber;
             let profile = this.state.profile;
-            this.setState({ client, clientid, emailaddress, firstname, lastname, profileurl, phonenumber, emailaddresscheck })
+            let userid = profile;
+           
 
 
-            this.setState({ client, clientid, profile, firstname, lastname, profileurl, phonenumber, emailaddress })
+            this.setState({ client, google, clientid, profile, userid, firstname, lastname, profileurl, phonenumber, emailaddress })
             construction.clientlogin.call(this)
 
 
@@ -1248,11 +1334,14 @@ class Construction {
 
     }
 
-    getbenefitbyid(providerid, benefitid) {
+    getbenefitbyid(_id, benefitid) {
+        console.log(_id,benefitid)
         const construction = new Construction();
-        const benefits = construction.getemployeebenefitsbyid.call(this, providerid)
+        const benefits = construction.getemployeebenefitsbyid.call(this, _id)
+        
         let mybenefit = false;
         if (benefits) {
+            console.log(benefits)
             // eslint-disable-next-line
             benefits.map(benefit => {
                 if (benefit.benefitid === benefitid) {
@@ -1263,24 +1352,25 @@ class Construction {
         return mybenefit;
     }
 
-    getemployeebyid(providerid) {
+    getemployeebyid(_id) {
         const construction = new Construction()
         let myemployees = construction.getmyemployees.call(this)
         let employees = false;
         if (myemployees) {
             // eslint-disable-next-line
             myemployees.map(employee => {
-                if (employee.providerid === providerid) {
+                if (employee._id === _id) {
                     employees = employee;
                 }
             })
         }
         return employees;
     }
-    getemployeebenefitsbyid(providerid) {
+    getemployeebenefitsbyid(_id) {
         const construction = new Construction();
         let benefits = false;
-        const employee = construction.getemployeebyid.call(this, providerid)
+        const employee = construction.getemployeebyid.call(this, _id)
+        console.log(employee)
         if (employee.hasOwnProperty("benefits")) {
             benefits = employee.benefits;
         }
@@ -1308,11 +1398,11 @@ class Construction {
         }
         return projects;
     }
-
+    
     getuser() {
         let user = false;
         if (this.props.myusermodel) {
-            if (this.props.myusermodel.hasOwnProperty("providerid")) {
+            if (this.props.myusermodel.hasOwnProperty("UserID") ) {
                 user = this.props.myusermodel;
             }
 
@@ -1348,10 +1438,11 @@ class Construction {
             let profileurl = user.providerData[0].photoURL;
             let client = 'apple';
             let clientid = user.providerData[0].uid;
+            let apple = user.providerData[0].uid;
             let emailaddress = user.providerData[0].email;
 
             let profile = this.state.profile;
-            this.setState({ client, clientid, profile, firstname, lastname, profileurl, phonenumber, emailaddress })
+            this.setState({ client, clientid, apple, profile, firstname, lastname, profileurl, phonenumber, emailaddress })
             construction.clientlogin.call(this)
 
         } catch (err) {
@@ -1453,6 +1544,18 @@ class Construction {
         }
 
         return benefits;
+    }
+
+    getAllCompanys() {
+      let allcompanys = false;
+        if(this.props.allcompanys.hasOwnProperty("length")) {
+           
+
+                allcompanys = this.props.allcompanys
+
+            
+        }
+        return allcompanys;
     }
 
     getAllActual() {
@@ -2600,14 +2703,14 @@ class Construction {
         }
     }
 
-    getemployeebyprofile(profile) {
+    getemployeebyuserid(user_id) {
         const construction = new Construction()
         let myemployees = construction.getmyemployees.call(this)
         let employees = false;
         if (myemployees) {
             // eslint-disable-next-line
             myemployees.map(employee => {
-                if (employee.profile === profile) {
+                if (employee.user_id === user_id) {
                     employees = employee;
                 }
             })
@@ -2615,14 +2718,14 @@ class Construction {
         return employees;
     }
 
-    getemployeekeybyid(providerid) {
+    getemployeekeybyid(_id) {
         const construction = new Construction()
         let myemployees = construction.getmyemployees.call(this)
         let key = false;
         if (myemployees) {
             // eslint-disable-next-line
             myemployees.map((employee, i) => {
-                if (employee.providerid === providerid) {
+                if (employee._id === _id) {
                     key = i;
                 }
             })
@@ -2732,36 +2835,27 @@ class Construction {
 
     async saveCompany() {
         const construction = new Construction()
-        const myuser = construction.getuser.call(this);
-        if (myuser) {
+        const company = construction.getcompany.call(this)
+        if (company) {
        
-               
-
-                const validate = construction.validateCompany.call(this,myuser);
-                if (!validate) {
+        
+            
                     try {
                         this.setState({ spinner: true })
-                        let response = await SaveCompany({myuser});
-                        console.log(response)
+                        let response = await SaveCompany({company});
+                        this.setState({ spinner: false })
                         construction.handlecompanyids.call(this, response)
                      
-                        if (response.hasOwnProperty("myuser")) {
-                            this.props.reduxUser(response.myuser)
+                        if (response.hasOwnProperty("company")) {
+                            this.props.reduxCompany(response.company)
                         }
-                        let message = "";
-                        if (response.hasOwnProperty("message")) {
-                            let dateupdated = formatTimeString(convertUTCTime(response.lastupdated))
-                            message = `${response.message} Last Updated ${dateupdated}`
-                        }
-                        this.setState({ message, spinner: false })
+                        this.setState({render:'render'})
 
                     } catch (err) {
                         alert(err)
                         this.setState({ spinner: false })
                     }
-                } else {
-                    this.setState({ message: validate })
-                }
+               
 
           
 
@@ -2771,7 +2865,7 @@ class Construction {
         try {
             let construction = new Construction();
             let myuser = construction.getuser.call(this)
-            let user = { providerid: myuser.providerid, firstname: myuser.firstname, lastname: myuser.lastname, emailaddress: myuser.emailaddress, phonenumber: myuser.phonenumber, profileurl: myuser.profileurl, profile: myuser.profile }
+            let user = { userid:myuser.userid, _id: myuser._ID, firstname: myuser.FirstName, lastname: myuser.LastName, emailaddress: myuser.EmailAddress, phonenumber: myuser.PhoneNumber, profileurl: myuser.ProfileURL, profile: myuser.profile, userid:myuser.UserID }
             this.setState({ spinner: true })
             let response = await SaveProfile({ myuser: user })
             console.log(response)

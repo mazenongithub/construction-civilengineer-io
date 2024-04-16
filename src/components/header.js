@@ -17,7 +17,7 @@ class Header {
             if (project) {
                 return (
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                        <Link to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
+                        <Link to={`/${myuser.UserID}/company/${myuser.company.url}/projects/${project.title}`}
                             onClick={() => { header.handleHeader.call(this, { projectid: project.projectid }) }}
                             style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{project.title}</Link>
                     </div>)
@@ -75,7 +75,7 @@ class Header {
                 if (myuser.hasOwnProperty("company")) {
                     return (
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <Link onClick={() => { header.handleHeader.call(this, { companyid: myuser.company.companyid }) }} to={`/${myuser.profile}/company/${myuser.company.url}`}
+                            <Link onClick={() => { header.handleHeader.call(this, { companyid: myuser.company.companyid }) }} to={`/${myuser.UserID}/company/${myuser.company.url}`}
                                 style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
                             >/{myuser.company.url}</Link>
                         </div>)
@@ -84,7 +84,7 @@ class Header {
 
             return (<div style={{ ...styles.generalContainer }}>
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                    <Link to={`/${myuser.profile}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{myuser.profile}</Link>
+                    <Link to={`/${myuser.UserID}/profile`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{myuser.UserID}</Link>
                 </div>
                 {company(myuser)}
                 

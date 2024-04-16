@@ -12,7 +12,7 @@ class Register {
 
     handleProfile(profile) {
         let errmsg = "";
-        this.setState({ profile })
+        this.setState({ profile, userid:profile })
         errmsg += validateProviderID(profile)
         if (errmsg) {
             this.setState({ profilecheck: profile, message: errmsg })
@@ -31,7 +31,7 @@ class Register {
         const clientid = new ClientID();
 
         const showprofile = () => {
-            if (this.state.clientid && this.state.register) {
+            if (this.state.clientid) {
                 return (
 
                     <div style={{ ...styles.generalContainer }}>

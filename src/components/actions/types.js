@@ -4,3 +4,4 @@ export const PROJECT = 'project'
 export const ALLUSERS = 'allusers';
 export const ALLCOMPANYS = 'allcompanys';
 export const CSIS = 'csis'
+export const MYCOMPANY = 'mycompany'
