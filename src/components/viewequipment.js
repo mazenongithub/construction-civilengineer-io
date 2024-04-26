@@ -12,6 +12,7 @@ import EquipmentDate from './equipmentdate';
 import { Link } from 'react-router-dom';
 import MakeID from './makeids'
 import Frequency from './frequency';
+import EquipmentID from './equipmentid';
 
 
 class ViewEquipment extends Component {
@@ -57,13 +58,13 @@ class ViewEquipment extends Component {
         this.setState({ equipmentdateyear: equipmentdateyear(), equipmentdatemonth: equipmentdatemonth(), equipmentdateday: equipmentdateday() })
     }
 
-    
+
 
     removeequipmentcost(cost) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this);
+        const company = construction.getcompany.call(this);
 
-        if (myuser) {
+        if (company) {
 
             if (window.confirm(`Are you sure you want to delete ${cost.detail}?`)) {
                 const equipment = this.getequipment()
@@ -76,8 +77,8 @@ class ViewEquipment extends Component {
                     if (mycost) {
                         const j = construction.getequipmentcostskeybyid.call(this, equipment.eequipmentid, cost.costid)
 
-                        myuser.company.equipment[i].ownership.cost.splice(j, 1);
-                        this.props.reduxUser(myuser)
+                        company.equipment[i].ownership.cost.splice(j, 1);
+                        this.props.reduxCompany(company)
                         this.setState({ render: 'render', activecostid: false })
 
                     }
@@ -99,20 +100,20 @@ class ViewEquipment extends Component {
         const removeIcon = construction.getremoveicon.call(this)
 
         const reoccurring = (cost) => {
-            if(cost.hasOwnProperty("reoccurring")) {
+            if (cost.hasOwnProperty("reoccurring")) {
                 return cost.reoccurring.frequency;
             }
         }
 
         const getactivecostbackground = (costid) => {
-         
-                if (this.state.activecostid === costid) {
-                    return ({ backgroundColor: '#F2C4D2' })
-                } else {
-                    return;
-                }
-        
-            
+
+            if (this.state.activecostid === costid) {
+                return ({ backgroundColor: '#F2C4D2' })
+            } else {
+                return;
+            }
+
+
         }
         return (
             <div style={{ ...styles.generalFlex }} key={cost.costid}>
@@ -149,9 +150,9 @@ class ViewEquipment extends Component {
 
     handledetail(detail) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
+        const company = construction.getcompany.call(this);
         const makeID = new MakeID();
-        if (myuser) {
+        if (company) {
 
             const equipment = this.getequipment()
 
@@ -163,8 +164,8 @@ class ViewEquipment extends Component {
                     if (mycost) {
 
                         let j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
-                        myuser.company.equipment[i].ownership.cost[j].detail = detail;
-                        this.props.reduxUser(myuser)
+                        company.equipment[i].ownership.cost[j].detail = detail;
+                        this.props.reduxCompany(company)
                         this.setState({ render: 'render' })
 
                     }
@@ -180,13 +181,13 @@ class ViewEquipment extends Component {
 
 
                     if (equipment.ownership.hasOwnProperty("cost")) {
-                        myuser.company.equipment[i].ownership.cost.push(newcost)
+                        company.equipment[i].ownership.cost.push(newcost)
                     } else {
 
-                        myuser.company.equipment[i].ownership.cost = [newcost]
+                        company.equipment[i].ownership.cost = [newcost]
                     }
 
-                    this.props.reduxUser(myuser)
+                    this.props.reduxCompany(company)
                     this.setState({ activecostid: costid, render: 'render' })
 
                 }
@@ -201,9 +202,9 @@ class ViewEquipment extends Component {
 
     handlecost(cost) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
+        const company = construction.getcompany.call(this);
         const makeID = new MakeID();
-        if (myuser) {
+        if (company) {
 
             const equipment = this.getequipment()
 
@@ -215,8 +216,8 @@ class ViewEquipment extends Component {
                     if (mycost) {
 
                         let j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
-                        myuser.company.equipment[i].ownership.cost[j].cost = cost;
-                        this.props.reduxUser(myuser)
+                        company.equipment[i].ownership.cost[j].cost = cost;
+                        this.props.reduxCompany(company)
                         this.setState({ render: 'render' })
 
                     }
@@ -233,13 +234,13 @@ class ViewEquipment extends Component {
 
 
                     if (equipment.ownership.hasOwnProperty("cost")) {
-                        myuser.company.equipment[i].ownership.cost.push(newcost)
+                        company.equipment[i].ownership.cost.push(newcost)
                     } else {
 
-                        myuser.company.equipment[i].ownership.cost = [newcost]
+                        company.equipment[i].ownership.cost = [newcost]
                     }
 
-                    this.props.reduxUser(myuser)
+                    this.props.reduxCompany(company)
                     this.setState({ activecostid: costid, render: 'render' })
 
                 }
@@ -250,11 +251,223 @@ class ViewEquipment extends Component {
         }
 
     }
+    getHourly() {
+        let hourly = "";
+        const equipment = this.getequipment();
+        if (equipment.hasOwnProperty("rented")) {
+            hourly = equipment.rented.hourly;
+        }
+        return hourly;
+
+    }
+
+    handleHourly(value) {
+        const construction = new Construction();
+        let company = construction.getcompany.call(this)
+
+        if (company) {
+
+            const equipmentid = this.props.match.params.equipmentid;
+
+            const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
+            if (equipment) {
+                if (equipment.hasOwnProperty("rented")) {
+                    const i = construction.getequipmentkeybyid.call(this, equipmentid)
+                    company.equipment[i].rented.hourly = value;
+                    this.props.reduxCompany(company)
+                    this.setState({ render: 'render' })
+
+
+                }
+
+            }
+
+        }
+    }
+
+
+    getDaily() {
+        let daily = "";
+        const equipment = this.getequipment();
+        if (equipment.hasOwnProperty("rented")) {
+            daily = equipment.rented.daily;
+        }
+        return daily;
+
+    }
+
+    handleDaily(value) {
+        const construction = new Construction();
+        let company = construction.getcompany.call(this)
+
+        if (company) {
+
+            const equipmentid = this.props.match.params.equipmentid;
+
+            const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
+            if (equipment) {
+                if (equipment.hasOwnProperty("rented")) {
+                    const i = construction.getequipmentkeybyid.call(this, equipmentid)
+                    company.equipment[i].rented.daily = value;
+                    this.props.reduxCompany(company)
+                    this.setState({ render: 'render' })
+
+
+                }
+
+            }
+
+        }
+    }
+
+
+    getWeekly() {
+        let weekly = "";
+        const equipment = this.getequipment();
+        if (equipment.hasOwnProperty("rented")) {
+            weekly = equipment.rented.weekly;
+        }
+        return weekly;
+
+    }
+
+    handleWeekly(value) {
+        const construction = new Construction();
+        let company = construction.getcompany.call(this)
+
+        if (company) {
+
+            const equipmentid = this.props.match.params.equipmentid;
+
+            const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
+            if (equipment) {
+                if (equipment.hasOwnProperty("rented")) {
+                    const i = construction.getequipmentkeybyid.call(this, equipmentid)
+                    company.equipment[i].rented.weekly = value;
+                    this.props.reduxCompany(company)
+                    this.setState({ render: 'render' })
+
+
+                }
+
+            }
+
+        }
+    }
+
+    getMonthly() {
+        let monthly = "";
+        const equipment = this.getequipment();
+        if (equipment.hasOwnProperty("rented")) {
+            monthly = equipment.rented.monthly;
+        }
+        return monthly;
+
+    }
+
+    handleMonthly(value) {
+        const construction = new Construction();
+        let company = construction.getcompany.call(this)
+
+        if (company) {
+
+            const equipmentid = this.props.match.params.equipmentid;
+
+            const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
+            if (equipment) {
+                if (equipment.hasOwnProperty("rented")) {
+                    const i = construction.getequipmentkeybyid.call(this, equipmentid)
+                    company.equipment[i].rented.monthly = value;
+                    this.props.reduxCompany(company)
+                    this.setState({ render: 'render' })
+
+
+                }
+
+            }
+
+        }
+    }
+
+    showRental() {
+
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
+        const styles = MyStylesheet();
+        const equipment = this.getequipment();
+        if (equipment) {
+
+            if (equipment.hasOwnProperty("rented")) {
+
+                return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
+                        <span style={{ ...headerFont, ...styles.generalFont, ...styles.boldFont }}>
+                            Equipment Rental
+                        </span>
+                    </div>
+                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                        <span style={{ ...regularFont, ...styles.generalFont }}>
+                            Rates
+                        </span>
+                    </div>
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex5, ...styles.addMargin }}>
+                            <input type="text" style={{ ...regularFont, ...styles.generalFont, ...styles.generalField }}
+                                value={this.getHourly()}
+                                onChange={event => { this.handleHourly(event.target.value) }}
+                            />
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                            <span style={{ ...regularFont, ...styles.generalFont }}>/hr</span>
+                        </div>
+                    </div>
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex5, ...styles.addMargin }}>
+                            <input type="text" style={{ ...regularFont, ...styles.generalFont, ...styles.generalField }}
+                            value={this.getDaily()}
+                                onChange={event => { this.handleDaily(event.target.value) }} />
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                            <span style={{ ...regularFont, ...styles.generalFont }}>/day</span>
+                        </div>
+                    </div>
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex5, ...styles.addMargin }}>
+                            <input type="text" style={{ ...regularFont, ...styles.generalFont, ...styles.generalField }}
+                            value={this.getWeekly()}
+                                onChange={event => { this.handleWeekly(event.target.value) }} />
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                            <span style={{ ...regularFont, ...styles.generalFont }}>/week</span>
+                        </div>
+                    </div>
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex5, ...styles.addMargin }}>
+                            <input type="text" style={{ ...regularFont, ...styles.generalFont, ...styles.generalField }}
+                            value={this.getMonthly()}
+                                onChange={event => { this.handleMonthly(event.target.value) }} />
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                            <span style={{ ...regularFont, ...styles.generalFont }}>/month</span>
+                        </div>
+                    </div>
+
+                </div>)
+
+            }
+
+        }
+    }
 
 
 
 
-    showaccountcost(equipment) {
+    showaccountcost() {
         const styles = MyStylesheet();
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this)
@@ -262,133 +475,143 @@ class ViewEquipment extends Component {
         const headerFont = construction.getHeaderFont.call(this)
         const frequency = new Frequency();
 
-        const buttonWidth = () => {
-            if (this.state.width > 1200) {
-                return ({ width: '60px' })
+        const equipment = this.getequipment();
 
-            } else if (this.state.width > 600) {
-                return ({ width: '50px' })
+        if (equipment) {
 
-            } else {
-                return ({ width: '40px' })
-            }
-        }
+            if (!equipment.hasOwnProperty("rented")) {
+
+                const buttonWidth = () => {
+                    if (this.state.width > 1200) {
+                        return ({ width: '60px' })
+
+                    } else if (this.state.width > 600) {
+                        return ({ width: '50px' })
+
+                    } else {
+                        return ({ width: '40px' })
+                    }
+                }
 
 
 
 
-        const getreoccuring = (equipment) => {
+                const getreoccuring = (equipment) => {
 
-            if (this.state.activecostid) {
-                const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                    if (this.state.activecostid) {
+                        const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
 
-                if (cost) {
-                    if (cost.hasOwnProperty("reoccurring")) {
-                        return (CheckedBox())
+                        if (cost) {
+                            if (cost.hasOwnProperty("reoccurring")) {
+                                return (CheckedBox())
 
+                            } else {
+                                return (EmptyBox())
+                            }
+                        } else {
+                            return (EmptyBox())
+                        }
                     } else {
                         return (EmptyBox())
                     }
-                } else {
-                    return (EmptyBox())
+
                 }
-            } else {
-                return (EmptyBox())
-            }
 
-        }
+                const showfrequency = (equipment) => {
+                    if (this.state.activecostid) {
 
-        const showfrequency = (equipment) => {
-            if (this.state.activecostid) {
+                        const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
 
-                const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                        if (cost.hasOwnProperty("reoccurring")) {
+                            return (frequency.showFrequency.call(this))
+                        }
+                    }
 
-                if (cost.hasOwnProperty("reoccurring")) {
-                    return (frequency.showFrequency.call(this))
                 }
-            }
-
-        }
 
 
-        const Reoccurring = (equipment) => {
+                const Reoccurring = (equipment) => {
 
-            if (this.state.activecostid) {
-                return (<div style={{ ...styles.generalContainer }}>
-                    <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => this.handlereoccurring()}> {getreoccuring(equipment)}</button>
-                    <span style={{ ...regularFont, ...styles.generalFont }}>
-                        Reoccurring Cost
+                    if (this.state.activecostid) {
+                        return (<div style={{ ...styles.generalContainer }}>
+                            <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => this.handlereoccurring()}> {getreoccuring(equipment)}</button>
+                            <span style={{ ...regularFont, ...styles.generalFont }}>
+                                Reoccurring Cost
                             </span>
-                    {showfrequency(equipment)}
+                            {showfrequency(equipment)}
 
 
-                </div>
-                )
-            }
-        }
-
-
-
-        return (
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1 }}>
-
-                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                        <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>Ownership Costs</span>
-                    </div>
-
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1 }}>
-                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...styles.addRightMargin }}>
-                                {equipmentdate.showequipmentdate.call(this)}
-                            </div>
-
-
-
-
-                            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
-                                <span style={{ ...styles.generalFont, ...regularFont }}>  Detail </span> <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont }}
-                                    value={this.getdetail(equipment)}
-                                    onChange={event => { this.handledetail(event.target.value) }}
-                                />
-                            </div>
                         </div>
-                    </div>
+                        )
+                    }
+                }
 
-                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                        <span style={{ ...styles.generalFont, ...regularFont }}> Cost</span> <br />
-                        <input type="text" style={{ ...styles.generalFont, ...regularFont }}
-                            value={this.getcost(equipment)}
-                            onChange={event => { this.handlecost(event.target.value) }} />
-                    </div>
 
-                    {Reoccurring(equipment)}
 
+                return (
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
-                            {this.showequipmentcosts(equipment)}
+
+                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>Ownership Costs</span>
+                            </div>
+
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.flex1 }}>
+                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15, ...styles.addRightMargin }}>
+                                        {equipmentdate.showequipmentdate.call(this)}
+                                    </div>
+
+
+
+
+                                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
+                                        <span style={{ ...styles.generalFont, ...regularFont }}>  Detail </span> <br /> <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                            value={this.getdetail(equipment)}
+                                            onChange={event => { this.handledetail(event.target.value) }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}> Cost</span> <br />
+                                <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                    value={this.getcost(equipment)}
+                                    onChange={event => { this.handlecost(event.target.value) }} />
+                            </div>
+
+                            {Reoccurring(equipment)}
+
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1 }}>
+                                    {this.showequipmentcosts(equipment)}
+                                </div>
+                            </div>
+
+
+
                         </div>
                     </div>
+                )
 
+            }
 
-
-                </div>
-            </div>
-        )
+        }
 
     }
-  
+
 
 
     handleworkinghours(workinghours) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
-        if (myuser) {
+        const company = construction.getcompany.call(this);
+        if (company) {
             const equipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
             if (equipment) {
                 let i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
-                myuser.company.equipment[i].ownership.workinghours = workinghours;
-                this.props.reduxUser(myuser)
+                company.equipment[i].ownership.workinghours = workinghours;
+                this.props.reduxCompany(company)
                 this.setState({ render: 'render' })
 
             }
@@ -399,22 +622,22 @@ class ViewEquipment extends Component {
 
     handleloaninterest(loaninterest) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
+        const company = construction.getcompany.call(this);
 
-        if (myuser) {
+        if (company) {
             if (this.props.match.params.equipmentid) {
                 const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
                 if (myequipment) {
 
-                    
-                        const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+
+                    const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
 
 
-                        myuser.company.equipment[i].ownership.loaninterest = loaninterest;
-                   
+                    company.equipment[i].ownership.loaninterest = loaninterest;
 
 
-                    this.props.reduxUser(myuser)
+
+                    this.props.reduxCompany(company)
                     this.setState({ render: 'render' })
 
                 }
@@ -448,23 +671,23 @@ class ViewEquipment extends Component {
     handleaccountid(accountid) {
         const construction = new Construction();
 
-            let myuser = construction.getuser.call(this);
-            if (myuser) {
-                if (this.props.match.params.equipmentid) {
-                    const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
-                    if (myequipment) {
+        const company = construction.getcompany.call(this);
+        if (company) {
+            if (this.props.match.params.equipmentid) {
+                const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
+                if (myequipment) {
 
-                        let i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
-                        myuser.company.equipment[i].accountid = accountid;
-                        this.props.reduxUser(myuser)
-                        this.setState({ render: 'render' })
+                    let i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                    company.equipment[i].accountid = accountid;
+                    this.props.reduxCompany(company)
+                    this.setState({ render: 'render' })
 
-                    }
                 }
-
             }
 
-       
+        }
+
+
     }
     getequipment() {
         const construction = new Construction();
@@ -514,7 +737,7 @@ class ViewEquipment extends Component {
         }
     }
 
-    equipmentdetail(equipment) {
+    equipmentdetail() {
         const styles = MyStylesheet();
         const construction = new Construction();
         const bidField = construction.getbidfield.call(this);
@@ -523,107 +746,115 @@ class ViewEquipment extends Component {
         const regularFont = construction.getRegularFont.call(this);
         const headerFont = construction.getHeaderFont.call(this)
 
-        const getsaledate = () => {
-            if (this.state.width > 1200) {
-                return (
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex2 }}>
-                            {saledate.showsaledate.call(this)}
+        const equipment = this.getequipment();
 
-                        </div>
-                        <div style={{ ...styles.flex1 }}>
-                            <span style={{ ...regularFont, ...styles.generalFont }}> Resale Value </span> <br />
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
-                                value={this.getresalevalue(equipment)}
-                                onChange={event => { this.handleresalevalue(event.target.value) }}
-                            />
-                        </div>
-                    </div>)
-            } else {
-                return (
-                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.generalContainer }}>
-                            {saledate.showsaledate.call(this)}
+        if (equipment) {
 
-                        </div>
-                        <div style={{ ...styles.generalContainer }}>
-                            <span style={{ ...regularFont, ...styles.generalFont }}> Resale Value </span> <br />
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
-                                value={this.getresalevalue(equipment)}
-                                onChange={event => { this.handleresalevalue(event.target.value) }}
-                            />
-                        </div>
-                    </div>)
-            }
-        }
+            if (!equipment.hasOwnProperty("rented")) {
 
-        const getpurchasedate = () => {
-            if (this.state.width > 1200) {
-                return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex2 }}>
-                        {purchasedate.showpurchasedate.call(this)}
-                    </div>
+                const getsaledate = () => {
+                    if (this.state.width > 1200) {
+                        return (
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.flex2 }}>
+                                    {saledate.showsaledate.call(this)}
+
+                                </div>
+                                <div style={{ ...styles.flex1 }}>
+                                    <span style={{ ...regularFont, ...styles.generalFont }}> Resale Value </span> <br />
+                                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
+                                        value={this.getresalevalue(equipment)}
+                                        onChange={event => { this.handleresalevalue(event.target.value) }}
+                                    />
+                                </div>
+                            </div>)
+                    } else {
+                        return (
+                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.generalContainer }}>
+                                    {saledate.showsaledate.call(this)}
+
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <span style={{ ...regularFont, ...styles.generalFont }}> Resale Value </span> <br />
+                                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
+                                        value={this.getresalevalue(equipment)}
+                                        onChange={event => { this.handleresalevalue(event.target.value) }}
+                                    />
+                                </div>
+                            </div>)
+                    }
+                }
+
+                const getpurchasedate = () => {
+                    if (this.state.width > 1200) {
+                        return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex2 }}>
+                                {purchasedate.showpurchasedate.call(this)}
+                            </div>
+                            <div style={{ ...styles.flex1 }}>
+                                <span style={{ ...regularFont, ...styles.generalFont }}> Purchase Value</span> <br />
+                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
+                                    value={this.getpurchasevalue(equipment)}
+                                    onChange={event => { this.handlepurchasevalue(event.target.value) }}
+                                />
+                            </div>
+                        </div>)
+                    } else {
+
+                        return (
+                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.generalContainer }}>
+                                    {purchasedate.showpurchasedate.call(this)}
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <span style={{ ...regularFont, ...styles.generalFont }}> Purchase Value</span> <br />
+                                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
+                                        value={this.getpurchasevalue(equipment)}
+                                        onChange={event => { this.handlepurchasevalue(event.target.value) }}
+                                    />
+                                </div>
+                            </div>)
+
+                    }
+                }
+
+
+                return (<div style={{ ...styles.generalFlex, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }}>
                     <div style={{ ...styles.flex1 }}>
-                        <span style={{ ...regularFont, ...styles.generalFont }}> Purchase Value</span> <br />
-                        <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
-                            value={this.getpurchasevalue(equipment)}
-                            onChange={event => { this.handlepurchasevalue(event.target.value) }}
-                        />
+
+                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                            <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>Ownership</span>
+                        </div>
+
+                        {getpurchasedate()}
+                        {getsaledate()}
+
+
+
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+                                <span style={{ ...regularFont, ...styles.generalFont }}> Estimated Annual Working Hours </span>
+                                <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                    value={this.getworkinghours(equipment)}
+                                    onChange={event => { this.handleworkinghours(event.target.value) }}
+                                />
+                            </div>
+
+                            <div style={{ ...styles.flex1 }}>
+                                <span style={{ ...regularFont, ...styles.generalFont }}> Loan Interest </span> <br />
+                                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
+                                    value={this.getloaninterest(equipment)}
+                                    onChange={event => { this.handleloaninterest(event.target.value) }}
+                                />
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>)
-            } else {
-
-                return (
-                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.generalContainer }}>
-                            {purchasedate.showpurchasedate.call(this)}
-                        </div>
-                        <div style={{ ...styles.generalContainer }}>
-                            <span style={{ ...regularFont, ...styles.generalFont }}> Purchase Value</span> <br />
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
-                                value={this.getpurchasevalue(equipment)}
-                                onChange={event => { this.handlepurchasevalue(event.target.value) }}
-                            />
-                        </div>
-                    </div>)
 
             }
-        }
-
-        if (equipment.hasOwnProperty("ownership")) {
-            return (<div style={{ ...styles.generalFlex, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.flex1 }}>
-
-                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                        <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>Ownership</span>
-                    </div>
-
-                    {getpurchasedate()}
-                    {getsaledate()}
-
-
-
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1 }}>
-                            <span style={{ ...regularFont, ...styles.generalFont }}> Estimated Annual Working Hours </span>
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont }}
-                                value={this.getworkinghours(equipment)}
-                                onChange={event => { this.handleworkinghours(event.target.value) }}
-                            />
-                        </div>
-
-                        <div style={{ ...styles.flex1 }}>
-                            <span style={{ ...regularFont, ...styles.generalFont }}> Loan Interest </span> <br />
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...bidField }}
-                                value={this.getloaninterest(equipment)}
-                                onChange={event => { this.handleloaninterest(event.target.value) }}
-                            />
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>)
 
         }
 
@@ -632,8 +863,8 @@ class ViewEquipment extends Component {
 
     handlepurchasevalue(purchasevalue) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
-        if (myuser) {
+        const company = construction.getcompany.call(this);
+        if (company) {
 
             const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
             if (myequipment) {
@@ -642,12 +873,13 @@ class ViewEquipment extends Component {
 
                 const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
 
-                myuser.company.equipment[i].ownership.purchase = purchasevalue;
+                company.equipment[i].ownership.purchase = purchasevalue;
+                company.equipment[i].ownership.purchasedate = new Date();
 
 
 
 
-                this.props.reduxUser(myuser)
+                this.props.reduxCompany(company)
                 this.setState({ render: 'render' })
 
             }
@@ -660,18 +892,18 @@ class ViewEquipment extends Component {
 
     handleresalevalue(resalevalue) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
-        if (myuser) {
+        const company = construction.getcompany.call(this);
+        if (company) {
             if (this.props.match.params.equipmentid) {
                 const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
                 if (myequipment) {
 
                     const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
-                    myuser.company.equipment[i].ownership.resalevalue = resalevalue;
+                    company.equipment[i].ownership.resalevalue = resalevalue;
 
 
 
-                    this.props.reduxUser(myuser)
+                    this.props.reduxCompany(company)
                     this.setState({ render: 'render' })
 
                 }
@@ -692,63 +924,52 @@ class ViewEquipment extends Component {
         return ownership;
     }
 
-    handleownership(type, add) {
+    handleownership(type) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
+        const company = construction.getcompany.call(this)
+        if (company) {
             const equipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid)
             if (equipment) {
                 const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
 
                 if (type === 'owned') {
 
-                    if (add) {
+                    company.equipment[i].ownership = {};
 
-                        if (!equipment.hasOwnProperty("ownership")) {
+                    if (equipment.hasOwnProperty("rented")) {
 
-                            myuser.company.equipment[i].ownership = this.createOwnership()
-                            
-                            
-                        }
-
-                        if (equipment.hasOwnProperty("rented")) {
-                            delete myuser.company.equipment[i].rented
-                        }
-
+                        delete company.equipment[i].rented;
                     }
+
+
 
                 }
 
-             else if (type === 'rented') {
+                else if (type === 'rented') {
 
-                if (add) {
+                    company.equipment[i].rented = {}
 
                     if (equipment.hasOwnProperty("ownership")) {
 
 
-                        myuser.company.equipment[i].rented = true;
+                        delete company.equipment[i].ownership
 
                     }
 
 
-
-                } else {
-
-                    if (equipment.hasOwnProperty("rented")) {
-                        delete myuser.company.equipment[i].rented
-                    }
 
                 }
 
+
+
             }
-        
-        
-        }
-
 
         }
 
-        this.props.reduxUser(myuser)
+
+
+
+        this.props.reduxCompany(company)
         this.setState({ render: 'render' })
     }
 
@@ -805,8 +1026,8 @@ class ViewEquipment extends Component {
 
     handleFrequency(amount) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
+        const company = construction.getcompany.call(this)
+        if (company) {
 
             const equipment = this.getequipment()
             if (equipment) {
@@ -816,8 +1037,8 @@ class ViewEquipment extends Component {
                     if (cost) {
                         if (cost.hasOwnProperty("reoccurring")) {
                             const j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
-                            myuser.company.equipment[i].ownership.cost[j].reoccurring.frequency = amount;
-                            this.props.reduxUser(myuser)
+                            company.equipment[i].ownership.cost[j].reoccurring.frequency = amount;
+                            this.props.reduxCompany(company)
                             this.setState({ render: 'render' })
 
                         }
@@ -852,9 +1073,9 @@ class ViewEquipment extends Component {
 
     handlereoccurring() {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
+        const company = construction.getcompany.call(this)
 
-        if (myuser) {
+        if (company) {
             const equipment = this.getequipment()
             if (equipment) {
                 const i = construction.getequipmentkeybyid.call(this, equipment.equipmentid)
@@ -863,12 +1084,12 @@ class ViewEquipment extends Component {
                     if (cost) {
                         const j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
                         if (cost.hasOwnProperty("reoccurring")) {
-                            delete myuser.company.equipment[i].ownership.cost[j].reoccurring
+                            delete company.equipment[i].ownership.cost[j].reoccurring
                         } else {
 
-                            myuser.company.equipment[i].ownership.cost[j].reoccurring = { frequency: '' }
+                            company.equipment[i].ownership.cost[j].reoccurring = { frequency: '' }
                         }
-                        this.props.reduxUser(myuser)
+                        this.props.reduxCompany(company)
                         this.setState({ render: 'render' })
 
                     }
@@ -925,20 +1146,20 @@ class ViewEquipment extends Component {
         }
         return { validate, validatemessage }
     }
-    
+
     removematerial(material) {
         const construction = new Construction();
-  
+
         if (window.confirm(`Are you sure you want to delete ${material.material}?`)) {
             const validate = this.validatematerial(material);
             if (validate.validate) {
-                let myuser = construction.getuser.call(this);
-                const mymaterial = construction.getmymaterialfromid.call(this,material.materialid)
-                if(mymaterial) {
-                const i = construction.getmaterialkeybyid.call(this, material.materialid);
-                myuser.company.materials.mymaterial.splice(i, 1);
-                this.props.reduxUser(myuser);
-                this.setState({ activematerialid: false, message: '' })
+                const company = construction.getcompany.call(this);
+                const mymaterial = construction.getmymaterialfromid.call(this, material.materialid)
+                if (mymaterial) {
+                    const i = construction.getmaterialkeybyid.call(this, material.materialid);
+                    company.materials.mymaterial.splice(i, 1);
+                    this.props.reduxCompany(company);
+                    this.setState({ activematerialid: false, message: '' })
 
                 }
             } else {
@@ -946,7 +1167,7 @@ class ViewEquipment extends Component {
             }
 
         }
-  
+
     }
 
     showmymaterial(mymaterial) {
@@ -1004,23 +1225,26 @@ class ViewEquipment extends Component {
 
             }
         }
+        const company = construction.getcompany.call(this)
         if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
+            if (company) {
                 const equipmentid = this.props.match.params.equipmentid;
                 const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
                 if (equipment) {
 
+
+
                     const ownershipbox = (equipment) => {
-                        if (equipment.hasOwnProperty("ownership") && !equipment.rented) {
+                        if (!equipment.hasOwnProperty("rented")) {
                             return (
                                 <div style={{ ...styles.generalContainer }}>
-                                    <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => { this.handleownership('owned', false) }}>{radioClosed()}</button>
+                                    <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => { this.handleownership('owned') }}>{radioClosed()}</button>
                                 </div>
                             )
                         } else {
                             return (
                                 <div style={{ ...styles.generalContainer }}>
-                                    <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => { this.handleownership('owned', true) }}>{radioOpen()}</button>
+                                    <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => { this.handleownership('owned') }}>{radioOpen()}</button>
                                 </div>
                             )
                         }
@@ -1028,41 +1252,35 @@ class ViewEquipment extends Component {
 
                     const rentedbox = (equipment) => {
                         if (equipment.hasOwnProperty("rented")) {
-                            if (equipment.rented) {
-                                return (
-                                    <div style={{ ...styles.generalContainer }}>
-                                        <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => { this.handleownership('rented', false) }}>{radioClosed()}</button>
-                                    </div>
-                                )
-                            } else {
-                                return (
-                                    <div style={{ ...styles.generalContainer }}>
-                                        <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => { this.handleownership('rented', true) }}>{radioOpen()}</button>
-                                    </div>
-                                )
 
-                            }
+                            return (
+                                <div style={{ ...styles.generalContainer }}>
+                                    <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => { this.handleownership('rented') }}>{radioClosed()}</button>
+                                </div>
+                            )
                         } else {
                             return (
                                 <div style={{ ...styles.generalContainer }}>
-                                    <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => { this.handleownership('rented', true) }}>{radioOpen()}</button>
+                                    <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => { this.handleownership('rented') }}>{radioOpen()}</button>
                                 </div>
                             )
+
                         }
                     }
 
-                    if (equipment.hasOwnProperty("ownership") && !this.setDefault()) {
-                        this.setDefaultState(equipment)
-                    }
 
-                    const equipmentrate =(equipment) => {
 
-                        if(equipment.hasOwnProperty("ownership")) {
-                            let equipmentrate =  construction.calculateequipmentratebyownership.call(this, equipment.equipmentid) 
-                            if(equipmentrate) {
-                                return(<div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
-                                    <span style={{...styles.generalFont,...regularFont}}>Equipment Rate is ${Number(equipmentrate).toFixed(2)}/hr</span>
-                                    </div>)
+
+
+
+                    const equipmentrate = (equipment) => {
+
+                        if (equipment.hasOwnProperty("ownership")) {
+                            let equipmentrate = construction.calculateequipmentratebyownership.call(this, equipment.equipmentid)
+                            if (equipmentrate) {
+                                return (<div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                                    <span style={{ ...styles.generalFont, ...regularFont }}>Equipment Rate is ${Number(equipmentrate).toFixed(2)}/hr</span>
+                                </div>)
                             }
                         }
                     }
@@ -1071,7 +1289,7 @@ class ViewEquipment extends Component {
 
                             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
 
-                                <Link to={`/${myuser.profile}/company/${myuser.company.url}/equipment/${equipment.equipmentid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{equipment.equipment}</Link>
+                                <Link to={`/${myuser.UserID}/company/${company.companyid}/equipment/${equipment.equipmentid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{equipment.equipment}</Link>
                             </div>
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
@@ -1087,9 +1305,11 @@ class ViewEquipment extends Component {
                             </div>
 
                             {accountid.showaccountmenu.call(this)}
-                            {this.equipmentdetail(equipment)}
-                            {this.showaccountcost(equipment)}
-                            {equipmentrate(equipment)}
+
+                            {this.showRental()}
+                            {this.equipmentdetail()}
+                            {this.showaccountcost()}
+
 
                             {construction.showsavecompany.call(this)}
 
@@ -1128,7 +1348,8 @@ function mapStateToProps(state) {
         project: state.project,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
-        csis: state.csis
+        csis: state.csis,
+        mycompany: state.mycompany
     }
 }
 

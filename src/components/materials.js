@@ -36,13 +36,15 @@ class Materials extends Component {
 
         }
         if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
+
+            const company = construction.getcompany.call(this)
+            if (company) {
                 return (
                     <div style={{ ...styles.generalContainer }} key={material.materialid}>
 
                         <div style={{ ...styles.generalContainer, ...getactivematerialbackground(material.materialid), ...styles.bottomMargin15 }}>
                             <Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}
-                                to={`/${myuser.profile}/company/${myuser.company.url}/materials/${material.materialid}`}>
+                                to={`/${myuser.UserID}/company/${company.companyid}/materials/${material.materialid}`}>
                                 <button style={{ ...getactivematerialbackground(material.materialid), ...buttonSize, ...styles.noBorder }}>{goToIcon()}</button> {material.material}</Link>
                         </div>
 
@@ -86,15 +88,17 @@ class Materials extends Component {
         const construction = new Construction();
         const myuser = construction.getuser.call(this)
         if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
 
-                if (myuser.company.hasOwnProperty("materials")) {
-                    myuser.company.materials.push(newMaterial)
+            const company = construction.getcompany.call(this)
+            if (company) {
+
+                if (company.hasOwnProperty("materials")) {
+                    company.materials.push(newMaterial)
                 } else {
                     let materials = { mymaterial: [newMaterial] }
-                    myuser.company.materials = materials;
+                    company.materials = materials;
                 }
-                this.props.reduxUser(myuser)
+                this.props.reduxCompany(company)
                 this.setState({ activematerialid: newMaterial.materialid })
 
             }
@@ -105,16 +109,16 @@ class Materials extends Component {
     handlematerial(material) {
         const construction = new Construction();
         const makeID = new MakeID();
-        const myuser = construction.getuser.call(this)
+        const company = construction.getcompany.call(this)
         const materials = new Materials();
-        if (myuser) {
+        if (company) {
 
             if (this.state.activematerialid) {
                 const mymaterial = construction.getmymaterialfromid.call(this, this.state.activematerialid)
                 if (mymaterial) {
                     let i = construction.getmaterialkeybyid.call(this, this.state.activematerialid)
-                    myuser.company.materials[i].material = material;
-                    this.props.reduxUser(myuser);
+                    company.materials[i].material = material;
+                    this.props.reduxCompany(company);
                     this.setState({ render: 'render', material: '' })
 
                 }
@@ -192,12 +196,12 @@ class Materials extends Component {
         if (window.confirm(`Are you sure you want to delete ${material.material}?`)) {
             const validate = materials.validatematerial.call(this, material);
             if (validate.validate) {
-                let myuser = construction.getuser.call(this);
+                let company = construction.getcompany.call(this)
                 const mymaterial = construction.getmymaterialfromid.call(this, material.materialid)
                 if (mymaterial) {
                     const i = construction.getmaterialkeybyid.call(this, material.materialid);
-                    myuser.company.materials.splice(i, 1);
-                    this.props.reduxUser(myuser);
+                    company.materials.splice(i, 1);
+                    this.props.reduxCompany(company);
                     this.setState({ activematerialid: false, message: '' })
 
                 }
@@ -219,7 +223,8 @@ class Materials extends Component {
         const headerFont = construction.getHeaderFont.call(this)
         const materials = new Materials();
         if (myuser) {
-
+            const company = construction.getcompany.call(this)
+            if(company) {
             
             return (
                 <div style={{ ...styles.generalFlex }}>
@@ -227,7 +232,7 @@ class Materials extends Component {
 
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                             <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                to={`/${myuser.profile}/company/${myuser.company.companyid}/materials`}
+                                to={`/${myuser.UserID}/company/${company.companyid}/materials`}
                             > /materials</Link>
                         </div>
 
@@ -249,6 +254,15 @@ class Materials extends Component {
                     </div>
                 </div>
             )
+
+
+            } else {
+
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Company Not Found </span>
+                </div>)
+
+            }
 
 
 

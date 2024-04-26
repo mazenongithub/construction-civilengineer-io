@@ -15,12 +15,16 @@ class Accounts {
 
         if (myuser) {
 
+            const company = construction.getcompany.call(this)
+
+            if(company) {
+
             if (this.state.activeaccountid) {
                 const account = construction.getaccountbyid.call(this, this.state.activeaccountid)
                 if (account) {
                     let i = construction.getaccountkeybyid.call(this, this.state.activeaccountid)
-                    myuser.company.accounts[i].accountname = accountname;
-                    this.props.reduxUser(myuser)
+                    company.accounts[i].accountname = accountname;
+                    this.props.reduxCompany(company)
                     this.setState({ render: 'render' })
                 }
 
@@ -30,16 +34,18 @@ class Accounts {
 
                 let newaccount = CreateAccount(accountid, accountname, myuser.providerid)
 
-                if (myuser.company.hasOwnProperty("accounts")) {
-                    myuser.company.accounts.push(newaccount)
+                if (company.hasOwnProperty("accounts")) {
+                    company.accounts.push(newaccount)
                 } else {
                     let accounts = { account: [newaccount] }
-                    myuser.company.accounts = accounts;
+                    company.accounts = accounts;
                 }
-                this.props.reduxUser(myuser)
+                this.props.reduxCompany(company)
                 this.setState({ activeaccountid: accountid })
 
             }
+
+        }
 
 
         }
@@ -151,16 +157,19 @@ class Accounts {
         const accounts = new Accounts();
         let construction = new Construction();
 
+        
+
         if (window.confirm(`Are you sure you want to delete ${account.accountname}?`)) {
             let validate = accounts.validateDeleteAccount.call(this, account);
             if (validate.deleteaccount) {
-                const myuser = construction.getuser.call(this);
-                if (myuser) {
+                const company = construction.getcompany.call(this)
+                if (company) {
+
                     const myaccount = construction.getaccountbyid.call(this, account.accountid)
                     if (myaccount) {
                         const i = construction.getaccountkeybyid.call(this, account.accountid)
-                        myuser.company.accounts.splice(i, 1);
-                        this.props.reduxUser(myuser)
+                        company.accounts.splice(i, 1);
+                        this.props.reduxCompany(company)
                         this.setState({ activeaccountid: false })
 
                     }
@@ -181,7 +190,7 @@ class Accounts {
     }
     showmyaccounts() {
         const construction = new Construction();
-        const myaccounts = construction.getmyaccounts.call(this);
+
         const accounts = new Accounts();
         let getaccounts = [];
         let styles = MyStylesheet();
@@ -198,10 +207,15 @@ class Accounts {
         }
 
         const myuser = construction.getuser.call(this)
+        if(myuser) {
+ 
+        const company = construction.getcompany.call(this)
 
 
-        if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
+      
+            if (company) {
+
+                const myaccounts = construction.getmyaccounts.call(this);
                 if (myaccounts) {
 
                     // eslint-disable-next-line
@@ -211,7 +225,7 @@ class Accounts {
 
                                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...regularFont, ...styles.generalFont, ...accounts.getactivebackground.call(this, account.accountid), ...styles.bottomMargin15 }}>
 
-                                    <Link style={{ ...styles.generalLink, ...styles.addLeftMargin15 }} to={`/${myuser.profile}/company/${myuser.company.url}/accounts/${account.accountid}`}>
+                                    <Link style={{ ...styles.generalLink, ...styles.addLeftMargin15 }} to={`/${myuser.UserID}/company/${company.url}/accounts/${account.accountid}`}>
                                         <span style={{ ...styles.generalFont, ...regularFont }}>{account.accountname}</span>
                                         <button style={{ ...accounts.getactivebackground.call(this, account.accountid), ...buttonSize, ...styles.noBorder }}
                                         >{goToIcon()}
@@ -239,7 +253,9 @@ class Accounts {
 
             }
 
-        }
+            }
+
+        
         return getaccounts;
     }
     showAccounts() {
@@ -251,13 +267,17 @@ class Accounts {
         const accounts = new Accounts();
         if (myuser) {
 
+            const company = construction.getcompany.call(this)
+
+            if(company) {
+
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                             <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                to={`/${myuser.profile}/company/${myuser.company.companyid}/accounts`}
+                                to={`/${myuser.UserID}/company/${company.companyid}/accounts`}
                             > /accounts</Link>
                         </div>
 
@@ -271,6 +291,14 @@ class Accounts {
                     </div>
                 </div>
             )
+
+            } else {
+
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Company Not Found</span>
+                </div>)
+
+            }
 
         } else {
             return (<div style={{ ...styles.generalContainer, ...regularFont }}>

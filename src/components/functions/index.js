@@ -269,8 +269,8 @@ export function CreateInvoice(invoiceid, providerid, updated, approved) {
 export function EquipmentOwnership(workinghours, purchasedate, saledate, loaninterest, resalevalue) {
     return ({ workinghours, purchasedate, saledate, loaninterest, resalevalue })
 }
-export function CreateEquipment(equipmentid, equipment, ownershipstatus, accountid) {
-    return ({ equipmentid, equipment, ownershipstatus, accountid })
+export function CreateEquipment(equipmentid, equipment, accountid) {
+    return ({ equipmentid, equipment, accountid })
 }
 export function CreateScheduleEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit) {
     return ({ equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit })

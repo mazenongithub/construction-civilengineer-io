@@ -61,16 +61,16 @@ class ViewMaterial extends Component {
     handleunitcost(unitcost) {
         const construction = new Construction();
        
-        const myuser = construction.getuser.call(this)
+        const company = construction.getcompany.call(this)
     
-        if (myuser) {
+        if (company) {
          
             
                 const mymaterial = this.getMaterial()
                 if(mymaterial) {
                 let i = construction.getmaterialkeybyid.call(this,mymaterial.materialid)
-                myuser.company.materials[i].unitcost = unitcost;
-                this.props.reduxUser(myuser);
+                company.materials[i].unitcost = unitcost;
+                this.props.reduxCompany(company);
                 this.setState({ render: 'render' })
     
                 }
@@ -83,16 +83,16 @@ class ViewMaterial extends Component {
     handleunit(unit) {
         const construction = new Construction();
     
-        const myuser = construction.getuser.call(this)
+        const company = construction.getcompany.call(this)
 
-        if (myuser) {
+        if (company) {
        
               
                     const mymaterial = this.getMaterial()
                     if (mymaterial) {
                         let i = construction.getmaterialkeybyid.call(this, mymaterial.materialid)
-                        myuser.company.materials[i].unit = unit;
-                        this.props.reduxUser(myuser);
+                        company.materials[i].unit = unit;
+                        this.props.reduxCompany(company);
                         this.setState({ render: 'render' })
 
                     }
@@ -105,16 +105,16 @@ class ViewMaterial extends Component {
 
     handleaccountid(accountid) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
+        const company = construction.getcompany.call(this)
 
-        if (myuser) {
+        if (company) {
           
             
                     const mymaterial = this.getMaterial()
                     if (mymaterial) {
                         const i = construction.getmaterialkeybyid.call(this, mymaterial.materialid)
-                        myuser.company.materials[i].accountid = accountid;
-                        this.props.reduxUser(myuser);
+                        company.materials[i].accountid = accountid;
+                        this.props.reduxCompany(company);
                         this.setState({ render: 'render' })
                     }
 
@@ -140,19 +140,23 @@ class ViewMaterial extends Component {
         const accountid  = new AccountID()
         if(myuser) {
 
+            const company = construction.getcompany.call(this)
+
+            if(company) {
+
             const material = this.getMaterial();
             if(material) {
         return (<div style={{ ...styles.generalContainer }}>
 
         <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                             <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                to={`/${myuser.profile}/company/${myuser.company.companyid}/materials`}
+                                to={`/${myuser.UserID}/company/${company.companyid}/materials`}
                             > /materials</Link>
                         </div>
 
             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
 
-                <Link to={`/${myuser.profile}/company/${myuser.company.url}/materials/${material.materialid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{material.material}</Link>
+                <Link to={`/${myuser.UserID}/company/${company.companyid}/materials/${material.materialid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{material.material}</Link>
             </div>
 
 
@@ -188,6 +192,14 @@ class ViewMaterial extends Component {
             }
 
         } else {
+
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Company Not Found </span>
+            </div>)
+
+        }
+
+        } else {
             return (<div style={{ ...styles.generalContainer, ...regularFont }}>
                 <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Materials </span>
             </div>)
@@ -202,7 +214,8 @@ function mapStateToProps(state) {
         project: state.project,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
-        csis: state.csis
+        csis: state.csis,
+        mycompany:state.mycompany
     }
 }
 

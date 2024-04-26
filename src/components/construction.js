@@ -2454,14 +2454,14 @@ class Construction {
 
     getmyequipment() {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
+        let company = construction.getcompany.call(this)
         let equipment = false;
-        if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
-                if (myuser.company.hasOwnProperty("equipment")) {
-                    equipment = myuser.company.equipment;
+        if (company) {
+        
+                if (company.hasOwnProperty("equipment")) {
+                    equipment = company.equipment;
                 }
-            }
+            
         }
         return equipment;
     }

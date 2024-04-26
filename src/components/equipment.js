@@ -23,16 +23,16 @@ class Equipment extends Component {
 
     handleequipment(equipment) {
         const construction = new Construction();
-        let myuser = construction.getuser.call(this);
+        let company = construction.getcompany.call(this)
         const makeID = new MakeID();
 
-        if (myuser) {
+        if (company) {
             if (this.state.activeequipmentid) {
                 const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid)
                 if (myequipment) {
                     let i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
-                    myuser.company.equipment[i].equipment = equipment;
-                    this.props.reduxUser(myuser)
+                    company.equipment[i].equipment = equipment;
+                    this.props.reduxCompany(company)
                     this.setState({ render: 'render' })
 
                 }
@@ -41,20 +41,20 @@ class Equipment extends Component {
 
                 let equipmentid = makeID.equipmentid.call(this);
 
-                let ownership = "";
+      
                 let accountid = this.state.accountid;
 
 
-                let newEquipment = CreateEquipment(equipmentid, equipment, ownership, accountid)
+                let newEquipment = CreateEquipment(equipmentid, equipment, accountid)
 
-                if (myuser.company.hasOwnProperty("equipment")) {
-                    myuser.company.equipment.push(newEquipment);
+                if (company.hasOwnProperty("equipment")) {
+                    company.equipment.push(newEquipment);
                 } else {
                     let equipment = { myequipment: [newEquipment] };
-                    myuser.company.equipment = equipment;
+                    company.equipment = equipment;
 
                 }
-                this.props.reduxUser(myuser);
+                this.props.reduxCompany(company);
                 this.setState({ activeequipmentid: equipmentid })
             }
 
@@ -156,17 +156,14 @@ class Equipment extends Component {
         const equipment = new Equipment();
         const construction = new Construction();
         if (window.confirm(`Are you sure you want to remove ${myequipment.equipment}?`)) {
-            const myuser = construction.getuser.call(this)
+            const company = construction.getcompany.call(this)
             const validate = equipment.checkremoveequipment.call(this, myequipment.equipmentid);
 
             if (validate.validate) {
                 const i = construction.getequipmentkeybyid.call(this, myequipment.equipmentid)
-                myuser.company.equipment.splice(i, 1);
-                if (myuser.company.equipment.length === 0) {
-                    delete myuser.company.equipment
-                    delete myuser.company.equipment
-                }
-                this.props.reduxUser(myuser);
+                company.equipment.splice(i, 1);
+              
+                this.props.reduxCompany(company);
                 this.setState({ render: 'render', activeequipmentid: false })
 
 
@@ -193,13 +190,14 @@ class Equipment extends Component {
 
         }
         if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
+            const company = construction.getcompany.call(this)
+            if (company) {
                 return (
                     <div style={{ ...styles.generalContainer }} key={getequipment.equipmentid}>
 
                         <div style={{ ...styles.generalContainer, ...getactiveequipmentbackground(getequipment.equipmentid), ...styles.bottomMargin15 }}>
                             <Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}
-                                to={`/${myuser.profile}/company/${myuser.company.url}/equipment/${getequipment.equipmentid}`}>
+                                to={`/${myuser.UserID}/company/${company.companyid}/equipment/${getequipment.equipmentid}`}>
                                 <button style={{ ...getactiveequipmentbackground(getequipment.equipmentid), ...buttonSize, ...styles.noBorder }}>{goToIcon()}</button> {getequipment.equipment}</Link>
                         </div>
 
@@ -229,13 +227,15 @@ class Equipment extends Component {
 
         if (myuser) {
 
+            const company = construction.getcompany.call(this)
 
+            if(company) {
             return (
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                             <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                to={`/${myuser.profile}/company/${myuser.company.companyid}/equipment`}
+                                to={`/${myuser.UserID}/company/${company.companyid}/equipment`}
                             > /equipment</Link>
                         </div>
                         {equipment.showequipment.call(this)}
@@ -244,6 +244,14 @@ class Equipment extends Component {
                     </div>
                 </div>
             )
+
+            } else {
+
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Company Not Found  </span>
+                </div>)
+
+            }
 
         } else {
             return (<div style={{ ...styles.generalContainer, ...regularFont }}>
