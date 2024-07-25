@@ -72,6 +72,7 @@ class App extends Component {
     this.props.reduxNavigation({ position: 'open' })
     firebase.initializeApp(firebaseConfig());
     this.checkuser();
+    this.loadAllUsers();
     this.updateWindowDimensions();
   }
   componentWillUnmount() {
@@ -97,6 +98,19 @@ class App extends Component {
       alert(err)
     }
   }
+  async loadAllUsers() {
+    try {
+
+    
+    const allusers = await LoadAllUsers();
+    this.props.reduxAllUsers(allusers)
+
+  } catch(err) {
+    alert(err)
+  }
+   
+  }
+
   async checkuser() {
     try {
       //let response = TestUser();
@@ -104,20 +118,13 @@ class App extends Component {
       let response = CheckUserNode();
       response = await response;
 
-      console.log(response)
+      console.log("checkuser", response)
 
-      response = updateTimes(response)
-
-      if (response.hasOwnProperty("myuser")) {
-        let myuser = response.myuser;
-
-        const allusers = await LoadAllUsers();
-
-        this.props.reduxUser(myuser)
-        this.props.reduxAllUsers(allusers)
-
+      if(response.hasOwnProperty("myuser")) {
+        this.props.reduxUser(response.myuser)
       }
-
+  
+      
 
 
     } catch (err) {
@@ -238,7 +245,7 @@ class App extends Component {
 
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link onClick={() => { this.handlenavigation({ companyid, active: 'employees' }) }}
-                to={`/${profile}/company/${companyid}/employees`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                to={`/${profile}/company/${companyid}`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /employees
               </Link>
             </div>
@@ -246,13 +253,13 @@ class App extends Component {
 
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link onClick={() => { this.handlenavigation({ companyid, active: 'accounts' }) }}
-                to={`/${profile}/company/${companyid}/accounts`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                to={`/${profile}/company/${companyid}`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /accounts
               </Link>
             </div>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link onClick={() => { this.handlenavigation({ companyid, active: 'equipment' }) }}
-                to={`/${profile}/company/${companyid}/equipment`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                to={`/${profile}/company/${companyid}`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /equipment
                </Link>
             </div>

@@ -248,7 +248,7 @@ class PieChart {
 
                 <div style={{ ...styles.generalContainer, ...styles.topMargin15, ...styles.bottomMargin15, ...styles.alignCenter }}>
                     <span style={{ ...styles.generalFont, ...headerFont }}>
-                        Employee Salary % Breakdown
+                        Employee Salary % Breakdown by Account
                     </span>
                 </div>
 

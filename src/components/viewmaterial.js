@@ -3,31 +3,18 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import Construction from './construction';
-import { Link } from 'react-router-dom';
+import { span } from 'react-router-dom';
 import AccountID from './accountid';
 
 
-class ViewMaterial extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { render: '', width: 0, height: 0, activematerialid: '', message: '',spinner:false }
-        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
-    }
-    componentDidMount() {
-        window.addEventListener('resize', this.updateWindowDimensions);
-        this.updateWindowDimensions();
-    }
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.updateWindowDimensions);
-    }
-    updateWindowDimensions() {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
-    }
+class ViewMaterial {
+ 
+   
 
    
     getunit() {
-      
-            let mymaterial = this.getMaterial();
+        const viewmaterial = new ViewMaterial();
+            let mymaterial = viewmaterial.getMaterial.call(this);
             if (mymaterial) {
                 return mymaterial.unit;
             }
@@ -35,19 +22,19 @@ class ViewMaterial extends Component {
     }
 
     getunitcost() {
-      
-            let mymaterial = this.getMaterial();
+            const viewmaterial = new ViewMaterial();
+            let mymaterial = viewmaterial.getMaterial.call(this);
             if (mymaterial) {
                 return mymaterial.unitcost;
             
         } else {
-            return this.state.unitcost;
+            return viewmaterial.state.unitcost;
         }
     }
 
     getaccountid() {
-       
-            let mymaterial = this.getMaterial();
+        const viewmaterial = new ViewMaterial();
+            let mymaterial = viewmaterial.getMaterial.call(this);
 
             if (mymaterial) {
 
@@ -60,13 +47,13 @@ class ViewMaterial extends Component {
 
     handleunitcost(unitcost) {
         const construction = new Construction();
-       
+        const viewmaterial = new ViewMaterial();
         const company = construction.getcompany.call(this)
     
         if (company) {
          
             
-                const mymaterial = this.getMaterial()
+                const mymaterial = viewmaterial.getMaterial.call(this)
                 if(mymaterial) {
                 let i = construction.getmaterialkeybyid.call(this,mymaterial.materialid)
                 company.materials[i].unitcost = unitcost;
@@ -82,13 +69,13 @@ class ViewMaterial extends Component {
 
     handleunit(unit) {
         const construction = new Construction();
-    
+        const viewmaterial = new ViewMaterial();
         const company = construction.getcompany.call(this)
 
         if (company) {
        
               
-                    const mymaterial = this.getMaterial()
+                    const mymaterial = viewmaterial.getMaterial.call(this)
                     if (mymaterial) {
                         let i = construction.getmaterialkeybyid.call(this, mymaterial.materialid)
                         company.materials[i].unit = unit;
@@ -106,11 +93,11 @@ class ViewMaterial extends Component {
     handleaccountid(accountid) {
         const construction = new Construction();
         const company = construction.getcompany.call(this)
-
+        const viewmaterial = new ViewMaterial();
         if (company) {
           
             
-                    const mymaterial = this.getMaterial()
+                    const mymaterial = viewmaterial.getMaterial.call(this)
                     if (mymaterial) {
                         const i = construction.getmaterialkeybyid.call(this, mymaterial.materialid)
                         company.materials[i].accountid = accountid;
@@ -127,36 +114,56 @@ class ViewMaterial extends Component {
 
     getMaterial() {
         const construction = new Construction();
-        const material = construction.getmymaterialfromid.call(this,this.props.match.params.materialid)
+        const material = construction.getmymaterialfromid.call(this,this.state.activematerialid)
         return material;
     }
 
-    render() {
+    showaccountmenu() {
+        const construction = new Construction();
+        const viewmaterial = new ViewMaterial();
+        const styles = MyStylesheet();
+        const regularFont = construction.getRegularFont.call(this);
+
+        return (
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
+                Account  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
+                    value={viewmaterial.getaccountid.call(this)}
+                    onChange={event => { viewmaterial.handleaccountid.call(this,event.target.value) }}>
+                    {construction.loadaccounts.call(this)}
+                </select>
+            </div>)
+
+
+    }
+
+    showViewMaterial() {
         const construction = new Construction();
         const headerFont = construction.getHeaderFont.call(this)
         const styles = MyStylesheet();
         const myuser =construction.getuser.call(this)
         const regularFont = construction.getRegularFont.call(this)
         const accountid  = new AccountID()
+        const viewmaterial = new ViewMaterial();
+
         if(myuser) {
 
             const company = construction.getcompany.call(this)
 
             if(company) {
 
-            const material = this.getMaterial();
+            const material = viewmaterial.getMaterial.call(this);
             if(material) {
         return (<div style={{ ...styles.generalContainer }}>
 
         <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                            <span style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
                                 to={`/${myuser.UserID}/company/${company.companyid}/materials`}
-                            > /materials</Link>
+                            > /materials</span>
                         </div>
 
             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
 
-                <Link to={`/${myuser.UserID}/company/${company.companyid}/materials/${material.materialid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{material.material}</Link>
+                <span to={`/${myuser.UserID}/company/${company.companyid}/materials/${material.materialid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}>/{material.material}</span>
             </div>
 
 
@@ -164,21 +171,21 @@ class ViewMaterial extends Component {
                         <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
                                 Unit <br /><input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    onChange={event => { this.handleunit(event.target.value) }}
-                                    value={this.getunit()} />
+                                    onChange={event => { viewmaterial.handleunit.call(this,event.target.value) }}
+                                    value={viewmaterial.getunit.call(this)} />
                             </div>
 
                             <div style={{ ...styles.flex1, ...styles.alignCenter, ...regularFont, ...styles.addMargin }}>
                                 Unit Cost <br /><input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                    onChange={event => { this.handleunitcost(event.target.value) }}
-                                    value={this.getunitcost()}
+                                    onChange={event => { viewmaterial.handleunitcost.call(this,event.target.value) }}
+                                    value={viewmaterial.getunitcost.call(this)}
                                 />
                             </div>
                         </div>
 
-                        {accountid.showaccountmenu.call(this)}
+                        {viewmaterial.showaccountmenu.call(this)}
 
-                        {construction.showsavecompany.call(this)}
+                
 
 
 
@@ -207,16 +214,5 @@ class ViewMaterial extends Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        myusermodel: state.myusermodel,
-        navigation: state.navigation,
-        project: state.project,
-        allusers: state.allusers,
-        allcompanys: state.allcompanys,
-        csis: state.csis,
-        mycompany:state.mycompany
-    }
-}
 
-export default connect(mapStateToProps, actions)(ViewMaterial);
+export default (ViewMaterial);

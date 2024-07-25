@@ -16,7 +16,7 @@ class EquipmentDate {
         const makeid = new MakeID();
         if (company) {
 
-            const equipmentid = this.props.match.params.equipmentid;
+            const equipmentid = this.state.activeequipmentid;
 
 
             const myequipment = construction.getmyequipmentbyid.call(this, equipmentid);
@@ -71,7 +71,7 @@ class EquipmentDate {
         console.log("getdate")
         const construction = new Construction();
         let getdate = "";
-        const equipmentid = this.props.match.params.equipmentid;
+        const equipmentid = this.state.activeequipmentid;
    
         const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
    

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import Construction from './construction';
 import MakeID from './makeids';
 
-class Materials extends Component {
+class Materials  {
 
 
     makematerialactive(materialid) {
@@ -16,6 +16,10 @@ class Materials extends Component {
             this.setState({ activematerialid: materialid })
         }
 
+    }
+
+    handlematerialid(materialid) {
+        this.setState({navigation:"viewmaterial", activematerialid:materialid})
     }
 
     showmaterialid(material) {
@@ -42,10 +46,12 @@ class Materials extends Component {
                 return (
                     <div style={{ ...styles.generalContainer }} key={material.materialid}>
 
-                        <div style={{ ...styles.generalContainer, ...getactivematerialbackground(material.materialid), ...styles.bottomMargin15 }}>
-                            <Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}
+                        <div style={{ ...styles.generalContainer, ...getactivematerialbackground(material.materialid), ...styles.bottomMargin15 }} onClick={()=> {
+                            materials.handlematerialid.call(this,material.materialid)
+                        }}>
+                            <span style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}
                                 to={`/${myuser.UserID}/company/${company.companyid}/materials/${material.materialid}`}>
-                                <button style={{ ...getactivematerialbackground(material.materialid), ...buttonSize, ...styles.noBorder }}>{goToIcon()}</button> {material.material}</Link>
+                                <button style={{ ...getactivematerialbackground(material.materialid), ...buttonSize, ...styles.noBorder }}>{goToIcon()}</button> {material.material}</span>
                         </div>
 
                         <div style={{ ...styles.generalFlex }}>
@@ -231,9 +237,9 @@ class Materials extends Component {
                     <div style={{ ...styles.flex1 }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                            <span style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
                                 to={`/${myuser.UserID}/company/${company.companyid}/materials`}
-                            > /materials</Link>
+                            > /materials</span>
                         </div>
 
 
@@ -249,7 +255,7 @@ class Materials extends Component {
 
                         {materials.showmaterialids.call(this)}
 
-                        {construction.showsavecompany.call(this)}
+                      
 
                     </div>
                 </div>

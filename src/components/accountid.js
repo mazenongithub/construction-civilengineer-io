@@ -2,11 +2,13 @@ import React from 'react'
 import Construction from './construction';
 import { MyStylesheet } from './styles';
 
+
 class AccountID {
     loadaccounts() {
         const construction = new Construction();
         let accounts =construction.getaccounts.call(this)
-        let options = [<option key={`selectanaccount`} value=""> Select Account ID</option>];
+        let options = [];
+        options.push(<option key={`selectanaccount`} value=""> Select Account ID</option>);
         if (accounts) {
             // eslint-disable-next-line
             accounts.map(account => {

@@ -5,41 +5,13 @@ import { MyStylesheet } from './styles';
 import Construction from './construction';
 import { StripeConnect } from './actions/api'
 import { inputUTCStringForLaborID, calculatetotalhours, sorttimes } from './functions'
-import { Link } from 'react-router-dom';
+import { span } from 'react-router-dom';
 
-class ViewAccount extends Component {
+class ViewAccount  {
 
-    constructor(props) {
-        super(props);
-        this.state = { render: '', width: 0, height: 0, checkstripe:false }
-        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
-    }
-
-    componentDidMount() {
-        
-        this.updateWindowDimensions();
-        const construction = new Construction();
-     
-        const csicodes = construction.getcsis.call(this)
-        if (!csicodes) {
-            construction.loadcsis.call(this)
-        }
-
-    
-
-
-    }
-
-
-
-    componentWillUnmount() {
-      
-    }
-    updateWindowDimensions() {
-        this.setState({ width: window.innerWidth, height: window.innerHeight });
-    }
+ 
     checklaborid(providerid) {
-        let accountid = this.props.match.params.accountid;
+        let accountid = this.state.activeaccountid;
         const construction = new Construction();
         let check = false;
         const benefits = construction.getemployeebenefitsbyid.call(this, providerid)
@@ -58,7 +30,7 @@ class ViewAccount extends Component {
     getaccount() {
         const construction = new Construction();
         
-        const account = construction.getaccountbyid.call(this,this.props.match.params.accountid)
+        const account = construction.getaccountbyid.call(this,this.state.activeaccountid)
         return account
     }
 
@@ -66,7 +38,7 @@ class ViewAccount extends Component {
     checkmaterialid(mymaterialid) {
         const construction = new Construction();
         let check = false;
-        const accountid = this.props.match.params.accountid;
+        const accountid = this.state.activeaccountid;
         const mymaterial = construction.getmymaterialfromid.call(this, mymaterialid)
         if (mymaterial) {
             if (mymaterial.accountid === accountid) {
@@ -81,7 +53,7 @@ class ViewAccount extends Component {
     checkequipmentid(equipmentid) {
         const construction = new Construction();
         const myequipment = construction.getmyequipmentbyid.call(this, equipmentid)
-        const accountid = this.props.match.params.accountid;
+        const accountid = this.state.activeaccountid;
         let check = false;
         if (myequipment) {
             if (myequipment.accountid === accountid) {
@@ -92,6 +64,7 @@ class ViewAccount extends Component {
     }
 
     getallitems() {
+        const viewaccount = new ViewAccount();
         const construction = new Construction()
         let items = [];
         const workItem = (itemid, timein, csiid, type, amount) => {
@@ -133,7 +106,7 @@ class ViewAccount extends Component {
                         // eslint-disable-next-line
                         project.actual.labor.map(mylabor => {
 
-                            if (this.checklaborid(mylabor.providerid)) {
+                            if (viewaccount.checklaborid.call(this,mylabor.providerid)) {
 
                                 let amount = calculatetotalhours(mylabor.timeout, mylabor.timein) * Number(mylabor.laborrate) * (1 + (Number(mylabor.profit) / 100))
                                 items.push(workItem(mylabor.laborid, mylabor.timein, mylabor.csiid, 'labor', amount))
@@ -223,14 +196,15 @@ class ViewAccount extends Component {
 
     async loadstripeconnect(myuser, stripe) {
         const construction = new Construction();
+        const company = construction.getcompany.call(this)
 
         try {
             this.setState({ checkstripe:true  })
             let response = await StripeConnect(stripe)
             console.log(response)
-            let i = construction.getaccountkeybyid.call(this, this.props.match.params.accountid)
+            let i = construction.getaccountkeybyid.call(this, this.state.activeaccountid)
             if (response.url) {
-                myuser.company.accounts[i].stripedashboard = response.url;
+                company.accounts[i].stripedashboard = response.url;
                 this.props.reduxUser(myuser)
                 
 
@@ -315,7 +289,8 @@ class ViewAccount extends Component {
     }
 
     showallworkitems() {
-        const items = this.getallitems();
+        const viewaccount = new ViewAccount();
+        const items = viewaccount.getallitems.call(this);
         let myitems = [];
         if (items.length > 0) {
             // eslint-disable-next-line
@@ -327,20 +302,23 @@ class ViewAccount extends Component {
     }
 
 
-    render() {
+    showViewAccount() {
         const construction = new Construction();
         const myuser = construction.getuser.call(this)
         const headerFont = construction.getHeaderFont.call(this)
         const regularFont = construction.getRegularFont.call(this)
+        const viewaccount = new ViewAccount();
         const styles = MyStylesheet();
-        const items = this.getallitems();
-        console.log(items)
+        const items = viewaccount.getallitems.call(this);
+     
         if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
+            const company = construction.getcompany.call(this)
 
-                if (myuser.company.hasOwnProperty("accounts")) {
+            if(company) {
 
-                    const accountid = this.props.match.params.accountid;
+                if (company.hasOwnProperty("accounts")) {
+
+                    const accountid = this.state.activeaccountid;
                     const account = construction.getaccountbyid.call(this, accountid)
          
                     if (account) {
@@ -351,7 +329,7 @@ class ViewAccount extends Component {
 
                                     <span style={{ ...styles.generalFont, ...styles.boldFont, ...headerFont }}>Account Dashboard</span> <br />
 
-                                    <a style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink, ...styles.blueLink }}
+                                    <a style={{ ...styles.generalFont, ...regularFont, ...styles.generalspan, ...styles.bluespan }}
                                         href={account.stripedashboard}>{account.stripedashboard}</a>
 
                                 </div>)
@@ -363,8 +341,8 @@ class ViewAccount extends Component {
                                     return (
                                         <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
                                             <span style={{ ...styles.generalFont, ...styles.boldFont, ...headerFont }}>Stripe Payments </span> <br />
-                                            <a style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink, ...styles.blueLink }}
-                                                href={`https://connect.stripe.com/express/oauth/authorize?response_type=code&redirect_uri=${process.env.REACT_APP_SERVER_API}/construction/stripe/accounts&client_id=${process.env.REACT_APP_STRIPE_CONNECT}&state=${this.props.match.params.accountid}&scope=read_write`}>Connect Your Account to Stripe To Get Started and Accept Payments</a>
+                                            <a style={{ ...styles.generalFont, ...regularFont, ...styles.generalspan, ...styles.bluespan }}
+                                                href={`https://connect.stripe.com/express/oauth/authorize?response_type=code&redirect_uri=${process.env.REACT_APP_SERVER_API}/construction/stripe/accounts&client_id=${process.env.REACT_APP_STRIPE_CONNECT}&state=${this.state.activeaccountid}&scope=read_write`}>Connect Your Account to Stripe To Get Started and Accept Payments</a>
                                         </div>)
                             
                         }
@@ -372,7 +350,7 @@ class ViewAccount extends Component {
                     }
 
                     if(account.stripe && !account.stripedashboard && !this.state.checkstripe) {
-                        this.loadstripeconnect(myuser,account.stripe)
+                        viewaccount.loadstripeconnect.call(this,myuser,account.stripe)
                     }
 
 
@@ -382,15 +360,15 @@ class ViewAccount extends Component {
 
 
                                 <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/accounts`}
-                                    > /accounts</Link>
+                                    <span style={{ ...styles.generalspan, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        to={`/${myuser.profile}/company/${company.companyid}/accounts`}
+                                    > /accounts</span>
                                 </div>
 
                                 <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/accounts/${account.accountid}`}
-                                    > /{account.accountname}</Link>
+                                    <span style={{ ...styles.generalspan, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                        to={`/${myuser.profile}/company/${company.companyid}/accounts/${account.accountid}`}
+                                    > /{account.accountname}</span>
                                 </div>
 
 
@@ -398,7 +376,7 @@ class ViewAccount extends Component {
 
                                 <div style={{ ...styles.generalContainer }}>
                                     <span style={{ ...styles.generalFont, ...styles.boldFont, ...headerFont }}>Account Summary </span> <br />
-                                    {this.showallworkitems()}
+                                    {viewaccount.showallworkitems.call(this)}
                                 </div>
 
 
@@ -408,16 +386,26 @@ class ViewAccount extends Component {
                             </div>)
 
                     } else {
-                        return (this.default())
+                        return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                            <span style={{ ...styles.generalFont, ...regularFont }}>Account Not Found</span>
+                        </div>)
                     }
-                } else {
-                    return (this.default())
-                }
+              
             } else {
-                return (this.default())
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>No Accounts found</span>
+                </div>)
             }
+
         } else {
-            return (this.default())
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Company Not Found</span>
+            </div>)
+        }
+        } else {
+            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Accounts</span>
+            </div>)
         }
 
 
@@ -425,13 +413,5 @@ class ViewAccount extends Component {
 
 }
 
-function mapStateToProps(state) {
-    return {
-        myusermodel: state.myusermodel,
-        navigation: state.navigation,
-        allusers: state.allusers,
-        csis: state.csis
-    }
-}
 
-export default connect(mapStateToProps, actions)(ViewAccount);
+export default ViewAccount;

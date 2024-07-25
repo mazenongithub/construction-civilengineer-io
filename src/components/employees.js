@@ -54,13 +54,18 @@ class Employees {
 
             }
         }
+    }
 
+    handleEmployee(employee) {
+        console.log("handleemployee", employee)
+        this.setState({navigation:'viewemployee', activeemployeeid:employee._ID})
     }
     showmyemployee(employee) {
         const construction = new Construction();
         const styles = MyStylesheet();
         const regularFont = construction.getRegularFont.call(this);
         const myuser = construction.getuser.call(this)
+        const employees = new Employees();
 
         if (myuser) {
             const company = construction.getcompany.call(this)
@@ -93,9 +98,9 @@ class Employees {
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={`myemployee${getemployee.UserID}`} >
                         <div style={{ ...styles.flex1 }}>
 
-                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}
+                            <a style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }} onClick={()=>{employees.handleEmployee.call(this,getemployee)}}
                                 to={`/${myuser.UserID}/company/${company.companyid}/employees/${getemployee.UserID}`}
-                            > <button style={{ ...styles.generalButton, ...buttonSize() }}>{goToIcon()}</button>  {getemployee. FirstName} {getemployee.LastName}</Link>
+                            > <button style={{ ...styles.generalButton, ...buttonSize() }}>{goToIcon()}</button>  {getemployee. FirstName} {getemployee.LastName}</a>
 
                         </div>
 
@@ -133,9 +138,9 @@ class Employees {
                     <div style={{ ...styles.flex1 }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                to={`/${myuser.UserID}/company/${company.companyid}/employees`}
-                            > /employees</Link>
+                            <span style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                              
+                            > /employees</span>
                         </div>
 
 

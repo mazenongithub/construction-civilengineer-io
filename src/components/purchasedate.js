@@ -11,10 +11,10 @@ class PurchaseDate {
         const construction = new Construction();
         const company = construction.getcompany.call(this)
         if(company) {
-            const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+            const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid);
             if (myequipment) {
 
-                const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                const i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
                 company.equipment[i].ownership.purchasedate = value
                 this.props.reduxCompany(company)
                 this.setState({render:'render'})
@@ -30,9 +30,11 @@ class PurchaseDate {
     getpurchasedate() {
         const construction = new Construction();
         let purchasedate = "";
-        const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+        const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid);
         if (myequipment) {
+            if(myequipment.ownership) {
             purchasedate = myequipment.ownership.purchasedate;
+            }
 
         }
         return purchasedate;

@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 class Accounts {
 
     handleaccountname(accountname) {
+        console.log(accountname)
         const construction = new Construction();
         let myuser = construction.getuser.call(this);
         const makeID = new MakeID();
@@ -18,7 +19,7 @@ class Accounts {
             const company = construction.getcompany.call(this)
 
             if(company) {
-
+           
             if (this.state.activeaccountid) {
                 const account = construction.getaccountbyid.call(this, this.state.activeaccountid)
                 if (account) {
@@ -33,7 +34,7 @@ class Accounts {
                 let accountid = makeID.accountid.call(this)
 
                 let newaccount = CreateAccount(accountid, accountname, myuser.providerid)
-
+                console.log("newaccount", newaccount)
                 if (company.hasOwnProperty("accounts")) {
                     company.accounts.push(newaccount)
                 } else {
@@ -188,6 +189,10 @@ class Accounts {
 
 
     }
+    handleaccountid(accountid) {
+        this.setState({navigation:'viewaccount',activeaccountid:accountid})
+    }
+  
     showmyaccounts() {
         const construction = new Construction();
 
@@ -225,12 +230,15 @@ class Accounts {
 
                                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...regularFont, ...styles.generalFont, ...accounts.getactivebackground.call(this, account.accountid), ...styles.bottomMargin15 }}>
 
-                                    <Link style={{ ...styles.generalLink, ...styles.addLeftMargin15 }} to={`/${myuser.UserID}/company/${company.url}/accounts/${account.accountid}`}>
+                                        <div style={{...styles.generalContainer}} onClick={()=>{accounts.handleaccountid.call(this,account.accountid)}}>
                                         <span style={{ ...styles.generalFont, ...regularFont }}>{account.accountname}</span>
                                         <button style={{ ...accounts.getactivebackground.call(this, account.accountid), ...buttonSize, ...styles.noBorder }}
+                                    
                                         >{goToIcon()}
                                         </button>
-                                    </Link>
+
+                                        </div>
+                                  
                                 </div>
                                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                     <div style={{ ...styles.flex1 }}>
@@ -276,9 +284,9 @@ class Accounts {
                     <div style={{ ...styles.flex1 }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                            <span style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
                                 to={`/${myuser.UserID}/company/${company.companyid}/accounts`}
-                            > /accounts</Link>
+                            > /accounts</span>
                         </div>
 
 
@@ -286,7 +294,7 @@ class Accounts {
 
                         {accounts.showmyaccounts.call(this)}
 
-                        {construction.showsavecompany.call(this)}
+                      
 
                     </div>
                 </div>

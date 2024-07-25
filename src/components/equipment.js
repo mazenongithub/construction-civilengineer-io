@@ -6,7 +6,7 @@ import Construction from './construction';
 import { Link } from 'react-router-dom';
 
 import MakeID from './makeids';
-class Equipment extends Component {
+class Equipment {
 
 
 
@@ -41,7 +41,7 @@ class Equipment extends Component {
 
                 let equipmentid = makeID.equipmentid.call(this);
 
-      
+
                 let accountid = this.state.accountid;
 
 
@@ -99,25 +99,16 @@ class Equipment extends Component {
         if (this.state.activeequipmentid !== equipmentid) {
             const myequipment = construction.getmyequipmentbyid.call(this, equipmentid)
             if (myequipment) {
-                if (myequipment.hasOwnProperty("ownership")) {
 
-                    const purchasedateyear = myequipment.ownership.purchasedate.substring(0, 4)
-                    const purchasedatemonth = myequipment.ownership.purchasedate.substring(5, 7);
-                    const purchasedateday = myequipment.ownership.purchasedate.substring(8, 10);
-                    const saledateyear = myequipment.ownership.saledate.substring(0, 4)
-                    const saledatemonth = myequipment.ownership.saledate.substring(5, 7);
-                    const saledateday = myequipment.ownership.saledate.substring(8, 10);
-                    this.setState({ activeequipmentid: equipmentid, purchasedateyear, purchasedatemonth, purchasedateday, saledateyear, saledatemonth, saledateday })
-                } else {
-                    this.setState({ activeequipmentid: equipmentid })
+                this.setState({ activeequipmentid: equipmentid })
 
-                }
+
             }
+
         } else {
-
-
-            this.setState({ activeequipmentid: false })
+            this.setState({ activeequipmentid: false}) 
         }
+
     }
     checkremoveequipment(equipmentid) {
         const construction = new Construction();
@@ -162,7 +153,7 @@ class Equipment extends Component {
             if (validate.validate) {
                 const i = construction.getequipmentkeybyid.call(this, myequipment.equipmentid)
                 company.equipment.splice(i, 1);
-              
+
                 this.props.reduxCompany(company);
                 this.setState({ render: 'render', activeequipmentid: false })
 
@@ -171,6 +162,9 @@ class Equipment extends Component {
                 this.setState({ message: validate.message })
             }
         }
+    }
+    viewEquipment(activeequipmentid) {
+        this.setState({activeequipmentid, navigation:"viewequipment"})
     }
     showequipmentid(getequipment) {
         const styles = MyStylesheet();
@@ -196,9 +190,13 @@ class Equipment extends Component {
                     <div style={{ ...styles.generalContainer }} key={getequipment.equipmentid}>
 
                         <div style={{ ...styles.generalContainer, ...getactiveequipmentbackground(getequipment.equipmentid), ...styles.bottomMargin15 }}>
-                            <Link style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}
-                                to={`/${myuser.UserID}/company/${company.companyid}/equipment/${getequipment.equipmentid}`}>
-                                <button style={{ ...getactiveequipmentbackground(getequipment.equipmentid), ...buttonSize, ...styles.noBorder }}>{goToIcon()}</button> {getequipment.equipment}</Link>
+                            <a style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}
+                                onClick={()=>{equipment.viewEquipment.call(this,getequipment.equipmentid)}}>
+                             {getequipment.equipment}</a>
+                                <button 
+                                 onClick={()=>{equipment.viewEquipment.call(this,getequipment.equipmentid)}}
+                                style={{ ...getactiveequipmentbackground(getequipment.equipmentid), ...buttonSize, ...styles.noBorder }}>{goToIcon()}</button> 
+                               
                         </div>
 
                         <div style={{ ...styles.generalFlex }} key={getequipment.equipmentid}>
@@ -229,21 +227,16 @@ class Equipment extends Component {
 
             const company = construction.getcompany.call(this)
 
-            if(company) {
-            return (
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
-                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                to={`/${myuser.UserID}/company/${company.companyid}/equipment`}
-                            > /equipment</Link>
+            if (company) {
+                return (
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1 }}>
+                           
+                            {equipment.showequipment.call(this)}
+                            {equipment.showequipmentids.call(this)}
                         </div>
-                        {equipment.showequipment.call(this)}
-                        {equipment.showequipmentids.call(this)}
-                        {construction.showsavecompany.call(this)}
                     </div>
-                </div>
-            )
+                )
 
             } else {
 

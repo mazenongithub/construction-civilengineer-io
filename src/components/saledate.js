@@ -11,36 +11,38 @@ class SaleDate {
     handledate(value) {
         const construction = new Construction();
         const company = construction.getcompany.call(this)
-        if(company) {
-            const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+        if (company) {
+            const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid);
             if (myequipment) {
 
-                const i = construction.getequipmentkeybyid.call(this, this.props.match.params.equipmentid)
+                const i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
                 company.equipment[i].ownership.saledate = value
                 this.props.reduxCompany(company)
-                this.setState({render:'render'})
+                this.setState({ render: 'render' })
 
 
 
             }
         }
-    
-    
+
+
     }
 
     getsaledate() {
         const construction = new Construction();
         let saledate = "";
-        const myequipment = construction.getmyequipmentbyid.call(this, this.props.match.params.equipmentid);
+        const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid);
         if (myequipment) {
-            saledate = myequipment.ownership.saledate;
+            if (myequipment.ownership) {
+                saledate = myequipment.ownership.saledate;
+            }
 
         }
         return saledate;
     }
 
 
-   
+
 
 
 
@@ -50,7 +52,7 @@ class SaleDate {
         const headerFont = construction.getHeaderFont.call(this)
         const regularFont = construction.getRegularFont.call(this)
         const saledate = new SaleDate();
-       
+
         return (
             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1, ...styles.calenderContainer }}>
@@ -64,16 +66,16 @@ class SaleDate {
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
-                            <input type="date" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }} 
-                                onChange={event => { saledate.handledate.call(this, event.target.value) }} 
+                            <input type="date" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }}
+                                onChange={event => { saledate.handledate.call(this, event.target.value) }}
                                 value={saledate.getsaledate.call(this)}
-                                />
+                            />
                         </div>
-                      
+
 
 
                     </div>
-            
+
 
 
                 </div>

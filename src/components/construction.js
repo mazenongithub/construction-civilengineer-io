@@ -2548,6 +2548,20 @@ class Construction {
         }
     }
 
+    loadaccounts() {
+        const construction = new Construction();
+        let accounts =construction.getaccounts.call(this)
+        let options = [];
+        options.push(<option key={`selectanaccount`} value=""> Select Account ID</option>);
+        if (accounts) {
+            // eslint-disable-next-line
+            accounts.map(account => {
+                options.push(<option key={account.accountid} value={account.accountid}>{account.accountname}</option>)
+            })
+        }
+        return options;
+    }
+
 
     handlecompanyids(response) {
         const construction = new Construction();
