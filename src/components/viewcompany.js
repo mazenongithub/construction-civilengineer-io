@@ -295,7 +295,9 @@ class ViewCompany extends Component {
                                 company.equipment[i].ownership.cost[j].timein = newcost.timein;
                                 company.equipment[i].ownership.cost[j].cost = newcost.cost;
                                 company.equipment[i].ownership.cost[j].detail = newcost.detail;
-                                console.log("updating equipment cost")
+                                if(newcost.hasOwnProperty("reoccurring")) {
+                                    company.equipment[i].ownership.cost[j].reoccurring = {frequency:newcost.reoccurring.frequency}
+                                }
 
                             } else {
 
