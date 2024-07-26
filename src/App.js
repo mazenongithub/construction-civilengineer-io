@@ -230,10 +230,10 @@ class App extends Component {
     const styles = MyStylesheet();
     const regularFont = construction.getRegularFont.call(this)
     if (myuser) {
-      console.log(myuser)
+    
       const company = construction.getcompany.call(this)
       if (company) {
-        console.log(company)
+   
         const profile = myuser.UserID;
         const companyid = company.companyid;
 
@@ -377,7 +377,7 @@ class App extends Component {
  
     if(user) {
       const company = construction.getcompany.call(this)
-      console.log(company)
+     
       if (company) {
         return (<Link onClick={() => { this.handlenavigation({ companyid: company.companyid }) }}
           to={`/${user.UserID}/company/${company.companyid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{company.companyid} </Link>)
@@ -598,7 +598,6 @@ class App extends Component {
     }
     const companylinks = () => {
 
-      console.log(company)
         if (company) {
           return (
             <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
