@@ -333,6 +333,70 @@ class ViewCompany extends Component {
                     }
                 }
 
+                if(updatecompany.employees.benefits.update.length > 0 || updatecompany.employees.benefits.insert.length >0) {
+
+                    let newbenefits = updatecompany.employees.benefits.update.concat(updatecompany.employees.benefits.insert)
+
+                    for (let newbenefit of newbenefits) {
+
+                        let employeeid = newbenefit.user_id;
+                        let getbenefit = newbenefit.benefit;
+                        let benefitid = newbenefit.benefitid;
+                        let accountid = newbenefit.accountid;
+                        let amount = newbenefit.amount;
+                        let frequency = newbenefit.frequency;
+
+                        let findemployee = construction.getemployeebyuserid.call(this,employeeid)
+
+                        if(findemployee) {
+                            let i = construction.getemployeekeybyuserid.call(this,employeeid)
+
+                            let findbenefit = construction.getBenefitsByID.call(this,employeeid,benefitid)
+
+                            if(findbenefit) {
+                                let j = construction.getBenefitKeyByID.call(this,employeeid,benefitid)
+                                company.employees[i].benefits[j].benefit = getbenefit;
+                                company.employees[i].benefits[j].amount = amount;
+                                company.employees[i].benefits[j].frequency = frequency;
+                                company.employees[i].benefits[j].accountid = accountid;
+
+
+                            } else {
+                                company.employees[i].benefits.push({benefitid, benefit:getbenefit, frequency, amount, accountid})
+                            }
+
+
+                        }
+
+
+
+
+
+                    }
+
+
+                } // end of insert/update benefit
+
+
+                if(updatecompany.employees.benefits.delete.length >0) {
+                    for(let deletebenefit of updatecompany.employees.benefits.delete) {
+                        let employeeid = deletebenefit.user_id;
+                        let benefitid = deletebenefit.benefitid;
+
+                        let findemployee = construction.getemployeebyuserid.call(this,employeeid)
+                        if(findemployee) {
+                            let i = construction.getemployeekeybyuserid.call(this,employeeid)
+                            let getdeletebenefit = construction.getBenefitsByID.call(this,employeeid,benefitid)
+                            if(getdeletebenefit) {
+                                let j = construction.getBenefitKeyByID.call(this,employeeid,benefitid)
+                                company.employees[i].benefits.splice(j,1)
+                            }
+                        
+                        }
+
+                    }
+                }
+
 
 
 

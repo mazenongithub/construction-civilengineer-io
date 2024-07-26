@@ -867,7 +867,7 @@ class ViewEquipment {
 
             const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid);
             if (myequipment) {
-                console.log(myequipment)
+            
 
 
                 const i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)

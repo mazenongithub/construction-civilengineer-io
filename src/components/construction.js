@@ -1335,13 +1335,13 @@ class Construction {
     }
 
     getbenefitbyid(_id, benefitid) {
-        console.log(_id,benefitid)
+     
         const construction = new Construction();
         const benefits = construction.getemployeebenefitsbyid.call(this, _id)
         
         let mybenefit = false;
         if (benefits) {
-            console.log(benefits)
+       
             // eslint-disable-next-line
             benefits.map(benefit => {
                 if (benefit.benefitid === benefitid) {
@@ -1370,7 +1370,7 @@ class Construction {
         const construction = new Construction();
         let benefits = false;
         const employee = construction.getemployeebyid.call(this, _id)
-        console.log(employee)
+
         if (employee.hasOwnProperty("benefits")) {
             benefits = employee.benefits;
         }
@@ -2000,7 +2000,7 @@ class Construction {
         const myequipment = construction.getmyequipmentbyid.call(this, equipmentid)
         if (myequipment) {
             const costs = construction.gettransformedcostsbyequimentid.call(this, equipmentid);
-            console.log(costs)
+      
             if (costs.length > 0) {
 
                 const Period = () => {
@@ -2013,7 +2013,7 @@ class Construction {
                         return 0;
                     }
                 }
-                console.log(Period())
+               
 
 
                 const totalworkinghours = () => {
@@ -2022,7 +2022,7 @@ class Construction {
 
                     return (Math.round(annual * years))
                 }
-                console.log(totalworkinghours())
+            
                 // eslint-disable-next-line
                 costs.map(cost => {
 
@@ -2715,6 +2715,49 @@ class Construction {
         } else {
             return ({ maxWidth: '400px' })
         }
+    }
+
+    getBenefitKeyByID(user_id, benefitid) {
+        const construction = new Construction();
+        const benefits = construction.getbenefitsbyUserID.call(this,user_id)
+        let key = false;
+        if(benefits) {
+            benefits.map((benefit,i)=> {
+                if(benefit.benefitid === benefitid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    }
+
+    getBenefitsByID(user_id, benefitid) {
+        const construction = new Construction();
+        const benefits = construction.getbenefitsbyUserID.call(this,user_id)
+        let getbenefit = false;
+        if(benefits) {
+            for(let benefit of benefits) {
+                if(benefit.benefitid === benefitid) {
+                    getbenefit = benefit;
+                }
+            }
+        }
+        return getbenefit;
+    }
+
+    getbenefitsbyUserID(user_id) {
+        const construction = new Construction();
+
+        const employee = construction.getemployeebyuserid.call(this,user_id)
+        let benefits = false;
+        if(employee) {
+            if(employee.hasOwnProperty("benefits")) {
+                benefits = employee.benefits;
+            }
+        }
+
+        return benefits;
+        
     }
 
     getemployeebyuserid(user_id) {

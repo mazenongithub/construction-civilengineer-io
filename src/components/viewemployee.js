@@ -246,7 +246,7 @@ class ViewEmployee {
         const construction = new Construction();
         let getbenefit = "";
         if (employee) {
-            console.log(employee)
+     
             if (this.state.activebenefitid) {
                 let benefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
                 if (benefit) {
