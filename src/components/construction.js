@@ -16,7 +16,7 @@ class Construction {
         let getuser = false;
         if(allusers) {
             for(let user of allusers) {
-                console.log(user_id, user)
+               
                 if(user._ID === user_id) {
                     getuser = user;
                 }
@@ -2730,6 +2730,21 @@ class Construction {
             })
         }
         return employees;
+    }
+
+    getemployeekeybyuserid(user_id) {
+        const construction = new Construction()
+        let myemployees = construction.getmyemployees.call(this)
+        let key = false;
+        if (myemployees) {
+            // eslint-disable-next-line
+            myemployees.map((employee,i) => {
+                if (employee.user_id === user_id) {
+                    key = i;
+                }
+            })
+        }
+        return key;
     }
 
     getemployeekeybyid(_id) {
