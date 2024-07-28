@@ -59,15 +59,9 @@ class ViewCompany extends Component {
         this.updateWindowDimensions();
         const construction = new Construction();
 
-        const myuser = construction.getuser.call(this)
-
-        if (myuser) {
-
-            const mycompany = construction.getcompany.call(this)
-
-            if (mycompany) {
-
-                const socket = new WebSocket(`ws://localhost:8081/company/${mycompany.companyid}/websocketapi`);
+        const companyid = this.props.match.params.companyid;
+               
+                const socket = new WebSocket(`ws://localhost:8081/company/${companyid}/websocketapi`);
                 this.setState({ socket })
 
 
@@ -451,11 +445,9 @@ class ViewCompany extends Component {
 
                 socket.onopen = (evt) => {
                     console.log("WEB SOCKET OPENED!!!");
-
+                    const userid = this.props.match.params.providerid;
                     construction.findMyCompany.call(this);
-                    const myuser = construction.getuser.call(this)
-                    const data = { type: "join", userid: myuser.UserID };
-                    console.log(data)
+                    const data = { type: "join", userid };
                     socket.send(JSON.stringify(data));
                 };
 
@@ -469,9 +461,7 @@ class ViewCompany extends Component {
                 };
 
 
-            }
-
-        }
+        
 
 
     }
@@ -871,7 +861,8 @@ function mapStateToProps(state) {
         navigation: state.navigation,
         allcompanys: state.allcompanys,
         mycompany: state.mycompany,
-        allusers: state.allusers
+        allusers: state.allusers,
+        allprojects:state.allprojects
     }
 }
 

@@ -5,7 +5,8 @@ import project from './projectreducer';
 import allusers from './allusersreducer';
 import allcompanys from './allcompanysreducer';
 import csis from './csireducer'
-import mycompany from './mycompanyreducer'
+import mycompany from './mycompanyreducer';
+import allprojects from './allprojectsreducer'
 export default combineReducers({
     myusermodel,
     navigation,
@@ -13,5 +14,6 @@ export default combineReducers({
     allusers,
     allcompanys,
     csis,
-    mycompany
+    mycompany,
+    allprojects
 })

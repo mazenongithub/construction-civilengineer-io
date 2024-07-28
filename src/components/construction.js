@@ -612,8 +612,14 @@ class Construction {
             let response = await FindMyCompany();
             if(response.hasOwnProperty("company")) {
                 this.props.reduxCompany(response.company)
-                this.setState({render:'render'})
+                
+            } 
+
+            if(response.hasOwnProperty("allprojects")) {
+                this.props.reduxAllProjects(response.allprojects)
             }
+
+            this.setState({render:'render'})
 
         } catch(err) {
             alert(err)
