@@ -8,7 +8,7 @@ class Projects {
     showprojectids() {
         const construction = new Construction();
         const projects = new Projects()
-        const myprojects = construction.getmyprojects.call(this)
+        const myprojects = construction.getAllProjects.call(this)
 
         let projectids = [];
         if (myprojects) {
@@ -27,9 +27,12 @@ class Projects {
 
         const regularFont = construction.getRegularFont.call(this)
 
-        const projectid = myproject.title
+        const projectid = myproject.ProjectID
         const myuser = construction.getuser.call(this)
         if (myuser) {
+
+            const company = construction.getcompany.call(this)
+            if(company) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={myproject.projectid}>
                 <div style={{ ...styles.flex1 }}>
 
@@ -38,7 +41,7 @@ class Projects {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                    <Link to={`/${myuser.UserID}/company/${company.companyid}/projects/${projectid}/schedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                         /schedule
                                     </Link>
                                 </div>
@@ -47,7 +50,7 @@ class Projects {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                    <Link to={`/${myuser.UserID}/company/${company.companyid}/projects/${projectid}/bidschedule`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                         /bidschedule
                                     </Link>
                                 </div>
@@ -61,7 +64,7 @@ class Projects {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                    <Link to={`/${myuser.UserID}/company/${company.companyid}/projects/${projectid}/actual`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                         /actual
                                     </Link>
                                 </div>
@@ -70,7 +73,7 @@ class Projects {
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.generalFont, ...regularFont }}>
-                                    <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                                    <Link to={`/${myuser.UserID}/company/${company.companyid}/projects/${projectid}/bid`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                                         /bid
                                     </Link>
                                 </div>
@@ -89,6 +92,8 @@ class Projects {
                 </div>
             </div>)
 
+            }
+
         }
 
     }
@@ -100,15 +105,16 @@ class Projects {
         const projects = new Projects();
         const myuser = construction.getuser.call(this)
         if (myuser) {
-            if (myuser.hasOwnProperty("company")) {
+            const company = construction.getcompany.call(this)
+            if (company) {
                 return (
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={myproject.projectid}>
                         <div style={{ ...styles.flex1 }}>
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...headerFont, ...styles.generalFont, ...styles.alignCenter }}>
-                                    <Link to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${myproject.title}`} style={{ ...styles.generalLink, ...headerFont, ...styles.boldFont, ...styles.generalFont }}>
-                                        {myproject.title}
+                                    <Link to={`/${myuser.UserID}/company/${company.companyid}/projects/${myproject.ProjectID}`} style={{ ...styles.generalLink, ...headerFont, ...styles.boldFont, ...styles.generalFont }}>
+                                        {myproject.ProjectID}
                                     </Link>
                                 </div>
                             </div>

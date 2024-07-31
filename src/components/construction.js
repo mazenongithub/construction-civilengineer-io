@@ -626,6 +626,427 @@ class Construction {
         }
     }
 
+    async loadMyCompany() {
+        const construction = new Construction();
+        try {
+    
+    
+          await construction.findMyCompany.call(this)
+          const mycompany = construction.getcompany.call(this)
+
+          const getsocket = construction.getCompanyWebSocket.call(this)
+    
+          if (mycompany && !getsocket) {
+    
+            const companyid = mycompany._id;
+    
+            const socket = new WebSocket(`ws://localhost:8081/company/${companyid}/websocketapi`)
+    
+            socket.onopen = (evt) => {
+              let myuser = construction.getuser.call(this)
+              console.log("WEB SOCKET OPENED!!!");
+              const userid = myuser.UserID;
+              const data = { type: "join", userid };
+              socket.send(JSON.stringify(data));
+            }
+    
+    
+            socket.onmessage = (evt) => {
+    
+              const response = JSON.parse(evt.data);
+              console.log(response)
+    
+              if (response.type === "join") {
+                console.log(response.text)
+              } else if
+                (response.type === "company") {
+                console.log(response)
+                const updatecompany = response.response;
+                construction.handleCompanyResponse.call(this, updatecompany)
+              }
+    
+            }
+    
+            socket.onerror = (evt) => {
+              console.log("SOMETHING WENT WRONG!");
+              console.log(evt);
+            };
+    
+            socket.onclose = (evt) => {
+              console.log("WEB SOCKET HAS BEEN CLOSED!!!!");
+            };
+    
+            this.props.reduxWebSockets({ company: socket })
+    
+    
+            this.props.reduxWebSockets({ company: socket })
+            this.setState({ render: 'render' })
+    
+          }
+    
+          } catch (err) {
+            alert(`Could not fetch company ${err}`)
+          }
+    
+        
+    
+      }
+
+    handleCompanyResponse(updatecompany) {
+      
+            const construction = new Construction();
+            const company = construction.getcompany.call(this)
+            console.log(updatecompany)
+            const accounts = updatecompany.accounts;
+
+ 
+
+            if (updatecompany.hasOwnProperty("company")) {
+                company.companyid = updatecompany.company.companyid;
+                company.company = updatecompany.company.company;
+                company.address = updatecompany.company.address;
+                company.city = updatecompany.company.city;
+                company.contactstate = updatecompany.company.contactstate;
+                company.zipcode = updatecompany.company.zipcode;
+            }
+
+            if (accounts.insert.length > 0 || accounts.update.length > 0) {
+                const newaccounts = accounts.insert.concat(accounts.update)
+                for (let newaccount of newaccounts) {
+
+                    const newaccountid = newaccount.accountid
+                    const getaccount = construction.getaccountbyid.call(this, newaccountid)
+                    if (getaccount) {
+                        let i = construction.getaccountkeybyid.call(this, newaccountid)
+                        company.accounts[i] = newaccount;
+                    } else {
+                        company.accounts.push(newaccount)
+                    }
+
+                }
+
+            } // insert/update accounts
+
+            if (accounts.delete.length > 0) {
+                for (let deleteaccount of accounts.delete) {
+                    const deleteaccountid = deleteaccount.accountid;
+                    const getdeleteaccount = construction.getaccountbyid.call(this, deleteaccountid)
+                    if (getdeleteaccount) {
+                        let i = construction.getaccountkeybyid.call(this, deleteaccountid)
+                        company.accounts.splice(i, 1)
+                    }
+
+                }
+            } // delete accounts
+
+
+            const newemployees = updatecompany.employees;
+            if (newemployees.insert.length > 0 || newemployees.update.length > 0) {
+                const getnewemployees = newemployees.insert.concat(newemployees.update)
+
+                for (let newemployee of getnewemployees) {
+
+                    let user_id = newemployee.user_id;
+                    const getemployee = construction.getemployeebyuserid.call(this, user_id)
+                    if (getemployee) {
+                        let i = construction.getemployeekeybyuserid.call(this, user_id)
+                        company.employees[i].title = newemployee.title;
+                        company.employees[i].workinghours = newemployee.workinghours;
+
+                    } else {
+                        company.employees.push(newemployee)
+                    }
+
+
+                }
+
+            } // end of insert/update employees
+
+
+            if (newemployees.delete.length > 0) {
+
+                for (let deleteemployee of newemployees.delete) {
+                    let user_id = deleteemployee.user_id;
+                    const getdeleteemployee = construction.getemployeebyuserid.call(this, user_id)
+                    if (getdeleteemployee) {
+                        let i = construction.getemployeekeybyuserid.call(this, user_id)
+                        company.employees.splice(i, 1)
+                    }
+                }
+
+
+            } // end of delete employees
+
+
+            const newmaterials = updatecompany.materials;
+
+            if (newmaterials.insert.length > 0 || newmaterials.update.length > 0) {
+                const getnewmaterials = newmaterials.insert.concat(newmaterials.update)
+                for (let newmaterial of getnewmaterials) {
+                    const newmaterialid = newmaterial.materialid;
+                    const getnewmaterial = construction.getmymaterialfromid.call(this, newmaterialid)
+                    if (getnewmaterial) {
+                        let i = construction.getmaterialkeybyid.call(this, newmaterialid)
+                        company.materials[i] = newmaterial
+                    } else {
+                        company.materials.push(newmaterial)
+                    }
+                }
+
+
+            } // end of insert/update material
+
+            if (newmaterials.delete.length > 0) {
+                for (let deletematerial of newmaterials.delete) {
+                    const deletematerialid = deletematerial.materialid;
+                    const getdeletematerial = construction.getmymaterialfromid.call(this, deletematerialid)
+                    if (getdeletematerial) {
+                        let i = construction.getmaterialkeybyid.call(this, deletematerialid)
+                        company.materials.splice(i, 1)
+                    }
+                }
+            } // end of delete material
+
+
+            const newequipment = updatecompany.equipment;
+
+            if (newequipment.insert.length > 0 || newequipment.update.length > 0) {
+                const newequipments = newequipment.insert.concat(newequipment.update)
+
+                for (let getnewequipment of newequipments) {
+
+                    const equipmentid = getnewequipment.equipmentid;
+
+                    const findnewequipment = construction.getmyequipmentbyid.call(this, equipmentid)
+                    if (findnewequipment) {
+
+                        let i = construction.getequipmentkeybyid.call(this, equipmentid);
+                        company.equipment[i].equipment = getnewequipment.equipment;
+                        company.equipment[i].accountid = getnewequipment.accountid;
+                        if (getnewequipment.hasOwnProperty("ownership")) {
+
+
+                            company.equipment[i].ownership.workinghours = getnewequipment.ownership.workinghours;
+                            company.equipment[i].ownership.purchase = getnewequipment.ownership.purchase;
+                            company.equipment[i].ownership.resalevalue = getnewequipment.ownership.resalevalue;
+                            company.equipment[i].ownership.saledate = getnewequipment.ownership.saledate;
+                            company.equipment[i].ownership.purchasedate = getnewequipment.ownership.purchasedate;
+                            company.equipment[i].ownership.loaninterest = getnewequipment.ownership.loaninterest;
+
+
+                        } else if (getnewequipment.hasOwnProperty("rented")) {
+
+                            company.equipment[i].rented.monthly = getnewequipment.rented.monthly;
+                            company.equipment[i].rented.weekly = getnewequipment.rented.weekly;
+                            company.equipment[i].rented.hourly = getnewequipment.rented.hourly;
+                            company.equipment[i].rented.daily = getnewequipment.rented.daily;
+
+
+
+
+                        }
+
+
+
+                    } else {
+
+                        company.equipment.push(getnewequipment)
+
+                    }
+
+
+
+                }
+
+
+
+            } // end of insert/update equipment
+
+
+            if (newequipment.delete.length > 0) {
+
+                for (let deleteequipment of newequipment.delete) {
+
+                    let deleteequipmentid = deleteequipment.equipmentid;
+                    const getdeleteequipment = construction.getmyequipmentbyid.call(this, deleteequipmentid)
+                    if (getdeleteequipment) {
+
+                        let i = construction.getequipmentkeybyid.call(this, deleteequipmentid)
+                        company.equipment.splice(i, 1)
+
+
+                    }
+
+
+                }
+
+
+
+            }
+
+            const newcosts = updatecompany.equipment.cost;
+
+            if (newcosts.insert.length > 0 || newcosts.update.length > 0) {
+                const getnewcosts = newcosts.insert.concat(newcosts.update)
+
+                for (let newcost of getnewcosts) {
+
+                    const newequipmentid = newcost.equipmentid;
+                    const newcostid = newcost.costid;
+
+
+                    let fetchequipment = construction.getmyequipmentbyid.call(this, newequipmentid)
+
+                    if (fetchequipment) {
+
+
+
+                        let i = construction.getequipmentkeybyid.call(this, newequipmentid)
+                        const getcost = construction.getcostbyid.call(this, newequipmentid, newcostid)
+                        if (getcost) {
+
+                            let j = construction.getequipmentcostskeybyid.call(this, newequipmentid, newcostid)
+
+                            company.equipment[i].ownership.cost[j].timein = newcost.timein;
+                            company.equipment[i].ownership.cost[j].cost = newcost.cost;
+                            company.equipment[i].ownership.cost[j].detail = newcost.detail;
+                            if (newcost.hasOwnProperty("reoccurring")) {
+                                company.equipment[i].ownership.cost[j].reoccurring = { frequency: newcost.reoccurring.frequency }
+                            }
+
+                        } else {
+
+                            company.equipment[i].ownership.cost.push(newcost)
+                        }
+
+
+                    }
+
+
+
+
+
+                }
+            } // end of insert update cost
+
+
+            if (newcosts.delete.length > 0) {
+                for (let deleteequipment of newcosts.delete) {
+
+                    let deletecostid = deleteequipment.costid;
+                    let deleteequipmentid = deleteequipment.equipmentid;
+
+                    const deletecost = construction.getcostbyid.call(this, deleteequipmentid, deletecostid)
+
+                    if (deletecost) {
+                        let i = construction.getequipmentkeybyid.call(this, deleteequipmentid);
+                        let j = construction.getequipmentcostskeybyid.call(this, deletecostid)
+
+                        company.equipment[i].ownership.cost.splice(j, 1)
+                    }
+
+
+
+                }
+            }
+
+            if (updatecompany.employees.benefits.update.length > 0 || updatecompany.employees.benefits.insert.length > 0) {
+
+                let newbenefits = updatecompany.employees.benefits.update.concat(updatecompany.employees.benefits.insert)
+
+                for (let newbenefit of newbenefits) {
+
+                    let employeeid = newbenefit.user_id;
+                    let getbenefit = newbenefit.benefit;
+                    let benefitid = newbenefit.benefitid;
+                    let accountid = newbenefit.accountid;
+                    let amount = newbenefit.amount;
+                    let frequency = newbenefit.frequency;
+
+                    let findemployee = construction.getemployeebyuserid.call(this, employeeid)
+
+                    if (findemployee) {
+                        let i = construction.getemployeekeybyuserid.call(this, employeeid)
+
+                        let findbenefit = construction.getBenefitsByID.call(this, employeeid, benefitid)
+
+                        if (findbenefit) {
+                            let j = construction.getBenefitKeyByID.call(this, employeeid, benefitid)
+                            company.employees[i].benefits[j].benefit = getbenefit;
+                            company.employees[i].benefits[j].amount = amount;
+                            company.employees[i].benefits[j].frequency = frequency;
+                            company.employees[i].benefits[j].accountid = accountid;
+
+
+                        } else {
+                            company.employees[i].benefits.push({ benefitid, benefit: getbenefit, frequency, amount, accountid })
+                        }
+
+
+                    }
+
+
+
+
+
+                }
+
+
+            } // end of insert/update benefit
+
+
+            if (updatecompany.employees.benefits.delete.length > 0) {
+                for (let deletebenefit of updatecompany.employees.benefits.delete) {
+                    let employeeid = deletebenefit.user_id;
+                    let benefitid = deletebenefit.benefitid;
+
+                    let findemployee = construction.getemployeebyuserid.call(this, employeeid)
+                    if (findemployee) {
+                        let i = construction.getemployeekeybyuserid.call(this, employeeid)
+                        let getdeletebenefit = construction.getBenefitsByID.call(this, employeeid, benefitid)
+                        if (getdeletebenefit) {
+                            let j = construction.getBenefitKeyByID.call(this, employeeid, benefitid)
+                            company.employees[i].benefits.splice(j, 1)
+                        }
+
+                    }
+
+                }
+            }
+
+
+
+
+
+
+
+
+            this.props.reduxCompany(company)
+            this.setState({ render: 'render' })
+
+
+        
+    }
+
+    getCompanyWebSocket() {
+        const construction = new Construction();
+        const websockets = construction.getWebSockets.call(this);
+        let companysocket = false;
+        if(websockets.company) {
+            companysocket = websockets.company;
+        }
+
+        return companysocket;
+    }
+
+    getWebSockets() {
+        let websockets = false;
+        if(this.props.websockets) {
+            websockets = this.props.websockets;
+        }
+        return websockets;
+    }
+
     getproject() {
 
         const construction = new Construction();
@@ -810,6 +1231,8 @@ class Construction {
     }
 
     async clientlogin() {
+
+        const construction = new Construction();
     
         let emailaddress = this.state.emailaddress;
         let client = this.state.client;
@@ -832,6 +1255,7 @@ class Construction {
            
 
             if (response.hasOwnProperty("myuser")) {
+                construction.loadMyCompany.call(this)
                 console.log(response.myuser)
                 this.props.reduxUser(response.myuser)
                 this.setState({ client: '', clientid: '', emailaddress: '', message: '', emailaddresscheck: false, profilecheck: false, profile: '', firstname: '', lastname: '', profileurl: '' })
@@ -2698,6 +3122,22 @@ class Construction {
     }
         return validate;
 
+    }
+
+    getAllProjects() {
+        let allprojects = false;
+        if(this.props.allprojects) {
+        if(this.props.allprojects.hasOwnProperty("length")) {
+
+            allprojects = this.props.allprojects;
+           
+        }
+
+    }
+
+
+
+        return allprojects;
     }
 
     getaccounts() {

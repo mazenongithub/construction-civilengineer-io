@@ -59,9 +59,9 @@ class App extends Component {
       activematerialid: false,
       activeequipmentid: false,
       activeemployeeid: false,
-      register:false,
-      apple:'',
-      google:''
+      register: false,
+      apple: '',
+      google: ''
     }
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
@@ -72,6 +72,7 @@ class App extends Component {
     this.props.reduxNavigation({ position: 'open' })
     firebase.initializeApp(firebaseConfig());
     this.checkuser();
+    this.loadMyCompany();
     this.loadAllUsers();
     this.updateWindowDimensions();
   }
@@ -98,17 +99,84 @@ class App extends Component {
       alert(err)
     }
   }
+
+  async loadMyCompany() {
+    const construction = new Construction();
+    try {
+
+
+      await construction.findMyCompany.call(this)
+      const mycompany = construction.getcompany.call(this)
+
+      if (mycompany) {
+
+        const companyid = mycompany._id;
+
+        const socket = new WebSocket(`ws://localhost:8081/company/${companyid}/websocketapi`)
+
+        socket.onopen = (evt) => {
+          let myuser = construction.getuser.call(this)
+          console.log("WEB SOCKET OPENED!!!");
+          const userid = myuser.UserID;
+          const data = { type: "join", userid };
+          socket.send(JSON.stringify(data));
+        }
+
+
+        socket.onmessage = (evt) => {
+
+          const response = JSON.parse(evt.data);
+          console.log(response)
+
+          if (response.type === "join") {
+            console.log(response.text)
+          } else if
+            (response.type === "company") {
+            console.log(response)
+            const updatecompany = response.response;
+            construction.handleCompanyResponse.call(this, updatecompany)
+          }
+
+        }
+
+        socket.onerror = (evt) => {
+          console.log("SOMETHING WENT WRONG!");
+          console.log(evt);
+        };
+
+        socket.onclose = (evt) => {
+          console.log("WEB SOCKET HAS BEEN CLOSED!!!!");
+        };
+
+        this.props.reduxWebSockets({ company: socket })
+
+
+        this.props.reduxWebSockets({ company: socket })
+        this.setState({ render: 'render' })
+
+      }
+
+      } catch (err) {
+        alert(`Could not fetch company ${err}`)
+      }
+
+    
+
+  }
+
+
+
   async loadAllUsers() {
     try {
 
-    
-    const allusers = await LoadAllUsers();
-    this.props.reduxAllUsers(allusers)
 
-  } catch(err) {
-    alert(err)
-  }
-   
+      const allusers = await LoadAllUsers();
+      this.props.reduxAllUsers(allusers)
+
+    } catch (err) {
+      alert(err)
+    }
+
   }
 
   async checkuser() {
@@ -120,11 +188,11 @@ class App extends Component {
 
       console.log("checkuser", response)
 
-      if(response.hasOwnProperty("myuser")) {
+      if (response.hasOwnProperty("myuser")) {
         this.props.reduxUser(response.myuser)
       }
-  
-      
+
+
 
 
     } catch (err) {
@@ -173,7 +241,7 @@ class App extends Component {
     const showprofile = () => {
       return (profile.showProfile.call(this))
     }
-   
+
     const showaccounts = () => {
       return (accounts.showAccounts.call(this))
     }
@@ -230,10 +298,10 @@ class App extends Component {
     const styles = MyStylesheet();
     const regularFont = construction.getRegularFont.call(this)
     if (myuser) {
-    
+
       const company = construction.getcompany.call(this)
       if (company) {
-   
+
         const profile = myuser.UserID;
         const companyid = company.companyid;
 
@@ -261,13 +329,13 @@ class App extends Component {
               <Link onClick={() => { this.handlenavigation({ companyid, active: 'equipment' }) }}
                 to={`/${profile}/company/${companyid}`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /equipment
-               </Link>
+              </Link>
             </div>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link onClick={() => { this.handlenavigation({ companyid, active: 'materials' }) }}
                 to={`/${profile}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /materials
-               </Link>
+              </Link>
             </div>
           </div>
 
@@ -320,21 +388,30 @@ class App extends Component {
     let projectidlinks = [];
     const myuser = construction.getuser.call(this)
     if (myuser) {
-      let profile = myuser.UserID;
-      const myproject = construction.getmyprojects.call(this)
-      if (myproject) {
-        const companyid = myuser.company.companyid
-        // eslint-disable-next-line
-        myproject.map(myproject => {
-          let projectid = myproject.title;
-          projectidlinks.push(
-            <div style={{ ...styles.generalContainer }} key={`link${myproject.projectid}`} onClick={() => { this.props.reduxProject({ projectid }) }}>
-              <Link onClick={() => { this.handlenavigation({ projectid: myproject.projectid }) }} to={`/${profile}/company/${companyid}/projects/${myproject.title}`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}> /{myproject.title} </Link>
-            </div>)
+      const company = construction.getcompany.call(this)
+      if (company) {
 
-        })
+        const allprojects = construction.getAllProjects.call(this)
+        if (allprojects) {
+          console.log(allprojects)
+          const companyid = company.companyid
+          // eslint-disable-next-line
+          allprojects.map(myproject => {
+            let projectid = myproject.ProjectID;
+            projectidlinks.push(
+              <div style={{ ...styles.generalContainer }} key={`link${myproject.projectid}`} onClick={() => { this.props.reduxProject({ projectid }) }}>
+                <Link onClick={() => { this.handlenavigation({ projectid: myproject.projectid }) }} to={`/${myuser.UserID}/company/${companyid}/projects/${myproject.ProjectID}`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}> /{myproject.ProjectID} </Link>
+              </div>)
+
+          })
+
+
+        }
+
 
       }
+
+
     }
     return projectidlinks;
   }
@@ -345,11 +422,14 @@ class App extends Component {
     const headerFont = construction.getHeaderFont.call(this);
 
     if (myuser) {
-      if (myuser.hasOwnProperty("company")) {
-        if (myuser.company.hasOwnProperty("projects")) {
+      const company = construction.getcompany.call(this)
+      if (company) {
+
+        const allprojects = construction.getAllProjects.call(this)
+        if (allprojects) {
           return (
             <div style={{ ...styles.generalContainer }}>
-              <Link to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>
+              <Link to={`/${myuser.UserID}/company/${company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>
             </div>)
         } else {
           return (<div style={{ ...styles.generalContainer }}>
@@ -369,15 +449,15 @@ class App extends Component {
   }
   handlecompanylink() {
     const construction = new Construction();
-   
+
 
     const styles = MyStylesheet();
     const headerFont = construction.getHeaderFont.call(this)
     const user = construction.getuser.call(this)
- 
-    if(user) {
+
+    if (user) {
       const company = construction.getcompany.call(this)
-     
+
       if (company) {
         return (<Link onClick={() => { this.handlenavigation({ companyid: company.companyid }) }}
           to={`/${user.UserID}/company/${company.companyid}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /{company.companyid} </Link>)
@@ -388,7 +468,7 @@ class App extends Component {
 
     }
 
-    
+
 
   }
 
@@ -404,46 +484,52 @@ class App extends Component {
 
     if (myuser) {
 
-      if (navigation.hasOwnProperty("project")) {
+      const company = construction.getcompany.call(this)
 
-        const project = construction.getprojectbyid.call(this, navigation.project.projectid)
+      if (company) {
 
-        if (project) {
+        if (navigation.hasOwnProperty("project")) {
 
-          return (
-            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
-              <div style={{ ...styles.generalContainer }}>
-                <Link
-                  to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects/${project.title}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }} > /{project.title} </Link>
-              </div>
+          const project = construction.getprojectbyid.call(this, navigation.project.projectid)
 
-              <div style={{ ...styles.generalContainer }}>
-                <Link
+          if (project) {
 
+            return (
+              <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
+                <div style={{ ...styles.generalContainer }}>
+                  <Link
+                    to={`/${myuser.UserID}/company/${company.companyid}/projects/${project.title}`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }} > /{project.title} </Link>
+                </div>
 
-                  to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects/${project.title}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /schedule </Link>
-              </div>
-              <div style={{ ...styles.generalContainer }}>
-                <Link
-
-                  to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects/${project.title}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
-              </div>
+                <div style={{ ...styles.generalContainer }}>
+                  <Link
 
 
-              <div style={{ ...styles.generalContainer }}>
-                <Link
-                  onClick={() => { this.handlenavigation({ projectid: project.projectid, active: 'actual' }) }}
-                  to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects/${project.title}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /actual </Link>
-              </div>
-              <div style={{ ...styles.generalContainer }}>
-                <Link
-                  to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects/${project.title}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
-              </div>
+                    to={`/${myuser.UserID}/company/${company.companyid}/projects/${project.title}/schedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /schedule </Link>
+                </div>
+                <div style={{ ...styles.generalContainer }}>
+                  <Link
+
+                    to={`/${myuser.UserID}/company/${company.companyid}/projects/${project.title}/bidschedule`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bidschedule </Link>
+                </div>
+
+
+                <div style={{ ...styles.generalContainer }}>
+                  <Link
+                    onClick={() => { this.handlenavigation({ projectid: project.projectid, active: 'actual' }) }}
+                    to={`/${myuser.UserID}/company/${company.companyid}/projects/${project.title}/actual`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /actual </Link>
+                </div>
+                <div style={{ ...styles.generalContainer }}>
+                  <Link
+                    to={`/${myuser.UserID}/company/${company.companyid}/projects/${project.title}/bid`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.boldFont }} > /bid </Link>
+                </div>
 
 
 
-            </div>)
+              </div>)
 
+
+          }
 
         }
 
@@ -582,35 +668,35 @@ class App extends Component {
         )
       }
     }
+    const allprojects = construction.getAllProjects.call(this)
     const projectlinks = () => {
 
-      if (myuser) {
-        if (myuser.hasOwnProperty("company")) {
-          if (myuser.company.hasOwnProperty("projects")) {
-            return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
-              {this.handleprojectlink()}
-              {this.projectidlinks()}
-            </div>)
-          }
-        }
+
+      if (allprojects) {
+        return (<div style={{ ...styles.generalContainer, ...styles.width90, ...styles.navContainer, ...styles.thickBorder, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.addMargin }}>
+          {this.handleprojectlink()}
+          {this.projectidlinks()}
+        </div>)
       }
+
+
 
     }
     const companylinks = () => {
 
-        if (company) {
-          return (
-            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-              {this.handlecompanylink()}
-              {this.showcompanylinks()}
-            </div>)
-        } else {
-          return (
-            <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-              {this.handlecompanylink()}
-            </div>)
-        }
-      
+      if (company) {
+        return (
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+            {this.handlecompanylink()}
+            {this.showcompanylinks()}
+          </div>)
+      } else {
+        return (
+          <div style={{ ...styles.generalContainer, ...styles.width90, ...styles.flex1, ...styles.navContainer, ...styles.thickBorder, ...styles.addMargin, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+            {this.handlecompanylink()}
+          </div>)
+      }
+
 
     }
 
@@ -657,7 +743,7 @@ class App extends Component {
     const submenulink_2 = () => {
       if (myuser) {
         if (myuser.hasOwnProperty("company")) {
-          return (<Link to={`/${myuser.UserID}/company/${myuser.company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>)
+          return (<Link to={`/${myuser.UserID}/company/${company.companyid}/projects`} style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}> /projects </Link>)
         }
       } else {
         return (<Link to={`/providers/register`} style={{ ...styles.generalLink, ...headerFont, ...styles.generalFont, ...styles.boldFont }}>/register </Link>)
@@ -769,8 +855,10 @@ function mapStateToProps(state) {
     myusermodel: state.myusermodel,
     navigation: state.navigation,
     csis: state.csis,
-    mycompany:state.mycompany,
-    allusers:state.allusers
+    mycompany: state.mycompany,
+    allusers: state.allusers,
+    allprojects: state.allprojects,
+    websockets: state.websockets
   }
 }
 

@@ -5,4 +5,5 @@ export const ALLUSERS = 'allusers';
 export const ALLCOMPANYS = 'allcompanys';
 export const CSIS = 'csis'
 export const MYCOMPANY = 'mycompany';
-export const ALLPROJECTS = 'allprojects'
+export const ALLPROJECTS = 'allprojects';
+export const WEBSOCKETS = 'websockets'

@@ -25,7 +25,7 @@ class Company extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.findMyCompany();
+        this.loadMyCompany();
        // this.checkAllCompany();
     }
     componentWillUnmount() {
@@ -35,19 +35,17 @@ class Company extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight, });
     }
 
-    async findMyCompany() {
+    async loadMyCompany() {
+        const construction = new Construction();
         try {
-
-            let response = await FindMyCompany();
-            if(response.hasOwnProperty("company")) {
-                this.props.reduxCompany(response.company)
-                this.setState({render:'render'})
-            }
-
+    
+          const mycompany = await construction.findMyCompany.call(this)
+    
+    
         } catch(err) {
-            alert(err)
+          alert (`Could not fetch company ${err}`)
         }
-    }
+      }
 
     async checkAllCompany() {
         const construction = new Construction();
