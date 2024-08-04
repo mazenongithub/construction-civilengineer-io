@@ -503,7 +503,8 @@ class Construction {
     getactualmaterials() {
         const construction = new Construction();
         let actualmaterials = false;
-        let myproject = construction.getproject.call(this);
+        const project_id = this.props.project_id;
+        let myproject = construction.getOurProjectByID.call(this,project_id)
         if (myproject.hasOwnProperty("actual")) {
             if (myproject.actual.hasOwnProperty("materials")) {
                 actualmaterials = myproject.actual.materials;
@@ -516,7 +517,8 @@ class Construction {
     getactualequipment() {
         const construction = new Construction();
         let actualequipment = false;
-        let myproject = construction.getproject.call(this);
+        const project_id = this.props.project_id;
+        let myproject = construction.getOurProjectByID.call(this,project_id)
         if (myproject.hasOwnProperty("actual")) {
             if (myproject.actual.hasOwnProperty("equipment")) {
                 actualequipment = myproject.actual.equipment;
@@ -547,7 +549,8 @@ class Construction {
     getschedulematerials() {
         const construction = new Construction();
         let schedulematerials = false;
-        let myproject = construction.getproject.call(this);
+        const project_id = this.props.project_id;
+        let myproject = construction.getOurProjectByID.call(this,project_id)
         if (myproject.hasOwnProperty("schedule")) {
 
             if (myproject.schedule.hasOwnProperty("materials")) {
@@ -562,7 +565,8 @@ class Construction {
 
     getmilestones() {
         const construction = new Construction();
-        let myproject = construction.getproject.call(this);
+        const project_id = this.props.project_id;
+        let myproject = construction.getOurProjectByID.call(this,project_id)
         let milestones = false;
         if (myproject) {
             if (myproject.hasOwnProperty("projectmilestones")) {
@@ -593,7 +597,9 @@ class Construction {
     getschedulelabor() {
         const construction = new Construction();
         let schedulelabor = false;
-        let myproject = construction.getproject.call(this);
+        const project_id = this.props.project_id;
+        let myproject = construction.getOurProjectByID.call(this,project_id)
+
         if (myproject.hasOwnProperty("schedule")) {
             if (myproject.schedule.hasOwnProperty("labor")) {
                 return myproject.schedule.labor;
@@ -2041,10 +2047,10 @@ class Construction {
 
     getAllSchedule() {
         const construction = new Construction();
-
+        const project_id = this.props.project_id;
         const schedule = () => {
             let schedules = [];
-            let myproject = construction.getproject.call(this)
+            let myproject = construction.getOurProjectByID.call(this, this.props.project_id )
 
 
             if (myproject.hasOwnProperty("schedule")) {
@@ -2351,7 +2357,9 @@ class Construction {
     getscheduleequipment() {
         const construction = new Construction();
         let scheduleequipment = false;
-        let myproject = construction.getproject.call(this);
+        const project_id = this.props.project_id;
+        let myproject = construction.getOurProjectByID.call(this,project_id)
+    
         if (myproject.hasOwnProperty("schedule")) {
             if (myproject.schedule.hasOwnProperty("equipment")) {
                 scheduleequipment = myproject.schedule.equipment;
@@ -2660,7 +2668,8 @@ class Construction {
     getactuallabor() {
         const construction = new Construction();
         let actuallabor = false;
-        let myproject = construction.getproject.call(this);
+        const project_id = this.props.project_id;
+        let myproject = construction.getOurProjectByID.call(this,project_id)
         if (myproject.hasOwnProperty("actual")) {
             if (myproject.actual.hasOwnProperty("labor")) {
                 return myproject.actual.labor;
@@ -3124,6 +3133,93 @@ class Construction {
 
     }
 
+    
+    getampmicon() {
+        if (this.state.width > 1200) {
+            return ({ width: '83px', height: '48px' })
+        } else if (this.state.width > 800) {
+            return ({ width: '70px', height: '41px' })
+        } else {
+            return ({ width: '57px', height: '33px' })
+        }
+
+    }
+
+    
+
+    getOurProjectKeyById(project_id) {
+        const construction = new Construction();
+        let key = false;
+        const projects = construction.getOurProjects.call(this)
+        console.log(projects,project_id)
+        if(projects) {
+        projects.map((project,i)=> {
+            if(project.project_id === project_id) {
+                key = i;
+            }
+        })
+    }
+        return key;
+    }
+
+    getOurProjectByID(project_id) {
+        const construction = new Construction();
+        let getproject = false;
+        const projects = construction.getOurProjects.call(this)
+        if(projects) {
+        projects.map(project=> {
+            if(project.project_id === project_id) {
+                getproject = project;
+            }
+        })
+
+    }
+        return getproject;
+    }
+
+    getOurProjects() {
+        let OurProjects = false;
+        if(this.props.myprojects) {
+            if(this.props.myprojects.hasOwnProperty("length")) {
+                OurProjects = this.props.myprojects;
+
+            }
+        }
+        return OurProjects;
+    }
+
+    getProjectBy_ID(project_id) {
+      
+        const construction = new Construction();
+        const allprojects = construction.getAllProjects.call(this)
+     
+        let getproject = false;
+        if(allprojects) {
+            allprojects.map(project => {
+                if(project._ID === project_id) {
+                    getproject = project;
+                }
+            })
+        }
+        return getproject;
+    }
+
+    getProjectByID(projectid) {
+      
+        const construction = new Construction();
+        const allprojects = construction.getAllProjects.call(this)
+     
+        let getproject = false;
+        if(allprojects) {
+            allprojects.map(project => {
+                if(project.ProjectID === projectid) {
+                    getproject = project;
+                }
+            })
+        }
+        return getproject;
+    }
+
     getAllProjects() {
         let allprojects = false;
         if(this.props.allprojects) {
@@ -3138,6 +3234,31 @@ class Construction {
 
 
         return allprojects;
+    }
+
+    getMyProjectByID(projectid) {
+        const construction = new Construction();
+        let getproject = false;
+        const myprojects = construction.getMyProjects.call(this)
+        if(myprojects) {
+            myprojects.map(project=> {
+                if(project.projectid === projectid) {
+                    getproject = project;
+                }
+            })
+
+        }
+
+        return getproject;
+    }
+
+    getMyProjects() {
+        let myprojects = false;
+        if(this.props.myprojects) {
+            myprojects = this.props.myprojects;
+
+        }
+        return myprojects;
     }
 
     getaccounts() {

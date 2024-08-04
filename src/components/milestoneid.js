@@ -1,11 +1,13 @@
 import React from 'react';
 import { MyStylesheet } from './styles'
 import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 class MilestoneID {
 
-    loadmilestoneids() {
-        const dynamicstyles = new DynamicStyles();
-        let myproject = dynamicstyles.getproject.call(this)
+    loadmilestoneids(project_id) {
+        const construction = new Construction();
+        
+        let myproject = construction.getOurProjectByID.call(this,project_id)
         let options = [];
         if (myproject.hasOwnProperty("milestones")) {
             // eslint-disable-next-line
@@ -19,7 +21,7 @@ class MilestoneID {
         return options;
     }
 
-    showmilestoneid() {
+    showmilestoneid(project_id) {
         const styles = MyStylesheet();
         const milestoneid = new MilestoneID();
         const dynamicstyles = new DynamicStyles();
@@ -30,7 +32,7 @@ class MilestoneID {
                 value={this.getmilestoneid()}
                 onChange={event => { this.handlemilestoneid(event.target.value) }}>
                 <option value={false}>Select A Project Milestone</option>
-                {milestoneid.loadmilestoneids.call(this)}
+                {milestoneid.loadmilestoneids.call(this,project_id)}
             </select>
         </div>)
     }

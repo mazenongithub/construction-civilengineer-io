@@ -25,7 +25,6 @@ class Company extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.loadMyCompany();
        // this.checkAllCompany();
     }
     componentWillUnmount() {

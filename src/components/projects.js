@@ -1,6 +1,7 @@
 import React from 'react';
 import { MyStylesheet } from './styles';
 import { Link } from 'react-router-dom';
+import { goToIcon } from './svg';
 import Construction from './construction';
 class Projects {
 
@@ -97,6 +98,9 @@ class Projects {
         }
 
     }
+
+   
+
     showprojectid(myproject) {
         const styles = MyStylesheet();
         const construction = new Construction();
@@ -104,6 +108,21 @@ class Projects {
 
         const projects = new Projects();
         const myuser = construction.getuser.call(this)
+
+        const buttonSize = () => {
+            if (this.state.width > 1200) {
+                return ({ width: '60px' })
+
+            } else if (this.state.width > 600) {
+                return ({ width: '50px' })
+
+            } else {
+                return ({ width: '40px' })
+
+            }
+        }
+
+
         if (myuser) {
             const company = construction.getcompany.call(this)
             if (company) {
@@ -112,14 +131,12 @@ class Projects {
                         <div style={{ ...styles.flex1 }}>
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1, ...headerFont, ...styles.generalFont, ...styles.alignCenter }}>
+                                <div style={{ ...styles.flex1, ...headerFont, ...styles.generalFont}}>
                                     <Link to={`/${myuser.UserID}/company/${company.companyid}/projects/${myproject.ProjectID}`} style={{ ...styles.generalLink, ...headerFont, ...styles.boldFont, ...styles.generalFont }}>
-                                        {myproject.ProjectID}
+                                       <button style={{...styles.generalButton, ...buttonSize()}}>{goToIcon()}</button> /{myproject.ProjectID} {myproject.Title}
                                     </Link>
                                 </div>
                             </div>
-
-                            {projects.projectmenus.call(this, myproject)}
                         </div>
                     </div>
 

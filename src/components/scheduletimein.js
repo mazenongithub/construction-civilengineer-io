@@ -1,22 +1,26 @@
 
 import React from 'react';
 import { MyStylesheet } from './styles'
-import DynamicStyles from './dynamicstyles'
+import Construction from './construction'
 import { UTCTimeStringfromTime, makeTimeString, validateMonth, validateDate, validateYear, validateMinutes } from './functions';
 import CalenderTimeIn from './scheduletimeincalender';
 class TimeIn {
+
+    
     handleminutes(minutes) {
         this.setState({ timeinminutes: minutes })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+      
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-                const projectid = project.projectid
+              
 
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
+                
                 if (minutes.length === 2) {
 
                     if (validateMinutes(minutes)) {
@@ -26,10 +30,10 @@ class TimeIn {
 
 
                             if (this.state.activelaborid) {
-                                const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid);
+                                const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
                                 if (mylabor) {
 
-                                    const j = dynamicstyles.getschedulelaborkeybyid.call(this,  this.state.activelaborid)
+                                    const j = construction.getschedulelaborkeybyid.call(this,  this.state.activelaborid)
                                     let day = this.state.timeinday;
                                     let year = this.state.timeinyear;
                                     let month = this.state.timeinmonth;
@@ -37,8 +41,8 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects[i].schedule.labor[j].timein = timein;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].schedule.labor[j].timein = timein;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
 
@@ -51,11 +55,11 @@ class TimeIn {
                         } else if (this.state.active === 'equipment') {
 
                             if (this.state.activeequipmentid) {
-                                const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this,  this.state.activeequipmentid)
+                                const myequipment = construction.getscheduleequipmentbyid.call(this,  this.state.activeequipmentid)
                                 if (myequipment) {
 
                                     if (myequipment) {
-                                        const j = dynamicstyles.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
+                                        const j = construction.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
                                         let day = this.state.timeinday;
                                         let year = this.state.timeinyear;
                                         let month = this.state.timeinmonth;
@@ -63,8 +67,8 @@ class TimeIn {
                                         let time = this.state.timeinampm;
                                         let timein = makeTimeString(year, month, day, hours, minutes, time);
                                         timein = UTCTimeStringfromTime(timein);
-                                        myuser.company.projects[i].schedule.equipment[j].timein = timein;
-                                        this.props.reduxUser(myuser)
+                                        myprojects[i].schedule.equipment[j].timein = timein;
+                                        this.props.reduxMyProjects(myprojects)
                                         this.setState({ render: 'render' })
                                     }
 
@@ -84,16 +88,16 @@ class TimeIn {
 
     handlehours(hours) {
         this.setState({ timeinhours: hours })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+                
 
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
                 if (hours.length === 2) {
                     if (validateMonth(hours)) {
 
@@ -102,10 +106,10 @@ class TimeIn {
 
 
                             if (this.state.activelaborid) {
-                                const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid);
+                                const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
                                 if (mylabor) {
 
-                                    const j = dynamicstyles.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                                    const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
                                     let day = this.state.timeinday;
                                     let year = this.state.timeinyear;
                                     let month = this.state.timeinmonth;
@@ -113,8 +117,8 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects[i].schedule.labor[j].timein = timein;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].schedule.labor[j].timein = timein;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
 
@@ -126,10 +130,10 @@ class TimeIn {
 
 
                             if (this.state.activeequipmentid) {
-                                const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this,  this.state.activeequipmentid)
+                                const myequipment = construction.getscheduleequipmentbyid.call(this,  this.state.activeequipmentid)
                                 if (myequipment) {
 
-                                    const j = dynamicstyles.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
+                                    const j = construction.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
                                     let day = this.state.timeinday;
                                     let year = this.state.timeinyear;
                                     let month = this.state.timeinmonth;
@@ -137,8 +141,8 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects[i].schedule.equipment[j].timein = timein;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].schedule.equipment[j].timein = timein;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
                                 }
@@ -158,16 +162,16 @@ class TimeIn {
 
     handleyear(year) {
         this.setState({ timeinyear: year })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+                
 
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
                 if (year.length === 4) {
 
                     if (validateYear(year)) {
@@ -177,10 +181,10 @@ class TimeIn {
 
 
                             if (this.state.activelaborid) {
-                                const mylabor = dynamicstyles.getschedulelaborbyid.call(this, this.state.activelaborid);
+                                const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
                                 if (mylabor) {
 
-                                    const j = dynamicstyles.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                                    const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
                                     let day = this.state.timeinday;
                                     let month = this.state.timeinmonth;
                                     let hours = this.state.timeinhours;
@@ -188,8 +192,8 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects[i].schedule.labor[j].timein = timein;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].schedule.labor[j].timein = timein;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
 
@@ -200,9 +204,9 @@ class TimeIn {
                         } else if (this.state.active === 'equipment') {
 
                             if (this.state.activeequipmentid) {
-                                const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                                const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
                                 if (myequipment) {
-                                    const j = dynamicstyles.getscheduleequipmentkeybyid.call(this, myequipment.equipmentid)
+                                    const j = construction.getscheduleequipmentkeybyid.call(this, myequipment.equipmentid)
                                     let day = this.state.timeinday;
                                     let minutes = this.state.timeinminutes;
                                     let month = this.state.timeinmonth;
@@ -210,8 +214,8 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects[i].schedule.equipment[j].timein = timein;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].schedule.equipment[j].timein = timein;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
                                 }
                             }
@@ -230,16 +234,16 @@ class TimeIn {
     handleday(day) {
         day = day.toString();
         this.setState({ timeinday: day })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+                
 
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
                 if (day.length === 2) {
 
                     if (validateDate(day)) {
@@ -249,10 +253,10 @@ class TimeIn {
 
 
                             if (this.state.activelaborid) {
-                                const mylabor = dynamicstyles.getschedulelaborbyid.call(this,  this.state.activelaborid);
+                                const mylabor = construction.getschedulelaborbyid.call(this,  this.state.activelaborid);
                                 if (mylabor) {
 
-                                    const j = dynamicstyles.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                                    const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
                                     let year = this.state.timeinyear;
                                     let month = this.state.timeinmonth;
                                     let hours = this.state.timeinhours;
@@ -260,8 +264,8 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects[i].schedule.labor[j].timein = timein;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].schedule.labor[j].timein = timein;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
 
@@ -271,10 +275,10 @@ class TimeIn {
 
                         } else if (this.state.active === 'equipment') {
                             if (this.state.activeequipmentid) {
-                                const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                                const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
 
                                 if (myequipment) {
-                                    const j = dynamicstyles.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
+                                    const j = construction.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
                                     let minutes = this.state.timeinminutes;
                                     let year = this.state.timeinyear;
                                     let month = this.state.timeinmonth;
@@ -282,8 +286,8 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects[i].schedule.equipment[j].timein = timein;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].schedule.equipment[j].timein = timein;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
                                 }
                             }
@@ -301,16 +305,16 @@ class TimeIn {
 
     handlemonth(month) {
         this.setState({ timeinmonth: month })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+                
 
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
                 if (month.length === 2) {
 
                     if (validateMonth(month)) {
@@ -320,10 +324,10 @@ class TimeIn {
 
 
                             if (this.state.activelaborid) {
-                                const mylabor = dynamicstyles.getschedulelaborbyid.call(this,  this.state.activelaborid);
+                                const mylabor = construction.getschedulelaborbyid.call(this,  this.state.activelaborid);
                                 if (mylabor) {
 
-                                    const j = dynamicstyles.getschedulelaborkeybyid.call(this,  this.state.activelaborid)
+                                    const j = construction.getschedulelaborkeybyid.call(this,  this.state.activelaborid)
                                     let day = this.state.timeinday;
                                     let year = this.state.timeinyear;
                                     let hours = this.state.timeinhours;
@@ -331,8 +335,8 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects[i].schedule.labor[j].timein = timein;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].schedule.labor[j].timein = timein;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
 
@@ -342,9 +346,9 @@ class TimeIn {
 
                         } else if (this.state.active === 'equipment') {
                             if (this.state.activeequipmentid) {
-                                const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                                const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
                                 if (myequipment) {
-                                    const j = dynamicstyles.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
+                                    const j = construction.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
                                     let day = this.state.timeinday;
                                     let year = this.state.timeinyear;
                                     let minutes = this.state.timeinminutes;
@@ -352,8 +356,8 @@ class TimeIn {
                                     let time = this.state.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
-                                    myuser.company.projects[i].schedule.equipment[j].timein = timein;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].schedule.equipment[j].timein = timein;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
                                 }
 
@@ -378,26 +382,26 @@ class TimeIn {
             this.setState({ timeinampm: 'am' })
         }
 
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+                
 
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
 
                 if (this.state.active === 'labor') {
 
 
 
                     if (this.state.activelaborid) {
-                        const mylabor = dynamicstyles.getschedulelaborbyid.call(this,  this.state.activelaborid);
+                        const mylabor = construction.getschedulelaborbyid.call(this,  this.state.activelaborid);
                         if (mylabor) {
 
-                            const j = dynamicstyles.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                            const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
                             let day = this.state.timeinday;
                             let year = this.state.timeinyear;
                             let month = this.state.timeinmonth;
@@ -408,8 +412,8 @@ class TimeIn {
                             console.log(timein)
                             timein = UTCTimeStringfromTime(timein);
                             console.log(timein)
-                            myuser.company.projects[i].schedule.labor[j].timein = timein;
-                            this.props.reduxUser(myuser)
+                            myprojects[i].schedule.labor[j].timein = timein;
+                            this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
 
 
@@ -420,9 +424,9 @@ class TimeIn {
                 } else if (this.state.active === 'equipment') {
 
                     if (this.state.activeequipmentid) {
-                        const myequipment = dynamicstyles.getscheduleequipmentbyid.call(this,  this.state.activeequipmentid)
+                        const myequipment = construction.getscheduleequipmentbyid.call(this,  this.state.activeequipmentid)
                         if (myequipment) {
-                            const j = dynamicstyles.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
+                            const j = construction.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
                             let day = this.state.timeinday;
                             let year = this.state.timeinyear;
                             let month = this.state.timeinmonth;
@@ -431,8 +435,8 @@ class TimeIn {
                             let time = ampm
                             let timein = makeTimeString(year, month, day, hours, minutes, time);
                             timein = UTCTimeStringfromTime(timein);
-                            myuser.company.projects[i].schedule.equipment[j].timein = timein;
-                            this.props.reduxUser(myuser)
+                            myprojects[i].schedule.equipment[j].timein = timein;
+                            this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
                     }
@@ -445,20 +449,20 @@ class TimeIn {
     }
 
     showampm() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
         const timein = new TimeIn();
         const showam = () => {
             return (<div style={{ ...styles.generalContainer }}>
-                <button style={{ ...styles.headerFamily, ...headerFont, ...styles.boldFont, ...styles.alignCenter, ...dynamicstyles.getampmicon.call(this) }} onClick={() => { timein.toggleampm.call(this, 'pm') }}>AM</button>
+                <button style={{ ...styles.headerFamily, ...headerFont, ...styles.boldFont, ...styles.alignCenter, ...construction.getampmicon.call(this) }} onClick={() => { timein.toggleampm.call(this, 'pm') }}>AM</button>
             </div>)
 
         }
         const showpm = () => {
 
             return (<div style={{ ...styles.generalContainer }}>
-                <button style={{ ...styles.headerFamily, ...headerFont, ...styles.boldFont, ...styles.alignCenter, ...dynamicstyles.getampmicon.call(this) }} onClick={() => { timein.toggleampm.call(this, 'am') }}>PM</button>
+                <button style={{ ...styles.headerFamily, ...headerFont, ...styles.boldFont, ...styles.alignCenter, ...construction.getampmicon.call(this) }} onClick={() => { timein.toggleampm.call(this, 'am') }}>PM</button>
             </div>)
 
         }
@@ -477,9 +481,9 @@ class TimeIn {
 
     showtimein() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const timein = new TimeIn();
         const calender = new CalenderTimeIn();
         return (

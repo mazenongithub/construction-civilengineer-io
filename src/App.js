@@ -132,7 +132,7 @@ class App extends Component {
             console.log(response.text)
           } else if
             (response.type === "company") {
-            console.log(response)
+           
             const updatecompany = response.response;
             construction.handleCompanyResponse.call(this, updatecompany)
           }
@@ -399,8 +399,9 @@ class App extends Component {
           allprojects.map(myproject => {
             let projectid = myproject.ProjectID;
             projectidlinks.push(
-              <div style={{ ...styles.generalContainer }} key={`link${myproject.projectid}`} onClick={() => { this.props.reduxProject({ projectid }) }}>
-                <Link onClick={() => { this.handlenavigation({ projectid: myproject.projectid }) }} to={`/${myuser.UserID}/company/${companyid}/projects/${myproject.ProjectID}`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}> /{myproject.ProjectID} </Link>
+              <div style={{ ...styles.generalContainer }} key={`link${myproject.projectid}`}>
+                <Link  to={`/${myuser.UserID}/company/${companyid}/projects/${myproject.ProjectID
+                }`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}> /{myproject.ProjectID} </Link>
               </div>)
 
           })

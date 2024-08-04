@@ -11,15 +11,15 @@ class MaterialDate {
     handleyear(year) {
         this.setState({ materialdateyear: year })
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            const project_id = this.props.project_id;
+            const myproject = construction.getOurProjectByID.call(this, project_id)
+            if(myproject) {
 
-            const project = construction.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+                
 
-                const projectid = project.projectid
-
-                const i = construction.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,project_id);
                 if (year.length === 4) {
 
                     if(validateYear(year)) {
@@ -34,8 +34,8 @@ class MaterialDate {
                                 let month = this.state.materialdatemonth;
                                 const timein = `${year}-${month}-${day}`
 
-                                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = timein;
-                                this.props.reduxUser(myuser)
+                                myprojects[i].schedule.materials[j].timein = timein;
+                                this.props.reduxMyProjects(myprojects)
                                 this.setState({ render: 'render' })
 
 
@@ -58,15 +58,20 @@ class MaterialDate {
         day = day.toString();
         this.setState({ materialdateday: day })
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
+        
+        const myprojects = construction.getOurProjects.call(this)
+        
+        if(myprojects) {
 
-            const project = construction.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+            const project_id = this.props.project_id
 
-                const projectid = project.projectid
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-                const i = construction.getprojectkeybyid.call(this, projectid);
+                
+                
+
+                const i = construction.getOurProjectKeyById.call(this,project_id);
                 if (day.length === 2) {
 
             
@@ -80,8 +85,8 @@ class MaterialDate {
                                 let year = this.state.materialdateyear;
                                 let month = this.state.materialdatemonth;
                                 const timein = `${year}-${month}-${day}`
-                                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = timein;
-                                this.props.reduxUser(myuser)
+                                myprojects[i].schedule.materials[j].timein = timein;
+                                this.props.reduxMyProjects(myprojects)
                                 this.setState({ render: 'render' })
 
 
@@ -104,15 +109,15 @@ class MaterialDate {
     handlemonth(month) {
         this.setState({ materialdatemonth: month })
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            const project_id = this.props.project_id
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-            const project = construction.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+              
 
-                const projectid = project.projectid
-
-                const i = construction.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,project_id);
                 if (month.length === 2) {
 
                     if(validateMonth(month)) {
@@ -129,8 +134,8 @@ class MaterialDate {
                                 let day = this.state.materialdateday;
                                 let year = this.state.materialdateyear;
                                 const timein = `${year}-${month}-${day}`
-                                myuser.company.projects.myproject[i].schedulematerials.mymaterial[j].timein = timein;
-                                this.props.reduxUser(myuser)
+                                myprojects[i].schedule.materials[j].timein = timein;
+                                this.props.reduxMyProjects(myprojects)
                                 this.setState({ render: 'render' })
 
 

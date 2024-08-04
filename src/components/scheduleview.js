@@ -1,12 +1,12 @@
 import React from 'react';
 import { MyStylesheet } from './styles'
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 import { getScheduleDates, getWeekSchedule,formatDateStringDisplay, makeID} from './functions'
 
 class ScheduleView {
 
     getypos() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const schedules = this.getSchedule();
    
         let employees = [];
@@ -64,7 +64,7 @@ class ScheduleView {
 
                     if (validatenewemployee(employees, schedule.providerid)) {
                         let me = {};
-                        let employee = dynamicstyles.getemployeebyid.call(this, schedule.providerid)
+                        let employee = construction.getemployeebyid.call(this, schedule.providerid)
                         me[schedule.providerid] = {};
                         me[schedule.providerid]["firstname"] = employee.firstname;
                         me[schedule.providerid]["lastname"] = employee.lastname;
@@ -83,7 +83,7 @@ class ScheduleView {
                 
                     if (validatenewequipment(equipment, schedule.myequipmentid)) {
                         let me = {};
-                        const myequipment = dynamicstyles.getmyequipmentbyid.call(this, schedule.myequipmentid)
+                        const myequipment = construction.getmyequipmentbyid.call(this, schedule.myequipmentid)
                         me[schedule.myequipmentid] = {};
                         me[schedule.myequipmentid]["equipmentid"] = schedule.myequipmentid;
                         me[schedule.myequipmentid]["equipment"] = myequipment.equipment;
@@ -128,7 +128,7 @@ class ScheduleView {
     }
 
     getschedule(type) {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const schedules = this.getSchedule();
         let showschedule = [];
         let employees = [];
@@ -196,7 +196,7 @@ class ScheduleView {
 
                     if (validatenewemployee(employees, schedule.providerid)) {
                         let me = {};
-                        let employee = dynamicstyles.getemployeebyid.call(this, schedule.providerid)
+                        let employee = construction.getemployeebyid.call(this, schedule.providerid)
                         me[schedule.providerid] = {};
                         me[schedule.providerid]["firstname"] = employee.firstname;
                         me[schedule.providerid]["lastname"] = employee.lastname;
@@ -215,7 +215,7 @@ class ScheduleView {
                 
                     if (validatenewequipment(equipment, schedule.myequipmentid)) {
                         let me = {};
-                        const myequipment = dynamicstyles.getmyequipmentbyid.call(this, schedule.myequipmentid)
+                        const myequipment = construction.getmyequipmentbyid.call(this, schedule.myequipmentid)
                         me[schedule.myequipmentid] = {};
                         me[schedule.myequipmentid]["equipmentid"] = schedule.myequipmentid;
                         me[schedule.myequipmentid]["equipment"] = myequipment.equipment;
@@ -324,8 +324,8 @@ class ScheduleView {
         const styles = MyStylesheet();
         const dates = getScheduleDates(`${this.state.timeinyear}-${this.state.timeinmonth}-${this.state.timeinday}`)
     
-        const dynamicstyles = new DynamicStyles();
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
         const getypos = scheduleview.getypos.call(this)
         const ypos = (getypos) => {
             if(getypos > 226.15) {

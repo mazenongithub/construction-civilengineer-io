@@ -1,9 +1,9 @@
 import { makeID } from './functions';
-import DynamicStyles from './dynamicstyles';
+import Construction from './construction';
 class MakeID {
     benefitid() {
-        const dynamicstyles = new DynamicStyles();
-        const employees = dynamicstyles.getmyemployees.call(this);
+        const construction = new Construction();
+        const employees = construction.getmyemployees.call(this);
         let benefitid = false;
         if (employees) {
             // eslint-disable-next-line
@@ -30,8 +30,8 @@ class MakeID {
         return benefitid;
     }
     materialid() {
-        const dynamicstyles = new DynamicStyles();
-        const mymaterial = dynamicstyles.getmymaterials.call(this)
+        const construction = new Construction();
+        const mymaterial = construction.getmymaterials.call(this)
         let materialid = false;
         if (mymaterial) {
             while (materialid === false) {
@@ -52,8 +52,8 @@ class MakeID {
 
     }
     costid() {
-        const dynamicstyles = new DynamicStyles();
-        const myequipment = dynamicstyles.getmyequipment.call(this);
+        const construction = new Construction();
+        const myequipment = construction.getmyequipment.call(this);
         let costid = false;
         while (!costid) {
             costid = makeID(16)
@@ -78,8 +78,8 @@ class MakeID {
         return costid;
     }
     equipmentid() {
-        const dynamicstyles = new DynamicStyles();
-        const myequipment = dynamicstyles.getmyequipment.call(this)
+        const construction = new Construction();
+        const myequipment = construction.getmyequipment.call(this)
         let equipmentid = false;
         if (myequipment) {
             while (equipmentid === false) {
@@ -100,8 +100,8 @@ class MakeID {
 
     }
     invoiceid() {
-        const dynamicstyles = new DynamicStyles();
-        const invoices = dynamicstyles.getinvoices.call(this);
+        const construction = new Construction();
+        const invoices = construction.getinvoices.call(this);
         let invoiceid = false;
         if (invoices) {
             while (!invoiceid) {
@@ -123,8 +123,8 @@ class MakeID {
     }
 
     proposalid() {
-        const dynamicstyles = new DynamicStyles();
-        const proposals = dynamicstyles.getproposals.call(this);
+        const construction = new Construction();
+        const proposals = construction.getproposals.call(this);
 
         let proposalid = false;
         if (proposals) {
@@ -146,8 +146,8 @@ class MakeID {
         return proposalid;
     }
     actualmaterialid() {
-        const dynamicstyles = new DynamicStyles();
-        const actualmaterials = dynamicstyles.getactualmaterials.call(this);
+        const construction = new Construction();
+        const actualmaterials = construction.getactualmaterials.call(this);
         let materialid = false;
         if (actualmaterials) {
             while (!materialid) {
@@ -169,8 +169,8 @@ class MakeID {
     }
 
     schedulematerialid() {
-        const dynamicstyles = new DynamicStyles();
-        const schedulematerials = dynamicstyles.getschedulematerials.call(this);
+        const construction = new Construction();
+        const schedulematerials = construction.getschedulematerials.call(this);
 
         let materialid = false;
         if (schedulematerials) {
@@ -193,8 +193,8 @@ class MakeID {
     }
 
     actuallaborid() {
-        const dynamicstyles = new DynamicStyles();
-        const actuallabor = dynamicstyles.getactuallabor.call(this);
+        const construction = new Construction();
+        const actuallabor = construction.getactuallabor.call(this);
 
         let laborid = false;
         if (actuallabor) {
@@ -216,8 +216,8 @@ class MakeID {
         return laborid;
     }
     schedulelaborid() {
-        const dynamicstyles = new DynamicStyles();
-        const schedulelabor = dynamicstyles.getschedulelabor.call(this);
+        const construction = new Construction();
+        const schedulelabor = construction.getschedulelabor.call(this);
 
         let laborid = false;
         if (schedulelabor) {
@@ -241,8 +241,8 @@ class MakeID {
 
 
     scheduleequipmentid() {
-        const dynamicstyles = new DynamicStyles();
-        const scheduleequipment = dynamicstyles.getscheduleequipment.call(this);
+        const construction = new Construction();
+        const scheduleequipment = construction.getscheduleequipment.call(this);
 
         let equipmentid = false;
         if (scheduleequipment) {
@@ -265,8 +265,8 @@ class MakeID {
     }
 
     actualequipmentid() {
-        const dynamicstyles = new DynamicStyles();
-        const actualequipment = dynamicstyles.getactualequipment.call(this);
+        const construction = new Construction();
+        const actualequipment = construction.getactualequipment.call(this);
 
         let equipmentid = false;
         if (actualequipment) {
@@ -289,8 +289,8 @@ class MakeID {
     }
 
     accountid() {
-        const dynamicstyles = new DynamicStyles();
-        const accounts = dynamicstyles.getmyaccounts.call(this)
+        const construction = new Construction();
+        const accounts = construction.getmyaccounts.call(this)
         let accountid = false;
         if (accounts) {
             while (!accountid) {

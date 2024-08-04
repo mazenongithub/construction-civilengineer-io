@@ -13,13 +13,15 @@ class EmployeeID {
         if (myuser) {
           
                 const company = construction.getcompany.call(this);
+               
                 if (company) {
                     if (company.hasOwnProperty("employees")) {
                         // eslint-disable-next-line
                         company.employees.map(employee => {
-                            let myemployee = construction.getemployeebyid.call(this, employee.providerid)
+                           
+                            let myemployee = construction.getuserbyID.call(this,employee.user_id)
                       
-                            options.push(<option key={`option${myemployee.providerid}`} value={myemployee.providerid}>{myemployee.firstname} {myemployee.lastname}</option>)
+                            options.push(<option key={`option${myemployee.user_id}`} value={employee.userid}>/{myemployee.UserID} {myemployee.FirstName} {myemployee.LastName}</option>)
                         })
 
                     }
@@ -42,7 +44,7 @@ class EmployeeID {
                         <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin, ...styles.generalField }}
                             value={this.getemployeeid()}
                             onChange={event => { this.handleemployeeid(event.target.value) }}>
-                            <option value={false}>Select An Employee to Create Labor Item</option>
+                            <option value={""}>Select An Employee to Create Labor Item</option>
                             {employeeid.loademployees.call(this)}
                         </select>
                     </div>
