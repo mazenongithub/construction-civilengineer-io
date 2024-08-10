@@ -4,7 +4,7 @@ import { updateTimes, sorttimes } from './functions'
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { calculateTotalMonths, UTCTimefromCurrentDate, validateLoanPayment, getRepaymentCosts, getInterval, newCost, convertUTCTime, formatTimeString, getBenefitInterval, validateProviderID, getDateTime, getDateInterval, getScale, calculatemonth, calculateyear, calculateday, calculateFloat } from './functions'
-import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin,  LoadCSIs, ValidateCompanyID, FindMyCompany } from './actions/api';
+import { SaveCompany, SaveProject, CheckEmailAddress, CheckProviderID, SaveProfile, AppleLogin, LoadCSIs, ValidateCompanyID, FindMyCompany, SaveMyProject } from './actions/api';
 import { saveCompanyIcon, saveProjectIcon } from './svg';
 import Spinner from './spinner'
 
@@ -14,10 +14,10 @@ class Construction {
         const construction = new Construction();
         const allusers = construction.getallusers.call(this)
         let getuser = false;
-        if(allusers) {
-            for(let user of allusers) {
-               
-                if(user._ID === user_id) {
+        if (allusers) {
+            for (let user of allusers) {
+
+                if (user._ID === user_id) {
                     getuser = user;
                 }
 
@@ -30,22 +30,22 @@ class Construction {
         const construction = new Construction();
         const allusers = construction.getallusers.call(this)
         let getuser = false;
-        if(allusers) {
-            for(let user of allusers) {
-            
-                if(user.UserID === user_id) {
+        if (allusers) {
+            for (let user of allusers) {
+
+                if (user.UserID === user_id) {
                     getuser = user;
                 }
 
             }
         }
- 
+
         return getuser;
     }
 
     getallusers() {
         let allusers = false;
-        if(this.props.allusers) {
+        if (this.props.allusers) {
             allusers = this.props.allusers;
         }
 
@@ -504,7 +504,7 @@ class Construction {
         const construction = new Construction();
         let actualmaterials = false;
         const project_id = this.props.project_id;
-        let myproject = construction.getOurProjectByID.call(this,project_id)
+        let myproject = construction.getOurProjectByID.call(this, project_id)
         if (myproject.hasOwnProperty("actual")) {
             if (myproject.actual.hasOwnProperty("materials")) {
                 actualmaterials = myproject.actual.materials;
@@ -518,7 +518,7 @@ class Construction {
         const construction = new Construction();
         let actualequipment = false;
         const project_id = this.props.project_id;
-        let myproject = construction.getOurProjectByID.call(this,project_id)
+        let myproject = construction.getOurProjectByID.call(this, project_id)
         if (myproject.hasOwnProperty("actual")) {
             if (myproject.actual.hasOwnProperty("equipment")) {
                 actualequipment = myproject.actual.equipment;
@@ -550,7 +550,7 @@ class Construction {
         const construction = new Construction();
         let schedulematerials = false;
         const project_id = this.props.project_id;
-        let myproject = construction.getOurProjectByID.call(this,project_id)
+        let myproject = construction.getOurProjectByID.call(this, project_id)
         if (myproject.hasOwnProperty("schedule")) {
 
             if (myproject.schedule.hasOwnProperty("materials")) {
@@ -566,7 +566,7 @@ class Construction {
     getmilestones() {
         const construction = new Construction();
         const project_id = this.props.project_id;
-        let myproject = construction.getOurProjectByID.call(this,project_id)
+        let myproject = construction.getOurProjectByID.call(this, project_id)
         let milestones = false;
         if (myproject) {
             if (myproject.hasOwnProperty("projectmilestones")) {
@@ -578,7 +578,7 @@ class Construction {
 
     }
 
-    
+
     getmilestonebyid(milestoneid) {
         let construction = new Construction();
         let milestones = construction.getmilestones.call(this)
@@ -594,11 +594,355 @@ class Construction {
         return milestone;
     }
 
+    getprojectactualequipmentkeybyid(project_id, equipmentid) {
+        const construction = new Construction();
+        let key = false;
+        let myequipment = construction.getprojectactualequipment.call(this, project_id)
+    
+        if (myequipment) {
+            myequipment.map((equipment,i)=> {
+                if(equipment.equipmentid === equipmentid) {
+                    key = i;
+                }
+            })
+        }
+    
+    
+        return  key;
+    }
+    
+    
+    getprojectactualmaterialkeybyid(project_id, materialid) {
+        const construction = new Construction();
+        let key = false;
+        let mymaterial = construction.getprojectactualmaterial.call(this, project_id)
+    
+        if (mymaterial) {
+            mymaterial.map((material,i)=> {
+                if(material.materialid === materialid) {
+                    key = i;
+                }
+            })
+        }
+    
+    
+        return  key;
+    }
+    
+    
+    getprojectactuallaborkeybyid(project_id, laborid) {
+        const construction = new Construction();
+        let key = false;
+        let mylabor = construction.getprojectactuallabor.call(this, project_id)
+    
+        if (mylabor) {
+            mylabor.map((labor,i)=> {
+                if(labor.laborid === laborid) {
+                    key = i;
+                }
+            })
+        }
+    
+    
+        return  key;
+    }
+    
+    getprojectactualequipmentbyid(project_id, equipmentid) {
+     
+        const construction = new Construction();
+        let getequipment = false;
+        let myequipment = construction.getprojectactualequipment.call(this, project_id)
+    
+        if (myequipment) {
+            myequipment.map(equipment=> {
+                if(equipment.equipmentid === equipmentid) {
+                    getequipment = equipment;
+                }
+            })
+        }
+    
+    
+        return getequipment;
+    }
+    
+    
+    getprojectactualmaterialbyid(project_id, materialid) {
+        const construction = new Construction();
+        let getmaterial = false;
+        let mymaterial = construction.getprojectactualmaterial.call(this, project_id)
+    
+        if (mymaterial) {
+            mymaterial.map(material=> {
+                if(material.materialid === materialid) {
+                    getmaterial = material;
+                }
+            })
+        }
+    
+    
+        return getmaterial;
+    }
+    
+    
+    getprojectactuallaborbyid(project_id, laborid) {
+        const construction = new Construction();
+        let getlabor = false;
+        let mylabor = construction.getprojectactuallabor.call(this, project_id)
+    
+        if (mylabor) {
+            mylabor.map(labor=> {
+                if(labor.laborid === laborid) {
+                    getlabor = labor;
+                }
+            })
+        }
+    
+    
+        return getlabor;
+    }
+    
+    getprojectactualequipment(project_id) {
+        const construction = new Construction();
+        let actualequipment = false;
+    
+        let myproject = construction.getOurProjectByID.call(this, project_id)
+    
+        if (myproject.hasOwnProperty("actual")) {
+            if (myproject.actual.hasOwnProperty("equipment")) {
+                return myproject.actual.equipment;
+            }
+    
+    
+        }
+    
+    
+        return actualequipment;
+    }
+    
+    
+    getprojectactualmaterial(project_id) {
+        const construction = new Construction();
+        let actualmaterial = false;
+    
+        let myproject = construction.getOurProjectByID.call(this, project_id)
+    
+        if (myproject.hasOwnProperty("actual")) {
+            if (myproject.actual.hasOwnProperty("materials")) {
+                return myproject.actual.materials;
+            }
+    
+    
+        }
+    
+    
+        return actualmaterial;
+    }
+    
+    
+    getprojectactuallabor(project_id) {
+        const construction = new Construction();
+        let actuallabor = false;
+    
+        let myproject = construction.getOurProjectByID.call(this, project_id)
+    
+        if (myproject.hasOwnProperty("actual")) {
+            if (myproject.actual.hasOwnProperty("labor")) {
+                return myproject.actual.labor;
+            }
+    
+    
+        }
+    
+    
+        return actuallabor;
+    }
+    
+    getactuallabor() {
+        const construction = new Construction();
+        let actuallabor = false;
+        const project_id = this.props.project_id;
+        let myproject = construction.getOurProjectByID.call(this, project_id)
+    
+        if (myproject.hasOwnProperty("actual")) {
+            if (myproject.actual.hasOwnProperty("labor")) {
+                return myproject.actual.labor;
+            }
+    
+    
+        }
+    
+    
+        return actuallabor;
+    }
+
+    getprojectscheduleequipmentkeybyid(project_id, equipmentid) {
+        const construction = new Construction();
+        let key = false;
+        let myequipment = construction.getprojectscheduleequipment.call(this, project_id)
+    
+        if (myequipment) {
+            myequipment.map((equipment,i)=> {
+                if(equipment.equipmentid === equipmentid) {
+                    key = i;
+                }
+            })
+        }
+    
+    
+        return  key;
+    }
+
+
+    getprojectschedulematerialkeybyid(project_id, materialid) {
+        const construction = new Construction();
+        let key = false;
+        let mymaterial = construction.getprojectschedulematerial.call(this, project_id)
+    
+        if (mymaterial) {
+            mymaterial.map((material,i)=> {
+                if(material.materialid === materialid) {
+                    key = i;
+                }
+            })
+        }
+    
+    
+        return  key;
+    }
+
+
+    getprojectschedulelaborkeybyid(project_id, laborid) {
+        const construction = new Construction();
+        let key = false;
+        let mylabor = construction.getprojectschedulelabor.call(this, project_id)
+
+        if (mylabor) {
+            mylabor.map((labor,i)=> {
+                if(labor.laborid === laborid) {
+                    key = i;
+                }
+            })
+        }
+
+
+        return  key;
+    }
+
+    getprojectscheduleequipmentbyid(project_id, equipmentid) {
+     
+        const construction = new Construction();
+        let getequipment = false;
+        let myequipment = construction.getprojectscheduleequipment.call(this, project_id)
+
+        if (myequipment) {
+            myequipment.map(equipment=> {
+                if(equipment.equipmentid === equipmentid) {
+                    getequipment = equipment;
+                }
+            })
+        }
+    
+    
+        return getequipment;
+    }
+    
+
+    getprojectschedulematerialbyid(project_id, materialid) {
+        const construction = new Construction();
+        let getmaterial = false;
+        let mymaterial = construction.getprojectschedulematerial.call(this, project_id)
+    
+        if (mymaterial) {
+            mymaterial.map(material=> {
+                if(material.materialid === materialid) {
+                    getmaterial = material;
+                }
+            })
+        }
+    
+    
+        return getmaterial;
+    }
+    
+
+    getprojectschedulelaborbyid(project_id, laborid) {
+        const construction = new Construction();
+        let getlabor = false;
+        let mylabor = construction.getprojectschedulelabor.call(this, project_id)
+
+        if (mylabor) {
+            mylabor.map(labor=> {
+                if(labor.laborid === laborid) {
+                    getlabor = labor;
+                }
+            })
+        }
+
+
+        return getlabor;
+    }
+
+    getprojectscheduleequipment(project_id) {
+        const construction = new Construction();
+        let scheduleequipment = false;
+    
+        let myproject = construction.getOurProjectByID.call(this, project_id)
+    
+        if (myproject.hasOwnProperty("schedule")) {
+            if (myproject.schedule.hasOwnProperty("equipment")) {
+                return myproject.schedule.equipment;
+            }
+    
+    
+        }
+    
+    
+        return scheduleequipment;
+    }
+
+
+    getprojectschedulematerial(project_id) {
+        const construction = new Construction();
+        let schedulematerial = false;
+    
+        let myproject = construction.getOurProjectByID.call(this, project_id)
+    
+        if (myproject.hasOwnProperty("schedule")) {
+            if (myproject.schedule.hasOwnProperty("materials")) {
+                return myproject.schedule.materials;
+            }
+    
+    
+        }
+    
+    
+        return schedulematerial;
+    }
+
+
+    getprojectschedulelabor(project_id) {
+        const construction = new Construction();
+        let schedulelabor = false;
+  
+        let myproject = construction.getOurProjectByID.call(this, project_id)
+
+        if (myproject.hasOwnProperty("schedule")) {
+            if (myproject.schedule.hasOwnProperty("labor")) {
+                return myproject.schedule.labor;
+            }
+
+
+        }
+
+
+        return schedulelabor;
+    }
+
     getschedulelabor() {
         const construction = new Construction();
         let schedulelabor = false;
         const project_id = this.props.project_id;
-        let myproject = construction.getOurProjectByID.call(this,project_id)
+        let myproject = construction.getOurProjectByID.call(this, project_id)
 
         if (myproject.hasOwnProperty("schedule")) {
             if (myproject.schedule.hasOwnProperty("labor")) {
@@ -616,18 +960,18 @@ class Construction {
         try {
 
             let response = await FindMyCompany();
-            if(response.hasOwnProperty("company")) {
+            if (response.hasOwnProperty("company")) {
                 this.props.reduxCompany(response.company)
-                
-            } 
 
-            if(response.hasOwnProperty("allprojects")) {
+            }
+
+            if (response.hasOwnProperty("allprojects")) {
                 this.props.reduxAllProjects(response.allprojects)
             }
 
-            this.setState({render:'render'})
+            this.setState({ render: 'render' })
 
-        } catch(err) {
+        } catch (err) {
             alert(err)
         }
     }
@@ -635,254 +979,228 @@ class Construction {
     async loadMyCompany() {
         const construction = new Construction();
         try {
-    
-    
-          await construction.findMyCompany.call(this)
-          const mycompany = construction.getcompany.call(this)
 
-          const getsocket = construction.getCompanyWebSocket.call(this)
-    
-          if (mycompany && !getsocket) {
-    
-            const companyid = mycompany._id;
-    
-            const socket = new WebSocket(`ws://localhost:8081/company/${companyid}/websocketapi`)
-    
-            socket.onopen = (evt) => {
-              let myuser = construction.getuser.call(this)
-              console.log("WEB SOCKET OPENED!!!");
-              const userid = myuser.UserID;
-              const data = { type: "join", userid };
-              socket.send(JSON.stringify(data));
+
+            await construction.findMyCompany.call(this)
+            const mycompany = construction.getcompany.call(this)
+
+            const getsocket = construction.getCompanyWebSocket.call(this)
+
+            if (mycompany && !getsocket) {
+
+                const companyid = mycompany._id;
+
+                const socket = new WebSocket(`ws://localhost:8081/company/${companyid}/websocketapi`)
+
+                socket.onopen = (evt) => {
+                    let myuser = construction.getuser.call(this)
+                    console.log("WEB SOCKET OPENED!!!");
+                    const userid = myuser.UserID;
+                    const data = { type: "join", userid };
+                    socket.send(JSON.stringify(data));
+                }
+
+
+                socket.onmessage = (evt) => {
+
+                    const response = JSON.parse(evt.data);
+                    console.log(response)
+
+                    if (response.type === "join") {
+                        console.log(response)
+                    } else if
+                        (response.type === "company") {
+                        console.log(response)
+                        const updatecompany = response.response;
+                        construction.handleCompanyResponse.call(this, updatecompany)
+                    }
+
+                }
+
+                socket.onerror = (evt) => {
+                    console.log("SOMETHING WENT WRONG!");
+                    console.log(evt);
+                };
+
+                socket.onclose = (evt) => {
+                    console.log("WEB SOCKET HAS BEEN CLOSED!!!!");
+                };
+
+                this.props.reduxWebSockets({ company: socket })
+
+
+                this.props.reduxWebSockets({ company: socket })
+                this.setState({ render: 'render' })
+
             }
-    
-    
-            socket.onmessage = (evt) => {
-    
-              const response = JSON.parse(evt.data);
-              console.log(response)
-    
-              if (response.type === "join") {
-                console.log(response.text)
-              } else if
-                (response.type === "company") {
-                console.log(response)
-                const updatecompany = response.response;
-                construction.handleCompanyResponse.call(this, updatecompany)
-              }
-    
-            }
-    
-            socket.onerror = (evt) => {
-              console.log("SOMETHING WENT WRONG!");
-              console.log(evt);
-            };
-    
-            socket.onclose = (evt) => {
-              console.log("WEB SOCKET HAS BEEN CLOSED!!!!");
-            };
-    
-            this.props.reduxWebSockets({ company: socket })
-    
-    
-            this.props.reduxWebSockets({ company: socket })
-            this.setState({ render: 'render' })
-    
-          }
-    
-          } catch (err) {
+
+        } catch (err) {
             alert(`Could not fetch company ${err}`)
-          }
-    
-        
-    
-      }
+        }
+
+
+
+    }
 
     handleCompanyResponse(updatecompany) {
-      
-            const construction = new Construction();
-            const company = construction.getcompany.call(this)
-            console.log(updatecompany)
-            const accounts = updatecompany.accounts;
 
- 
+        const construction = new Construction();
+        const company = construction.getcompany.call(this)
 
-            if (updatecompany.hasOwnProperty("company")) {
-                company.companyid = updatecompany.company.companyid;
-                company.company = updatecompany.company.company;
-                company.address = updatecompany.company.address;
-                company.city = updatecompany.company.city;
-                company.contactstate = updatecompany.company.contactstate;
-                company.zipcode = updatecompany.company.zipcode;
+        const accounts = updatecompany.accounts;
+
+
+
+        if (updatecompany.hasOwnProperty("company")) {
+            company.companyid = updatecompany.company.companyid;
+            company.company = updatecompany.company.company;
+            company.address = updatecompany.company.address;
+            company.city = updatecompany.company.city;
+            company.contactstate = updatecompany.company.contactstate;
+            company.zipcode = updatecompany.company.zipcode;
+        }
+
+        if (accounts.insert.length > 0 || accounts.update.length > 0) {
+            const newaccounts = accounts.insert.concat(accounts.update)
+            for (let newaccount of newaccounts) {
+
+                const newaccountid = newaccount.accountid
+                const getaccount = construction.getaccountbyid.call(this, newaccountid)
+                if (getaccount) {
+                    let i = construction.getaccountkeybyid.call(this, newaccountid)
+                    company.accounts[i] = newaccount;
+                } else {
+                    company.accounts.push(newaccount)
+                }
+
             }
 
-            if (accounts.insert.length > 0 || accounts.update.length > 0) {
-                const newaccounts = accounts.insert.concat(accounts.update)
-                for (let newaccount of newaccounts) {
+        } // insert/update accounts
 
-                    const newaccountid = newaccount.accountid
-                    const getaccount = construction.getaccountbyid.call(this, newaccountid)
-                    if (getaccount) {
-                        let i = construction.getaccountkeybyid.call(this, newaccountid)
-                        company.accounts[i] = newaccount;
-                    } else {
-                        company.accounts.push(newaccount)
-                    }
-
+        if (accounts.delete.length > 0) {
+            for (let deleteaccount of accounts.delete) {
+                const deleteaccountid = deleteaccount.accountid;
+                const getdeleteaccount = construction.getaccountbyid.call(this, deleteaccountid)
+                if (getdeleteaccount) {
+                    let i = construction.getaccountkeybyid.call(this, deleteaccountid)
+                    company.accounts.splice(i, 1)
                 }
 
-            } // insert/update accounts
-
-            if (accounts.delete.length > 0) {
-                for (let deleteaccount of accounts.delete) {
-                    const deleteaccountid = deleteaccount.accountid;
-                    const getdeleteaccount = construction.getaccountbyid.call(this, deleteaccountid)
-                    if (getdeleteaccount) {
-                        let i = construction.getaccountkeybyid.call(this, deleteaccountid)
-                        company.accounts.splice(i, 1)
-                    }
-
-                }
-            } // delete accounts
+            }
+        } // delete accounts
 
 
-            const newemployees = updatecompany.employees;
-            if (newemployees.insert.length > 0 || newemployees.update.length > 0) {
-                const getnewemployees = newemployees.insert.concat(newemployees.update)
+        const newemployees = updatecompany.employees;
+        if (newemployees.insert.length > 0 || newemployees.update.length > 0) {
+            const getnewemployees = newemployees.insert.concat(newemployees.update)
 
-                for (let newemployee of getnewemployees) {
+            for (let newemployee of getnewemployees) {
 
-                    let user_id = newemployee.user_id;
-                    const getemployee = construction.getemployeebyuserid.call(this, user_id)
-                    if (getemployee) {
-                        let i = construction.getemployeekeybyuserid.call(this, user_id)
-                        company.employees[i].title = newemployee.title;
-                        company.employees[i].workinghours = newemployee.workinghours;
+                let user_id = newemployee.user_id;
+                const getemployee = construction.getemployeebyuserid.call(this, user_id)
+                if (getemployee) {
+                    let i = construction.getemployeekeybyuserid.call(this, user_id)
+                    company.employees[i].title = newemployee.title;
+                    company.employees[i].workinghours = newemployee.workinghours;
 
-                    } else {
-                        company.employees.push(newemployee)
-                    }
-
-
-                }
-
-            } // end of insert/update employees
-
-
-            if (newemployees.delete.length > 0) {
-
-                for (let deleteemployee of newemployees.delete) {
-                    let user_id = deleteemployee.user_id;
-                    const getdeleteemployee = construction.getemployeebyuserid.call(this, user_id)
-                    if (getdeleteemployee) {
-                        let i = construction.getemployeekeybyuserid.call(this, user_id)
-                        company.employees.splice(i, 1)
-                    }
+                } else {
+                    company.employees.push(newemployee)
                 }
 
 
-            } // end of delete employees
+            }
+
+        } // end of insert/update employees
 
 
-            const newmaterials = updatecompany.materials;
+        if (newemployees.delete.length > 0) {
 
-            if (newmaterials.insert.length > 0 || newmaterials.update.length > 0) {
-                const getnewmaterials = newmaterials.insert.concat(newmaterials.update)
-                for (let newmaterial of getnewmaterials) {
-                    const newmaterialid = newmaterial.materialid;
-                    const getnewmaterial = construction.getmymaterialfromid.call(this, newmaterialid)
-                    if (getnewmaterial) {
-                        let i = construction.getmaterialkeybyid.call(this, newmaterialid)
-                        company.materials[i] = newmaterial
-                    } else {
-                        company.materials.push(newmaterial)
-                    }
+            for (let deleteemployee of newemployees.delete) {
+                let user_id = deleteemployee.user_id;
+                const getdeleteemployee = construction.getemployeebyuserid.call(this, user_id)
+                if (getdeleteemployee) {
+                    let i = construction.getemployeekeybyuserid.call(this, user_id)
+                    company.employees.splice(i, 1)
                 }
+            }
 
 
-            } // end of insert/update material
+        } // end of delete employees
 
-            if (newmaterials.delete.length > 0) {
-                for (let deletematerial of newmaterials.delete) {
-                    const deletematerialid = deletematerial.materialid;
-                    const getdeletematerial = construction.getmymaterialfromid.call(this, deletematerialid)
-                    if (getdeletematerial) {
-                        let i = construction.getmaterialkeybyid.call(this, deletematerialid)
-                        company.materials.splice(i, 1)
-                    }
+
+        const newmaterials = updatecompany.materials;
+
+        if (newmaterials.insert.length > 0 || newmaterials.update.length > 0) {
+            const getnewmaterials = newmaterials.insert.concat(newmaterials.update)
+            for (let newmaterial of getnewmaterials) {
+                const newmaterialid = newmaterial.materialid;
+                const getnewmaterial = construction.getmymaterialfromid.call(this, newmaterialid)
+                if (getnewmaterial) {
+                    let i = construction.getmaterialkeybyid.call(this, newmaterialid)
+                    company.materials[i] = newmaterial
+                } else {
+                    company.materials.push(newmaterial)
                 }
-            } // end of delete material
+            }
 
 
-            const newequipment = updatecompany.equipment;
+        } // end of insert/update material
 
-            if (newequipment.insert.length > 0 || newequipment.update.length > 0) {
-                const newequipments = newequipment.insert.concat(newequipment.update)
-
-                for (let getnewequipment of newequipments) {
-
-                    const equipmentid = getnewequipment.equipmentid;
-
-                    const findnewequipment = construction.getmyequipmentbyid.call(this, equipmentid)
-                    if (findnewequipment) {
-
-                        let i = construction.getequipmentkeybyid.call(this, equipmentid);
-                        company.equipment[i].equipment = getnewequipment.equipment;
-                        company.equipment[i].accountid = getnewequipment.accountid;
-                        if (getnewequipment.hasOwnProperty("ownership")) {
-
-
-                            company.equipment[i].ownership.workinghours = getnewequipment.ownership.workinghours;
-                            company.equipment[i].ownership.purchase = getnewequipment.ownership.purchase;
-                            company.equipment[i].ownership.resalevalue = getnewequipment.ownership.resalevalue;
-                            company.equipment[i].ownership.saledate = getnewequipment.ownership.saledate;
-                            company.equipment[i].ownership.purchasedate = getnewequipment.ownership.purchasedate;
-                            company.equipment[i].ownership.loaninterest = getnewequipment.ownership.loaninterest;
-
-
-                        } else if (getnewequipment.hasOwnProperty("rented")) {
-
-                            company.equipment[i].rented.monthly = getnewequipment.rented.monthly;
-                            company.equipment[i].rented.weekly = getnewequipment.rented.weekly;
-                            company.equipment[i].rented.hourly = getnewequipment.rented.hourly;
-                            company.equipment[i].rented.daily = getnewequipment.rented.daily;
-
-
-
-
-                        }
-
-
-
-                    } else {
-
-                        company.equipment.push(getnewequipment)
-
-                    }
-
-
-
+        if (newmaterials.delete.length > 0) {
+            for (let deletematerial of newmaterials.delete) {
+                const deletematerialid = deletematerial.materialid;
+                const getdeletematerial = construction.getmymaterialfromid.call(this, deletematerialid)
+                if (getdeletematerial) {
+                    let i = construction.getmaterialkeybyid.call(this, deletematerialid)
+                    company.materials.splice(i, 1)
                 }
+            }
+        } // end of delete material
 
 
+        const newequipment = updatecompany.equipment;
 
-            } // end of insert/update equipment
+        if (newequipment.insert.length > 0 || newequipment.update.length > 0) {
+            const newequipments = newequipment.insert.concat(newequipment.update)
+
+            for (let getnewequipment of newequipments) {
+
+                const equipmentid = getnewequipment.equipmentid;
+
+                const findnewequipment = construction.getmyequipmentbyid.call(this, equipmentid)
+                if (findnewequipment) {
+
+                    let i = construction.getequipmentkeybyid.call(this, equipmentid);
+                    company.equipment[i].equipment = getnewequipment.equipment;
+                    company.equipment[i].accountid = getnewequipment.accountid;
+                    if (getnewequipment.hasOwnProperty("ownership")) {
 
 
-            if (newequipment.delete.length > 0) {
+                        company.equipment[i].ownership.workinghours = getnewequipment.ownership.workinghours;
+                        company.equipment[i].ownership.purchase = getnewequipment.ownership.purchase;
+                        company.equipment[i].ownership.resalevalue = getnewequipment.ownership.resalevalue;
+                        company.equipment[i].ownership.saledate = getnewequipment.ownership.saledate;
+                        company.equipment[i].ownership.purchasedate = getnewequipment.ownership.purchasedate;
+                        company.equipment[i].ownership.loaninterest = getnewequipment.ownership.loaninterest;
 
-                for (let deleteequipment of newequipment.delete) {
 
-                    let deleteequipmentid = deleteequipment.equipmentid;
-                    const getdeleteequipment = construction.getmyequipmentbyid.call(this, deleteequipmentid)
-                    if (getdeleteequipment) {
+                    } else if (getnewequipment.hasOwnProperty("rented")) {
 
-                        let i = construction.getequipmentkeybyid.call(this, deleteequipmentid)
-                        company.equipment.splice(i, 1)
+                        company.equipment[i].rented.monthly = getnewequipment.rented.monthly;
+                        company.equipment[i].rented.weekly = getnewequipment.rented.weekly;
+                        company.equipment[i].rented.hourly = getnewequipment.rented.hourly;
+                        company.equipment[i].rented.daily = getnewequipment.rented.daily;
+
+
 
 
                     }
 
+
+
+                } else {
+
+                    company.equipment.push(getnewequipment)
 
                 }
 
@@ -890,155 +1208,229 @@ class Construction {
 
             }
 
-            const newcosts = updatecompany.equipment.cost;
-
-            if (newcosts.insert.length > 0 || newcosts.update.length > 0) {
-                const getnewcosts = newcosts.insert.concat(newcosts.update)
-
-                for (let newcost of getnewcosts) {
-
-                    const newequipmentid = newcost.equipmentid;
-                    const newcostid = newcost.costid;
 
 
-                    let fetchequipment = construction.getmyequipmentbyid.call(this, newequipmentid)
-
-                    if (fetchequipment) {
+        } // end of insert/update equipment
 
 
+        if (newequipment.delete.length > 0) {
 
-                        let i = construction.getequipmentkeybyid.call(this, newequipmentid)
-                        const getcost = construction.getcostbyid.call(this, newequipmentid, newcostid)
-                        if (getcost) {
+            for (let deleteequipment of newequipment.delete) {
 
-                            let j = construction.getequipmentcostskeybyid.call(this, newequipmentid, newcostid)
+                let deleteequipmentid = deleteequipment.equipmentid;
+                const getdeleteequipment = construction.getmyequipmentbyid.call(this, deleteequipmentid)
+                if (getdeleteequipment) {
 
-                            company.equipment[i].ownership.cost[j].timein = newcost.timein;
-                            company.equipment[i].ownership.cost[j].cost = newcost.cost;
-                            company.equipment[i].ownership.cost[j].detail = newcost.detail;
-                            if (newcost.hasOwnProperty("reoccurring")) {
-                                company.equipment[i].ownership.cost[j].reoccurring = { frequency: newcost.reoccurring.frequency }
-                            }
-
-                        } else {
-
-                            company.equipment[i].ownership.cost.push(newcost)
-                        }
-
-
-                    }
-
-
-
-
-
-                }
-            } // end of insert update cost
-
-
-            if (newcosts.delete.length > 0) {
-                for (let deleteequipment of newcosts.delete) {
-
-                    let deletecostid = deleteequipment.costid;
-                    let deleteequipmentid = deleteequipment.equipmentid;
-
-                    const deletecost = construction.getcostbyid.call(this, deleteequipmentid, deletecostid)
-
-                    if (deletecost) {
-                        let i = construction.getequipmentkeybyid.call(this, deleteequipmentid);
-                        let j = construction.getequipmentcostskeybyid.call(this, deletecostid)
-
-                        company.equipment[i].ownership.cost.splice(j, 1)
-                    }
-
-
-
-                }
-            }
-
-            if (updatecompany.employees.benefits.update.length > 0 || updatecompany.employees.benefits.insert.length > 0) {
-
-                let newbenefits = updatecompany.employees.benefits.update.concat(updatecompany.employees.benefits.insert)
-
-                for (let newbenefit of newbenefits) {
-
-                    let employeeid = newbenefit.user_id;
-                    let getbenefit = newbenefit.benefit;
-                    let benefitid = newbenefit.benefitid;
-                    let accountid = newbenefit.accountid;
-                    let amount = newbenefit.amount;
-                    let frequency = newbenefit.frequency;
-
-                    let findemployee = construction.getemployeebyuserid.call(this, employeeid)
-
-                    if (findemployee) {
-                        let i = construction.getemployeekeybyuserid.call(this, employeeid)
-
-                        let findbenefit = construction.getBenefitsByID.call(this, employeeid, benefitid)
-
-                        if (findbenefit) {
-                            let j = construction.getBenefitKeyByID.call(this, employeeid, benefitid)
-                            company.employees[i].benefits[j].benefit = getbenefit;
-                            company.employees[i].benefits[j].amount = amount;
-                            company.employees[i].benefits[j].frequency = frequency;
-                            company.employees[i].benefits[j].accountid = accountid;
-
-
-                        } else {
-                            company.employees[i].benefits.push({ benefitid, benefit: getbenefit, frequency, amount, accountid })
-                        }
-
-
-                    }
-
-
-
+                    let i = construction.getequipmentkeybyid.call(this, deleteequipmentid)
+                    company.equipment.splice(i, 1)
 
 
                 }
 
 
-            } // end of insert/update benefit
-
-
-            if (updatecompany.employees.benefits.delete.length > 0) {
-                for (let deletebenefit of updatecompany.employees.benefits.delete) {
-                    let employeeid = deletebenefit.user_id;
-                    let benefitid = deletebenefit.benefitid;
-
-                    let findemployee = construction.getemployeebyuserid.call(this, employeeid)
-                    if (findemployee) {
-                        let i = construction.getemployeekeybyuserid.call(this, employeeid)
-                        let getdeletebenefit = construction.getBenefitsByID.call(this, employeeid, benefitid)
-                        if (getdeletebenefit) {
-                            let j = construction.getBenefitKeyByID.call(this, employeeid, benefitid)
-                            company.employees[i].benefits.splice(j, 1)
-                        }
-
-                    }
-
-                }
             }
 
 
 
+        }
+
+        const newcosts = updatecompany.equipment.cost;
+
+        if (newcosts.insert.length > 0 || newcosts.update.length > 0) {
+            const getnewcosts = newcosts.insert.concat(newcosts.update)
+
+            for (let newcost of getnewcosts) {
+
+                const newequipmentid = newcost.equipmentid;
+                const newcostid = newcost.costid;
+
+
+                let fetchequipment = construction.getmyequipmentbyid.call(this, newequipmentid)
+
+                if (fetchequipment) {
+
+
+
+                    let i = construction.getequipmentkeybyid.call(this, newequipmentid)
+                    const getcost = construction.getcostbyid.call(this, newequipmentid, newcostid)
+                    if (getcost) {
+
+                        let j = construction.getequipmentcostskeybyid.call(this, newequipmentid, newcostid)
+
+                        company.equipment[i].ownership.cost[j].timein = newcost.timein;
+                        company.equipment[i].ownership.cost[j].cost = newcost.cost;
+                        company.equipment[i].ownership.cost[j].detail = newcost.detail;
+                        if (newcost.hasOwnProperty("reoccurring")) {
+                            company.equipment[i].ownership.cost[j].reoccurring = { frequency: newcost.reoccurring.frequency }
+                        }
+
+                    } else {
+
+                        company.equipment[i].ownership.cost.push(newcost)
+                    }
+
+
+                }
 
 
 
 
 
-            this.props.reduxCompany(company)
-            this.setState({ render: 'render' })
+            }
+        } // end of insert update cost
 
 
+        if (newcosts.delete.length > 0) {
+            for (let deleteequipment of newcosts.delete) {
+
+                let deletecostid = deleteequipment.costid;
+                let deleteequipmentid = deleteequipment.equipmentid;
+
+                const deletecost = construction.getcostbyid.call(this, deleteequipmentid, deletecostid)
+
+                if (deletecost) {
+                    let i = construction.getequipmentkeybyid.call(this, deleteequipmentid);
+                    let j = construction.getequipmentcostskeybyid.call(this, deletecostid)
+
+                    company.equipment[i].ownership.cost.splice(j, 1)
+                }
+
+
+
+            }
+        }
+
+        if (updatecompany.employees.benefits.update.length > 0 || updatecompany.employees.benefits.insert.length > 0) {
+
+            let newbenefits = updatecompany.employees.benefits.update.concat(updatecompany.employees.benefits.insert)
+
+            for (let newbenefit of newbenefits) {
+
+                let employeeid = newbenefit.user_id;
+                let getbenefit = newbenefit.benefit;
+                let benefitid = newbenefit.benefitid;
+                let accountid = newbenefit.accountid;
+                let amount = newbenefit.amount;
+                let frequency = newbenefit.frequency;
+
+                let findemployee = construction.getemployeebyuserid.call(this, employeeid)
+
+                if (findemployee) {
+                    let i = construction.getemployeekeybyuserid.call(this, employeeid)
+
+                    let findbenefit = construction.getBenefitsByID.call(this, employeeid, benefitid)
+
+                    if (findbenefit) {
+                        let j = construction.getBenefitKeyByID.call(this, employeeid, benefitid)
+                        company.employees[i].benefits[j].benefit = getbenefit;
+                        company.employees[i].benefits[j].amount = amount;
+                        company.employees[i].benefits[j].frequency = frequency;
+                        company.employees[i].benefits[j].accountid = accountid;
+
+
+                    } else {
+                        company.employees[i].benefits.push({ benefitid, benefit: getbenefit, frequency, amount, accountid })
+                    }
+
+
+                }
+
+
+
+
+
+            }
+
+
+        } // end of insert/update benefit
+
+
+        if (updatecompany.employees.benefits.delete.length > 0) {
+            for (let deletebenefit of updatecompany.employees.benefits.delete) {
+                let employeeid = deletebenefit.user_id;
+                let benefitid = deletebenefit.benefitid;
+
+                let findemployee = construction.getemployeebyuserid.call(this, employeeid)
+                if (findemployee) {
+                    let i = construction.getemployeekeybyuserid.call(this, employeeid)
+                    let getdeletebenefit = construction.getBenefitsByID.call(this, employeeid, benefitid)
+                    if (getdeletebenefit) {
+                        let j = construction.getBenefitKeyByID.call(this, employeeid, benefitid)
+                        company.employees[i].benefits.splice(j, 1)
+                    }
+
+                }
+
+            }
+        }
+
+
+
+
+
+
+
+
+        this.props.reduxCompany(company)
+        this.setState({ render: 'render' })
+
+
+
+    }
+
+
+
+    async saveMyProject() {
         
+        const construction = new Construction();
+        try {
+      
+            let myprojects = construction.getOurProjects.call(this)
+
+            const myproject = this.getProject()
+            
+
+            if(myproject) {
+            const i = construction.getOurProjectKeyById.call(this,this.props.project_id)
+            const project_id = this.props.project_id;
+            const getproject = construction.getProjectBy_ID.call(this, project_id)
+            const projectsocket = construction.getProjectSocketByID.call(this,getproject.ProjectID)
+          
+            const socket = projectsocket.socket;
+            const payload = JSON.stringify({ type: "construction", myproject });
+            socket.send(payload)
+            // const savemyproject = await SaveMyProject(this.props.project_id, myproject);
+            // console.log(savemyproject)
+       //     if(savemyproject.hasOwnProperty("myproject")) {
+                // myprojects[i]= savemyproject.myproject;
+                // this.props.reduxMyProjects(myprojects)
+              
+          //  }
+
+
+
+            }
+            
+            
+        } catch(err) {
+            alert(`Could not save my Project ${err}`)
+        }
+    }
+
+    showSaveProject() {
+        const styles = MyStylesheet();
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
+        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }} onClick={() => { construction.saveMyProject.call(this) }}>
+            <button style={{ ...regularFont, ...styles.generalFont, ...styles.addPadding15 }}>Save Project</button>
+        </div>)
     }
 
     getCompanyWebSocket() {
         const construction = new Construction();
         const websockets = construction.getWebSockets.call(this);
         let companysocket = false;
-        if(websockets.company) {
+        if (websockets.company) {
             companysocket = websockets.company;
         }
 
@@ -1047,18 +1439,17 @@ class Construction {
 
     getWebSockets() {
         let websockets = false;
-        if(this.props.websockets) {
+        if (this.props.websockets) {
             websockets = this.props.websockets;
         }
         return websockets;
     }
 
     getproject() {
-
         const construction = new Construction();
-        let projectid = this.props.match.params.projectid;
+        let projectid = this.props.project_id;
         let projects = false;
-        let myproject = construction.getprojectbytitle.call(this, projectid);
+        let myproject = construction.getOurProjectByID.call(this, projectid);
 
         if (myproject) {
             projects = myproject;
@@ -1068,8 +1459,8 @@ class Construction {
 
     getcompany() {
         let company = false;
-        if(this.props.mycompany) {
-            if(this.props.mycompany.hasOwnProperty("_id")) {
+        if (this.props.mycompany) {
+            if (this.props.mycompany.hasOwnProperty("_id")) {
                 company = this.props.mycompany;
             }
         }
@@ -1092,11 +1483,11 @@ class Construction {
         const construction = new Construction()
         let company = construction.getcompany.call(this)
         let employees = false;
-            if (company) {
-                if (company.hasOwnProperty("employees")) {
-                    employees = company.employees;
-                }
-            
+        if (company) {
+            if (company.hasOwnProperty("employees")) {
+                employees = company.employees;
+            }
+
         }
         return employees;
     }
@@ -1239,7 +1630,7 @@ class Construction {
     async clientlogin() {
 
         const construction = new Construction();
-    
+
         let emailaddress = this.state.emailaddress;
         let client = this.state.client;
         let clientid = this.state.clientid;
@@ -1252,13 +1643,13 @@ class Construction {
         let google = this.state.google;
         let apple = this.state.apple;
 
-        let values = { emailaddress, client, clientid, firstname, lastname, userid, profile, phonenumber, profileurl, apple, google}
-        console.log(values)
+        let values = { emailaddress, client, clientid, firstname, lastname, userid, profile, phonenumber, profileurl, apple, google }
+      
         try {
             this.setState({ spinner: true })
             let response = await AppleLogin(values)
             this.setState({ spinner: false })
-           
+
 
             if (response.hasOwnProperty("myuser")) {
                 construction.loadMyCompany.call(this)
@@ -1270,8 +1661,8 @@ class Construction {
                 this.setState({ message: response.message })
             }
 
-            if(response.hasOwnProperty("register")) {
-                this.setState({register:response.register})
+            if (response.hasOwnProperty("register")) {
+                this.setState({ register: response.register })
             }
         } catch (err) {
             alert(err)
@@ -1313,11 +1704,11 @@ class Construction {
         return equipments;
     }
 
-    getRadioIcon () {
-        if(this.state.width>600) {
-            return({width:'48px'})
+    getRadioIcon() {
+        if (this.state.width > 600) {
+            return ({ width: '48px' })
         } else {
-            return({width:'24px'})
+            return ({ width: '24px' })
         }
     }
 
@@ -1365,7 +1756,7 @@ class Construction {
             let phonenumber = user.phoneNumber;
             let profile = this.state.profile;
             let userid = profile;
-           
+
 
 
             this.setState({ client, google, clientid, profile, userid, firstname, lastname, profileurl, phonenumber, emailaddress })
@@ -1415,12 +1806,12 @@ class Construction {
 
     }
 
-    validateProject(project) {      
+    validateProject(project) {
         let message = "";
-        if(project.hasOwnProperty("schedule")) {
+        if (project.hasOwnProperty("schedule")) {
 
-        if (project.schedule.hasOwnProperty("labor")) {
-          
+            if (project.schedule.hasOwnProperty("labor")) {
+
                 // eslint-disable-next-line
                 project.schedule.labor.map(mylabor => {
                     if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
@@ -1438,16 +1829,16 @@ class Construction {
                     }
                 })
 
-            
-        }
 
-        if (project.schedule.hasOwnProperty("equipment")) {
+            }
 
-        
+            if (project.schedule.hasOwnProperty("equipment")) {
+
+
                 // eslint-disable-next-line
                 project.schedule.equipment.map(equipment => {
                     if (!equipment.csiid || !equipment.milestoneid || !equipment.myequipment) {
-                        
+
                         if (!equipment.csiid) {
                             message += `Schedule Equipment ${equipment.equipmentid} is missing CSIID `
                         }
@@ -1462,17 +1853,17 @@ class Construction {
                 })
 
             }
-        
 
-        if (project.schedule.hasOwnProperty("materials")) {
-         
+
+            if (project.schedule.hasOwnProperty("materials")) {
+
                 // eslint-disable-next-line
                 project.schedule.materials.map(mymaterial => {
-                    
+
                     let material = "";
-               
+
                     if (!mymaterial.mymaterialid || !mymaterial.csiid || !mymaterial.milestoneid) {
-                        
+
                         if (!mymaterial.mymaterialid) {
                             message += `Schedule Material is missing materialid `
                         }
@@ -1486,43 +1877,43 @@ class Construction {
                     }
                 })
 
-            
+
+            }
+
         }
 
-    }
+        if (project.hasOwnProperty("actual")) {
 
-    if(project.hasOwnProperty("actual")) {
+            if (project.actual.hasOwnProperty("labor")) {
 
-        if (project.actual.hasOwnProperty("labor")) {
-          
-            // eslint-disable-next-line
-            project.actual.labor.map(mylabor => {
-                if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
-                    ;
-                    if (!mylabor.csiid) {
-                        message += `Schedule labor ${mylabor.laborid} is missing CSIID `
+                // eslint-disable-next-line
+                project.actual.labor.map(mylabor => {
+                    if (!mylabor.csiid || !mylabor.milestoneid || !mylabor.providerid) {
+                        ;
+                        if (!mylabor.csiid) {
+                            message += `Schedule labor ${mylabor.laborid} is missing CSIID `
+                        }
+                        if (!mylabor.milestoneid) {
+                            message += `Schedule labor ${mylabor.laborid} is missing MilestoneID `
+                        }
+                        if (!mylabor.providerid) {
+                            message += `Schedule labor ${mylabor.laborid} is missing ProviderID `
+                        }
+
                     }
-                    if (!mylabor.milestoneid) {
-                        message += `Schedule labor ${mylabor.laborid} is missing MilestoneID `
-                    }
-                    if (!mylabor.providerid) {
-                        message += `Schedule labor ${mylabor.laborid} is missing ProviderID `
-                    }
-
-                }
-            })
-
-        
-    }
+                })
 
 
-        if (project.actual.hasOwnProperty("materials")) {
-        
+            }
+
+
+            if (project.actual.hasOwnProperty("materials")) {
+
                 // eslint-disable-next-line
                 project.actual.materials.map(mymaterial => {
-                  
+
                     if (!mymaterial.mymaterialid || !mymaterial.csiid || !mymaterial.milestoneid) {
-                        
+
                         if (!mymaterial.mymaterialid) {
 
                             message += `Actual Material is missing materialid `
@@ -1537,16 +1928,16 @@ class Construction {
                     }
                 })
 
-            
-        }
-      
-        if (project.actual.hasOwnProperty("equipment")) {
-        
+
+            }
+
+            if (project.actual.hasOwnProperty("equipment")) {
+
                 // eslint-disable-next-line
                 project.actual.equipment.map(myequipment => {
-                 
+
                     if (!myequipment.myequipmentid || !myequipment.csiid || !myequipment.milestoneid) {
-                        
+
                         if (!myequipment.myequipmentid) {
                             message += `Actual Equipment is missing Equipment ID `;
                         }
@@ -1562,14 +1953,14 @@ class Construction {
 
                 })
 
-            
 
-        
 
+
+
+
+            }
 
         }
-
-    }
         return message;
     }
 
@@ -1587,43 +1978,43 @@ class Construction {
                 let validate = "";
                 validate += construction.validateCompany.call(this, myuser);
                 validate += construction.validateProject.call(this, project)
-                if(!validate) {
-                try {
-                    this.setState({ spinner: true })
-                    let response = await SaveProject({ myuser, projectid })
+                if (!validate) {
+                    try {
+                        this.setState({ spinner: true })
+                        let response = await SaveProject({ myuser, projectid })
 
-                    // construction.handlecompanyids.call(this, response)
-                    // construction.handleprojectids.call(this, response)
-                    response = updateTimes(response)
-                    console.log(response)
+                        // construction.handlecompanyids.call(this, response)
+                        // construction.handleprojectids.call(this, response)
+                        response = updateTimes(response)
+                        console.log(response)
 
-                    if (response.hasOwnProperty("myuser")) {
+                        if (response.hasOwnProperty("myuser")) {
 
 
-                        this.props.reduxUser(response.myuser)
+                            this.props.reduxUser(response.myuser)
+                        }
+
+                        let message = "";
+
+                        if (response.hasOwnProperty("message")) {
+                            let lastupdated = formatTimeString(convertUTCTime(response.lastupdated))
+                            message = `${response.message} Last updated ${lastupdated}`
+
+                        }
+
+                        this.setState({ message, spinner: false })
+
+
+                    } catch (err) {
+                        alert(err)
+                        this.setState({ spinner: false })
+
                     }
 
-                    let message = "";
 
-                    if (response.hasOwnProperty("message")) {
-                        let lastupdated = formatTimeString(convertUTCTime(response.lastupdated))
-                        message = `${response.message} Last updated ${lastupdated}`
-
-                    }
-
-                    this.setState({ message, spinner: false })
-
-
-                } catch (err) {
-                    alert(err)
-                    this.setState({ spinner: false })
-
+                } else {
+                    this.setState({ message: validate })
                 }
-
-
-            } else {
-                this.setState({message:validate})
-            }
 
 
 
@@ -1771,13 +2162,13 @@ class Construction {
     }
 
     getbenefitbyid(_id, benefitid) {
-     
+
         const construction = new Construction();
         const benefits = construction.getemployeebenefitsbyid.call(this, _id)
-        
+
         let mybenefit = false;
         if (benefits) {
-       
+
             // eslint-disable-next-line
             benefits.map(benefit => {
                 if (benefit.benefitid === benefitid) {
@@ -1834,11 +2225,11 @@ class Construction {
         }
         return projects;
     }
-    
+
     getuser() {
         let user = false;
         if (this.props.myusermodel) {
-            if (this.props.myusermodel.hasOwnProperty("UserID") ) {
+            if (this.props.myusermodel.hasOwnProperty("UserID")) {
                 user = this.props.myusermodel;
             }
 
@@ -1983,13 +2374,13 @@ class Construction {
     }
 
     getAllCompanys() {
-      let allcompanys = false;
-        if(this.props.allcompanys.hasOwnProperty("length")) {
-           
+        let allcompanys = false;
+        if (this.props.allcompanys.hasOwnProperty("length")) {
 
-                allcompanys = this.props.allcompanys
 
-            
+            allcompanys = this.props.allcompanys
+
+
         }
         return allcompanys;
     }
@@ -2050,7 +2441,7 @@ class Construction {
         const project_id = this.props.project_id;
         const schedule = () => {
             let schedules = [];
-            let myproject = construction.getOurProjectByID.call(this, this.props.project_id )
+            let myproject = construction.getOurProjectByID.call(this, this.props.project_id)
 
 
             if (myproject.hasOwnProperty("schedule")) {
@@ -2259,12 +2650,12 @@ class Construction {
             })
         }
 
-        if(!material) {
+        if (!material) {
             let actuals = construction.getactualmaterials.call(this)
-            if(actuals) {
+            if (actuals) {
                 // eslint-disable-next-line
-                actuals.map(actual=> {
-                    if(actual.materialid === materialid) {
+                actuals.map(actual => {
+                    if (actual.materialid === materialid) {
                         material = actual;
                     }
                 })
@@ -2302,7 +2693,7 @@ class Construction {
                 const myinvoice = construction.getinvoicebyid.call(this, invoiceid)
                 if (myinvoice) {
 
-               
+
 
                     myuser.company.projects[i].actual.updated = UTCTimefromCurrentDate();
                     this.props.reduxUser(myuser)
@@ -2358,8 +2749,8 @@ class Construction {
         const construction = new Construction();
         let scheduleequipment = false;
         const project_id = this.props.project_id;
-        let myproject = construction.getOurProjectByID.call(this,project_id)
-    
+        let myproject = construction.getOurProjectByID.call(this, project_id)
+
         if (myproject.hasOwnProperty("schedule")) {
             if (myproject.schedule.hasOwnProperty("equipment")) {
                 scheduleequipment = myproject.schedule.equipment;
@@ -2390,7 +2781,7 @@ class Construction {
         let equipment = false;
         const myequipment = construction.getscheduleequipment.call(this)
         if (myequipment) {
-// eslint-disable-next-line
+            // eslint-disable-next-line
             myequipment.map((myequipment, i) => {
                 if (myequipment.equipmentid === equipmentid) {
                     equipment = myequipment;
@@ -2398,12 +2789,12 @@ class Construction {
             })
         }
 
-        if(!equipment) {
+        if (!equipment) {
             const actuals = construction.getactualequipment.call(this);
-            if(actuals) {
+            if (actuals) {
                 // eslint-disable-next-line
-                actuals.map(actual=> {
-                    if(actual.equipmentid === equipmentid) {
+                actuals.map(actual => {
+                    if (actual.equipmentid === equipmentid) {
                         equipment = actual;
                     }
                 })
@@ -2419,7 +2810,7 @@ class Construction {
         let equipment = false;
         const myequipment = construction.getscheduleequipment.call(this)
         if (myequipment) {
-// eslint-disable-next-line
+            // eslint-disable-next-line
             myequipment.map((myequipment, i) => {
                 if (myequipment.equipmentid === equipmentid) {
                     equipment = myequipment;
@@ -2438,7 +2829,7 @@ class Construction {
         const myequipment = construction.getmyequipmentbyid.call(this, equipmentid)
         if (myequipment) {
             const costs = construction.gettransformedcostsbyequimentid.call(this, equipmentid);
-      
+
             if (costs.length > 0) {
 
                 const Period = () => {
@@ -2451,7 +2842,7 @@ class Construction {
                         return 0;
                     }
                 }
-               
+
 
 
                 const totalworkinghours = () => {
@@ -2460,7 +2851,7 @@ class Construction {
 
                     return (Math.round(annual * years))
                 }
-            
+
                 // eslint-disable-next-line
                 costs.map(cost => {
 
@@ -2540,7 +2931,7 @@ class Construction {
         const myequipment = construction.getactualequipment.call(this)
 
         if (myequipment) {
-// eslint-disable-next-line
+            // eslint-disable-next-line
             myequipment.map((myequipment, i) => {
                 if (myequipment.equipmentid === equipmentid) {
                     equipment = myequipment;
@@ -2564,7 +2955,99 @@ class Construction {
         return actual;
 
     }
+
+
+    getprojectbidactualkeybyid(project_id, csiid) {
+        const construction = new Construction();
+        const bidactual = construction.getprojectbidactual.call(this,project_id)
+        let key = false;
+        if(bidactual) {
+            bidactual.map((csi,i)=> {
+                if(csi.csiid === csiid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
     
+    }
+    
+    getprojectbidactualbyid(project_id, csiid) {
+        const construction = new Construction();
+        const bidactual = construction.getprojectbidactual.call(this,project_id)
+        let getactual = false;
+        if(bidactual) {
+            bidactual.map(csi=> {
+                if(csi.csiid === csiid) {
+                    getactual = csi;
+                }
+            })
+        }
+        return getactual;
+    
+    }
+    
+    getprojectbidactual(project_id) {
+        const construction = new Construction();
+        const project = construction.getOurProjectByID.call(this,project_id)
+        let actual = false;
+        if (project.hasOwnProperty("actual")) {
+    
+            if (project.actual.hasOwnProperty("bid")) {
+                actual = project.actual.bid;
+            }
+    
+        }
+        return actual;
+    
+    }
+    
+
+    getprojectbidschedulekeybyid(project_id, csiid) {
+        const construction = new Construction();
+        const bidschedule = construction.getprojectbidschedule.call(this,project_id)
+        let key = false;
+        if(bidschedule) {
+            bidschedule.map((csi,i)=> {
+                if(csi.csiid === csiid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+
+    }
+
+    getprojectbidschedulebyid(project_id, csiid) {
+        const construction = new Construction();
+        const bidschedule = construction.getprojectbidschedule.call(this,project_id)
+        let getschedule = false;
+        if(bidschedule) {
+            bidschedule.map(csi=> {
+                if(csi.csiid === csiid) {
+                    getschedule = csi;
+                }
+            })
+        }
+        return getschedule;
+
+    }
+
+    getprojectbidschedule(project_id) {
+        const construction = new Construction();
+        const project = construction.getOurProjectByID.call(this,project_id)
+        let schedule = false;
+        if (project.hasOwnProperty("schedule")) {
+
+            if (project.schedule.hasOwnProperty("bidschedule")) {
+                schedule = project.schedule.bidschedule;
+            }
+
+        }
+        return schedule;
+
+    }
+
     getbidschedule() {
         const construction = new Construction();
         const project = construction.getproject.call(this)
@@ -2572,11 +3055,11 @@ class Construction {
         if (project.hasOwnProperty("schedule")) {
 
             if (project.schedule.hasOwnProperty("bidschedule")) {
-                schedule  = project.schedule.bidschedule;
+                schedule = project.schedule.bidschedule;
             }
 
         }
-        return schedule ;
+        return schedule;
 
     }
 
@@ -2669,7 +3152,7 @@ class Construction {
         const construction = new Construction();
         let actuallabor = false;
         const project_id = this.props.project_id;
-        let myproject = construction.getOurProjectByID.call(this,project_id)
+        let myproject = construction.getOurProjectByID.call(this, project_id)
         if (myproject.hasOwnProperty("actual")) {
             if (myproject.actual.hasOwnProperty("labor")) {
                 return myproject.actual.labor;
@@ -2717,12 +3200,12 @@ class Construction {
 
         }
 
-        if(!labor) {
+        if (!labor) {
             const actuals = construction.getactuallabor.call(this)
-            if(actuals) {
+            if (actuals) {
                 // eslint-disable-next-line
-                actuals.map(actual=> {
-                    if(actual.laborid === laborid) {
+                actuals.map(actual => {
+                    if (actual.laborid === laborid) {
                         labor = actual;
                     }
                 })
@@ -2864,6 +3347,28 @@ class Construction {
         return key;
 
     }
+    getProjectSocketByID(projectid) {
+        const construction = new Construction();
+        const sockets = construction.getProjectSockets.call(this)
+        let getsocket = false;
+        if (sockets) {
+            for (let socket of sockets) {
+                if (socket.projectid === projectid) {
+                    getsocket = socket;
+                }
+            }
+        }
+        return getsocket;
+    }
+    getProjectSockets() {
+        let sockets = false;
+        if (this.props.projectsockets) {
+            if (this.props.projectsockets.hasOwnProperty("length")) {
+                sockets = this.props.projectsockets;
+            }
+        }
+        return sockets;
+    }
     getmyprojects() {
         const construction = new Construction();
         const company = construction.getcompany.call(this);
@@ -2896,11 +3401,11 @@ class Construction {
         let company = construction.getcompany.call(this)
         let equipment = false;
         if (company) {
-        
-                if (company.hasOwnProperty("equipment")) {
-                    equipment = company.equipment;
-                }
-            
+
+            if (company.hasOwnProperty("equipment")) {
+                equipment = company.equipment;
+            }
+
         }
         return equipment;
     }
@@ -2989,7 +3494,7 @@ class Construction {
 
     loadaccounts() {
         const construction = new Construction();
-        let accounts =construction.getaccounts.call(this)
+        let accounts = construction.getaccounts.call(this)
         let options = [];
         options.push(<option key={`selectanaccount`} value=""> Select Account ID</option>);
         if (accounts) {
@@ -3089,51 +3594,51 @@ class Construction {
 
         if (myuser.hasOwnProperty("invalid")) {
 
-            validate  += myuser.invalid;
+            validate += myuser.invalid;
         }
-        if(myuser.hasOwnProperty("company")) {
+        if (myuser.hasOwnProperty("company")) {
 
-        if (myuser.company.hasOwnProperty("equipment")) {
-            // eslint-disable-next-line
-            myuser.company.equipment.map(myequipment => {
-                if (!myequipment.accountid) {
-                    
-                    validate += `${myequipment.equipment} is missing AccountID `
-                }
+            if (myuser.company.hasOwnProperty("equipment")) {
+                // eslint-disable-next-line
+                myuser.company.equipment.map(myequipment => {
+                    if (!myequipment.accountid) {
 
-            })
+                        validate += `${myequipment.equipment} is missing AccountID `
+                    }
+
+                })
+            }
+            if (myuser.company.hasOwnProperty("materials")) {
+                // eslint-disable-next-line
+                myuser.company.materials.map(mymaterial => {
+                    if (!mymaterial.accountid) {
+
+                        validate += `${mymaterial.material} is missing AccountID `
+                    }
+                })
+            }
+            if (myuser.company.hasOwnProperty("employees")) {
+                // eslint-disable-next-line
+                myuser.company.employees.map(employee => {
+
+                    if (employee.hasOwnProperty("benefits")) {
+                        // eslint-disable-next-line
+                        employee.benefits.map(benefit => {
+                            if (!benefit.accountid) {
+
+                                validate += `${benefit.benefit} is missing AccountID `
+                            }
+                        })
+                    }
+                })
+            }
+
         }
-        if (myuser.company.hasOwnProperty("materials")) {
-            // eslint-disable-next-line
-            myuser.company.materials.map(mymaterial => {
-                if (!mymaterial.accountid) {
-            
-                    validate += `${mymaterial.material} is missing AccountID `
-                }
-            })
-        }
-        if (myuser.company.hasOwnProperty("employees")) {
-            // eslint-disable-next-line
-            myuser.company.employees.map(employee => {
-
-                if (employee.hasOwnProperty("benefits")) {
-                    // eslint-disable-next-line
-                    employee.benefits.map(benefit => {
-                        if (!benefit.accountid) {
-                          
-                            validate += `${benefit.benefit} is missing AccountID `
-                        }
-                    })
-                }
-            })
-        }
-
-    }
         return validate;
 
     }
 
-    
+
     getampmicon() {
         if (this.state.width > 1200) {
             return ({ width: '83px', height: '48px' })
@@ -3145,42 +3650,44 @@ class Construction {
 
     }
 
-    
+
 
     getOurProjectKeyById(project_id) {
         const construction = new Construction();
         let key = false;
         const projects = construction.getOurProjects.call(this)
-        console.log(projects,project_id)
-        if(projects) {
-        projects.map((project,i)=> {
-            if(project.project_id === project_id) {
-                key = i;
-            }
-        })
-    }
+     
+        if (projects) {
+            projects.map((project, i) => {
+                if (project.project_id === project_id) {
+                    key = i;
+                }
+            })
+        }
         return key;
     }
 
     getOurProjectByID(project_id) {
+      
         const construction = new Construction();
         let getproject = false;
         const projects = construction.getOurProjects.call(this)
-        if(projects) {
-        projects.map(project=> {
-            if(project.project_id === project_id) {
-                getproject = project;
-            }
-        })
 
-    }
+        if (projects) {
+            projects.map(project => {
+                if (project.project_id === project_id) {
+                    getproject = project;
+                }
+            })
+
+        }
         return getproject;
     }
 
     getOurProjects() {
         let OurProjects = false;
-        if(this.props.myprojects) {
-            if(this.props.myprojects.hasOwnProperty("length")) {
+        if (this.props.myprojects) {
+            if (this.props.myprojects.hasOwnProperty("length")) {
                 OurProjects = this.props.myprojects;
 
             }
@@ -3189,14 +3696,14 @@ class Construction {
     }
 
     getProjectBy_ID(project_id) {
-      
+
         const construction = new Construction();
         const allprojects = construction.getAllProjects.call(this)
-     
+
         let getproject = false;
-        if(allprojects) {
+        if (allprojects) {
             allprojects.map(project => {
-                if(project._ID === project_id) {
+                if (project._ID === project_id) {
                     getproject = project;
                 }
             })
@@ -3204,15 +3711,18 @@ class Construction {
         return getproject;
     }
 
+   
+
+
     getProjectByID(projectid) {
-      
+
         const construction = new Construction();
         const allprojects = construction.getAllProjects.call(this)
-     
+
         let getproject = false;
-        if(allprojects) {
+        if (allprojects) {
             allprojects.map(project => {
-                if(project.ProjectID === projectid) {
+                if (project.ProjectID === projectid) {
                     getproject = project;
                 }
             })
@@ -3222,14 +3732,14 @@ class Construction {
 
     getAllProjects() {
         let allprojects = false;
-        if(this.props.allprojects) {
-        if(this.props.allprojects.hasOwnProperty("length")) {
+        if (this.props.allprojects) {
+            if (this.props.allprojects.hasOwnProperty("length")) {
 
-            allprojects = this.props.allprojects;
-           
+                allprojects = this.props.allprojects;
+
+            }
+
         }
-
-    }
 
 
 
@@ -3240,9 +3750,9 @@ class Construction {
         const construction = new Construction();
         let getproject = false;
         const myprojects = construction.getMyProjects.call(this)
-        if(myprojects) {
-            myprojects.map(project=> {
-                if(project.projectid === projectid) {
+        if (myprojects) {
+            myprojects.map(project => {
+                if (project.projectid === projectid) {
                     getproject = project;
                 }
             })
@@ -3254,7 +3764,7 @@ class Construction {
 
     getMyProjects() {
         let myprojects = false;
-        if(this.props.myprojects) {
+        if (this.props.myprojects) {
             myprojects = this.props.myprojects;
 
         }
@@ -3286,11 +3796,11 @@ class Construction {
 
     getBenefitKeyByID(user_id, benefitid) {
         const construction = new Construction();
-        const benefits = construction.getbenefitsbyUserID.call(this,user_id)
+        const benefits = construction.getbenefitsbyUserID.call(this, user_id)
         let key = false;
-        if(benefits) {
-            benefits.map((benefit,i)=> {
-                if(benefit.benefitid === benefitid) {
+        if (benefits) {
+            benefits.map((benefit, i) => {
+                if (benefit.benefitid === benefitid) {
                     key = i;
                 }
             })
@@ -3300,11 +3810,11 @@ class Construction {
 
     getBenefitsByID(user_id, benefitid) {
         const construction = new Construction();
-        const benefits = construction.getbenefitsbyUserID.call(this,user_id)
+        const benefits = construction.getbenefitsbyUserID.call(this, user_id)
         let getbenefit = false;
-        if(benefits) {
-            for(let benefit of benefits) {
-                if(benefit.benefitid === benefitid) {
+        if (benefits) {
+            for (let benefit of benefits) {
+                if (benefit.benefitid === benefitid) {
                     getbenefit = benefit;
                 }
             }
@@ -3315,16 +3825,16 @@ class Construction {
     getbenefitsbyUserID(user_id) {
         const construction = new Construction();
 
-        const employee = construction.getemployeebyuserid.call(this,user_id)
+        const employee = construction.getemployeebyuserid.call(this, user_id)
         let benefits = false;
-        if(employee) {
-            if(employee.hasOwnProperty("benefits")) {
+        if (employee) {
+            if (employee.hasOwnProperty("benefits")) {
                 benefits = employee.benefits;
             }
         }
 
         return benefits;
-        
+
     }
 
     getemployeebyuserid(user_id) {
@@ -3348,7 +3858,7 @@ class Construction {
         let key = false;
         if (myemployees) {
             // eslint-disable-next-line
-            myemployees.map((employee,i) => {
+            myemployees.map((employee, i) => {
                 if (employee.user_id === user_id) {
                     key = i;
                 }
@@ -3476,27 +3986,27 @@ class Construction {
         const construction = new Construction()
         const company = construction.getcompany.call(this)
         if (company) {
-       
-        
-            
-                    try {
-                        this.setState({ spinner: true })
-                        let response = await SaveCompany({company});
-                        this.setState({ spinner: false })
-                        construction.handlecompanyids.call(this, response)
-                     
-                        if (response.hasOwnProperty("company")) {
-                            this.props.reduxCompany(response.company)
-                        }
-                        this.setState({render:'render'})
 
-                    } catch (err) {
-                        alert(err)
-                        this.setState({ spinner: false })
-                    }
-               
 
-          
+
+            try {
+                this.setState({ spinner: true })
+                let response = await SaveCompany({ company });
+                this.setState({ spinner: false })
+                construction.handlecompanyids.call(this, response)
+
+                if (response.hasOwnProperty("company")) {
+                    this.props.reduxCompany(response.company)
+                }
+                this.setState({ render: 'render' })
+
+            } catch (err) {
+                alert(err)
+                this.setState({ spinner: false })
+            }
+
+
+
 
         }
     }
@@ -3504,11 +4014,11 @@ class Construction {
         try {
             let construction = new Construction();
             let myuser = construction.getuser.call(this)
-            let user = { userid:myuser.userid, _id: myuser._ID, firstname: myuser.FirstName, lastname: myuser.LastName, emailaddress: myuser.EmailAddress, phonenumber: myuser.PhoneNumber, profileurl: myuser.ProfileURL, profile: myuser.profile, userid:myuser.UserID }
+            let user = { userid: myuser.userid, _id: myuser._ID, firstname: myuser.FirstName, lastname: myuser.LastName, emailaddress: myuser.EmailAddress, phonenumber: myuser.PhoneNumber, profileurl: myuser.ProfileURL, profile: myuser.profile, userid: myuser.UserID }
             this.setState({ spinner: true })
             let response = await SaveProfile({ myuser: user })
             console.log(response)
-         
+
             if (response.hasOwnProperty("myuser")) {
 
                 this.props.reduxUser(response.myuser)

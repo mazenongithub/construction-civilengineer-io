@@ -46,7 +46,15 @@ class Schedule extends Component {
         this.timeoutdefault();
         this.materialdatedefault();
         const construction = new Construction();
+        
+        
 
+        const csicodes = construction.getcsis.call(this)
+        if (!csicodes) {
+            construction.loadcsis.call(this)
+        }
+
+       
 
 
     }
@@ -56,6 +64,8 @@ class Schedule extends Component {
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
+
+   
     materialdatedefault() {
         const materialdatemonth = () => {
             let month = new Date().getMonth() + 1;
@@ -216,7 +226,7 @@ class Schedule extends Component {
     }
 
     getProject() {
-     
+    
         const project_id = this.props.project_id;
         const construction = new Construction();
         const ourproject = construction.getOurProjectByID.call(this, project_id)
@@ -421,7 +431,9 @@ class Schedule extends Component {
     removelaborid(labor) {
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
-        if (window.confirm(`Are you sure you want to delete labor for ${labor.providerid}`)) {
+        console.log(labor)
+        const user = construction.getuserbyID.call(this,labor.userid)
+        if (window.confirm(`Are you sure you want to delete labor for ${user.UserID}`)) {
             if(myprojects) {
                 const project = this.getProject()
                 if (project) {
@@ -990,7 +1002,7 @@ class Schedule extends Component {
 
                     const labors = construction.getschedulelabor.call(this)
                     if (labors) {
-                        console.log(myprojects, i)
+                  
                         myprojects[i].schedule.labor.push(newLabor)
                     } else {
                    
@@ -1538,7 +1550,9 @@ class Schedule extends Component {
         if(myprojects) {
 
             const project = this.getProject()
+            console.log(project)
             if (project) {
+              
 
 
                 return (
@@ -1577,7 +1591,7 @@ class Schedule extends Component {
                             {equipmentrate()}
                             {showmaterialquantity()}
 
-
+                            {construction.showSaveProject.call(this)}
                             {construction.showsaveproject.call(this)}
 
 
@@ -1618,7 +1632,9 @@ function mapStateToProps(state) {
         allusers: state.allusers,
         allcompanys: state.allcompanys,
         allprojects: state.allprojects,
-        websockets:state.websockets
+        websockets:state.websockets,
+        csis:state.csis,
+        projectsockets:state.projectsockets
     }
     }
 

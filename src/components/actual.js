@@ -48,11 +48,13 @@ class Actual extends Component {
         this.timeoutdefault();
         this.materialdatedefault();
         const construction = new Construction();
-
         const csicodes = construction.getcsis.call(this)
         if (!csicodes) {
             construction.loadcsis.call(this)
         }
+    
+
+       
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -203,7 +205,6 @@ class Actual extends Component {
             const myequipment = construction.getactualequipmentbyid.call(this, this.state.activeequipmentid)
 
             if (myequipment) {
-
                 let csi = construction.getcsibyid.call(this, myequipment.csiid);
                 if (csi) {
                     return `${csi.csi}-${csi.title}`
@@ -211,25 +212,36 @@ class Actual extends Component {
             }
 
         } else if (this.state.csiid) {
+
             let csi = construction.getcsibyid.call(this, this.state.csiid);
-            return `${csi.csi}-${csi.title}`
+            if (csi) {
+                return `${csi.csi}-${csi.title}`
+            }
         }
+
+    }
+
+    getProject() {
+     
+        const project_id = this.props.project_id;
+        const construction = new Construction();
+        const ourproject = construction.getOurProjectByID.call(this, project_id)
+        return ourproject;
+        
 
     }
 
     getmilestoneid() {
         const construction = new Construction();
-        const project = construction.getproject.call(this);
-        let milestoneid = this.state.milestoneid;
+        const project = this.getProject();
+        let milestoneid = ""
         if (project) {
 
             if (this.state.active === 'labor') {
                 if (this.state.activelaborid) {
                     const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid);
                     milestoneid = mylabor.milestoneid;
-                } else {
-                    milestoneid = this.state.milestoneid;
-                }
+                } 
 
             } else if (this.state.active === 'equipment') {
                 if (this.state.activeequipmentid) {
@@ -253,8 +265,9 @@ class Actual extends Component {
 
     handlecsiid(csiid) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+
+        if(myprojects) {
             const csi = construction.getcsibyid.call(this, csiid);
             if (csi) {
 
@@ -262,22 +275,23 @@ class Actual extends Component {
                 const csi_2 = csi.csi.substring(2, 4);
                 const csi_3 = csi.csi.substring(4, 6);
                 let csi_4 = "";
+                let title = csi.title;
                 if (csi.csi.length > 6) {
                     csi_4 = csi.csi.substring(7, 9);
                 }
-                this.setState({ csi_4, csi_3, csi_2, csi_1 })
-                const project = construction.getproject.call(this)
+                this.setState({ csi_4, csi_3, csi_2, csi_1, title })
+                const project = this.getProject()
                 if (project) {
-                    const projectid = project.projectid;
-                    const i = construction.getprojectkeybyid.call(this, projectid)
+                    const project_id = this.props.project_id;
+                    const i = construction.getOurProjectKeyById.call(this, project_id)
                     if (this.state.active === 'labor') {
 
                         if (this.state.activelaborid) {
                             const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid);
                             if (mylabor) {
                                 const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
-                                myuser.company.projects[i].actual.labor[j].csiid = csiid;
-                                this.props.reduxUser(myuser)
+                                myprojects[i].actual.labor[j].csiid = csiid;
+                                this.props.reduxMyProjects(myprojects)
                                 this.setState({ render: 'render' })
                             }
 
@@ -291,8 +305,8 @@ class Actual extends Component {
                             const mymaterial = construction.getactualmaterialbyid.call(this, this.state.activematerialid);
                             if (mymaterial) {
                                 const j = construction.getactualmaterialkeybyid.call(this, this.state.activematerialid);
-                                myuser.company.projects[i].actual.materials[j].csiid = csiid;
-                                this.props.reduxUser(myuser)
+                                myprojects[i].actual.materials[j].csiid = csiid;
+                                this.props.reduxMyProjects(myprojects)
                                 this.setState({ render: 'render' })
                             }
                         } else {
@@ -305,8 +319,8 @@ class Actual extends Component {
                             const myequipment = construction.getactualequipmentbyid.call(this, this.state.activeequipmentid);
                             if (myequipment) {
                                 const j = construction.getactualequipmentkeybyid.call(this, this.state.activeequipmentid)
-                                myuser.company.projects[i].actual.equipment[j].csiid = csiid;
-                                this.props.reduxUser(myuser)
+                                myprojects[i].actual.equipment[j].csiid = csiid;
+                                this.props.reduxMyProjects(myprojects)
                                 this.setState({ render: 'render' })
                             }
                         } else {
@@ -327,20 +341,20 @@ class Actual extends Component {
 
     handlemilestoneid(milestoneid) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
-            const project = construction.getproject.call(this)
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            const project = this.getProject()
             if (project) {
-                const projectid = project.projectid;
-                const i = construction.getprojectkeybyid.call(this, projectid)
+                const project_id = this.props.project_id;
+                const i = construction.getOurProjectKeyById.call(this, project_id)
                 if (this.state.active === 'labor') {
 
                     if (this.state.activelaborid) {
                         const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid);
                         if (mylabor) {
                             const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
-                            myuser.company.projects[i].actual.labor[j].milestoneid = milestoneid;
-                            this.props.reduxUser(myuser)
+                            myprojects[i].actual.labor[j].milestoneid = milestoneid;
+                            this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
 
@@ -354,8 +368,8 @@ class Actual extends Component {
                         const mymaterial = construction.getactualmaterialbyid.call(this, this.state.activematerialid);
                         if (mymaterial) {
                             const j = construction.getactualmaterialkeybyid.call(this, this.state.activematerialid);
-                            myuser.company.projects[i].actual.materials[j].milestoneid = milestoneid;
-                            this.props.reduxUser(myuser)
+                            myprojects[i].actual.materials[j].milestoneid = milestoneid;
+                            this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
                     } else {
@@ -368,8 +382,8 @@ class Actual extends Component {
                         const myequipment = construction.getactualequipmentbyid.call(this, this.state.activeequipmentid);
                         if (myequipment) {
                             const j = construction.getactualequipmentkeybyid.call(this, this.state.activeequipmentid)
-                            myuser.company.projects[i].actual.equipment[j].milestoneid = milestoneid;
-                            this.props.reduxUser(myuser)
+                            myprojects[i].actual.equipment[j].milestoneid = milestoneid;
+                            this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
                     } else {
@@ -392,7 +406,7 @@ class Actual extends Component {
 
     getequipmentid() {
         const construction = new Construction();
-        const project = construction.getproject.call(this)
+        const project = this.getProject()
         let equipmentid = "";
         if (project) {
 
@@ -412,18 +426,18 @@ class Actual extends Component {
 
     removelaborid(labor) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this);
+        const myprojects = construction.getOurProjects.call(this)
         if (window.confirm(`Are you sure you want to delete labor for ${labor.providerid}`)) {
-            if (myuser) {
-                const project = construction.getproject.call(this)
+            if(myprojects) {
+                const project = this.getProject()
                 if (project) {
-                    const projectid = project.projectid;
-                    const i = construction.getprojectkeybyid.call(this, projectid)
+                    const project_id = this.props.project_id;
+                    const i = construction.getOurProjectKeyById.call(this, project_id)
                     const mylabor = construction.getactuallaborbyid.call(this, labor.laborid);
                     if (mylabor) {
                         const j = construction.getactuallaborkeybyid.call(this, mylabor.laborid);
-                        myuser.company.projects[i].actual.labor.splice(j, 1);
-                        this.props.reduxUser(myuser)
+                        myprojects[i].actual.labor.splice(j, 1);
+                        this.props.reduxMyProjects(myprojects)
                         this.reset();
                     }
                 }
@@ -434,23 +448,25 @@ class Actual extends Component {
     }
     getemployeeid() {
         const construction = new Construction();
+        const project = this.getProject()
+        if (project) {
 
-        if (this.state.activelaborid) {
-            const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid)
-            if (mylabor) {
+            if (this.state.activelaborid) {
+                const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid)
+                if (mylabor) {
 
-                return mylabor.providerid;
+                    return mylabor.userid
+                }
+            } else {
+                return this.state.providerid;
             }
-        } else {
-            return this.state.providerid;
+
         }
-
-
     }
 
     makematerialactive(materialid) {
         const construction = new Construction();
-        const project = construction.getproject.call(this)
+        const project = this.getProject()
         if (project) {
 
             if (this.state.activematerialid === materialid) {
@@ -472,7 +488,6 @@ class Actual extends Component {
                     let csi_3 = "";
                     let csi_4 = "";
                     let title = "";
-
                     if (csi) {
                         csi_1 = csi.csi.substring(0, 2)
                         csi_2 = csi.csi.substring(2, 4);
@@ -484,7 +499,8 @@ class Actual extends Component {
                         title = csi.title
                     }
 
-                    this.setState({ materialdatemonth, materialdateday, materialdateyear, activematerialid: materialid, csi_1, csi_2, csi_3, csi_4, title})
+
+                    this.setState({ materialdatemonth, materialdateday, materialdateyear, activematerialid: materialid, csi_1, csi_2, csi_3, csi_4, title })
 
                 }
 
@@ -497,7 +513,7 @@ class Actual extends Component {
     makeequipmentactive(equipmentid) {
 
         const construction = new Construction();
-        const project = construction.getproject.call(this)
+        const project = this.getProject()
         if (project) {
 
             if (this.state.activeequipmentid === equipmentid) {
@@ -540,6 +556,7 @@ class Actual extends Component {
                         }
                         title = csi.title
                     }
+
                     this.setState({ activeequipmentid: equipmentid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4, title })
 
                 }
@@ -551,7 +568,7 @@ class Actual extends Component {
     makelaboractive(laborid) {
 
         const construction = new Construction();
-        const project = construction.getproject.call(this)
+        const project = this.getProject()
         if (project) {
 
             if (this.state.activelaborid === laborid) {
@@ -594,6 +611,8 @@ class Actual extends Component {
                         title = csi.title
                     }
 
+
+
                     this.setState({ activelaborid: laborid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4, title })
 
                 }
@@ -604,8 +623,9 @@ class Actual extends Component {
 
     getSchedule() {
         const construction = new Construction();
-        const schedule = construction.getAllActual.call(this);
-        return schedule;
+        const project_id = this.props.project_id;
+        const actual = construction.getAllActual.call(this, project_id);
+        return actual;
 
     }
 
@@ -617,7 +637,7 @@ class Actual extends Component {
         const csi = construction.getcsibyid.call(this, labor.csiid);
         let employee = construction.getemployeebyid.call(this, labor.providerid)
         let hourlyrate = labor.laborrate;
-        const project = construction.getproject.call(this)
+        const project = this.getProject()
         if (project) {
 
             const milestone = construction.getmilestonebyid.call(this, labor.milestoneid)
@@ -625,7 +645,7 @@ class Actual extends Component {
 
             const getbutton = () => {
                 if (this.state.activelaborid === labor.laborid) {
-                    return (styles.activeactualButton);
+                    return (styles.activeButton);
                 } else {
                     return (styles.generalButton);
                 }
@@ -634,27 +654,21 @@ class Actual extends Component {
 
             const getactivelaborbackground = (laborid) => {
                 if (this.state.activelaborid === laborid) {
-                    return styles.activeactualButton
+                    return styles.activeBackground;
                 }
 
-            }
-
-            const remove = () => {
-                if (!labor.settlementid) {
-                    return (<button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removelaborid(labor) }}>{removeIconSmall()} </button>)
-                }
             }
 
             if (this.state.active === 'labor') {
 
                 return (
-                    <div key={labor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin10 }}>
+                    <div key={labor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont,...styles.bottomMargin10, }}>
                         <span style={{ ...getactivelaborbackground(labor.laborid) }} onClick={() => { this.makelaboractive(labor.laborid) }}>
                             {employee.firstname} {employee.lastname}: {labor.description} Milestone {milestone.milestone} CSI:{csi.csi}-{csi.title}<br />
                 From {inputUTCStringForLaborID(labor.timein)} to {inputUTCStringForLaborID(labor.timeout)}
-                ${Number(hourlyrate).toFixed(2)}/Hr x {+Number(calculatetotalhours(labor.timeout, labor.timein)).toFixed(2)} Hrs = ${(Number(calculatetotalhours(labor.timeout, labor.timein)) * hourlyrate).toFixed(2)}
+                ${Number(hourlyrate).toFixed(2)}/Hr x {calculatetotalhours(labor.timeout, labor.timein)} Hrs = ${(Number(calculatetotalhours(labor.timeout, labor.timein)) * hourlyrate).toFixed(2)}
                         </span>
-                        {remove()}
+                        <button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removelaborid(labor) }}>{removeIconSmall()} </button>
                     </div>)
 
             }
@@ -664,19 +678,19 @@ class Actual extends Component {
     }
     showlaborids() {
         const construction = new Construction();
-        const project = construction.getproject.call(this)
+        const project = this.getProject()
         let laborids = [];
-        const myuser = construction.getuser.call(this);
-        if (myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
             if (project) {
                 const labors = construction.getactuallabor.call(this)
                 if (labors) {
                     // eslint-disable-next-line
                     labors.map(labor => {
-
-
-                        laborids.push(this.showlaborid(labor))
-
+                   
+                   
+                            laborids.push(this.showlaborid(labor))
+                        
 
                     })
                 }
@@ -690,19 +704,19 @@ class Actual extends Component {
 
     removematerial(mymaterial) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this);
+        const myprojects = construction.getOurProjects.call(this)
         const material = construction.getmymaterialfromid.call(this, mymaterial.mymaterialid)
         if (window.confirm(`Are you sure you want to delete material for ${material.material}`)) {
-            if (myuser) {
-                const project = construction.getproject.call(this)
+            if(myprojects) {
+                const project = this.getProject()
                 if (project) {
-                    const projectid = project.projectid;
-                    const i = construction.getprojectkeybyid.call(this, projectid)
+                    const project_id = this.props.project_id;
+                    const i = construction.getOurProjectKeyById.call(this, project_id)
                     const material = construction.getactualmaterialbyid.call(this, mymaterial.materialid)
                     if (material) {
                         const j = construction.getactualmaterialkeybyid.call(this, material.materialid)
-                        myuser.company.projects[i].actual.materials.splice(j, 1)
-                        this.props.reduxUser(myuser)
+                        myprojects[i].actual.materials.splice(j, 1)
+                        this.props.reduxMyProjects(myprojects)
                         this.reset();
 
                     }
@@ -727,12 +741,12 @@ class Actual extends Component {
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this)
         const removeIcon = construction.getremoveicon.call(this)
-        const project = construction.getproject.call(this)
+        const project = this.getProject()
         const csi = construction.getcsibyid.call(this, mymaterial.csiid);
         const material = construction.getmymaterialfromid.call(this, mymaterial.mymaterialid)
         const getbutton = () => {
             if (this.state.activematerialid === mymaterial.materialid) {
-                return (styles.activeactualButton);
+                return (styles.activeButton);
             } else {
                 return (styles.generalButton);
             }
@@ -741,26 +755,21 @@ class Actual extends Component {
         }
         const activebackground = (materialid) => {
             if (this.state.activematerialid === materialid) {
-                return (styles.activeactualButton)
+                return (styles.activeBackground)
             }
 
-        }
-        const remove = () => {
-            if (!mymaterial.settlementid) {
-                return (<button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removematerial(mymaterial) }}>{removeIconSmall()} </button>)
-            }
         }
         if (this.state.active === 'materials') {
             if (project) {
 
                 const milestone = construction.getmilestonebyid.call(this, mymaterial.milestoneid)
 
-                return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...styles.bottomMargin10, ...activebackground(mymaterial.materialid) }} key={mymaterial.materialid}>
+                return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...activebackground(mymaterial.materialid), ...styles.bottomMargin10 }} key={mymaterial.materialid}>
                     <span onClick={() => { this.makematerialactive(mymaterial.materialid) }} key={mymaterial.materialid}>{formatDateStringDisplay(mymaterial.timein)} <br />
                         {material.material} CSI: {csi.csi}-{csi.title} Milestone: {milestone.milestone} <br />
                         {mymaterial.quantity}  x ${mymaterial.unitcost}/{mymaterial.unit} = ${(mymaterial.quantity * mymaterial.unitcost).toFixed(2)}
                     </span>
-                    {remove()}
+                    <button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removematerial(mymaterial) }}>{removeIconSmall()} </button>
                 </div>)
 
             }
@@ -770,7 +779,7 @@ class Actual extends Component {
 
     showmaterialids() {
         const construction = new Construction();
-        const project = construction.getproject.call(this)
+        const project = this.getProject()
         let materialids = [];
         if (project) {
 
@@ -788,19 +797,19 @@ class Actual extends Component {
     }
     removeequipment(equipment) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this);
+        const myprojects = construction.getOurProjects.call(this)
         const myequipment = construction.getmyequipmentbyid.call(this, equipment.myequipmentid)
         if (window.confirm(`Are you sure you want to delete material for ${myequipment.equipment}`)) {
-            if (myuser) {
-                const project = construction.getproject.call(this)
+            if(myprojects) {
+                const project = this.getProject()
                 if (project) {
-                    const projectid = project.projectid;
-                    const i = construction.getprojectkeybyid.call(this, projectid)
+                    const project_id = this.props.project_id;
+                    const i = construction.getOurProjectKeyById.call(this, project_id)
                     const myequipment = construction.getactualequipmentbyid.call(this, equipment.equipmentid);
                     if (myequipment) {
                         const j = construction.getactualequipmentkeybyid.call(this, equipment.equipmentid);
-                        myuser.company.projects[i].actual.equipment.splice(j, 1)
-                        this.props.reduxUser(myuser)
+                        myprojects[i].actual.equipment.splice(j, 1)
+                        this.props.reduxMyProjects(myprojects)
                         this.reset();
                     }
 
@@ -818,7 +827,7 @@ class Actual extends Component {
         const styles = MyStylesheet();
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this);
-        const project = construction.getproject.call(this)
+        const project = this.getProject()
         const csi = construction.getcsibyid.call(this, equipment.csiid)
         const totalhours = +Number(calculatetotalhours(equipment.timeout, equipment.timein)).toFixed(2)
         const equipmentrate = `$${+Number(equipment.equipmentrate).toFixed(2)}/hr`
@@ -826,7 +835,7 @@ class Actual extends Component {
         const amount = (calculatetotalhours(equipment.timeout, equipment.timein) * Number(equipment.equipmentrate))
         const getbutton = () => {
             if (this.state.activeequipmentid === equipment.equipmentid) {
-                return (styles.activeactualButton);
+                return (styles.activeButton);
             } else {
                 return (styles.generalButton);
             }
@@ -834,20 +843,14 @@ class Actual extends Component {
 
         const activeequipment = (equipmentid) => {
             if (this.state.activeequipmentid === equipmentid) {
-                return (styles.activeactualButton)
+                return (styles.activeBackground)
             }
 
-        }
-        const remove = () => {
-            if (!equipment.settlementid) {
-                return (<button style={{ ...getbutton(), ...removeIcon }}
-                    onClick={() => { this.removeequipment(equipment) }}>{removeIconSmall()} </button>)
-            }
         }
         if (project) {
 
             const milestone = construction.getmilestonebyid.call(this, equipment.milestoneid)
-            const myequipment = construction.getequipmentfromid.call(this, equipment.myequipmentid);
+            const myequipment = construction.getequipmentfromid.call(this, equipment.equipmentid);
 
             return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin10 }} key={equipment.equipmentid}>
                 <span style={{ ...activeequipment(equipment.equipmentid) }} onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>
@@ -855,7 +858,8 @@ class Actual extends Component {
                  CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone}
                 Total Hours: {totalhours} x  {equipmentrate} = ${amount.toFixed(2)}
                 </span>
-                {remove()}
+                <button style={{ ...getbutton(), ...removeIcon }}
+                    onClick={() => { this.removeequipment(equipment) }}>{removeIconSmall()} </button>
             </div>
             )
 
@@ -864,7 +868,7 @@ class Actual extends Component {
 
     showequipmentids() {
         const construction = new Construction();
-        const project = construction.getproject.call(this);
+        const project = this.getProject();
         let equipmentids = [];
         if (this.state.active === 'equipment') {
             if (project) {
@@ -887,19 +891,19 @@ class Actual extends Component {
     }
     handleequipmentid(myequipmentid) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this);
+        const myprojects = construction.getOurProjects.call(this)
         const makeid = new MakeID();
-        if (myuser) {
-            const project = construction.getproject.call(this);
+        if(myprojects) {
+            const project = this.getProject();
             if (project) {
-                const projectid = project.projectid;
-                const i = construction.getprojectkeybyid.call(this, projectid)
+                const project_id = this.props.project_id;
+                const i = construction.getOurProjectKeyById.call(this, project_id)
                 if (this.state.activeequipmentid) {
                     const myequipment = construction.getactualequipmentbyid.call(this, this.state.activeequipmentid)
                     if (myequipment) {
                         const j = construction.getactualequipmentkeybyid.call(this, this.state.activeequipmentid)
-                        myuser.company.projects[i].actual.equipment[j].myequipmentid = myequipmentid;
-                        this.props.reduxUser(myuser)
+                        myprojects[i].actual.equipment[j].myequipmentid = myequipmentid;
+                        this.props.reduxMyProjects(myprojects)
                         this.setState({ render: 'render' })
                     }
 
@@ -923,20 +927,20 @@ class Actual extends Component {
                     const timetimeout = this.state.timeoutampm;
                     let timeout = makeTimeString(yearout, monthout, dayout, hoursout, minutesout, timetimeout);
                     timeout = UTCTimeStringfromTime(timeout);
-                    const equipmentrate = Number(construction.calculateequipmentratebyownership.call(this, myequipmentid)).toFixed(2)
-                    const engineerid = myuser.providerid;
+                    const equipmentrate = construction.calculateequipmentratebyownership.call(this, myequipmentid) > 0 ? Number(construction.calculateequipmentratebyownership.call(this, myequipmentid)).toFixed(2) : 0;
+                  
 
 
-                    const newEquipment = CreateActualEquipment(equipmentid, myequipmentid, engineerid, csiid, milestoneid, timein, timeout, equipmentrate, '', 0)
+                    const newEquipment = CreateActualEquipment(equipmentid, myequipmentid, csiid, milestoneid, timein, timeout, equipmentrate, '', 0)
 
                     const equipments = construction.getactualequipment.call(this)
                     if (equipments) {
-                        myuser.company.projects[i].actual.equipment.push(newEquipment)
+                        myprojects[i].actual.equipment.push(newEquipment)
                     } else {
-                     
-                        myuser.company.projects[i].actual.equipment = [newEquipment]
+                   
+                        myprojects[i].actual.equipment = [newEquipment]
                     }
-                    this.props.reduxUser(myuser)
+                    this.props.reduxMyProjects(myprojects)
                     this.setState({ activeequipmentid: equipmentid })
 
 
@@ -945,21 +949,23 @@ class Actual extends Component {
         }
     }
 
-    handleemployeeid(providerid) {
+    handleemployeeid(user_id) {
         const construction = new Construction();
         const makeid = new MakeID();
-        const myuser = construction.getuser.call(this);
-        if (myuser) {
-            const project = construction.getproject.call(this);
+ 
+        const myprojects = construction.getOurProjects.call(this);
+        if (myprojects) {
+          
+            const project = this.getProject();
             if (project) {
-                const projectid = project.projectid;
-                const i = construction.getprojectkeybyid.call(this, projectid)
+                const project_id = this.props.project_id;
+                const i = construction.getOurProjectKeyById.call(this, project_id)
                 if (this.state.activelaborid) {
                     const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid)
                     if (mylabor) {
                         const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
-                        myuser.company.projects[i].actual.labor[j].providerid = providerid;
-                        this.props.reduxUser(myuser)
+                        myprojects[i].actual.labor[j].userid = user_id;
+                        this.props.reduxMyProjects(myprojects)
                         this.setState({ render: 'render' })
                     }
                 } else {
@@ -982,20 +988,21 @@ class Actual extends Component {
                     const timetimeout = this.state.timeoutampm;
                     let timeout = makeTimeString(yearout, monthout, dayout, hoursout, minutesout, timetimeout);
                     timeout = UTCTimeStringfromTime(timeout);
-                    const laborrate = construction.calculateLaborRatebyID.call(this, providerid).toFixed(2)
+                    const laborrate = construction.calculateLaborRatebyID.call(this, user_id).toFixed(2)
                     const profit = 0;
-                    const engineerid = myuser.providerid;
-
-                    const newLabor = CreateActualLabor(laborid, engineerid, milestoneid, csiid, timein, timeout, laborrate, '', '', profit)
+                    
+                                   
+                    const newLabor = CreateActualLabor(laborid, user_id, milestoneid, csiid, timein, timeout, laborrate, '', '', profit)
 
                     const labors = construction.getactuallabor.call(this)
                     if (labors) {
-                        myuser.company.projects[i].actual.labor.push(newLabor)
+                        console.log(myprojects, i)
+                        myprojects[i].actual.labor.push(newLabor)
                     } else {
                    
-                        myuser.company.projects[i].actual.labor = [newLabor]
+                        myprojects[i].actual.labor = [newLabor]
                     }
-                    this.props.reduxUser(myuser)
+                    this.props.reduxMyProjects(myprojects)
                     this.setState({ activelaborid: laborid })
                 }
             }
@@ -1004,8 +1011,8 @@ class Actual extends Component {
 
     getequipmentrate() {
         const construction = new Construction();
-        const project = construction.getproject.call(this)
-        let equipmentrate = "";
+        const project = this.getProject()
+        let equipmentrate = 0;
         if (project) {
 
             if (this.state.activeequipmentid) {
@@ -1013,8 +1020,7 @@ class Actual extends Component {
                 if (myequipment) {
                     equipmentrate = myequipment.equipmentrate;
                 }
-            } else {
-                equipmentrate = this.state.equipmentrate;
+            
             }
 
         }
@@ -1028,7 +1034,7 @@ class Actual extends Component {
 
     getlaborrate() {
         const construction = new Construction();
-        const project = construction.getproject.call(this)
+        const project = this.getProject()
         let laborrate = "";
         if (project) {
 
@@ -1046,19 +1052,19 @@ class Actual extends Component {
 
     handleequipmentrate(equipmentrate) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this);
+        const myprojects = construction.getOurProjects.call(this)
         if (isNumeric(equipmentrate)) {
-            if (myuser) {
-                const project = construction.getproject.call(this)
+            if(myprojects) {
+                const project = this.getProject()
                 if (project) {
-                    const projectid = project.projectid;
-                    const i = construction.getprojectkeybyid.call(this, projectid)
+                    const project_id = this.props.project_id;
+                    const i = construction.getOurProjectKeyById.call(this, project_id)
                     if (this.state.activeequipmentid) {
                         const myequipment = construction.getactualequipmentbyid.call(this, this.state.activeequipmentid)
                         if (myequipment) {
                             const j = construction.getactualequipmentkeybyid.call(this, this.state.activeequipmentid)
-                            myuser.company.projects[i].actual.equipment[j].equipmentrate = equipmentrate;
-                            this.props.reduxUser(myuser)
+                            myprojects[i].actual.equipment[j].equipmentrate = equipmentrate;
+                            this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
 
@@ -1075,19 +1081,20 @@ class Actual extends Component {
 
     handlelaborrate(laborrate) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this);
+        const myprojects = construction.getOurProjects.call(this)
+
         if (isNumeric(laborrate)) {
-            if (myuser) {
-                const project = construction.getproject.call(this)
+            if(myprojects) {
+                const project = this.getProject()
                 if (project) {
-                    const projectid = project.projectid;
-                    const i = construction.getprojectkeybyid.call(this, projectid)
+                    const project_id = this.props.project_id;
+                    const i = construction.getOurProjectKeyById.call(this, project_id)
                     if (this.state.activelaborid) {
                         const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid)
                         if (mylabor) {
                             const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
-                            myuser.company.projects[i].actual.labor[j].laborrate = laborrate;
-                            this.props.reduxUser(myuser)
+                            myprojects[i].actual.labor[j].laborrate = laborrate;
+                            this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
 
@@ -1103,7 +1110,7 @@ class Actual extends Component {
     }
     getquantity() {
         const construction = new Construction();
-        const project = construction.getproject.call(this);
+        const project = this.getProject();
         let quantity = this.state.quantity;
         if (project) {
 
@@ -1119,7 +1126,7 @@ class Actual extends Component {
     }
     getunit() {
         const construction = new Construction();
-        const project = construction.getproject.call(this);
+        const project = this.getProject();
         let unit = this.state.unit;
         if (project) {
 
@@ -1135,7 +1142,7 @@ class Actual extends Component {
     }
     getunitcost() {
         const construction = new Construction();
-        const project = construction.getproject.call(this);
+        const project = this.getProject();
         let unitcost = this.state.unitcost;
         if (project) {
 
@@ -1151,19 +1158,19 @@ class Actual extends Component {
     }
     handlequantity(quantity) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
+        const projects = construction.getOurProjects.call(this)
         if (isNumeric(quantity)) {
-            if (myuser) {
-                const project = construction.getproject.call(this)
+            if (projects) {
+                const project = this.getProject()
                 if (project) {
-                    const projectid = project.projectid;
-                    const i = construction.getprojectkeybyid.call(this, projectid);
+                    const project_id = this.props.project_id;
+                    const i = construction.getOurProjectKeyById.call(this, project_id);
                     if (this.state.activematerialid) {
                         const mymaterial = construction.getactualmaterialbyid.call(this, this.state.activematerialid)
                         if (mymaterial) {
                             const j = construction.getactualmaterialkeybyid.call(this, this.state.activematerialid);
-                            myuser.company.projects[i].actual.materials[j].quantity = quantity;
-                            this.props.reduxUser(myuser)
+                            projects[i].actual.materials[j].quantity = quantity;
+                            this.props.reduxMyProjects(projects)
                             this.setState({ render: 'render' })
                         }
                     } else {
@@ -1180,18 +1187,18 @@ class Actual extends Component {
     }
     handleunit(unit) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
-            const project = construction.getproject.call(this)
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            const project = this.getProject()
             if (project) {
-                const projectid = project.projectid;
-                const i = construction.getprojectkeybyid.call(this, projectid);
+                const project_id = this.props.project_id;
+                const i = construction.getOurProjectKeyById.call(this, project_id);
                 if (this.state.activematerialid) {
                     const mymaterial = construction.getactualmaterialbyid.call(this, this.state.activematerialid)
                     if (mymaterial) {
                         const j = construction.getactualmaterialkeybyid.call(this, this.state.activematerialid);
-                        myuser.company.projects[i].actual.materials[j].unit = unit;
-                        this.props.reduxUser(myuser)
+                        myprojects[i].actual.materials[j].unit = unit;
+                        this.props.reduxMyProjects(myprojects)
                         this.setState({ render: 'render' })
                     }
                 } else {
@@ -1203,19 +1210,19 @@ class Actual extends Component {
     }
     handleunitcost(unitcost) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
+        const myprojects = construction.getOurProjects.call(this)
         if (isNumeric(unitcost)) {
-            if (myuser) {
-                const project = construction.getproject.call(this)
+            if(myprojects) {
+                const project = this.getProject()
                 if (project) {
-                    const projectid = project.projectid;
-                    const i = construction.getprojectkeybyid.call(this, projectid);
+                    const project_id = this.props.project_id;
+                    const i = construction.getOurProjectKeyById.call(this, project_id);
                     if (this.state.activematerialid) {
                         const mymaterial = construction.getactualmaterialbyid.call(this, this.state.activematerialid)
                         if (mymaterial) {
                             const j = construction.getactualmaterialkeybyid.call(this, this.state.activematerialid);
-                            myuser.company.projects[i].actual.materials[j].unitcost = unitcost;
-                            this.props.reduxUser(myuser)
+                            myprojects[i].actual.materials[j].unitcost = unitcost;
+                            this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
                     } else {
@@ -1234,19 +1241,19 @@ class Actual extends Component {
     handlemymaterialid(mymaterialid) {
 
         const construction = new Construction();
-        const myuser = construction.getuser.call(this);
+        const myprojects = construction.getOurProjects.call(this)
         const makeid = new MakeID();
-        if (myuser) {
-            const project = construction.getproject.call(this)
+        if(myprojects) {
+            const project = this.getProject()
             if (project) {
-                const projectid = project.projectid;
-                const i = construction.getprojectkeybyid.call(this, projectid)
+                const project_id = this.props.project_id;
+                const i = construction.getOurProjectKeyById.call(this, project_id)
                 if (this.state.activematerialid) {
                     const mymaterial = construction.getactualmaterialbyid.call(this, this.state.activematerialid);
                     if (mymaterial) {
                         const j = construction.getactualmaterialkeybyid.call(this, this.state.activematerialid)
-                        myuser.company.projects[i].actual.materials[j].mymaterialid = mymaterialid;
-                        this.reduxUser({ myuser })
+                        myprojects[i].actual.materials[j].mymaterialid = mymaterialid;
+                        this.props.reduxMyProjects(myprojects)
                         this.setState({ render: 'render' })
                     }
 
@@ -1262,18 +1269,18 @@ class Actual extends Component {
                     const quantity = this.state.quantity;
                     const unitcost = mymaterial.unitcost;
                     const unit = mymaterial.unit;
-                    const engineerid = myuser.providerid;
-                    const newMaterial = CreateActualMaterial(materialid, mymaterialid, engineerid, milestoneid, csiid, timein, quantity, unit, unitcost, '', 0);
+                 
+                    const newMaterial = CreateActualMaterial(materialid, mymaterialid, milestoneid, csiid, timein, quantity, unit, unitcost, '', 0);
                     const materials = construction.getactualmaterials.call(this);
                     if (materials) {
-                        myuser.company.projects[i].actual.materials.push(newMaterial)
+                        myprojects[i].actual.materials.push(newMaterial)
 
                     } else {
-                 
-                        myuser.company.projects[i].actual.materials = [newMaterial]
+                  
+                        myprojects[i].actual.materials = [newMaterial];
                     }
 
-                    this.props.reduxUser(myuser)
+                    this.props.reduxMyProjects(myprojects)
                     this.setState({ activematerialid: materialid })
 
                 }
@@ -1284,10 +1291,10 @@ class Actual extends Component {
 
     getmymaterialid() {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        let materialid = this.state.mymaterialid;
-        if (myuser) {
-            const project = construction.getproject.call(this)
+        const myprojects = construction.getOurProjects.call(this)
+        let materialid = this.stateid;
+        if(myprojects) {
+            const project = this.getProject()
             if (project) {
 
 
@@ -1566,7 +1573,7 @@ class Actual extends Component {
 
         const myuser = construction.getuser.call(this)
         if (myuser) {
-            const project = construction.getproject.call(this)
+            const project = construction.getOurProjectByID.call(this,this.props.project_id)
             if (project) {
 
                 return (
@@ -1574,17 +1581,7 @@ class Actual extends Component {
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
 
-                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
-                                > /{project.title}</Link>
-                            </div>
-
-                            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                    to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/actual`}
-                                > /actual</Link>
-                            </div>
+            
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
@@ -1644,10 +1641,13 @@ function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
         navigation: state.navigation,
-        project: state.project,
+        mycompany: state.mycompany,
+        myprojects: state.myprojects,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
-        csis: state.csis
+        allprojects: state.allprojects,
+        websockets:state.websockets,
+        csis:state.csis
     }
 }
 export default connect(mapStateToProps, actions)(Actual);

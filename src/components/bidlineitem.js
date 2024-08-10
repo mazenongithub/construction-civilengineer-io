@@ -4,7 +4,7 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import Construction from './construction';
 import { inputUTCStringForLaborID, calculatetotalhours, formatDateStringDisplay, DirectCostForMaterial, DirectCostForEquipment, DirectCostForLabor } from './functions';
-import { Link } from 'react-router-dom';
+
 
 class BidLineItem extends Component {
     constructor(props) {
@@ -15,11 +15,7 @@ class BidLineItem extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        const construction = new Construction();
-        const csicodes = construction.getcsis.call(this)
-        if (!csicodes) {
-            construction.loadcsis.call(this)
-        }
+      
 
     }
     componentWillUnmount() {
@@ -31,7 +27,7 @@ class BidLineItem extends Component {
     getlaboritems() {
         const construction = new Construction();
         const actual = construction.getAllActual.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let laboritems = [];
         let items = [];
         // eslint-disable-next-line
@@ -53,7 +49,7 @@ class BidLineItem extends Component {
     getlabor() {
         const construction = new Construction();
         const actual = construction.getAllActual.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let laboritems = [];
         // eslint-disable-next-line
         actual.map(item => {
@@ -80,7 +76,7 @@ class BidLineItem extends Component {
     getmaterialitems() {
         const construction = new Construction();
         const actual = construction.getAllActual.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let laboritems = [];
         let items = [];
         // eslint-disable-next-line
@@ -103,7 +99,7 @@ class BidLineItem extends Component {
     getmaterial() {
         const construction = new Construction();
         const actual = construction.getAllActual.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let materialitems = [];
         // eslint-disable-next-line
         actual.map(item => {
@@ -131,7 +127,7 @@ class BidLineItem extends Component {
 
         const construction = new Construction();
         const actual = construction.getAllActual.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let laboritems = [];
         let items = [];
         // eslint-disable-next-line
@@ -155,7 +151,7 @@ class BidLineItem extends Component {
 
         const construction = new Construction();
         const actual = construction.getAllActual.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let laboritems = [];
         // eslint-disable-next-line
         actual.map(item => {
@@ -182,16 +178,19 @@ class BidLineItem extends Component {
 
     handlematerialprofit(mymaterial,profit) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+   
+        if(myprojects) {
         const project = construction.getproject.call(this)
         if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
+
+            
+            const i = construction.getOurProjectKeyById.call(this,this.props.project_id)
             const getmaterial = construction.getactualmaterialbyid.call(this,mymaterial.materialid)
             if(getmaterial) {
                 const j = construction.getactualmaterialkeybyid.call(this,mymaterial.materialid)
-                myuser.company.projects[i].actual.materials[j].profit = profit
-                this.props.reduxUser(myuser)
+                myprojects[i].actual.materials[j].profit = profit
+                this.props.reduxMyProjects(myprojects)
                 this.setState({render:'render'})
             }
     
@@ -205,16 +204,17 @@ class BidLineItem extends Component {
 
     handlematerialquantity(mymaterial,quantity) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+
+        if(myprojects) {
         const project = construction.getproject.call(this)
         if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
+            const i = construction.getOurProjectKeyById.call(this,this.props.project_id)
             const getmaterial = construction.getactualmaterialbyid.call(this,mymaterial.materialid)
             if(getmaterial) {
                 const j = construction.getactualmaterialkeybyid.call(this,mymaterial.materialid)
-                myuser.company.projects[i].actual.materials[j].quantity = quantity
-                this.props.reduxUser(myuser)
+                myprojects[i].actual.materials[j].quantity = quantity
+                this.props.reduxMyProjects(myprojects)
                 this.setState({render:'render'})
             }
 
@@ -228,16 +228,17 @@ class BidLineItem extends Component {
 
     handlematerialunit(mymaterial,unit) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+
+        if(myprojects) {
         const project = construction.getproject.call(this)
         if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
+            const i = construction.getOurProjectKeyById.call(this,this.props.project_id)
             const getmaterial = construction.getactualmaterialbyid.call(this,mymaterial.materialid)
             if(getmaterial) {
                 const j = construction.getactualmaterialkeybyid.call(this,mymaterial.materialid)
-                myuser.company.projects[i].actual.materials[j].unit = unit
-                this.props.reduxUser(myuser)
+                myprojects[i].actual.materials[j].unit = unit
+                this.props.reduxMyProjects(myprojects)
                 this.setState({render:'render'})
             }
     
@@ -252,16 +253,16 @@ class BidLineItem extends Component {
 
     handlematerialunitcost(mymaterial,unitcost) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
         const project = construction.getproject.call(this)
         if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
+            const i = construction.getOurProjectKeyById.call(this,this.props.project_id)
             const getmaterial = construction.getactualmaterialbyid.call(this,mymaterial.materialid)
             if(getmaterial) {
                 const j = construction.getactualmaterialkeybyid.call(this,mymaterial.materialid)
-                myuser.company.projects[i].actual.materials[j].unitcost = unitcost
-                this.props.reduxUser(myuser)
+                myprojects[i].actual.materials[j].unitcost = unitcost
+                this.props.reduxMyProjects(myprojects)
                 this.setState({render:'render'})
             }
     
@@ -278,16 +279,17 @@ class BidLineItem extends Component {
 
     handlelaborprofit(mylabor,profit) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+ 
+        if(myprojects) {
         const project = construction.getproject.call(this)
         if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
+            const i = construction.getOurProjectKeyById.call(this,this.props.project_id)
             const labor = construction.getactuallaborbyid.call(this,mylabor.laborid)
             if(labor) {
                 const j = construction.getactuallaborkeybyid.call(this,mylabor.laborid)
-                myuser.company.projects[i].actual.labor[j].profit = profit;
-                this.props.reduxUser(myuser)
+                myprojects[i].actual.labor[j].profit = profit;
+                this.props.reduxMyProjects(myprojects)
                 this.setState({render:'render'})
     
             }
@@ -301,16 +303,17 @@ class BidLineItem extends Component {
 
     handlelaborrate(mylabor,laborrate) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+       
+        if(myprojects) {
         const project = construction.getproject.call(this)
         if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
+            const i = construction.getOurProjectKeyById.call(this,this.props.project_id)
             const labor = construction.getactuallaborbyid.call(this,mylabor.laborid)
             if(labor) {
                 const j = construction.getactuallaborkeybyid.call(this,mylabor.laborid)
-                myuser.company.projects[i].actual.labor[j].laborrate = laborrate;
-                this.props.reduxUser(myuser)
+                myprojects[i].actual.labor[j].laborrate = laborrate;
+                this.props.reduxMyProjects(myprojects)
                 this.setState({render:'render'})
 
             }
@@ -322,16 +325,16 @@ class BidLineItem extends Component {
 
     handleequipmentrate(equipment,equipmentrate) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
         const project = construction.getproject.call(this)
         if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
+            const i = construction.getOurProjectKeyById.call(this,this.props.project_id)
             const getequipment = construction.getactualequipmentbyid.call(this,equipment.equipmentid)
             if(getequipment) {
                 const j = construction.getactualequipmentkeybyid.call(this,equipment.equipmentid)
-                myuser.company.projects[i].actual.equipment[j].equipmentrate = equipmentrate;
-                this.props.reduxUser(myuser)
+                myprojects[i].actual.equipment[j].equipmentrate = equipmentrate;
+                this.props.reduxMyProjects(myprojects)
                 this.setState({render:'render'})
             }
 
@@ -345,16 +348,17 @@ class BidLineItem extends Component {
     
     handleequipmentprofit(equipment,profit) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+     
+        if(myprojects) {
         const project = construction.getproject.call(this)
         if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
+            const i = construction.getOurProjectKeyById.call(this,this.props.project_id)
             const getequipment = construction.getactualequipmentbyid.call(this,equipment.equipmentid)
             if(getequipment) {
                 const j = construction.getactualequipmentkeybyid.call(this,equipment.equipmentid)
-                myuser.company.projects[i].actual.equipment[j].profit = profit;
-                this.props.reduxUser(myuser)
+                myprojects[i].actual.equipment[j].profit = profit;
+                this.props.reduxMyProjects(myprojects)
                 this.setState({render:'render'})
             }
     
@@ -470,7 +474,7 @@ class BidLineItem extends Component {
         const construction = new Construction();
         const styles = MyStylesheet();
         const headerFont = construction.getHeaderFont.call(this)
-        const csiid = this.props.match.params.csiid;
+        const csiid = this.props.csiid;
         const csi = construction.getcsibyid.call(this, csiid)
         const myuser = construction.getuser.call(this)
         const regularFont = construction.getRegularFont.call(this)
@@ -486,22 +490,11 @@ class BidLineItem extends Component {
                             <div style={{ ...styles.generalFlex }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
 
-                                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                            to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
-                                        > /{project.title}</Link>
-                                    </div>
+                        
 
-                                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-
-                                            to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bid`}
-                                        > /bid</Link>
-                                    </div>
-
-                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bid/csi/${csi.csiid}`}
-                                    > /{csi.csi} {csi.title}</Link>
+                                    <a style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                       
+                                    > /{csi.csi} {csi.title}</a>
                                 </div>
                             </div>
 
@@ -531,9 +524,12 @@ function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
         navigation: state.navigation,
-        projectid: state.projectid,
+        mycompany: state.mycompany,
+        myprojects: state.myprojects,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
+        allprojects: state.allprojects,
+        websockets: state.websockets,
         csis: state.csis
     }
 }

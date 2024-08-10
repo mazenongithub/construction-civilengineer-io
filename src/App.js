@@ -148,10 +148,11 @@ class App extends Component {
           console.log("WEB SOCKET HAS BEEN CLOSED!!!!");
         };
 
-        this.props.reduxWebSockets({ company: socket })
 
+        let websockets =  {};
+        websockets.company = socket
+        this.props.reduxWebSockets(websockets)
 
-        this.props.reduxWebSockets({ company: socket })
         this.setState({ render: 'render' })
 
       }

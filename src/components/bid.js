@@ -4,12 +4,12 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import { ProfitForLabor, DirectCostForMaterial, DirectCostForLabor, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, CreateBidItem, sortcode } from './functions'
 import Construction from './construction';
-import { Link } from 'react-router-dom';
+import BidLineItem from './bidlineitem'
 
 class Bid extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, csiids: [], biditems: [], spinner: false }
+        this.state = { render: '', width: 0, height: 0, csiids: [], biditems: [], spinner: false, activecsiid: false }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
@@ -76,7 +76,7 @@ class Bid extends Component {
             // eslint-disable-next-line
             items.map(lineitem => {
                 if (validateNewItem(csis, lineitem)) {
-                    const csi = construction.getcsibyid.call(this,lineitem.csiid)
+                    const csi = construction.getcsibyid.call(this, lineitem.csiid)
 
                     let newItem = CreateBidItem(lineitem.csiid, "", 0)
                     newItem.csi = csi.csi
@@ -104,7 +104,7 @@ class Bid extends Component {
         return lineids;
     }
 
- 
+
     getdirectcost(csiid) {
         const construction = new Construction();
         let myproject = construction.getproject.call(this);
@@ -167,7 +167,7 @@ class Bid extends Component {
     }
 
 
-  
+
     getquantity(csiid) {
         let quantity = ""
 
@@ -259,32 +259,33 @@ class Bid extends Component {
     }
     handlequantity(csiid, quantity) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if (myuser) {
+
+        const myprojects = construction.getOurProjects.call(this)
+        if (myprojects) {
             const project = construction.getproject.call(this);
             if (project) {
-                const i = construction.getprojectkeybyid.call(this, project.projectid);
+                const i = construction.getOurProjectKeyById.call(this, this.props.project_id);
                 const actualitems = construction.getbidactual.call(this)
                 if (actualitems) {
 
                     const actualitem = construction.getbidactualbyid.call(this, csiid)
                     if (actualitem) {
                         const j = construction.getbidactualkeybyid.call(this, csiid)
-                        myuser.company.projects[i].actual.bid[j].quantity = quantity;
-                        this.props.reduxUser(myuser);
+                        myprojects[i].actual.bid[j].quantity = quantity;
+                        this.props.reduxMyProjects(myprojects);
                         this.setState({ render: 'render' })
 
                     } else {
-                        let newItem = { csiid, quantity, unit: '', providerid: myuser.providerid }
-                        myuser.company.projects[i].actual.bid.push(newItem)
-                        this.props.reduxUser(myuser);
+                        let newItem = { csiid, quantity, unit: '' }
+                        myprojects[i].actual.bid.push(newItem)
+                        this.props.reduxMyProjects(myprojects);
                         this.setState({ render: 'render' })
                     }
 
                 } else {
-                    let newItem = { csiid, quantity, unit: '', providerid: myuser.providerid }
-                    myuser.company.projects[i].actual.bid = [newItem]
-                    this.props.reduxUser(myuser);
+                    let newItem = { csiid, quantity, unit: '' }
+                    myprojects[i].actual.bid = [newItem]
+                    this.props.reduxMyProjects(myprojects);
                     this.setState({ render: 'render' })
                 }
 
@@ -298,12 +299,13 @@ class Bid extends Component {
 
     handleunit(csiid, unit) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
+        const myprojects = construction.getOurProjects.call(this)
 
-        if (myuser) {
+        if (myprojects) {
             const project = construction.getproject.call(this);
             if (project) {
-                const i = construction.getprojectkeybyid.call(this, project.projectid);
+
+                const i = construction.getOurProjectKeyById.call(this, this.props.project_id);
                 const actualitems = construction.getbidactual.call(this)
                 if (actualitems) {
 
@@ -312,21 +314,21 @@ class Bid extends Component {
                     if (actualitem) {
 
                         const j = construction.getbidactualkeybyid.call(this, csiid)
-                        myuser.company.projects[i].actual.bid[j].unit = unit;
-                        this.props.reduxUser(myuser);
+                        myprojects[i].actual.bid[j].unit = unit;
+                        this.props.reduxMyProjects(myprojects);
                         this.setState({ render: 'render' })
 
                     } else {
-                        let newItem = { csiid, quantity: '', unit, providerid: myuser.providerid }
-                        myuser.company.projects[i].actual.bid.push(newItem)
-                        this.props.reduxUser(myuser);
+                        let newItem = { csiid, quantity: '', unit }
+                        myprojects[i].actual.bid.push(newItem)
+                        this.props.reduxMyProjects(myprojects);
                         this.setState({ render: 'render' })
                     }
 
                 } else {
-                    let newItem = { csiid, quantity: '', unit, providerid: myuser.providerid }
-                    myuser.company.projects[i].bid = [newItem]
-                    this.props.reduxUser(myuser);
+                    let newItem = { csiid, quantity: '', unit }
+                    myprojects[i].bid = [newItem]
+                    this.props.reduxMyProjects(myprojects);
                     this.setState({ render: 'render' })
                 }
 
@@ -340,8 +342,8 @@ class Bid extends Component {
 
 
     handleprofit(csiid, profit) {
-        
-        console.log(csiid,profit)
+
+        console.log(csiid, profit)
     }
 
 
@@ -354,148 +356,187 @@ class Bid extends Component {
         const regularFont = construction.getRegularFont.call(this);
         const bidField = construction.getbidfield.call(this)
         if (myuser) {
-            const providerid = myuser.profile;
-            if (myuser.hasOwnProperty("company")) {
-                const companyid = myuser.company.url;
 
-                const project = construction.getproject.call(this)
-              
-                if (project) {
 
-                    const csi = construction.getcsibyid.call(this, item.csiid);
+            const project = construction.getproject.call(this)
 
-                    if (csi) {
+            if (project) {
 
-                        const getbidprice = `$${Number(this.getbidprice(item.csiid)).toFixed(2)}`;
-                        const getunitprice = `$${Number(this.getunitprice(item.csiid)).toFixed(2)}`;
-                        const getdirectcost = `$${Number(this.getdirectcost(item.csiid)).toFixed(2)}`;
-                        const getprofit = +Number(this.getprofit(item.csiid)).toFixed(4)
-                        const getunit = this.getunit(item.csiid);
+                const csi = construction.getcsibyid.call(this, item.csiid);
 
-                        const unitprice = () => {
-                            const unitpriceLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Unit Price <br /></span> : '';
-                            return (
-                                <div style={{ ...styles.generalContainer }}>
-                                    {unitpriceLabel}
-                                    <span style={{ ...styles.generalFont, ...regularFont }}>{getunitprice}/{getunit}</span>
-                                </div>)
+                if (csi) {
 
-                        }
+                    const getbidprice = `$${Number(this.getbidprice(item.csiid)).toFixed(2)}`;
+                    const getunitprice = `$${Number(this.getunitprice(item.csiid)).toFixed(2)}`;
+                    const getdirectcost = `$${Number(this.getdirectcost(item.csiid)).toFixed(2)}`;
+                    const getprofit = +Number(this.getprofit(item.csiid)).toFixed(4)
+                    const getunit = this.getunit(item.csiid);
 
-                        const profit = () => {
-                            const profitLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Profit % <br /></span> : '';
-                            return (
-                                <div style={{ ...styles.generalContainer }}>
-                                    {profitLabel}
-                                    <span style={{ ...styles.generalFont, ...regularFont }}>{getprofit}</span>
-                                </div>)
-
-                        }
-
-                        const bidprice = () => {
-                            const bidpriceLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Bid Price<br /> </span> : '';
-                            return (
-                                <div style={{ ...styles.generalContainer }}>
-                                    {bidpriceLabel}
-                                    <span style={{ ...styles.generalFont, ...regularFont }}>{getbidprice}</span>
-                                </div>)
-
-                        }
-
-                        const directcost = () => {
-                            const directcostLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Direct Cost<br /> </span> : '';
-                            return (
-                                <div style={{ ...styles.generalContainer }}>
-
-                                    {directcostLabel}
-                                    <span style={{ ...styles.generalFont, ...regularFont }}>{getdirectcost}</span>
-                                </div>)
-
-                        }
-
-                        const unit = () => {
-                            const unitLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Unit<br /></span> : '';
-                            return (
-                                <div style={{ ...styles.generalContainer }}>
-
-                                    {unitLabel}
-                                    <input type="text"
-                                        style={{ ...regularFont, ...styles.generalFont, ...bidField, ...styles.alignCenter }}
-                                        value={getunit}
-                                        onChange={event => { this.handleunit(item.csiid, event.target.value) }} />
-                                </div>)
-                        }
-                        const quantity = () => {
-                            const quantityLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Quantity <br /></span> : '';
-
-                            return (<div style={{ ...styles.generalContainer }}>
-                                {quantityLabel}
-                                <input type="text"
-                                    style={{ ...regularFont, ...styles.generalFont, ...bidField, ...styles.alignCenter }}
-                                    value={this.getquantity(item.csiid)} onChange={event => { this.handlequantity(item.csiid, event.target.value) }} />
-
+                    const unitprice = () => {
+                        const unitpriceLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Unit Price <br /></span> : '';
+                        return (
+                            <div style={{ ...styles.generalContainer }}>
+                                {unitpriceLabel}
+                                <span style={{ ...styles.generalFont, ...regularFont }}>{getunitprice}/{getunit}</span>
                             </div>)
-                        }
-
-                        if (this.state.width > 1200) {
-                            return (
-                                <tr>
-                                    <td><Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${project.title}/bid/${csi.csiid}`}>{csi.csi}-{csi.title}</Link></td>
-                                    <td style={{ ...styles.alignCenter }}>{quantity()}</td>
-                                    <td style={{ ...styles.alignCenter }}>{unit()}</td>
-                                    <td style={{ ...styles.alignCenter }}>{directcost()}</td>
-                                    <td style={{ ...styles.alignCenter }}>{profit()}</td>
-                                    <td style={{ ...styles.alignCenter }}>{bidprice()}</td>
-                                    <td style={{ ...styles.alignCenter }}> {unitprice()}</td>
-                                </tr>)
-
-
-                        } else {
-                            return (
-                                <div style={{ ...styles.generalFlex }} key={item.csiid}>
-                                    <div style={{ ...styles.flex1 }}>
-                                        <div style={{ ...styles.generalFlex }}>
-                                            <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont, ...styles.showBorder }}>
-                                                <Link style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} to={`/${providerid}/company/${companyid}/projects/${project.title}/bid/${csi.csiid}`}> Line Item <br />
-                                                    {csi.csi}-{csi.title} </Link>
-                                            </div>
-                                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                                                {quantity()}
-
-                                            </div>
-                                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                                                {unit()}
-                                            </div>
-                                        </div>
-
-                                        <div style={{ ...styles.generalFlex }}>
-                                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                                                {directcost()}
-                                            </div>
-                                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                                                {profit()}
-                                            </div>
-                                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                                                {bidprice()}
-                                            </div>
-                                            <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                                                {unitprice()}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>)
-                        }
-
-
-
 
                     }
 
-                }
+                    const profit = () => {
+                        const profitLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Profit % <br /></span> : '';
+                        return (
+                            <div style={{ ...styles.generalContainer }}>
+                                {profitLabel}
+                                <span style={{ ...styles.generalFont, ...regularFont }}>{getprofit}</span>
+                            </div>)
 
+                    }
+
+                    const bidprice = () => {
+                        const bidpriceLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Bid Price<br /> </span> : '';
+                        return (
+                            <div style={{ ...styles.generalContainer }}>
+                                {bidpriceLabel}
+                                <span style={{ ...styles.generalFont, ...regularFont }}>{getbidprice}</span>
+                            </div>)
+
+                    }
+
+                    const directcost = () => {
+                        const directcostLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Direct Cost<br /> </span> : '';
+                        return (
+                            <div style={{ ...styles.generalContainer }}>
+
+                                {directcostLabel}
+                                <span style={{ ...styles.generalFont, ...regularFont }}>{getdirectcost}</span>
+                            </div>)
+
+                    }
+
+                    const unit = () => {
+                        const unitLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Unit<br /></span> : '';
+                        return (
+                            <div style={{ ...styles.generalContainer }}>
+
+                                {unitLabel}
+                                <input type="text"
+                                    style={{ ...regularFont, ...styles.generalFont, ...bidField, ...styles.alignCenter }}
+                                    value={getunit}
+                                    onChange={event => { this.handleunit(item.csiid, event.target.value) }} />
+                            </div>)
+                    }
+                    const quantity = () => {
+                        const quantityLabel = this.state.width < 1200 ? <span style={{ ...regularFont, ...styles.generalFont }}>Quantity <br /></span> : '';
+
+                        return (<div style={{ ...styles.generalContainer }}>
+                            {quantityLabel}
+                            <input type="text"
+                                style={{ ...regularFont, ...styles.generalFont, ...bidField, ...styles.alignCenter }}
+                                value={this.getquantity(item.csiid)} onChange={event => { this.handlequantity(item.csiid, event.target.value) }} />
+
+                        </div>)
+                    }
+
+                    if (this.state.width > 1200) {
+                        return (
+                            <tr>
+                                <td><a style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} onClick={() => { this.handleCSIID(csi.csiid) }}>{csi.csi}-{csi.title}</a></td>
+                                <td style={{ ...styles.alignCenter }}>{quantity()}</td>
+                                <td style={{ ...styles.alignCenter }}>{unit()}</td>
+                                <td style={{ ...styles.alignCenter }}>{directcost()}</td>
+                                <td style={{ ...styles.alignCenter }}>{profit()}</td>
+                                <td style={{ ...styles.alignCenter }}>{bidprice()}</td>
+                                <td style={{ ...styles.alignCenter }}> {unitprice()}</td>
+                            </tr>)
+
+
+                    } else {
+                        return (
+                            <div style={{ ...styles.generalFlex }} key={item.csiid}>
+                                <div style={{ ...styles.flex1 }}>
+                                    <div style={{ ...styles.generalFlex }}>
+                                        <div style={{ ...styles.flex2, ...regularFont, ...styles.generalFont, ...styles.showBorder }}>
+                                            <a style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }} onClick={() => { this.handleCSIID(csi.csiid) }}> Line Item <br />
+                                                {csi.csi}-{csi.title} </a>
+                                        </div>
+                                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
+                                            {quantity()}
+
+                                        </div>
+                                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
+                                            {unit()}
+                                        </div>
+                                    </div>
+
+                                    <div style={{ ...styles.generalFlex }}>
+                                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
+                                            {directcost()}
+                                        </div>
+                                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
+                                            {profit()}
+                                        </div>
+                                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
+                                            {bidprice()}
+                                        </div>
+                                        <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
+                                            {unitprice()}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>)
+                    }
+
+
+
+
+                }
 
             }
 
+
+
+
+        }
+    }
+
+    handleBid() {
+
+        const styles = MyStylesheet();
+        const construction = new Construction();
+        const regularFont = construction.getRegularFont.call(this)
+        if (this.state.activecsiid) {
+
+
+            return (<BidLineItem project_id={this.props.project_id} csiid={this.state.activecsiid} />)
+
+        } else {
+            const amount = `$${Number(this.getamount()).toFixed(2)}`;
+
+            return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+
+
+
+                {construction.showbidtable.call(this)}
+
+                {construction.showsaveproject.call(this)}
+
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...regularFont }}>
+                        The Proposed BidS Amount: {amount}
+                    </div>
+                </div>
+            </div>)
+        }
+
+
+
+    }
+
+    handleCSIID(csiid) {
+        if (this.state.activecsiid === csiid) {
+            this.setState({ activecsiid: false })
+        } else {
+            this.setState({ activecsiid: csiid })
         }
     }
 
@@ -516,27 +557,14 @@ class Bid extends Component {
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
 
-                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
-                                > /{project.title}</Link>
+                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
+                                <a style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    onClick={() => { this.setState({ activecsiid: false }) }}>/bid</a>
                             </div>
 
-                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                    to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}/bid`}
-                                > /bid</Link>
-                            </div>
 
-                           
 
-                            {construction.showbidtable.call(this)}
-
-                            <div style={{ ...styles.generalFlex }}>
-                                <div style={{ ...styles.flex1, ...regularFont }}>
-                                    The Actual Bid Amount: {amount}
-                                </div>
-                            </div>
+                            {this.handleBid()}
 
                             {construction.showsaveproject.call(this)}
 
@@ -565,6 +593,12 @@ function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
         navigation: state.navigation,
+        mycompany: state.mycompany,
+        myprojects: state.myprojects,
+        allusers: state.allusers,
+        allcompanys: state.allcompanys,
+        allprojects: state.allprojects,
+        websockets: state.websockets,
         csis: state.csis
     }
 }

@@ -4,7 +4,7 @@ import * as actions from './actions';
 import { MyStylesheet } from './styles';
 import Construction from './construction';
 import { inputUTCStringForLaborID, calculatetotalhours, formatDateStringDisplay, DirectCostForMaterial, DirectCostForEquipment, DirectCostForLabor } from './functions';
-import { Link } from 'react-router-dom';
+
 
 class BidScheduleLineItem extends Component {
     constructor(props) {
@@ -15,11 +15,7 @@ class BidScheduleLineItem extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        const construction = new Construction();
-        const csicodes = construction.getcsis.call(this)
-        if (!csicodes) {
-            construction.loadcsis.call(this)
-        }
+
 
     }
     componentWillUnmount() {
@@ -31,7 +27,7 @@ class BidScheduleLineItem extends Component {
     getlaboritems() {
         const construction = new Construction();
         const schedule = construction.getAllSchedule.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let laboritems = [];
         let items = [];
         // eslint-disable-next-line
@@ -53,7 +49,7 @@ class BidScheduleLineItem extends Component {
     getlabor() {
         const construction = new Construction();
         const schedule = construction.getAllSchedule.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let laboritems = [];
         // eslint-disable-next-line
         schedule.map(item => {
@@ -72,7 +68,7 @@ class BidScheduleLineItem extends Component {
             // eslint-disable-next-line
             items.map(item => {
 
-                cost += DirectCostForLabor(item) * (1 + (Number(item.profit)/100))
+                cost += DirectCostForLabor(item) * (1 + (Number(item.profit) / 100))
             })
         }
         return cost;
@@ -80,7 +76,7 @@ class BidScheduleLineItem extends Component {
     getmaterialitems() {
         const construction = new Construction();
         const schedule = construction.getAllSchedule.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let laboritems = [];
         let items = [];
         // eslint-disable-next-line
@@ -103,7 +99,7 @@ class BidScheduleLineItem extends Component {
     getmaterial() {
         const construction = new Construction();
         const schedule = construction.getAllSchedule.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let materialitems = [];
         // eslint-disable-next-line
         schedule.map(item => {
@@ -122,8 +118,8 @@ class BidScheduleLineItem extends Component {
         if (items.length > 0) {
             // eslint-disable-next-line
             items.map(item => {
-                console.log(DirectCostForMaterial(item),(Number(item.profit)/100))
-                cost += DirectCostForMaterial(item) * (1 + (Number(item.profit)/100))
+                console.log(DirectCostForMaterial(item), (Number(item.profit) / 100))
+                cost += DirectCostForMaterial(item) * (1 + (Number(item.profit) / 100))
                 console.log(cost)
             })
         }
@@ -133,7 +129,7 @@ class BidScheduleLineItem extends Component {
 
         const construction = new Construction();
         const schedule = construction.getAllSchedule.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let laboritems = [];
         let items = [];
         // eslint-disable-next-line
@@ -157,7 +153,7 @@ class BidScheduleLineItem extends Component {
 
         const construction = new Construction();
         const schedule = construction.getAllSchedule.call(this)
-        let csiid = this.props.match.params.csiid;
+        let csiid = this.props.csiid;
         let laboritems = [];
         // eslint-disable-next-line
         schedule.map(item => {
@@ -176,367 +172,374 @@ class BidScheduleLineItem extends Component {
         if (items.length > 0) {
             // eslint-disable-next-line
             items.map(item => {
-                cost += DirectCostForEquipment(item) * (1 + (Number(item.profit)/100))
+                cost += DirectCostForEquipment(item) * (1 + (Number(item.profit) / 100))
             })
         }
         return (cost)
     }
 
-    handlematerialprofit(mymaterial,profit) {
+    handlematerialprofit(mymaterial, profit) {
         const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
-        const project = construction.getproject.call(this)
-        if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
-            const getmaterial = construction.getschedulematerialbyid.call(this,mymaterial.materialid)
-            if(getmaterial) {
-                const j = construction.getschedulematerialkeybyid.call(this,mymaterial.materialid)
-                myuser.company.projects[i].schedule.materials[j].profit = profit
-                this.props.reduxUser(myuser)
-                this.setState({render:'render'})
-            }
-    
-    
-        }
-    
-    
-    }
-    
-    }
-
-    handlematerialquantity(mymaterial,quantity) {
-        const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
-        const project = construction.getproject.call(this)
-        if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
-            const getmaterial = construction.getschedulematerialbyid.call(this,mymaterial.materialid)
-            if(getmaterial) {
-                const j = construction.getschedulematerialkeybyid.call(this,mymaterial.materialid)
-                myuser.company.projects[i].schedule.materials[j].quantity = quantity
-                this.props.reduxUser(myuser)
-                this.setState({render:'render'})
-            }
-
-
-        }
-
-
-    }
-
-    }
-
-    handlematerialunit(mymaterial,unit) {
-        const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
-        const project = construction.getproject.call(this)
-        if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
-            const getmaterial = construction.getschedulematerialbyid.call(this,mymaterial.materialid)
-            if(getmaterial) {
-                const j = construction.getschedulematerialkeybyid.call(this,mymaterial.materialid)
-                myuser.company.projects[i].schedule.materials[j].unit = unit
-                this.props.reduxUser(myuser)
-                this.setState({render:'render'})
-            }
-    
-    
-        }
-    
-    
-    }
-    
-    }
-
-
-    handlematerialunitcost(mymaterial,unitcost) {
-        const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
-        const project = construction.getproject.call(this)
-        if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
-            const getmaterial = construction.getschedulematerialbyid.call(this,mymaterial.materialid)
-            if(getmaterial) {
-                const j = construction.getschedulematerialkeybyid.call(this,mymaterial.materialid)
-                myuser.company.projects[i].schedule.materials[j].unitcost = unitcost
-                this.props.reduxUser(myuser)
-                this.setState({render:'render'})
-            }
-    
-    
-        }
-    
-    
-    }
-    
-    }
-    
-    
-
-
-    handlelaborprofit(mylabor,profit) {
-        const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
-        const project = construction.getproject.call(this)
-        if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
-            const labor = construction.getschedulelaborbyid.call(this,mylabor.laborid)
-            if(labor) {
-                const j = construction.getschedulelaborkeybyid.call(this,mylabor.laborid)
-                myuser.company.projects[i].schedule.labor[j].profit = profit;
-                this.props.reduxUser(myuser)
-                this.setState({render:'render'})
-    
-            }
-        }
-    
-    }
-    
-    }
-   
-
-
-    handlelaborrate(mylabor,laborrate) {
-        const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
-        const project = construction.getproject.call(this)
-        if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
-            const labor = construction.getschedulelaborbyid.call(this,mylabor.laborid)
-            if(labor) {
-                const j = construction.getschedulelaborkeybyid.call(this,mylabor.laborid)
-                myuser.company.projects[i].schedule.labor[j].laborrate = laborrate;
-                this.props.reduxUser(myuser)
-                this.setState({render:'render'})
-
-            }
-        }
-
-    }
-
-    }
-
-    handleequipmentrate(equipment,equipmentrate) {
-        const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
-        const project = construction.getproject.call(this)
-        if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
-            const getequipment = construction.getscheduleequipmentbyid.call(this,equipment.equipmentid)
-            if(getequipment) {
-                const j = construction.getscheduleequipmentkeybyid.call(this,equipment.equipmentid)
-                myuser.company.projects[i].schedule.equipment[j].equipmentrate = equipmentrate;
-                this.props.reduxUser(myuser)
-                this.setState({render:'render'})
-            }
-
-
-        }
-
-
-    }
-
-    }
-    
-    handleequipmentprofit(equipment,profit) {
-        const construction = new Construction();
-        const myuser = construction.getuser.call(this)
-        if(myuser) {
-        const project = construction.getproject.call(this)
-        if(project) {
-            const i = construction.getprojectkeybyid.call(this,project.projectid)
-            const getequipment = construction.getscheduleequipmentbyid.call(this,equipment.equipmentid)
-            if(getequipment) {
-                const j = construction.getscheduleequipmentkeybyid.call(this,equipment.equipmentid)
-                myuser.company.projects[i].schedule.equipment[j].profit = profit;
-                this.props.reduxUser(myuser)
-                this.setState({render:'render'})
-            }
-    
-    
-        }
-    
-    
-    }
-    
-    }
-    
-    
-    getitemtotal() {
-        let labortotal = this.getlabortotal();
-        let materialtotal = this.getmaterialtotal();
-        let equipmenttotal = this.getequipmenttotal();
-        let total = labortotal + materialtotal + equipmenttotal;
-        return total;
-    }
-    
-    showlaborid(mylabor) {
-        const styles = MyStylesheet();
-        const construction = new Construction();
-        const regularFont = construction.getRegularFont.call(this)
-        let employee = construction.getemployeebyid.call(this, mylabor.providerid)
-        const csi = construction.getcsibyid.call(this,mylabor.csiid)
-        let hourlyrate = mylabor.laborrate;
-        let profit = mylabor.profit;
-        const totalhours = calculatetotalhours(mylabor.timeout, mylabor.timein)
-        const bidField = construction.getbidfield.call(this)
-        const bidprice = (hourlyrate * totalhours)*(1 + (Number(profit)/100)) 
-
-        if(csi) {
-
-        return (<div key={mylabor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
-
-            {employee.firstname} {employee.lastname} {mylabor.description}
-            From {inputUTCStringForLaborID(mylabor.timein)} to {inputUTCStringForLaborID(mylabor.timeout)}
-            $<input type="text" 
-            value={hourlyrate} 
-            style={{...styles.alignCenter,...styles.generalFont, ...regularFont, ...bidField}}
-            onChange={(event)=>{this.handlelaborrate(mylabor,event.target.value)}} />/Hr 
-            x {Number(totalhours).toFixed(2)} Hrs x 
-            <span style={{...styles.generalFont, ...regularFont}}>(1 + (</span><input type="text" value={profit} 
-            style={{...styles.alignCenter,...styles.generalFont, ...regularFont, ...bidField}}
-            onChange={(event)=>{this.handlelaborprofit(mylabor,event.target.value)}} /><span style={{...styles.generalFont, ...regularFont}}>/100)</span>
-            
-            
-             = ${Number(bidprice).toFixed(2)}
-
-        </div>)
-
-        }
-    }
-
-    showmaterialid(mymaterial) {
-        const styles = MyStylesheet();
-        const construction = new Construction();
-        const regularFont = construction.getRegularFont.call(this);
-        const material = construction.getmymaterialfromid.call(this, mymaterial.mymaterialid)
-        const bidField = construction.getbidfield.call(this)
-        const bidprice = Number(mymaterial.quantity) * Number(mymaterial.unitcost) * (1 + (Number(mymaterial.profit)/100))
-       
-        
-        return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }} key={mymaterial.materialid}>
-            {material.material}        {formatDateStringDisplay(mymaterial.timein)}
-            <input type="text" 
-            onChange={(event)=>{this.handlematerialquantity(mymaterial,event.target.value)}} 
-            value={mymaterial.quantity}
-            style={{...styles.alignCenter,...regularFont, ...styles.generalFont, ...bidField}} />
-              x $<input type="text" 
-              onChange={(event)=>{this.handlematerialunitcost(mymaterial,event.target.value)}}
-              value={mymaterial.unitcost}
-            style={{...styles.alignCenter,...regularFont, ...styles.generalFont, ...bidField}} />
-                <span style={{...styles.generalFont,...regularFont}}>/</span>
-             <input type="text"
-            onChange={(event)=>{this.handlematerialunit(mymaterial,event.target.value)}}  
-            value={mymaterial.unit}
-            style={{...styles.alignCenter,...regularFont, ...styles.generalFont, ...bidField}} />
-               <span style={{...styles.generalFont, ...regularFont}}> x (1 + (</span><input type="text" value={mymaterial.profit} 
-            style={{...styles.generalFont, ...regularFont, ...bidField,...styles.alignCenter,}}
-            onChange={(event)=>{this.handlematerialprofit(mymaterial,event.target.value)}} /><span style={{...styles.generalFont, ...regularFont}}>/100)</span> = ${Number(bidprice).toFixed(2)}
-            
-        </div>)
-    }
-
-
-    showequipmentid(equipment) {
-        const styles = MyStylesheet();
-        const construction = new Construction();
-        const regularFont = construction.getRegularFont.call(this);
-        const myequipment = construction.getequipmentfromid.call(this, equipment.myequipmentid);
-        const totalhours = calculatetotalhours(equipment.timeout, equipment.timein)
-        const bidprice = totalhours * Number(equipment.equipmentrate) * (1+(Number(equipment.profit)/100))
-        const bidField = construction.getbidfield.call(this)
-        return (<div style={{ ...styles.generalContainer}} key={equipment.equipmentid}>
-           <span style={{...styles.generalFont,...regularFont}}>{myequipment.equipment} 
-            From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)} 
-            =  {totalhours} hrs x $</span> 
-            <input type="text" value={equipment.equipmentrate} 
-                style={{...styles.generalFont,...regularFont, ...styles.alignCenter,...bidField}}
-                onChange={(event)=> {this.handleequipmentrate(equipment,event.target.value)}}
-            />
-             
-             <span style={{...styles.generalFont, ...regularFont}}>/hr x (1 + (</span><input type="text" value={equipment.profit} 
-            style={{...styles.generalFont, ...regularFont, ...bidField,...styles.alignCenter,}}
-            onChange={(event)=>{this.handleequipmentprofit(equipment,event.target.value)}} /><span style={{...styles.generalFont, ...regularFont}}>/100)</span> = ${Number(bidprice).toFixed(2)}
-
-        </div>)
-    }
-
-
-    render() {
-        const construction = new Construction();
-        const styles = MyStylesheet();
-        const headerFont = construction.getHeaderFont.call(this)
-        const csiid = this.props.match.params.csiid;
-        const csi = construction.getcsibyid.call(this, csiid)
-        const myuser = construction.getuser.call(this)
-        const regularFont = construction.getRegularFont.call(this)
-
-        if (myuser) {
+        const myprojects = construction.getOurProjects.call(this)
+        if (myprojects) {
             const project = construction.getproject.call(this)
-            console.log(project,this.props.match.params.projectid)
             if (project) {
-                return (
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1 }}>
+                const i = construction.getOurProjectKeyById.call(this, this.props.project_id)
+                const getmaterial = construction.getschedulematerialbyid.call(this, mymaterial.materialid)
+                if (getmaterial) {
+                    const j = construction.getschedulematerialkeybyid.call(this, mymaterial.materialid)
+                    myprojects[i].schedule.materials[j].profit = profit
+                    this.props.reduxMyProjects(myprojects)
+                    this.setState({ render: 'render' })
+                }
 
-                            <div style={{ ...styles.generalFlex }}>
-                                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
 
-                                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                            to={`/${myuser.profile}/company/${myuser.company.url}/projects/${project.title}`}
-                                        > /{project.title}</Link>
-                                    </div>
-
-                                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-
-                                            to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bidschedule`}
-                                        > /bidschedule</Link>
-                                    </div>
-
-                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                        to={`/${myuser.profile}/company/${myuser.company.companyid}/projects/${project.title}/bid/csi/${csi.csiid}`}
-                                    > /{csi.csi} {csi.title}</Link>
-                                </div>
-                            </div>
-
-                            {construction.showlinedetail.call(this)}
-
-                            {construction.showsaveproject.call(this)}
-
-                        </div>
-                    </div>)
-
-            } else {
-                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Project Not Found </span>
-                </div>)
             }
 
-        } else {
-            return (<div style={{ ...styles.generalContainer, ...regularFont }}>
-                <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Bid Line Item </span>
+
+        }
+
+    }
+
+    handlematerialquantity(mymaterial, quantity) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if (myprojects) {
+            const project = construction.getproject.call(this)
+            if (project) {
+                const i = construction.getOurProjectKeyById.call(this, this.props.project_id)
+                const getmaterial = construction.getschedulematerialbyid.call(this, mymaterial.materialid)
+                if (getmaterial) {
+                    const j = construction.getschedulematerialkeybyid.call(this, mymaterial.materialid)
+                    myprojects[i].schedule.materials[j].quantity = quantity
+                    this.props.reduxMyProjects(myprojects)
+                    this.setState({ render: 'render' })
+                }
+
+
+            }
+
+        }
+
+
+        }
+
+
+
+        handlematerialunit(mymaterial, unit) {
+            const construction = new Construction();
+            const myprojects = construction.getOurProjects.call(this)
+            if (myprojects) {
+                const project = construction.getproject.call(this)
+                if (project) {
+                    const i = construction.getOurProjectKeyById.call(this, this.props.project_id)
+                    const getmaterial = construction.getschedulematerialbyid.call(this, mymaterial.materialid)
+                    if (getmaterial) {
+                        const j = construction.getschedulematerialkeybyid.call(this, mymaterial.materialid)
+                        myprojects[i].schedule.materials[j].unit = unit
+                        this.props.reduxMyProjects(myprojects)
+                        this.setState({ render: 'render' })
+                    }
+
+
+                }
+
+            }
+
+
+        }
+
+
+
+
+        handlematerialunitcost(mymaterial, unitcost) {
+            const construction = new Construction();
+            const myprojects = construction.getOurProjects.call(this)
+            if (myprojects) {
+                const project = construction.getproject.call(this)
+                if (project) {
+                    const i = construction.getOurProjectKeyById.call(this, this.props.project_id)
+                    const getmaterial = construction.getschedulematerialbyid.call(this, mymaterial.materialid)
+                    if (getmaterial) {
+                        const j = construction.getschedulematerialkeybyid.call(this, mymaterial.materialid)
+                        myprojects[i].schedule.materials[j].unitcost = unitcost
+                        this.props.reduxMyProjects(myprojects)
+                        this.setState({ render: 'render' })
+                    }
+
+
+                }
+
+            }
+
+
+        }
+
+
+
+
+
+
+        handlelaborprofit(mylabor, profit) {
+            const construction = new Construction();
+            const myprojects = construction.getOurProjects.call(this)
+            if (myprojects) {
+                const project = construction.getproject.call(this)
+                if (project) {
+                    const i = construction.getOurProjectKeyById.call(this, this.props.project_id)
+                    const labor = construction.getschedulelaborbyid.call(this, mylabor.laborid)
+                    if (labor) {
+                        const j = construction.getschedulelaborkeybyid.call(this, mylabor.laborid)
+                        myprojects[i].schedule.labor[j].profit = profit;
+                        this.props.reduxMyProjects(myprojects)
+                        this.setState({ render: 'render' })
+
+                    }
+                }
+
+            }
+
+        }
+
+
+
+
+
+        handlelaborrate(mylabor, laborrate) {
+            const construction = new Construction();
+            const myprojects = construction.getOurProjects.call(this)
+            if (myprojects) {
+                const project = construction.getproject.call(this)
+                if (project) {
+                    const i = construction.getOurProjectKeyById.call(this, this.props.project_id)
+                    const labor = construction.getschedulelaborbyid.call(this, mylabor.laborid)
+                    if (labor) {
+                        const j = construction.getschedulelaborkeybyid.call(this, mylabor.laborid)
+                        myprojects[i].schedule.labor[j].laborrate = laborrate;
+                        this.props.reduxMyProjects(myprojects)
+                        this.setState({ render: 'render' })
+
+                    }
+                }
+
+            }
+
+
+
+        }
+
+        handleequipmentrate(equipment, equipmentrate) {
+            const construction = new Construction();
+            const myprojects = construction.getOurProjects.call(this)
+            if (myprojects) {
+                const project = construction.getproject.call(this)
+                if (project) {
+                    const i = construction.getOurProjectKeyById.call(this, this.props.project_id)
+                    const getequipment = construction.getscheduleequipmentbyid.call(this, equipment.equipmentid)
+                    if (getequipment) {
+                        const j = construction.getscheduleequipmentkeybyid.call(this, equipment.equipmentid)
+                        myprojects[i].schedule.equipment[j].equipmentrate = equipmentrate;
+                        this.props.reduxMyProjects(myprojects)
+                        this.setState({ render: 'render' })
+                    }
+
+                }
+
+
+            }
+
+
+
+
+        }
+
+        handleequipmentprofit(equipment, profit) {
+            const construction = new Construction();
+            const myprojects = construction.getOurProjects.call(this)
+            if (myprojects) {
+                const project = construction.getproject.call(this)
+                if (project) {
+
+                    const i = construction.getOurProjectKeyById.call(this, this.props.project_id)
+                    const getequipment = construction.getscheduleequipmentbyid.call(this, equipment.equipmentid)
+                    if (getequipment) {
+                        const j = construction.getscheduleequipmentkeybyid.call(this, equipment.equipmentid)
+                        myprojects[i].schedule.equipment[j].profit = profit;
+                        this.props.reduxMyProjects(myprojects)
+                        this.setState({ render: 'render' })
+                    }
+
+
+                }
+
+            }
+
+
+
+
+        }
+
+
+        getitemtotal() {
+            let labortotal = this.getlabortotal();
+            let materialtotal = this.getmaterialtotal();
+            let equipmenttotal = this.getequipmenttotal();
+            let total = labortotal + materialtotal + equipmenttotal;
+            return total;
+        }
+
+        showlaborid(mylabor) {
+            const styles = MyStylesheet();
+            const construction = new Construction();
+            const regularFont = construction.getRegularFont.call(this)
+            let employee = construction.getemployeebyid.call(this, mylabor.providerid)
+            const csi = construction.getcsibyid.call(this, mylabor.csiid)
+            let hourlyrate = mylabor.laborrate;
+            let profit = mylabor.profit;
+            const totalhours = calculatetotalhours(mylabor.timeout, mylabor.timein)
+            const bidField = construction.getbidfield.call(this)
+            const bidprice = (hourlyrate * totalhours) * (1 + (Number(profit) / 100))
+
+            if (csi) {
+
+                return (<div key={mylabor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
+
+                    {employee.firstname} {employee.lastname} {mylabor.description}
+                    From {inputUTCStringForLaborID(mylabor.timein)} to {inputUTCStringForLaborID(mylabor.timeout)}
+                    $<input type="text"
+                        value={hourlyrate}
+                        style={{ ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...bidField }}
+                        onChange={(event) => { this.handlelaborrate(mylabor, event.target.value) }} />/Hr
+                    x {Number(totalhours).toFixed(2)} Hrs x
+                    <span style={{ ...styles.generalFont, ...regularFont }}>(1 + (</span><input type="text" value={profit}
+                        style={{ ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...bidField }}
+                        onChange={(event) => { this.handlelaborprofit(mylabor, event.target.value) }} /><span style={{ ...styles.generalFont, ...regularFont }}>/100)</span>
+
+
+                    = ${Number(bidprice).toFixed(2)}
+
+                </div>)
+
+            }
+        }
+
+        showmaterialid(mymaterial) {
+            const styles = MyStylesheet();
+            const construction = new Construction();
+            const regularFont = construction.getRegularFont.call(this);
+            const material = construction.getmymaterialfromid.call(this, mymaterial.mymaterialid)
+            const bidField = construction.getbidfield.call(this)
+            const bidprice = Number(mymaterial.quantity) * Number(mymaterial.unitcost) * (1 + (Number(mymaterial.profit) / 100))
+
+
+            return (<div style={{ ...styles.generalContainer, ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }} key={mymaterial.materialid}>
+                {material.material}        {formatDateStringDisplay(mymaterial.timein)}
+                <input type="text"
+                    onChange={(event) => { this.handlematerialquantity(mymaterial, event.target.value) }}
+                    value={mymaterial.quantity}
+                    style={{ ...styles.alignCenter, ...regularFont, ...styles.generalFont, ...bidField }} />
+                x $<input type="text"
+                    onChange={(event) => { this.handlematerialunitcost(mymaterial, event.target.value) }}
+                    value={mymaterial.unitcost}
+                    style={{ ...styles.alignCenter, ...regularFont, ...styles.generalFont, ...bidField }} />
+                <span style={{ ...styles.generalFont, ...regularFont }}>/</span>
+                <input type="text"
+                    onChange={(event) => { this.handlematerialunit(mymaterial, event.target.value) }}
+                    value={mymaterial.unit}
+                    style={{ ...styles.alignCenter, ...regularFont, ...styles.generalFont, ...bidField }} />
+                <span style={{ ...styles.generalFont, ...regularFont }}> x (1 + (</span><input type="text" value={mymaterial.profit}
+                    style={{ ...styles.generalFont, ...regularFont, ...bidField, ...styles.alignCenter, }}
+                    onChange={(event) => { this.handlematerialprofit(mymaterial, event.target.value) }} /><span style={{ ...styles.generalFont, ...regularFont }}>/100)</span> = ${Number(bidprice).toFixed(2)}
+
             </div>)
         }
 
+
+        showequipmentid(equipment) {
+            const styles = MyStylesheet();
+            const construction = new Construction();
+            const regularFont = construction.getRegularFont.call(this);
+            const myequipment = construction.getequipmentfromid.call(this, equipment.myequipmentid);
+            const totalhours = calculatetotalhours(equipment.timeout, equipment.timein)
+            const bidprice = totalhours * Number(equipment.equipmentrate) * (1 + (Number(equipment.profit) / 100))
+            const bidField = construction.getbidfield.call(this)
+            return (<div style={{ ...styles.generalContainer }} key={equipment.equipmentid}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>{myequipment.equipment}
+                    From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
+                    =  {totalhours} hrs x $</span>
+                <input type="text" value={equipment.equipmentrate}
+                    style={{ ...styles.generalFont, ...regularFont, ...styles.alignCenter, ...bidField }}
+                    onChange={(event) => { this.handleequipmentrate(equipment, event.target.value) }}
+                />
+
+                <span style={{ ...styles.generalFont, ...regularFont }}>/hr x (1 + (</span><input type="text" value={equipment.profit}
+                    style={{ ...styles.generalFont, ...regularFont, ...bidField, ...styles.alignCenter, }}
+                    onChange={(event) => { this.handleequipmentprofit(equipment, event.target.value) }} /><span style={{ ...styles.generalFont, ...regularFont }}>/100)</span> = ${Number(bidprice).toFixed(2)}
+
+            </div>)
+        }
+
+
+        render() {
+            const construction = new Construction();
+            const styles = MyStylesheet();
+            const headerFont = construction.getHeaderFont.call(this)
+            const csiid = this.props.csiid;
+            const csi = construction.getcsibyid.call(this, csiid)
+            const regularFont = construction.getRegularFont.call(this)
+            const myuser = construction.getuser.call(this)
+
+            if (myuser) {
+                const project = construction.getproject.call(this)
+
+                if (project) {
+                    return (
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+
+                                <div style={{ ...styles.generalFlex }}>
+                                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+
+
+
+                                        <a style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+
+                                        > /{csi.csi} {csi.title}</a>
+                                    </div>
+                                </div>
+
+                                {construction.showlinedetail.call(this)}
+
+                                {construction.showsaveproject.call(this)}
+
+                            </div>
+                        </div>)
+
+                } else {
+                    return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                        <span style={{ ...styles.generalFont, ...regularFont }}>Project Not Found </span>
+                    </div>)
+                }
+
+            } else {
+                return (<div style={{ ...styles.generalContainer, ...regularFont }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Please Login to View Bid Line Item </span>
+                </div>)
+            }
+
+        }
     }
-}
 
 function mapStateToProps(state) {
     return {
         myusermodel: state.myusermodel,
         navigation: state.navigation,
-        projectid: state.projectid,
+        mycompany: state.mycompany,
+        myprojects: state.myprojects,
         allusers: state.allusers,
         allcompanys: state.allcompanys,
+        allprojects: state.allprojects,
+        websockets: state.websockets,
         csis: state.csis
     }
 }

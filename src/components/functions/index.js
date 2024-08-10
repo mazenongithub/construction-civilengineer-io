@@ -245,8 +245,8 @@ export function CreateMaterial(materialid, material, providerid, accountid, csii
 export function CreateMyMaterial(materialid, mymaterialid,  milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit) {
     return ({ materialid, mymaterialid, milestoneid, csiid, timein, quantity, unit, unitcost, proposalid, profit })
 }
-export function CreateActualMaterial(materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit) {
-    return ({ materialid, mymaterialid, providerid, milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit })
+export function CreateActualMaterial(materialid, mymaterialid, milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit) {
+    return ({ materialid, mymaterialid,  milestoneid, csiid, timein, quantity, unit, unitcost, invoiceid, profit })
 }
 export function newBenefit(benefitid, detail, purchasedate, amount, accountid) {
     return ({ benefitid, detail, purchasedate, amount, accountid })
@@ -275,8 +275,8 @@ export function CreateEquipment(equipmentid, equipment, accountid) {
 export function CreateScheduleEquipment(equipmentid, myequipmentid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit) {
     return ({ equipmentid, myequipmentid, csiid, milestoneid, timein, timeout, equipmentrate, proposalid, profit })
 }
-export function CreateActualEquipment(equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit) {
-    return ({ equipmentid, myequipmentid, providerid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit })
+export function CreateActualEquipment(equipmentid, myequipmentid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit) {
+    return ({ equipmentid, myequipmentid, csiid, milestoneid, timein, timeout, equipmentrate, invoiceid, profit })
 }
 export function CreateCostID(costid, cost, detail, timein) {
     return ({ costid, cost, detail, timein })
@@ -472,8 +472,8 @@ export function sorttimes(timeina, timeinb) {
     }
 }
 
-export function CreateActualLabor(laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit) {
-    return ({ laborid, providerid, milestoneid, csiid, timein, timeout, laborrate, description, invoiceid, profit })
+export function CreateActualLabor(laborid, userid, milestoneid, csiid, timein, timeout, laborrate, invoiceid, profit) {
+    return ({ laborid, userid, milestoneid, csiid, timein, timeout, laborrate, invoiceid, profit })
 }
 export function CreateBidScheduleItem(csiid, unit, quantity) {
     return ({ csiid, unit, quantity })

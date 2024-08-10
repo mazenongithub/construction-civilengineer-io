@@ -7,7 +7,8 @@ import allcompanys from './allcompanysreducer';
 import csis from './csireducer'
 import mycompany from './mycompanyreducer';
 import allprojects from './allprojectsreducer'
-import websockets from './websocketsreducer'
+import websockets from './websocketsreducer';
+import projectsockets from './projectsocketsreducer';
 export default combineReducers({
     myusermodel,
     navigation,
@@ -17,5 +18,6 @@ export default combineReducers({
     csis,
     mycompany,
     allprojects,
-    websockets
+    websockets,
+    projectsockets
 })

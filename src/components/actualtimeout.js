@@ -1,22 +1,26 @@
 
 import React from 'react';
 import { MyStylesheet } from './styles'
-import DynamicStyles from './dynamicstyles'
+import Construction from './construction'
 import { UTCTimeStringfromTime, makeTimeString, validateMonth, validateDate, validateYear, validateMinutes } from './functions';
 import CalenderTimeOut from './actualtimeoutcalender';
 class TimeOut {
+
+    
     handleminutes(minutes) {
         this.setState({ timeoutminutes: minutes })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+      
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-                const projectid = project.projectid
+              
 
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
+                
                 if (minutes.length === 2) {
 
                     if (validateMinutes(minutes)) {
@@ -26,10 +30,10 @@ class TimeOut {
 
 
                             if (this.state.activelaborid) {
-                                const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                                const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid);
                                 if (mylabor) {
 
-                                    const j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid)
+                                    const j = construction.getactuallaborkeybyid.call(this,  this.state.activelaborid)
                                     let day = this.state.timeoutday;
                                     let year = this.state.timeoutyear;
                                     let month = this.state.timeoutmonth;
@@ -37,8 +41,8 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects[i].actual.labor[j].timeout = timeout;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].actual.labor[j].timeout = timeout;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
 
@@ -51,11 +55,11 @@ class TimeOut {
                         } else if (this.state.active === 'equipment') {
 
                             if (this.state.activeequipmentid) {
-                                const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                                const myequipment = construction.getactualequipmentbyid.call(this,  this.state.activeequipmentid)
                                 if (myequipment) {
 
                                     if (myequipment) {
-                                        const j = dynamicstyles.getactualequipmentkeybyid.call(this, myequipment.equipmentid)
+                                        const j = construction.getactualequipmentkeybyid.call(this,  myequipment.equipmentid)
                                         let day = this.state.timeoutday;
                                         let year = this.state.timeoutyear;
                                         let month = this.state.timeoutmonth;
@@ -63,8 +67,8 @@ class TimeOut {
                                         let time = this.state.timeoutampm;
                                         let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                         timeout = UTCTimeStringfromTime(timeout);
-                                        myuser.company.projects[i].actual.equipment[j].timeout = timeout;
-                                        this.props.reduxUser(myuser)
+                                        myprojects[i].actual.equipment[j].timeout = timeout;
+                                        this.props.reduxMyProjects(myprojects)
                                         this.setState({ render: 'render' })
                                     }
 
@@ -84,16 +88,16 @@ class TimeOut {
 
     handlehours(hours) {
         this.setState({ timeouthours: hours })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+                
 
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
                 if (hours.length === 2) {
                     if (validateMonth(hours)) {
 
@@ -102,10 +106,10 @@ class TimeOut {
 
 
                             if (this.state.activelaborid) {
-                                const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                                const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid);
                                 if (mylabor) {
 
-                                    const j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid)
+                                    const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
                                     let day = this.state.timeoutday;
                                     let year = this.state.timeoutyear;
                                     let month = this.state.timeoutmonth;
@@ -113,8 +117,8 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects[i].actual.labor[j].timeout = timeout;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].actual.labor[j].timeout = timeout;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
 
@@ -126,10 +130,10 @@ class TimeOut {
 
 
                             if (this.state.activeequipmentid) {
-                                const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                                const myequipment = construction.getactualequipmentbyid.call(this,  this.state.activeequipmentid)
                                 if (myequipment) {
 
-                                    const j = dynamicstyles.getactualequipmentkeybyid.call(this, myequipment.equipmentid)
+                                    const j = construction.getactualequipmentkeybyid.call(this,  myequipment.equipmentid)
                                     let day = this.state.timeoutday;
                                     let year = this.state.timeoutyear;
                                     let month = this.state.timeoutmonth;
@@ -137,8 +141,8 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects[i].actual.equipment[j].timeout = timeout;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].actual.equipment[j].timeout = timeout;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
                                 }
@@ -158,16 +162,16 @@ class TimeOut {
 
     handleyear(year) {
         this.setState({ timeoutyear: year })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+                
 
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
                 if (year.length === 4) {
 
                     if (validateYear(year)) {
@@ -177,10 +181,10 @@ class TimeOut {
 
 
                             if (this.state.activelaborid) {
-                                const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                                const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid);
                                 if (mylabor) {
 
-                                    const j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid)
+                                    const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
                                     let day = this.state.timeoutday;
                                     let month = this.state.timeoutmonth;
                                     let hours = this.state.timeouthours;
@@ -188,8 +192,8 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects[i].actual.labor[j].timeout = timeout;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].actual.labor[j].timeout = timeout;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
 
@@ -200,9 +204,9 @@ class TimeOut {
                         } else if (this.state.active === 'equipment') {
 
                             if (this.state.activeequipmentid) {
-                                const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                                const myequipment = construction.getactualequipmentbyid.call(this, this.state.activeequipmentid)
                                 if (myequipment) {
-                                    const j = dynamicstyles.getactualequipmentkeybyid.call(this, myequipment.equipmentid)
+                                    const j = construction.getactualequipmentkeybyid.call(this, myequipment.equipmentid)
                                     let day = this.state.timeoutday;
                                     let minutes = this.state.timeoutminutes;
                                     let month = this.state.timeoutmonth;
@@ -210,8 +214,8 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects[i].actual.equipment[j].timeout = timeout;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].actual.equipment[j].timeout = timeout;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
                                 }
                             }
@@ -230,16 +234,16 @@ class TimeOut {
     handleday(day) {
         day = day.toString();
         this.setState({ timeoutday: day })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+                
 
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
                 if (day.length === 2) {
 
                     if (validateDate(day)) {
@@ -249,10 +253,10 @@ class TimeOut {
 
 
                             if (this.state.activelaborid) {
-                                const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                                const mylabor = construction.getactuallaborbyid.call(this,  this.state.activelaborid);
                                 if (mylabor) {
 
-                                    const j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid)
+                                    const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
                                     let year = this.state.timeoutyear;
                                     let month = this.state.timeoutmonth;
                                     let hours = this.state.timeouthours;
@@ -260,8 +264,8 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects[i].actual.labor[j].timeout = timeout;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].actual.labor[j].timeout = timeout;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
 
@@ -271,10 +275,10 @@ class TimeOut {
 
                         } else if (this.state.active === 'equipment') {
                             if (this.state.activeequipmentid) {
-                                const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                                const myequipment = construction.getactualequipmentbyid.call(this, this.state.activeequipmentid)
 
                                 if (myequipment) {
-                                    const j = dynamicstyles.getactualequipmentkeybyid.call(this, myequipment.equipmentid)
+                                    const j = construction.getactualequipmentkeybyid.call(this,  myequipment.equipmentid)
                                     let minutes = this.state.timeoutminutes;
                                     let year = this.state.timeoutyear;
                                     let month = this.state.timeoutmonth;
@@ -282,8 +286,8 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects[i].actual.equipment[j].timeout = timeout;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].actual.equipment[j].timeout = timeout;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
                                 }
                             }
@@ -301,16 +305,16 @@ class TimeOut {
 
     handlemonth(month) {
         this.setState({ timeoutmonth: month })
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+                
 
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
                 if (month.length === 2) {
 
                     if (validateMonth(month)) {
@@ -320,10 +324,10 @@ class TimeOut {
 
 
                             if (this.state.activelaborid) {
-                                const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                                const mylabor = construction.getactuallaborbyid.call(this,  this.state.activelaborid);
                                 if (mylabor) {
 
-                                    const j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid)
+                                    const j = construction.getactuallaborkeybyid.call(this,  this.state.activelaborid)
                                     let day = this.state.timeoutday;
                                     let year = this.state.timeoutyear;
                                     let hours = this.state.timeouthours;
@@ -331,8 +335,8 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects[i].actual.labor[j].timeout = timeout;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].actual.labor[j].timeout = timeout;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
 
 
@@ -342,9 +346,9 @@ class TimeOut {
 
                         } else if (this.state.active === 'equipment') {
                             if (this.state.activeequipmentid) {
-                                const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                                const myequipment = construction.getactualequipmentbyid.call(this, this.state.activeequipmentid)
                                 if (myequipment) {
-                                    const j = dynamicstyles.getactualequipmentkeybyid.call(this, myequipment.equipmentid)
+                                    const j = construction.getactualequipmentkeybyid.call(this,  myequipment.equipmentid)
                                     let day = this.state.timeoutday;
                                     let year = this.state.timeoutyear;
                                     let minutes = this.state.timeoutminutes;
@@ -352,8 +356,8 @@ class TimeOut {
                                     let time = this.state.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
-                                    myuser.company.projects[i].actual.equipment[j].timeout = timeout;
-                                    this.props.reduxUser(myuser)
+                                    myprojects[i].actual.equipment[j].timeout = timeout;
+                                    this.props.reduxMyProjects(myprojects)
                                     this.setState({ render: 'render' })
                                 }
 
@@ -378,26 +382,26 @@ class TimeOut {
             this.setState({ timeoutampm: 'am' })
         }
 
-        const dynamicstyles = new DynamicStyles();
-        const myuser = dynamicstyles.getuser.call(this)
-        if (myuser) {
+        const construction = new Construction();
+        const myprojects = construction.getOurProjects.call(this)
+        if(myprojects) {
+            
+            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
+            if(myproject) {
 
-            const project = dynamicstyles.getprojectbytitle.call(this, this.props.match.params.projectid)
-            if (project) {
+                
 
-                const projectid = project.projectid
-
-                const i = dynamicstyles.getprojectkeybyid.call(this, projectid);
+                const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
 
                 if (this.state.active === 'labor') {
 
 
 
                     if (this.state.activelaborid) {
-                        const mylabor = dynamicstyles.getactuallaborbyid.call(this, this.state.activelaborid);
+                        const mylabor = construction.getactuallaborbyid.call(this,  this.state.activelaborid);
                         if (mylabor) {
 
-                            const j = dynamicstyles.getactuallaborkeybyid.call(this, this.state.activelaborid)
+                            const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
                             let day = this.state.timeoutday;
                             let year = this.state.timeoutyear;
                             let month = this.state.timeoutmonth;
@@ -405,11 +409,11 @@ class TimeOut {
                             let time = ampm;
                             let minutes = this.state.timeoutminutes;
                             let timeout = makeTimeString(year, month, day, hours, minutes, time);
-                            console.log(timeout)
+                   
                             timeout = UTCTimeStringfromTime(timeout);
-                            console.log(timeout)
-                            myuser.company.projects[i].actual.labor[j].timeout = timeout;
-                            this.props.reduxUser(myuser)
+
+                            myprojects[i].actual.labor[j].timeout = timeout;
+                            this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
 
 
@@ -420,9 +424,9 @@ class TimeOut {
                 } else if (this.state.active === 'equipment') {
 
                     if (this.state.activeequipmentid) {
-                        const myequipment = dynamicstyles.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                        const myequipment = construction.getactualequipmentbyid.call(this,  this.state.activeequipmentid)
                         if (myequipment) {
-                            const j = dynamicstyles.getactualequipmentkeybyid.call(this, myequipment.equipmentid)
+                            const j = construction.getactualequipmentkeybyid.call(this,  myequipment.equipmentid)
                             let day = this.state.timeoutday;
                             let year = this.state.timeoutyear;
                             let month = this.state.timeoutmonth;
@@ -431,8 +435,8 @@ class TimeOut {
                             let time = ampm
                             let timeout = makeTimeString(year, month, day, hours, minutes, time);
                             timeout = UTCTimeStringfromTime(timeout);
-                            myuser.company.projects[i].actual.equipment[j].timeout = timeout;
-                            this.props.reduxUser(myuser)
+                            myprojects[i].actual.equipment[j].timeout = timeout;
+                            this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
                     }
@@ -445,20 +449,20 @@ class TimeOut {
     }
 
     showampm() {
-        const dynamicstyles = new DynamicStyles();
+        const construction = new Construction();
         const styles = MyStylesheet();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
         const timeout = new TimeOut();
         const showam = () => {
             return (<div style={{ ...styles.generalContainer }}>
-                <button style={{ ...styles.headerFamily, ...headerFont, ...styles.boldFont, ...styles.alignCenter, ...dynamicstyles.getampmicon.call(this) }} onClick={() => { timeout.toggleampm.call(this, 'pm') }}>AM</button>
+                <button style={{ ...styles.headerFamily, ...headerFont, ...styles.boldFont, ...styles.alignCenter, ...construction.getampmicon.call(this) }} onClick={() => { timeout.toggleampm.call(this, 'pm') }}>AM</button>
             </div>)
 
         }
         const showpm = () => {
 
             return (<div style={{ ...styles.generalContainer }}>
-                <button style={{ ...styles.headerFamily, ...headerFont, ...styles.boldFont, ...styles.alignCenter, ...dynamicstyles.getampmicon.call(this) }} onClick={() => { timeout.toggleampm.call(this, 'am') }}>PM</button>
+                <button style={{ ...styles.headerFamily, ...headerFont, ...styles.boldFont, ...styles.alignCenter, ...construction.getampmicon.call(this) }} onClick={() => { timeout.toggleampm.call(this, 'am') }}>PM</button>
             </div>)
 
         }
@@ -477,9 +481,9 @@ class TimeOut {
 
     showtimeout() {
         const styles = MyStylesheet();
-        const dynamicstyles = new DynamicStyles();
-        const headerFont = dynamicstyles.getHeaderFont.call(this)
-        const regularFont = dynamicstyles.getRegularFont.call(this)
+        const construction = new Construction();
+        const headerFont = construction.getHeaderFont.call(this)
+        const regularFont = construction.getRegularFont.call(this)
         const timeout = new TimeOut();
         const calender = new CalenderTimeOut();
         return (
@@ -488,7 +492,7 @@ class TimeOut {
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Time Out (MM-DD-YYYY HH mm) </span>
+                            <span style={{ ...styles.generalFont, ...regularFont }}>Time In (MM-DD-YYYY HH mm) </span>
                         </div>
                     </div>
 

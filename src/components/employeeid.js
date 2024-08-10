@@ -21,7 +21,7 @@ class EmployeeID {
                            
                             let myemployee = construction.getuserbyID.call(this,employee.user_id)
                       
-                            options.push(<option key={`option${myemployee.user_id}`} value={employee.userid}>/{myemployee.UserID} {myemployee.FirstName} {myemployee.LastName}</option>)
+                            options.push(<option key={`option${myemployee.user_id}`} value={employee.user_id}>/{myemployee.UserID} {myemployee.FirstName} {myemployee.LastName}</option>)
                         })
 
                     }
