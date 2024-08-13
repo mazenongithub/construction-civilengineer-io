@@ -73,6 +73,7 @@ class App extends Component {
     firebase.initializeApp(firebaseConfig());
     this.checkuser();
     this.loadMyCompany();
+    
     this.loadAllUsers();
     this.updateWindowDimensions();
   }

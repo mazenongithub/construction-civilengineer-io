@@ -510,7 +510,7 @@ class BidScheduleLineItem extends Component {
 
                                 {construction.showlinedetail.call(this)}
 
-                                {construction.showsaveproject.call(this)}
+                             
 
                             </div>
                         </div>)

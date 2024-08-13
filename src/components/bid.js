@@ -518,7 +518,7 @@ class Bid extends Component {
 
                 {construction.showbidtable.call(this)}
 
-                {construction.showsaveproject.call(this)}
+    
 
                 <div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1, ...regularFont }}>
@@ -566,10 +566,7 @@ class Bid extends Component {
 
                             {this.handleBid()}
 
-                            {construction.showsaveproject.call(this)}
-
-
-
+                       
 
                         </div>
                     </div>

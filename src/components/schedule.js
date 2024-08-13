@@ -1591,10 +1591,7 @@ class Schedule extends Component {
                             {equipmentrate()}
                             {showmaterialquantity()}
 
-                            {construction.showSaveProject.call(this)}
-                            {construction.showsaveproject.call(this)}
-
-
+                          
                             {scheduleview.showschedule.call(this, "schedule", project_id)}
 
                             {this.showlaborids()}

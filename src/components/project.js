@@ -8,7 +8,8 @@ import Construction from './construction'
 import Schedule from './schedule'
 import Actual from './actual';
 import BidSchedule from './bidschedule';
-import Bid from './bid'
+import Bid from './bid';
+import { saveProjectIcon } from './svg';
 class Project extends Component {
     constructor(props) {
         super(props);
@@ -216,10 +217,10 @@ class Project extends Component {
                                         }
 
                                     } else if (obj.hasOwnProperty("csiid")) {
-                                    
+
                                         let csiid = obj.csiid;
                                         let csi = construction.getprojectbidschedulebyid.call(this, project_id, csiid)
-                                     
+
                                         if (csi) {
                                             let j = construction.getprojectbidschedulekeybyid.call(this, project_id, csiid)
                                             myprojects[i].schedule.bidschedule[j] = obj;
@@ -360,15 +361,15 @@ class Project extends Component {
                                         }
 
                                     } else if (obj.hasOwnProperty("csiid")) {
-                                    
+
                                         let csiid = obj.csiid;
                                         let csi = construction.getprojectbidactualbyid.call(this, project_id, csiid)
-                                     
+
                                         if (csi) {
                                             let j = construction.getprojectbidactualkeybyid.call(this, project_id, csiid)
                                             myprojects[i].actual.bid[j] = obj;
                                         }
-                                    
+
                                     }
                                 })
                             }
@@ -622,6 +623,7 @@ class Project extends Component {
         const regularFont = construction.getRegularFont.call(this)
         const myuser = construction.getuser.call(this)
         const headerFont = construction.getHeaderFont.call(this)
+        const saveprojecticon = construction.getsaveprojecticon.call(this);
         if (myuser) {
 
             const company = construction.getcompany.call(this)
@@ -645,17 +647,11 @@ class Project extends Component {
                                 {this.Navigation()}
 
 
-
-
-
-                                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15, ...styles.generalFont }}>
-                                    <span style={{ ...regularFont }}>{this.state.message}</span>
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                    <button style={{ ...styles.generalButton, ...saveprojecticon }} onClick={() => { this.saveMyProject() }}>{saveProjectIcon()}</button>
                                 </div>
 
 
-                                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }} onClick={() => { this.saveMyProject() }}>
-                                    <button style={{ ...regularFont, ...styles.generalFont, ...styles.addPadding15 }}>Save Project</button>
-                                </div>
 
 
                             </div>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { MyStylesheet } from './styles'
 import Construction from './construction'
-import { scrollImageDown, goCheckIcon } from './svg';
+import { scrollImageDown, saveCompanyIcon } from './svg';
 import { validateCompanyID } from './functions';
 import { connect } from 'react-redux';
 import * as actions from './actions';
@@ -57,47 +57,47 @@ class ViewCompany extends Component {
 
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-       
-       
 
 
 
 
 
-                    // const messages = this.state.messages;
-
-                    // if(msg.type === "chat") {
-                    // messages.push(msg)
-                    // this.setState({render:'render', messages})
-                    // }
-                    // if (msg.type === "note") {
-                    //   const item = document.createElement("li");
-                    //   const text = document.createElement("i");
-                    //   text.textContent = msg.text;
-                    //   item.appendChild(text);
-                    //   document.querySelector("#messages").appendChild(item);
-                    // } else if (msg.type === "chat") {
-                    //   const item = document.createElement("li");
-                    //   item.innerHTML = `<b>${msg.name}:</b> ${msg.text}`;
-                    //   document.querySelector("#messages").appendChild(item);
-                    // }
 
 
-                
-                console.log("I am a JS File")
+        // const messages = this.state.messages;
+
+        // if(msg.type === "chat") {
+        // messages.push(msg)
+        // this.setState({render:'render', messages})
+        // }
+        // if (msg.type === "note") {
+        //   const item = document.createElement("li");
+        //   const text = document.createElement("i");
+        //   text.textContent = msg.text;
+        //   item.appendChild(text);
+        //   document.querySelector("#messages").appendChild(item);
+        // } else if (msg.type === "chat") {
+        //   const item = document.createElement("li");
+        //   item.innerHTML = `<b>${msg.name}:</b> ${msg.text}`;
+        //   document.querySelector("#messages").appendChild(item);
+        // }
 
 
 
-
-             
-
-
-            }
-
-        
+        console.log("I am a JS File")
 
 
-    
+
+
+
+
+
+    }
+
+
+
+
+
 
 
 
@@ -110,7 +110,7 @@ class ViewCompany extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight, });
     }
 
-   
+
 
     equipmentdatedefault() {
         const equipmentdatemonth = () => {
@@ -138,14 +138,14 @@ class ViewCompany extends Component {
     async loadMyCompany() {
         const construction = new Construction();
         try {
-    
-          const mycompany = await construction.findMyCompany.call(this)
-    
-    
-        } catch(err) {
-          alert (`Could not fetch company ${err}`)
+
+            const mycompany = await construction.findMyCompany.call(this)
+
+
+        } catch (err) {
+            alert(`Could not fetch company ${err}`)
         }
-      }
+    }
 
 
     getcompany() {
@@ -413,7 +413,7 @@ class ViewCompany extends Component {
 
         const goIcon = construction.getgocheckheight.call(this)
         const viewcompany = new ViewCompany()
-
+        const savecompanyicon = construction.getsaveprojecticon.call(this)
 
         if (myuser) {
             const company = construction.getcompany.call(this)
@@ -470,14 +470,11 @@ class ViewCompany extends Component {
 
                         {this.handledisplay()}
 
-                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }} onClick={() => { this.saveCompany() }}>
-                            <button style={{ ...regularFont, ...styles.generalFont, ...styles.addPadding15 }}>Save Company</button>
+
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...savecompanyicon }} onClick={() => { this.saveCompany() }}>{saveCompanyIcon()}</button>
                         </div>
 
-
-
-
-                        {construction.showsavecompany.call(this)}
 
                     </div>
 
@@ -509,8 +506,8 @@ function mapStateToProps(state) {
         allcompanys: state.allcompanys,
         mycompany: state.mycompany,
         allusers: state.allusers,
-        allprojects:state.allprojects,
-        websockets:state.websockets
+        allprojects: state.allprojects,
+        websockets: state.websockets
     }
 }
 

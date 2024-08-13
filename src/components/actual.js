@@ -1605,7 +1605,7 @@ class Actual extends Component {
                             {equipmentrate()}
                             {showmaterialquantity()}
 
-                            {construction.showsaveproject.call(this)}
+                         
 
                             {scheduleview.showschedule.call(this, "actual")}
 
