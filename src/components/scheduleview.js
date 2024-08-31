@@ -14,11 +14,11 @@ class ScheduleView {
 
       
 
-        const getemployeekey = (employees, providerid) => {
+        const getemployeekey = (employees, user_id) => {
             let key = false;
             // eslint-disable-next-line
             employees.map((employee, i) => {
-                if (employee.hasOwnProperty(providerid)) {
+                if (employee.hasOwnProperty(user_id)) {
                     key = i;
 
                 }
@@ -41,12 +41,12 @@ class ScheduleView {
 
         
 
-        const validatenewemployee = (employees, providerid) => {
+        const validatenewemployee = (employees, user_id) => {
             let validate = true;
             if (employees.length > 0) {
                 // eslint-disable-next-line
                 employees.map(employee => {
-                    if (employee.hasOwnProperty(providerid)) {
+                    if (employee.hasOwnProperty(user_id)) {
                         validate = false;
                     }
                 })
@@ -62,19 +62,19 @@ class ScheduleView {
 
                 if (schedule.hasOwnProperty("laborid")) {
 
-                    if (validatenewemployee(employees, schedule.providerid)) {
+                    if (validatenewemployee(employees, schedule.user_id)) {
                         let me = {};
-                        let employee = construction.getemployeebyid.call(this, schedule.providerid)
-                        me[schedule.providerid] = {};
-                        me[schedule.providerid]["firstname"] = employee.firstname;
-                        me[schedule.providerid]["lastname"] = employee.lastname;
-                        me[schedule.providerid]["providerid"] = employee.providerid;
-                        me[schedule.providerid]["schedule"] = [];
-                        me[schedule.providerid]["schedule"].push({ timein: schedule.timein, timeout: schedule.timeout })
+                        let employee = construction.getuserby_id.call(this, schedule.user_id)
+                        me[schedule.user_id] = {};
+                        me[schedule.user_id]["firstname"] = employee.FirstName;
+                        me[schedule.user_id]["lastname"] = employee.LastName;
+                        me[schedule.user_id]["user_id"] = employee.user_id;
+                        me[schedule.user_id]["schedule"] = [];
+                        me[schedule.user_id]["schedule"].push({ timein: schedule.timein, timeout: schedule.timeout })
                         employees.push(me)
                     } else {
-                        let i = getemployeekey(employees, schedule.providerid)
-                        employees[i][schedule.providerid].schedule.push({ timein: schedule.timein, timeout: schedule.timeout })
+                        let i = getemployeekey(employees, schedule.user_id)
+                        employees[i][schedule.user_id].schedule.push({ timein: schedule.timein, timeout: schedule.timeout })
 
                     }
 
@@ -143,11 +143,11 @@ class ScheduleView {
             }
         }
 
-        const getemployeekey = (employees, providerid) => {
+        const getemployeekey = (employees, user_id) => {
             let key = false;
             // eslint-disable-next-line
             employees.map((employee, i) => {
-                if (employee.hasOwnProperty(providerid)) {
+                if (employee.hasOwnProperty(user_id)) {
                     key = i;
 
                 }
@@ -170,12 +170,12 @@ class ScheduleView {
 
         
 
-        const validatenewemployee = (employees, providerid) => {
+        const validatenewemployee = (employees, user_id) => {
             let validate = true;
             if (employees.length > 0) {
                 // eslint-disable-next-line
                 employees.map(employee => {
-                    if (employee.hasOwnProperty(providerid)) {
+                    if (employee.hasOwnProperty(user_id)) {
                         validate = false;
                     }
                 })
@@ -194,19 +194,19 @@ class ScheduleView {
 
                 if (schedule.hasOwnProperty("laborid")) {
 
-                    if (validatenewemployee(employees, schedule.providerid)) {
+                    if (validatenewemployee(employees, schedule.user_id)) {
                         let me = {};
-                        let employee = construction.getemployeebyid.call(this, schedule.providerid)
-                        me[schedule.providerid] = {};
-                        me[schedule.providerid]["firstname"] = employee.firstname;
-                        me[schedule.providerid]["lastname"] = employee.lastname;
-                        me[schedule.providerid]["providerid"] = employee.providerid;
-                        me[schedule.providerid]["schedule"] = [];
-                        me[schedule.providerid]["schedule"].push({ timein: schedule.timein, timeout: schedule.timeout })
+                        let employee = construction.getuserby_id.call(this, schedule.user_id)
+                        me[schedule.user_id] = {};
+                        me[schedule.user_id]["firstname"] = employee.FirstName;
+                        me[schedule.user_id]["lastname"] = employee.LastName;
+                        me[schedule.user_id]["user_id"] = employee.user_id;
+                        me[schedule.user_id]["schedule"] = [];
+                        me[schedule.user_id]["schedule"].push({ timein: schedule.timein, timeout: schedule.timeout })
                         employees.push(me)
                     } else {
-                        let i = getemployeekey(employees, schedule.providerid)
-                        employees[i][schedule.providerid].schedule.push({ timein: schedule.timein, timeout: schedule.timeout })
+                        let i = getemployeekey(employees, schedule.user_id)
+                        employees[i][schedule.user_id].schedule.push({ timein: schedule.timein, timeout: schedule.timeout })
 
                     }
 
@@ -255,7 +255,7 @@ class ScheduleView {
                     let props = Object.getOwnPropertyNames(employee)
                     let firstname = employee[props[0]].firstname
                     let lastname = employee[props[0]].lastname
-                    let key = employee[props[0]].providerid;
+                    let key = employee[props[0]].user_id;
                     showschedule.push(<text key={key} className="timegraph-1" transform={`translate(0, ${ypos})`}>{firstname} {lastname}</text>)
                    
 

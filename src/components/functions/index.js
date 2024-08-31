@@ -281,8 +281,8 @@ export function CreateActualEquipment(equipmentid, myequipmentid, csiid, milesto
 export function CreateCostID(costid, cost, detail, timein) {
     return ({ costid, cost, detail, timein })
 }
-export function CreateScheduleLabor(laborid, userid, milestoneid, csiid, timein, timeout, laborrate, proposalid, profit) {
-    return ({ laborid, userid, milestoneid, csiid, timein, timeout, laborrate, proposalid, profit })
+export function CreateScheduleLabor(laborid, user_id, milestoneid, csiid, timein, timeout, laborrate, proposalid, profit) {
+    return ({ laborid, user_id, milestoneid, csiid, timein, timeout, laborrate, proposalid, profit })
 }
 
 export function getBenefitInterval(reoccurring, amount, detail, accountid) {
@@ -472,8 +472,8 @@ export function sorttimes(timeina, timeinb) {
     }
 }
 
-export function CreateActualLabor(laborid, userid, milestoneid, csiid, timein, timeout, laborrate, invoiceid, profit) {
-    return ({ laborid, userid, milestoneid, csiid, timein, timeout, laborrate, invoiceid, profit })
+export function CreateActualLabor(laborid, user_id, milestoneid, csiid, timein, timeout, laborrate, invoiceid, profit) {
+    return ({ laborid, user_id, milestoneid, csiid, timein, timeout, laborrate, invoiceid, profit })
 }
 export function CreateBidScheduleItem(csiid, unit, quantity) {
     return ({ csiid, unit, quantity })

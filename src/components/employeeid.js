@@ -19,9 +19,10 @@ class EmployeeID {
                         // eslint-disable-next-line
                         company.employees.map(employee => {
                            
-                            let myemployee = construction.getuserbyID.call(this,employee.user_id)
+                            let myemployee = construction.getuserby_id.call(this,employee.user_id)
+
                       
-                            options.push(<option key={`option${myemployee.user_id}`} value={employee.user_id}>/{myemployee.UserID} {myemployee.FirstName} {myemployee.LastName}</option>)
+                            options.push(<option key={`option${myemployee.User_ID}`} value={employee.user_id}>/{myemployee.UserID} {myemployee.FirstName} {myemployee.LastName}</option>)
                         })
 
                     }

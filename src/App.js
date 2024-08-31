@@ -173,7 +173,10 @@ class App extends Component {
 
 
       const allusers = await LoadAllUsers();
-      this.props.reduxAllUsers(allusers)
+      if(allusers.hasOwnProperty("allusers")) {
+        this.props.reduxAllUsers(allusers.allusers)
+      }
+     
 
     } catch (err) {
       alert(err)
@@ -395,7 +398,7 @@ class App extends Component {
 
         const allprojects = construction.getAllProjects.call(this)
         if (allprojects) {
-          console.log(allprojects)
+    
           const companyid = company.companyid
           // eslint-disable-next-line
           allprojects.map(myproject => {

@@ -431,8 +431,8 @@ class Schedule extends Component {
     removelaborid(labor) {
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
-        console.log(labor)
-        const user = construction.getuserbyID.call(this,labor.userid)
+    
+        const user = construction.getuserbyID.call(this,labor.user_id)
         if (window.confirm(`Are you sure you want to delete labor for ${user.UserID}`)) {
             if(myprojects) {
                 const project = this.getProject()
@@ -455,19 +455,20 @@ class Schedule extends Component {
     getemployeeid() {
         const construction = new Construction();
         const project = this.getProject()
+
+        let employeeid = "";
         if (project) {
 
             if (this.state.activelaborid) {
                 const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid)
                 if (mylabor) {
 
-                    return mylabor.userid
+                    employeeid = mylabor.user_id
                 }
-            } else {
-                return this.state.providerid;
-            }
+            } 
 
         }
+        return employeeid;
     }
 
     makematerialactive(materialid) {
@@ -641,12 +642,13 @@ class Schedule extends Component {
         const removeIcon = construction.getremoveicon.call(this)
         const regularFont = construction.getRegularFont.call(this);
         const csi = construction.getcsibyid.call(this, labor.csiid);
-        let employee = construction.getemployeebyid.call(this, labor.providerid)
+        let employee = construction.getuserby_id.call(this, labor.user_id)
         let hourlyrate = labor.laborrate;
         const project = this.getProject()
         if (project) {
 
             const milestone = construction.getmilestonebyid.call(this, labor.milestoneid)
+            console.log(milestone, labor.milestoneid)
 
 
             const getbutton = () => {
@@ -670,7 +672,7 @@ class Schedule extends Component {
                 return (
                     <div key={labor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont,...styles.bottomMargin10, }}>
                         <span style={{ ...getactivelaborbackground(labor.laborid) }} onClick={() => { this.makelaboractive(labor.laborid) }}>
-                            {employee.firstname} {employee.lastname}: {labor.description} Milestone {milestone.milestone} CSI:{csi.csi}-{csi.title}<br />
+                            {employee.FirstName} {employee.LastName}: {labor.description} Milestone {milestone.milestone} CSI:{csi.csi}-{csi.title}<br />
                 From {inputUTCStringForLaborID(labor.timein)} to {inputUTCStringForLaborID(labor.timeout)}
                 ${Number(hourlyrate).toFixed(2)}/Hr x {calculatetotalhours(labor.timeout, labor.timein)} Hrs = ${(Number(calculatetotalhours(labor.timeout, labor.timein)) * hourlyrate).toFixed(2)}
                         </span>
@@ -956,6 +958,7 @@ class Schedule extends Component {
     }
 
     handleemployeeid(user_id) {
+
         const construction = new Construction();
         const makeid = new MakeID();
  
@@ -970,7 +973,7 @@ class Schedule extends Component {
                     const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid)
                     if (mylabor) {
                         const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
-                        myprojects[i].schedule.labor[j].userid = user_id;
+                        myprojects[i].schedule.labor[j].user_id = user_id;
                         this.props.reduxMyProjects(myprojects)
                         this.setState({ render: 'render' })
                     }
@@ -1339,6 +1342,7 @@ class Schedule extends Component {
 
 
 
+
         const equipmentrate = () => {
             if (this.state.active === 'equipment' && this.state.activeequipmentid) {
                 return (
@@ -1494,7 +1498,7 @@ class Schedule extends Component {
             }
         }
 
-        const milestonescsi = () => {
+        const milestonescsi = (project_id) => {
 
             if (this.state.width > 800) {
 
@@ -1513,7 +1517,7 @@ class Schedule extends Component {
             } else {
                 return (<div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
-                        {milestoneid.showmilestoneid.call(this)}
+                        {milestoneid.showmilestoneid.call(this, project_id)}
                         {csi.showCSI.call(this)}
                     </div>
                 </div>)
@@ -1550,7 +1554,7 @@ class Schedule extends Component {
         if(myprojects) {
 
             const project = this.getProject()
-            console.log(project)
+    
             if (project) {
               
 
@@ -1582,7 +1586,7 @@ class Schedule extends Component {
 
 
 
-                            {milestonescsi()}
+                            {milestonescsi(project_id)}
                             {showmaterialdate()}
 
                             {showtimes()}

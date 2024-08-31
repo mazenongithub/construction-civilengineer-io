@@ -39,10 +39,10 @@ class Project extends Component {
 
         socket.onmessage = (evt) => {
             const response = JSON.parse(evt.data);
-
+            console.log(response)
 
             if (response.type === "join") {
-                console.log(response)
+            
 
 
                 if (response.hasOwnProperty("myproject")) {
@@ -78,7 +78,7 @@ class Project extends Component {
 
             } else if (response.type === "construction") {
 
-                console.log(response)
+          
 
                 let myprojects = construction.getOurProjects.call(this)
                 let myproject = this.getOurProject();
@@ -438,7 +438,7 @@ class Project extends Component {
     getOurProject() {
         const construction = new Construction();
         const getproject = this.getproject();
-        const project_id = getproject._ID;
+        const project_id = getproject.Project_ID;
 
         const ourproject = construction.getOurProjectByID.call(this, project_id)
 

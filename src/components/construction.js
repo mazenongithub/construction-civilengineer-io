@@ -26,6 +26,24 @@ class Construction {
         return getuser;
     }
 
+    getuserby_id(user_id) {
+        const construction = new Construction();
+        const allusers = construction.getallusers.call(this)
+        let getuser = false;
+        if (allusers) {
+            for (let user of allusers) {
+
+                if (user.User_ID === user_id) {
+                    getuser = user;
+                }
+
+            }
+        }
+
+        return getuser;
+    }
+
+
     getuserbyid(user_id) {
         const construction = new Construction();
         const allusers = construction.getallusers.call(this)
@@ -569,8 +587,8 @@ class Construction {
         let myproject = construction.getOurProjectByID.call(this, project_id)
         let milestones = false;
         if (myproject) {
-            if (myproject.hasOwnProperty("projectmilestones")) {
-                milestones = myproject.projectmilestones.mymilestone;
+            if (myproject.hasOwnProperty("milestones")) {
+                milestones = myproject.milestones;
 
             }
         }
@@ -582,6 +600,7 @@ class Construction {
     getmilestonebyid(milestoneid) {
         let construction = new Construction();
         let milestones = construction.getmilestones.call(this)
+
         let milestone = false;
         if (milestones) {
             // eslint-disable-next-line
@@ -3703,7 +3722,7 @@ class Construction {
         let getproject = false;
         if (allprojects) {
             allprojects.map(project => {
-                if (project._ID === project_id) {
+                if (project.Project_ID === project_id) {
                     getproject = project;
                 }
             })
@@ -4014,7 +4033,7 @@ class Construction {
         try {
             let construction = new Construction();
             let myuser = construction.getuser.call(this)
-            let user = { userid: myuser.userid, _id: myuser._ID, firstname: myuser.FirstName, lastname: myuser.LastName, emailaddress: myuser.EmailAddress, phonenumber: myuser.PhoneNumber, profileurl: myuser.ProfileURL, profile: myuser.profile, userid: myuser.UserID }
+            let user = { userid: myuser.UserID, user_id: myuser.User_ID, firstname: myuser.FirstName, lastname: myuser.LastName, emailaddress: myuser.EmailAddress, phonenumber: myuser.PhoneNumber, profileurl: myuser.ProfileURL}
             this.setState({ spinner: true })
             let response = await SaveProfile({ myuser: user })
             console.log(response)

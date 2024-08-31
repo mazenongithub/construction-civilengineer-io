@@ -635,7 +635,7 @@ class Actual extends Component {
         const removeIcon = construction.getremoveicon.call(this)
         const regularFont = construction.getRegularFont.call(this);
         const csi = construction.getcsibyid.call(this, labor.csiid);
-        let employee = construction.getemployeebyid.call(this, labor.providerid)
+        let employee = construction.getuserby_id.call(this, labor.user_id)
         let hourlyrate = labor.laborrate;
         const project = this.getProject()
         if (project) {
@@ -964,7 +964,7 @@ class Actual extends Component {
                     const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid)
                     if (mylabor) {
                         const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
-                        myprojects[i].actual.labor[j].userid = user_id;
+                        myprojects[i].actual.labor[j].user_id = user_id;
                         this.props.reduxMyProjects(myprojects)
                         this.setState({ render: 'render' })
                     }
@@ -1334,6 +1334,8 @@ class Actual extends Component {
             position = menu.position
         }
 
+        const project_id = this.props.project_id;
+
 
 
 
@@ -1506,7 +1508,7 @@ class Actual extends Component {
             }
         }
 
-        const milestonescsi = () => {
+        const milestonescsi = (project_id) => {
 
 
 
@@ -1516,7 +1518,7 @@ class Actual extends Component {
 
                 return (<div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
-                        {milestoneid.showmilestoneid.call(this)}
+                        {milestoneid.showmilestoneid.call(this, project_id)}
                     </div>
                     <div style={{ ...styles.flex1 }}>
                         {csi.showCSI.call(this)}
@@ -1530,7 +1532,7 @@ class Actual extends Component {
 
                 return (<div style={{ ...styles.generalFlex }}>
                     <div style={{ ...styles.flex1 }}>
-                        {milestoneid.showmilestoneid.call(this)}
+                        {milestoneid.showmilestoneid.call(this, project_id)}
                         {csi.showCSI.call(this)}
                     </div>
                 </div>)
@@ -1598,7 +1600,7 @@ class Actual extends Component {
                             {showemployeeid()}
                             {showequipmentid()}
                             {showmaterialid()}
-                            {milestonescsi()}
+                            {milestonescsi(project_id)}
                             {showmaterialdate()}
                             {showtimes()}
                             {laborrate()}
