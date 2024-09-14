@@ -455,7 +455,7 @@ class Actual extends Component {
                 const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid)
                 if (mylabor) {
 
-                    return mylabor.userid
+                    return mylabor.user_id
                 }
             } else {
                 return this.state.providerid;
@@ -630,6 +630,7 @@ class Actual extends Component {
     }
 
     showlaborid(labor) {
+        
         const construction = new Construction();
         const styles = MyStylesheet();
         const removeIcon = construction.getremoveicon.call(this)
@@ -664,7 +665,7 @@ class Actual extends Component {
                 return (
                     <div key={labor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont,...styles.bottomMargin10, }}>
                         <span style={{ ...getactivelaborbackground(labor.laborid) }} onClick={() => { this.makelaboractive(labor.laborid) }}>
-                            {employee.firstname} {employee.lastname}: {labor.description} Milestone {milestone.milestone} CSI:{csi.csi}-{csi.title}<br />
+                            {employee.FirstName} {employee.LastName}: {labor.description} Milestone {milestone.milestone} CSI:{csi.csi}-{csi.title}<br />
                 From {inputUTCStringForLaborID(labor.timein)} to {inputUTCStringForLaborID(labor.timeout)}
                 ${Number(hourlyrate).toFixed(2)}/Hr x {calculatetotalhours(labor.timeout, labor.timein)} Hrs = ${(Number(calculatetotalhours(labor.timeout, labor.timein)) * hourlyrate).toFixed(2)}
                         </span>

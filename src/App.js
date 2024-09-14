@@ -191,7 +191,7 @@ class App extends Component {
       let response = CheckUserNode();
       response = await response;
 
-      console.log("checkuser", response)
+      console.log(response)
 
       if (response.hasOwnProperty("myuser")) {
         this.props.reduxUser(response.myuser)

@@ -648,7 +648,7 @@ class Schedule extends Component {
         if (project) {
 
             const milestone = construction.getmilestonebyid.call(this, labor.milestoneid)
-            console.log(milestone, labor.milestoneid)
+        
 
 
             const getbutton = () => {

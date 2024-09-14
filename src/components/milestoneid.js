@@ -26,7 +26,6 @@ class MilestoneID {
         const styles = MyStylesheet();
         const milestoneid = new MilestoneID();
         const dynamicstyles = new DynamicStyles();
-        console.log("showmilestone", project_id)
         const regularFont = dynamicstyles.getRegularFont.call(this);
         return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
             MilestoneID

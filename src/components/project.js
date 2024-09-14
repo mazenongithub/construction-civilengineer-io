@@ -31,7 +31,7 @@ class Project extends Component {
 
         socket.onopen = (evt) => {
 
-            const data = { type: "join", userid };
+            const data = { type: "join", userid, application:'construction' };
             socket.send(JSON.stringify(data));
             console.log("Project Web Socket Open", data)
 
@@ -41,7 +41,7 @@ class Project extends Component {
             const response = JSON.parse(evt.data);
             console.log(response)
 
-            if (response.type === "join") {
+            if (response.type === "join" && response.application === "construction") {
             
 
 
@@ -393,7 +393,38 @@ class Project extends Component {
 
 
 
-            } // end response type construction
+            } else if (response.type === "pm") {
+
+                if(response.hasOwnProperty("myproject")) {
+
+
+
+                    let myprojects = construction.getOurProjects.call(this)
+                    
+                    let myproject = this.getOurProject();
+    
+                    if (myproject) {
+                      
+                        let i = construction.getOurProjectKeyById.call(this, myproject.project_id)
+
+                        myprojects[i].milestones = response.myproject.milestones;
+                        myprojects[i].team = response.myproject.team
+                        this.props.reduxMyProjects(myprojects)
+                        this.setState({message:response.text})
+
+
+                    }
+
+
+
+
+
+                }
+                
+                
+                
+            }
+        
 
         } // end of socket message
 
@@ -492,13 +523,13 @@ class Project extends Component {
         switch (navigation) {
             case "schedule":
                 return (
-                    <div style={{ ...styles.generalContainer, ...styles.addMargin }}><Schedule schedule={this.state.schedule} projectid={this.props.match.params.projectid} project_id={project_id} /> </div>)
+                    <div style={{ ...styles.generalContainer, ...styles.addMargin }}><Schedule schedule={this.state.schedule} projectid={this.props.match.params.projectid} project_id={project_id} key={Math.random()}/> </div>)
             case "bidschedule":
-                return (<div style={{ ...styles.generalContainer, ...styles.addMargin }}><BidSchedule bidschedule={this.state.bidschedule} project_id={project_id} /></div>)
+                return (<div style={{ ...styles.generalContainer, ...styles.addMargin }}><BidSchedule bidschedule={this.state.bidschedule} project_id={project_id} key={Math.random()} /></div>)
             case "bid":
-                return (<div style={{ ...styles.generalContainer, ...styles.addMargin }}><Bid bid={this.state.bid} project_id={project_id} /></div>)
+                return (<div style={{ ...styles.generalContainer, ...styles.addMargin }}><Bid bid={this.state.bid} project_id={project_id} key={Math.random()}/></div>)
             case "actual":
-                return (<div style={{ ...styles.generalContainer, ...styles.addMargin }}><Actual actual={this.state.actual} project_id={project_id} /></div>)
+                return (<div style={{ ...styles.generalContainer, ...styles.addMargin }}><Actual actual={this.state.actual} project_id={project_id} key={Math.random()}/></div>)
             default:
                 return (this.showProject())
         }
@@ -645,6 +676,10 @@ class Project extends Component {
 
 
                                 {this.Navigation()}
+
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                                    <span style={{...regularFont}}>{this.state.message}</span>
+                                </div>
 
 
                                 <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>

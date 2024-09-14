@@ -15,7 +15,7 @@ class Login {
 
         const myuser = construction.getuser.call(this)
         if (myuser) {
-            console.log(myuser)
+ 
             return (profile.showProfile.call(this))
 
         } else {
