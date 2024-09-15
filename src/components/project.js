@@ -27,11 +27,23 @@ class Project extends Component {
 
         const projectsocket = construction.getProjectSocketByID.call(this, projectid)
 
-        const socket = new WebSocket(`ws://localhost:8081/projects/${projectid}/websocketapi`)
+        let server_api = process.env.REACT_APP_SERVER_API
+
+        const stripHttp = (server_api) => {
+
+            return server_api.replace(/^https?:\/\//, '')
+
+        }
+
+
+        server_api = stripHttp(server_api)
+
+
+        const socket = new WebSocket(`ws://${server_api}/projects/${projectid}/websocketapi`)
 
         socket.onopen = (evt) => {
 
-            const data = { type: "join", userid, application:'construction' };
+            const data = { type: "join", userid, application: 'construction' };
             socket.send(JSON.stringify(data));
             console.log("Project Web Socket Open", data)
 
@@ -42,7 +54,7 @@ class Project extends Component {
             console.log(response)
 
             if (response.type === "join" && response.application === "construction") {
-            
+
 
 
                 if (response.hasOwnProperty("myproject")) {
@@ -78,7 +90,7 @@ class Project extends Component {
 
             } else if (response.type === "construction") {
 
-          
+
 
                 let myprojects = construction.getOurProjects.call(this)
                 let myproject = this.getOurProject();
@@ -395,22 +407,22 @@ class Project extends Component {
 
             } else if (response.type === "pm") {
 
-                if(response.hasOwnProperty("myproject")) {
+                if (response.hasOwnProperty("myproject")) {
 
 
 
                     let myprojects = construction.getOurProjects.call(this)
-                    
+
                     let myproject = this.getOurProject();
-    
+
                     if (myproject) {
-                      
+
                         let i = construction.getOurProjectKeyById.call(this, myproject.project_id)
 
                         myprojects[i].milestones = response.myproject.milestones;
                         myprojects[i].team = response.myproject.team
                         this.props.reduxMyProjects(myprojects)
-                        this.setState({message:response.text})
+                        this.setState({ message: response.text })
 
 
                     }
@@ -420,11 +432,11 @@ class Project extends Component {
 
 
                 }
-                
-                
-                
+
+
+
             }
-        
+
 
         } // end of socket message
 
@@ -523,13 +535,13 @@ class Project extends Component {
         switch (navigation) {
             case "schedule":
                 return (
-                    <div style={{ ...styles.generalContainer, ...styles.addMargin }}><Schedule schedule={this.state.schedule} projectid={this.props.match.params.projectid} project_id={project_id} key={Math.random()}/> </div>)
+                    <div style={{ ...styles.generalContainer, ...styles.addMargin }}><Schedule schedule={this.state.schedule} projectid={this.props.match.params.projectid} project_id={project_id} key={Math.random()} /> </div>)
             case "bidschedule":
                 return (<div style={{ ...styles.generalContainer, ...styles.addMargin }}><BidSchedule bidschedule={this.state.bidschedule} project_id={project_id} key={Math.random()} /></div>)
             case "bid":
-                return (<div style={{ ...styles.generalContainer, ...styles.addMargin }}><Bid bid={this.state.bid} project_id={project_id} key={Math.random()}/></div>)
+                return (<div style={{ ...styles.generalContainer, ...styles.addMargin }}><Bid bid={this.state.bid} project_id={project_id} key={Math.random()} /></div>)
             case "actual":
-                return (<div style={{ ...styles.generalContainer, ...styles.addMargin }}><Actual actual={this.state.actual} project_id={project_id} key={Math.random()}/></div>)
+                return (<div style={{ ...styles.generalContainer, ...styles.addMargin }}><Actual actual={this.state.actual} project_id={project_id} key={Math.random()} /></div>)
             default:
                 return (this.showProject())
         }
@@ -678,7 +690,7 @@ class Project extends Component {
                                 {this.Navigation()}
 
                                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                                    <span style={{...regularFont}}>{this.state.message}</span>
+                                    <span style={{ ...regularFont }}>{this.state.message}</span>
                                 </div>
 
 
