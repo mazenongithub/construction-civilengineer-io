@@ -9,6 +9,7 @@ export function closeDetail() {
     return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111.2 112.99"><defs><style></style></defs><title>closeDetail</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path className="closedetail-1" d="M2.38,101.05c15,9.35,33.83,10,48.8,1.44,17.18-9.78,26.5-30,23-50.24" /><polygon className="closedetail-2" points="74.02 3.52 40.65 51.96 107.39 51.96 74.02 3.52" /></g></g></svg>)
 }
 
+
 export function goToIcon() {
     return(
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86.79 35.34"><defs><style>

@@ -12,7 +12,39 @@ import { removeIconSmall } from './svg';
 import PieChart from './piechart';
 import EmployeeID from './employeeid';
 
-class ViewEmployee {
+class ViewEmployee extends Component {
+    
+
+    constructor(props) {
+        super(props);
+
+              this.state = {
+
+            render: '', width: 0, height: 0 
+
+        }
+
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
+    }
+    componentDidMount() {
+
+        window.addEventListener('resize', this.updateWindowDimensions);
+        this.updateWindowDimensions();
+    
+
+
+    }
+
+
+    // this.checkAllCompany();
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+    updateWindowDimensions() {
+        this.setState({ width: window.innerWidth, height: window.innerHeight, });
+    }
+
 
 
 
@@ -20,18 +52,18 @@ class ViewEmployee {
         const construction = new Construction();
         let company = construction.getcompany.call(this)
         const makeID = new MakeID();
-        const viewemployee = new ViewEmployee()
+       
         if (company) {
 
-            let employee = viewemployee.getemployee.call(this)
+            let employee = this.getemployee()
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee._id)
-                if (this.state.activebenefitid) {
+                let i = construction.getemployeekeybyid.call(this, employee.user_id)
+                if (this.getActiveBenefitID()) {
 
-                    const getbenefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee.user_id, this.getActiveBenefitID())
 
                     if (getbenefit) {
-                        let j = construction.getbenefitkeybyid.call(this, employee._id, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee.user_id, this.getActiveBenefitID())
 
                         company.employees[i].benefits[j].accountid = accountid;
                         this.props.reduxCompany(company)
@@ -46,7 +78,7 @@ class ViewEmployee {
                     let benefit = ""
                     let frequency = ""
                     let amount = 0
-                    viewemployee.createNewBenefit.call(this, benefitid, benefit, accountid, amount, frequency)
+                    this.createNewBenefit(benefitid, benefit, accountid, amount, frequency)
 
                 }
             }
@@ -55,14 +87,14 @@ class ViewEmployee {
 
     }
     getaccountid() {
-        const viewemployee = new ViewEmployee();
-        const employee = viewemployee.getemployee.call(this);
+        
+        const employee = this.getemployee();
         const construction = new Construction();
         let accountid = "";
         if (employee) {
 
-            if (this.state.activebenefitid) {
-                let benefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
+            if (this.getActiveBenefitID()) {
+                let benefit = construction.getbenefitbyid.call(this, employee.user_id, this.getActiveBenefitID())
                 if (benefit) {
                     accountid = benefit.accountid;
                 }
@@ -78,9 +110,9 @@ class ViewEmployee {
     getemployee() {
 
         const construction = new Construction();
-        const getemployee = construction.getuserbyID.call(this, this.state.activeemployeeid)
-        const _id = getemployee._ID;
-        return construction.getemployeebyuserid.call(this, _id)
+        const navigation = construction.getNavigation.call(this)
+        const employeeid = navigation.company.employee.activeemployeeid;
+        return construction.getemployeebyuserid.call(this, employeeid)
 
     }
 
@@ -88,18 +120,18 @@ class ViewEmployee {
         const construction = new Construction();
         let company = construction.getcompany.call(this)
         const makeID = new MakeID();
-        const viewemployee = new ViewEmployee();
+       
         if (company) {
 
-            let employee = viewemployee.getemployee.call(this)
+            let employee = this.getemployee()
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee._id)
-                if (this.state.activebenefitid) {
+                let i = construction.getemployeekeybyid.call(this, employee.user_id)
+                if (this.getActiveBenefitID()) {
 
-                    const getbenefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee.user_id, this.getActiveBenefitID())
 
                     if (getbenefit) {
-                        let j = construction.getbenefitkeybyid.call(this, employee._id, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee.user_id, this.getActiveBenefitID())
 
                         company.employees[i].benefits[j].amount = amount;
                         this.props.reduxCompany(company)
@@ -114,8 +146,7 @@ class ViewEmployee {
                     let benefit = ""
                     let accountid = ""
                     let frequency = "";
-                    viewemployee.createNewBenefit.call(this, benefitid, benefit, accountid, amount, frequency)
-
+                    this.createNewBenefit(benefitid, benefit, accountid, amount, frequency)
                 }
             }
 
@@ -124,14 +155,14 @@ class ViewEmployee {
     }
 
     getamount() {
-        const viewemployee = new ViewEmployee();
-        const employee = viewemployee.getemployee.call(this);
+  
+        const employee = this.getemployee();
         const construction = new Construction();
         let getamount = "";
         if (employee) {
 
-            if (this.state.activebenefitid) {
-                let benefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
+            if (this.getActiveBenefitID()) {
+                let benefit = construction.getbenefitbyid.call(this, employee.user_id, this.getActiveBenefitID())
                 if (benefit) {
                     getamount = benefit.amount;
                 }
@@ -143,10 +174,10 @@ class ViewEmployee {
     }
 
     getworkinghours() {
-        const viewemployee = new ViewEmployee();
+      
         let workinghours = "";
 
-        let employee = viewemployee.getemployee.call(this);
+        let employee = this.getemployee();
         if (employee) {
             workinghours = employee.workinghours;
         }
@@ -156,14 +187,14 @@ class ViewEmployee {
     }
     handleworkinghours(workinghours) {
         const construction = new Construction();
-        const viewemployee = new ViewEmployee();
+    
         const company = construction.getcompany.call(this)
 
         if (company) {
 
-            let employee = viewemployee.getemployee.call(this)
+            let employee = this.getemployee()
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee._id)
+                let i = construction.getemployeekeybyid.call(this, employee.user_id)
                 company.employees[i].workinghours = workinghours;
                 this.props.reduxCompany(company)
                 this.setState({ render: 'render' })
@@ -179,11 +210,12 @@ class ViewEmployee {
     createNewBenefit(benefitid, benefit, accountid, amount, frequency) {
         const construction = new Construction()
         const company = construction.getcompany.call(this)
-        const viewemployee = new ViewEmployee();
+        const navigation = construction.getNavigation.call(this)
+      
         if (company) {
-            let employee = viewemployee.getemployee.call(this)
+            let employee = this.getemployee(this)
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee._id)
+                let i = construction.getemployeekeybyid.call(this, employee.user_id)
                 let newBenefit = CreateBenefit(benefitid, benefit, accountid, amount, frequency);
                 if (employee.hasOwnProperty("benefits")) {
                     company.employees[i].benefits.push(newBenefit)
@@ -192,8 +224,10 @@ class ViewEmployee {
                     company.employees[i].benefits = benefits;
 
                 }
+                navigation.company.employee.activebenefitid = benefitid;
                 this.props.reduxCompany(company)
-                this.setState({ activebenefitid: benefitid })
+                this.props.reduxNavigation(navigation)
+                this.setState({ render:'render' })
 
             }
 
@@ -206,18 +240,18 @@ class ViewEmployee {
         const construction = new Construction();
         let company = construction.getcompany.call(this)
         const makeID = new MakeID();
-        const viewemployee = new ViewEmployee();
+      
         if (company) {
 
-            let employee = viewemployee.getemployee.call(this)
+            let employee = this.getemployee()
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee._id)
-                if (this.state.activebenefitid) {
+                let i = construction.getemployeekeybyid.call(this, employee.user_id)
+                if (this.getActiveBenefitID()) {
 
-                    const getbenefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee.user_id, this.getActiveBenefitID())
 
                     if (getbenefit) {
-                        let j = construction.getbenefitkeybyid.call(this, employee._id, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee.user_id, this.getActiveBenefitID())
 
                         company.employees[i].benefits[j].benefit = benefit;
                         this.props.reduxCompany(company)
@@ -232,7 +266,7 @@ class ViewEmployee {
                     let amount = 0;
                     let accountid = ""
                     let frequency = "";
-                    viewemployee.createNewBenefit.call(this, benefitid, benefit, accountid, amount, frequency)
+                    this.createNewBenefit( benefitid, benefit, accountid, amount, frequency)
 
                 }
             }
@@ -241,14 +275,15 @@ class ViewEmployee {
 
     }
     getbenefit() {
-        const viewemployee = new ViewEmployee();
-        const employee = viewemployee.getemployee.call(this);
+        
+        const employee = this.getemployee();
         const construction = new Construction();
         let getbenefit = "";
         if (employee) {
      
-            if (this.state.activebenefitid) {
-                let benefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
+            if (this.getActiveBenefitID()) {
+                let benefit = construction.getbenefitbyid.call(this, employee.user_id, this.getActiveBenefitID())
+                console.log(employee.user_id, )
                 if (benefit) {
                     getbenefit = benefit.benefit;
                 }
@@ -260,14 +295,14 @@ class ViewEmployee {
     }
 
     getfrequency() {
-        const viewemployee = new ViewEmployee();
-        const employee = viewemployee.getemployee.call(this);
+        
+        const employee = this.getemployee();
         const construction = new Construction();
         let getfrequency = "";
         if (employee) {
 
-            if (this.state.activebenefitid) {
-                let benefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
+            if (this.getActiveBenefitID()) {
+                let benefit = construction.getbenefitbyid.call(this, employee.user_id, this.getActiveBenefitID())
                 if (benefit) {
                     getfrequency = benefit.frequency;
                 }
@@ -281,20 +316,20 @@ class ViewEmployee {
 
     handleFrequency(frequency) {
         const construction = new Construction();
-        const viewemployee = new ViewEmployee();
+        
         let company = construction.getcompany.call(this)
         const makeID = new MakeID();
         if (company) {
 
-            let employee = viewemployee.getemployee.call(this)
+            let employee = this.getemployee()
             if (employee) {
-                let i = construction.getemployeekeybyid.call(this, employee._id)
-                if (this.state.activebenefitid) {
+                let i = construction.getemployeekeybyid.call(this, employee.user_id)
+                if (this.getActiveBenefitID()) {
 
-                    const getbenefit = construction.getbenefitbyid.call(this, employee._id, this.state.activebenefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee.user_id, this.getActiveBenefitID())
 
                     if (getbenefit) {
-                        let j = construction.getbenefitkeybyid.call(this, employee._id, this.state.activebenefitid)
+                        let j = construction.getbenefitkeybyid.call(this, employee.user_id, this.getActiveBenefitID())
 
                         company.employees[i].benefits[j].frequency = frequency;
                         this.props.reduxCompany(company)
@@ -309,7 +344,7 @@ class ViewEmployee {
                     let benefit = ""
                     let accountid = ""
                     let amount = 0
-                    viewemployee.createNewBenefit.call(this, benefitid, benefit, accountid, amount, frequency)
+                    this.createNewBenefit( benefitid, benefit, accountid, amount, frequency)
 
                 }
             }
@@ -319,13 +354,13 @@ class ViewEmployee {
     }
 
     showbenefits() {
-        const viewemployee = new ViewEmployee();
-        const employee = viewemployee.getemployee.call(this);
+        
+        const employee = this.getemployee();
         let showbenefit = [];
         if (employee.hasOwnProperty("benefits")) {
             // eslint-disable-next-line
             employee.benefits.map(benefit => {
-                showbenefit.push(viewemployee.showbenefit.call(this,benefit))
+                showbenefit.push(this.showbenefit(benefit))
 
             })
         }
@@ -333,30 +368,46 @@ class ViewEmployee {
 
     }
 
+    getActiveBenefitID() {
+        const construction = new Construction();
+        let activebenefitid = "";
+        const navigation = construction.getNavigation.call(this)
+        activebenefitid = navigation.company.employee.activebenefitid;
+        return activebenefitid;
+    }
+
     makebenefitactive(benefitid) {
-        if (this.state.activebenefitid === benefitid) {
-            this.setState({ activebenefitid: false })
+        const construction = new Construction();
+        const activebenefitid = this.getActiveBenefitID();
+        const navigation = construction.getNavigation.call(this)
+  
+        if (activebenefitid === benefitid) {
+            navigation.company.employee.activebenefitid = false
+           
         } else {
-            this.setState({ activebenefitid: benefitid })
+            navigation.company.employee.activebenefitid = benefitid;
+        
         }
+        this.props.reduxNavigation(navigation)
+        this.setState({render:'render'})
     }
 
     removebenefit(benefit) {
-        const viewemployee = new ViewEmployee();
+        
         const construction = new Construction();
         if (window.confirm(`Are you sure you want to remove ${benefit.benefit}?`)) {
             const company = construction.getcompany.call(this)
 
             if (company) {
-                const employee = viewemployee.getemployee.call(this);
+                const employee = this.getemployee();
 
                 if (employee) {
-                    const i = construction.getemployeekeybyid.call(this, employee._id)
+                    const i = construction.getemployeekeybyid.call(this, employee.user_id)
 
-                    const getbenefit = construction.getbenefitbyid.call(this, employee._id, benefit.benefitid)
+                    const getbenefit = construction.getbenefitbyid.call(this, employee.user_id, benefit.benefitid)
 
                     if (getbenefit) {
-                        const j = construction.getbenefitkeybyid.call(this, employee._id, benefit.benefitid)
+                        const j = construction.getbenefitkeybyid.call(this, employee.user_id, benefit.benefitid)
 
                         company.employees[i].benefits.splice(j, 1)
                         this.props.reduxCompany(company)
@@ -375,7 +426,7 @@ class ViewEmployee {
 
     showbenefit(benefit) {
         const construction = new Construction();
-        const viewemployee = new ViewEmployee();
+        
         const removeIcon = () => {
             if (this.state.width > 1200) {
                 return ({ width: '40px' })
@@ -390,7 +441,7 @@ class ViewEmployee {
         const regularFont = construction.getRegularFont.call(this)
 
         const activebenefit = (benefitid) => {
-            if (this.state.activebenefitid === benefitid) {
+            if (this.getActiveBenefitID() === benefitid) {
                 return styles.activeBackground;
             } else {
                 return styles.whiteBackground
@@ -400,11 +451,11 @@ class ViewEmployee {
         return (
             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...activebenefit(benefit.benefitid) }}
                 key={benefit.benefitid}>
-                <span style={{ ...styles.generalFont, ...regularFont }} onClick={() => { viewemployee.makebenefitactive.call(this,benefit.benefitid) }}>
+                <span style={{ ...styles.generalFont, ...regularFont }} onClick={() => { this.makebenefitactive(benefit.benefitid) }}>
                     {benefit.benefit} Amount: ${+Number(benefit.amount).toFixed(2)} {benefit.frequency} Account: {account.accountname}
                 </span>
                 <button style={{ ...activebenefit(benefit.benefitid), ...styles.noBorder, ...removeIcon() }}
-                    onClick={() => { viewemployee.removebenefit.call(this,benefit) }}>{removeIconSmall()}
+                    onClick={() => { this.removebenefit(benefit) }}>{removeIconSmall()}
                 </button>
 
 
@@ -414,11 +465,11 @@ class ViewEmployee {
 
 
     calculateLaborRate() {
-        const viewemployee = new ViewEmployee();
-        const employee = viewemployee.getemployee.call(this);
+        
+        const employee = this.getemployee();
         let sum = 0;
         if (employee) {
-            const benefits = viewemployee.getemployeebenefitinterval.call(this);
+            const benefits = this.getemployeebenefitinterval();
 
             if (benefits.length > 0) {
                 // eslint-disable-next-line
@@ -434,10 +485,10 @@ class ViewEmployee {
     }
 
     getemployeebenefitinterval() {
-        const viewemployee = new ViewEmployee();
+        
 
         let benefits = [];
-        const employee = viewemployee.getemployee.call(this);
+        const employee = this.getemployee();
         if (employee) {
             if (employee.hasOwnProperty("benefits")) {
                 // eslint-disable-next-line
@@ -453,10 +504,10 @@ class ViewEmployee {
 
 
     showlaborRate() {
-        const viewemployee = new ViewEmployee();
+        
         const styles = MyStylesheet();
         const construction = new Construction();
-        const laborrate = viewemployee.calculateLaborRate.call(this);
+        const laborrate = this.calculateLaborRate();
         const regularFont = construction.getRegularFont.call(this)
         return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
             <span style={{ ...styles.generalFont, ...regularFont }}>Calculated Labor Rate is ${Number(laborrate).toFixed(2)}</span>
@@ -483,13 +534,13 @@ class ViewEmployee {
         const accountid = new AccountID();
         const styles = MyStylesheet();
         const regularFont = construction.getRegularFont.call(this);
-        const viewemployee = new ViewEmployee();
+        
         return (
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin15 }}>
                 Account  <select style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                    value={viewemployee.getaccountid.call(this)}
-                    onChange={event => { viewemployee.handleaccountid.call(this,event.target.value) }}>
-                    {viewemployee.loadaccounts.call(this)}
+                    value={this.getaccountid()}
+                    onChange={event => { this.handleaccountid(event.target.value) }}>
+                    {this.loadaccounts()}
                 </select>
             </div>)
 
@@ -500,12 +551,12 @@ class ViewEmployee {
         const styles = MyStylesheet();
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this)
-        const viewemployee = new ViewEmployee();
+        
         return(
             <div style={{...styles.generalContainer, ...styles.bottomMargin15}}>
         <select style={{ ...styles.generalField, ...regularFont, ...styles.generalFont }}
-            onChange={event => {viewemployee.handleFrequency.call(this,event.target.value) }}
-            value={viewemployee.getfrequency.call(this)}>
+            onChange={event => {this.handleFrequency(event.target.value) }}
+            value={this.getfrequency()}>
             <option value={false}>Select Frequency</option>
             <option value={`daily`}>Daily</option>
             <option value={`weekly`}>Weekly</option>
@@ -516,7 +567,7 @@ class ViewEmployee {
     }
 
 
-    showViewEmployee() {
+    render() {
         const construction = new Construction();
         const myuser = construction.getuser.call(this)
         const styles = MyStylesheet();
@@ -525,12 +576,13 @@ class ViewEmployee {
         const accountid = new AccountID();
         const frequency = new Frequency();
         const piechart = new PieChart();
-        const viewemployee = new ViewEmployee();
+        
         if (myuser) {
             const company = construction.getcompany.call(this)
-            const employee = viewemployee.getemployee.call(this);
-            const employeeid = this.state.activeemployeeid;
-            const getemployee = construction.getuserbyID.call(this, this.state.activeemployeeid)
+            const employee = this.getemployee();
+            const navigation = construction.getNavigation.call(this)
+            const employeeid = navigation.company.employee.activeemployeeid
+            const getemployee = construction.getuserbyID.call(this, employeeid)
             if (getemployee) {
                 return (
 
@@ -555,8 +607,8 @@ class ViewEmployee {
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...regularFont, ...styles.generalFont }}>
                                     Estimated Annual Working Hours <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.addLeftMargin }}
-                                        value={viewemployee.getworkinghours.call(this)}
-                                        onChange={event => { viewemployee.handleworkinghours.call(this, event.target.value) }}
+                                        value={this.getworkinghours()}
+                                        onChange={event => { this.handleworkinghours( event.target.value) }}
                                     />
                                 </div>
                             </div>
@@ -568,30 +620,30 @@ class ViewEmployee {
                             </div>
 
                             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
-                                {viewemployee.showaccountmenu.call(this)}
+                                {this.showaccountmenu()}
                             </div>
                             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
                                 <span style={{ ...styles.generalFont, ...regularFont }}>Benefit</span>
                                 <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={viewemployee.getbenefit.call(this)}
-                                    onChange={event => { viewemployee.handleBenefit.call(this, event.target.value) }} />
+                                    value={this.getbenefit()}
+                                    onChange={event => { this.handleBenefit( event.target.value) }} />
                             </div>
                             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...regularFont, }}>
                                 <span style={{ ...styles.generalFont, ...regularFont }}>Amount  </span>
                                 <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.addLeftMargin }}
-                                    value={viewemployee.getamount.call(this)}
-                                    onChange={event => { viewemployee.handleAmount.call(this, event.target.value) }}
+                                    value={this.getamount()}
+                                    onChange={event => { this.handleAmount( event.target.value) }}
                                 />
                             </div>
 
-                            {viewemployee.showFrequency.call(this)}
+                            {this.showFrequency()}
 
 
-                            {viewemployee.showbenefits.call(this)}
+                            {this.showbenefits()}
 
-                            {viewemployee.showlaborRate.call(this)}
+                            {this.showlaborRate()}
 
-                            {piechart.showpiechart.call(this, employee._id)}
+                            {piechart.showpiechart.call( this, employee.user_id)}
 
 
                         </div>
@@ -614,5 +666,19 @@ class ViewEmployee {
 }
 
 
+function mapStateToProps(state) {
+    return {
+        myusermodel: state.myusermodel,
+        navigation: state.navigation,
+        allcompanys: state.allcompanys,
+        mycompany: state.mycompany,
+        allusers: state.allusers,
+        allprojects: state.allprojects,
+        websockets: state.websockets
+    }
+}
 
-export default ViewEmployee;
+export default connect(mapStateToProps, actions)(ViewEmployee);
+
+
+

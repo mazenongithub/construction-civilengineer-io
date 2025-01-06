@@ -5,6 +5,7 @@ import { MyStylesheet } from './styles';
 import { CreateBidScheduleItem, ProfitForLabor, DirectCostForMaterial, DirectCostForLabor, ProfitForMaterial, DirectCostForEquipment, ProfitForEquipment, sortcode } from './functions'
 import Construction from './construction'
 import BidScheduleLineItem from './schedulelineitem'
+import project from './project';
 
 class BidSchedule extends Component {
     constructor(props) {
@@ -85,12 +86,31 @@ class BidSchedule extends Component {
         return amount;
     }
 
-    handleCSIID(csiid) {
-        if (this.state.activecsiid === csiid) {
-            this.setState({ activecsiid: false })
-        } else {
-            this.setState({ activecsiid: csiid })
+    getActiveCSIID() {
+        const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        let activecsiid = "";
+        if(projectnavigation.bidschedule.activecsiid) {
+            activecsiid = projectnavigation.bidschedule.activecsiid
         }
+        return activecsiid;
+    }
+
+    handleCSIID(csiid) {
+        const construction = new Construction();
+
+        const activecsiid = this.getActiveCSIID();
+
+        let projectnavigation = construction.getProjectNavigation.call(this)
+       
+        if (activecsiid === csiid) {
+            projectnavigation.bidschedule.activecsiid = false;
+        } else {
+            projectnavigation.bidschedule.activecsiid = csiid 
+        }
+
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
     }
 
     showbiditem(item) {
@@ -581,10 +601,11 @@ class BidSchedule extends Component {
         const construction = new Construction();
         const styles = MyStylesheet();
         const regularFont = construction.getRegularFont.call(this)
-        if (this.state.activecsiid) {
+        const activecsiid = this.getActiveCSIID();
+        if (activecsiid) {
 
             
-            return(<BidScheduleLineItem project_id={this.props.project_id} csiid={this.state.activecsiid} />)
+            return(<BidScheduleLineItem project_id={this.props.project_id} csiid={activecsiid} />)
 
         } else {
             const amount = `$${Number(this.getamount()).toFixed(2)}`;
@@ -622,7 +643,7 @@ class BidSchedule extends Component {
 
                             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
                                 <a style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                    onClick={() => { this.setState({ activecsiid: false }) }}>/bidschedule</a>
+                                    onClick={() => { this.handleCSIID(false) }}>/bidschedule</a>
                             </div>
 
 
@@ -662,7 +683,8 @@ function mapStateToProps(state) {
         allprojects: state.allprojects,
         websockets: state.websockets,
         csis: state.csis,
-        projectsockets:state.projectsockets
+        projectsockets:state.projectsockets,
+        projectnavigation: state.projectnavigation
     }
 }
 

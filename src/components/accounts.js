@@ -5,6 +5,7 @@ import { CreateAccount } from './functions';
 import Construction from './construction';
 import MakeID from './makeids';
 import { Link } from 'react-router-dom';
+import ViewAccount from './viewaccount'
 
 class Accounts {
 
@@ -18,35 +19,35 @@ class Accounts {
 
             const company = construction.getcompany.call(this)
 
-            if(company) {
-           
-            if (this.state.activeaccountid) {
-                const account = construction.getaccountbyid.call(this, this.state.activeaccountid)
-                if (account) {
-                    let i = construction.getaccountkeybyid.call(this, this.state.activeaccountid)
-                    company.accounts[i].accountname = accountname;
-                    this.props.reduxCompany(company)
-                    this.setState({ render: 'render' })
-                }
+            if (company) {
+
+                if (this.state.activeaccountid) {
+                    const account = construction.getaccountbyid.call(this, this.state.activeaccountid)
+                    if (account) {
+                        let i = construction.getaccountkeybyid.call(this, this.state.activeaccountid)
+                        company.accounts[i].accountname = accountname;
+                        this.props.reduxCompany(company)
+                        this.setState({ render: 'render' })
+                    }
 
 
-            } else {
-                let accountid = makeID.accountid.call(this)
-
-                let newaccount = CreateAccount(accountid, accountname, myuser.providerid)
-                console.log("newaccount", newaccount)
-                if (company.hasOwnProperty("accounts")) {
-                    company.accounts.push(newaccount)
                 } else {
-                    let accounts = { account: [newaccount] }
-                    company.accounts = accounts;
+                    let accountid = makeID.accountid.call(this)
+
+                    let newaccount = CreateAccount(accountid, accountname, myuser.providerid)
+                    console.log("newaccount", newaccount)
+                    if (company.hasOwnProperty("accounts")) {
+                        company.accounts.push(newaccount)
+                    } else {
+                        let accounts = { account: [newaccount] }
+                        company.accounts = accounts;
+                    }
+                    this.props.reduxCompany(company)
+                    this.setState({ activeaccountid: accountid })
+
                 }
-                this.props.reduxCompany(company)
-                this.setState({ activeaccountid: accountid })
 
             }
-
-        }
 
 
         }
@@ -158,7 +159,7 @@ class Accounts {
         const accounts = new Accounts();
         let construction = new Construction();
 
-        
+
 
         if (window.confirm(`Are you sure you want to delete ${account.accountname}?`)) {
             let validate = accounts.validateDeleteAccount.call(this, account);
@@ -190,9 +191,15 @@ class Accounts {
 
     }
     handleaccountid(accountid) {
-        this.setState({navigation:'viewaccount',activeaccountid:accountid})
+        const construction = new Construction();
+        let navigation = construction.getNavigation.call(this)
+        navigation.company.active = "viewaccount"
+        navigation.company.activeaccountid = accountid;
+
+        this.props.reduxNavigation(navigation)
+        this.setState({ render: 'render' })
     }
-  
+
     showmyaccounts() {
         const construction = new Construction();
 
@@ -212,12 +219,12 @@ class Accounts {
         }
 
         const myuser = construction.getuser.call(this)
-        if(myuser) {
- 
-        const company = construction.getcompany.call(this)
+        if (myuser) {
+
+            const company = construction.getcompany.call(this)
 
 
-      
+
             if (company) {
 
                 const myaccounts = construction.getmyaccounts.call(this);
@@ -230,15 +237,15 @@ class Accounts {
 
                                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...regularFont, ...styles.generalFont, ...accounts.getactivebackground.call(this, account.accountid), ...styles.bottomMargin15 }}>
 
-                                        <div style={{...styles.generalContainer}} onClick={()=>{accounts.handleaccountid.call(this,account.accountid)}}>
+                                    <div style={{ ...styles.generalContainer }} onClick={() => { accounts.handleaccountid.call(this, account.accountid) }}>
                                         <span style={{ ...styles.generalFont, ...regularFont }}>{account.accountname}</span>
                                         <button style={{ ...accounts.getactivebackground.call(this, account.accountid), ...buttonSize, ...styles.noBorder }}
-                                    
+
                                         >{goToIcon()}
                                         </button>
 
-                                        </div>
-                                  
+                                    </div>
+
                                 </div>
                                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                     <div style={{ ...styles.flex1 }}>
@@ -261,10 +268,37 @@ class Accounts {
 
             }
 
-            }
+        }
 
-        
+
         return getaccounts;
+    }
+
+    handleNavigation() {
+        const construction = new Construction();
+        let navigation = construction.getNavigation.call(this)
+        navigation.company.active = "accounts"
+        this.props.reduxNavigation(navigation)
+        this.setState({ render: 'render' })
+    }
+
+    handleShowAccounts() {
+        const construction = new Construction();
+        const navigation = construction.getNavigation.call(this)
+        const styles = MyStylesheet();
+        const accounts = new Accounts();
+        if (navigation.company.active === 'accounts') {
+           return( <div style={{ ...styles.generalContainer }}>
+
+                {accounts.showaccount.call(this)}
+
+                {accounts.showmyaccounts.call(this)}
+
+            </div>)
+
+        } else if (navigation.company.active = 'viewaccount') {
+            return (<ViewAccount />)
+        }
     }
     showAccounts() {
         const styles = MyStylesheet();
@@ -277,28 +311,26 @@ class Accounts {
 
             const company = construction.getcompany.call(this)
 
-            if(company) {
+            if (company) {
 
-            return (
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
+                return (
+                    <div style={{ ...styles.generalFlex }}>
+                        <div style={{ ...styles.flex1 }}>
 
-                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <span style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                to={`/${myuser.UserID}/company/${company.companyid}/accounts`}
-                            > /accounts</span>
+                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                                <span style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+                                    onClick={() => { { accounts.handleNavigation.call(this) } }}
+                                > /accounts</span>
+                            </div>
+
+
+                            {accounts.handleShowAccounts.call(this)}
+
+
+
                         </div>
-
-
-                        {accounts.showaccount.call(this)}
-
-                        {accounts.showmyaccounts.call(this)}
-
-                      
-
                     </div>
-                </div>
-            )
+                )
 
             } else {
 

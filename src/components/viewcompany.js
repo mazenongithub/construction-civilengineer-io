@@ -57,6 +57,20 @@ class ViewCompany extends Component {
 
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        const companyid = this.props.match.params.companyid;
+        const construction = new Construction();
+        const navigation = construction.getNavigation.call(this)
+
+        if(!navigation.hasOwnProperty("company")) {
+            navigation.company = { companyid }
+            navigation.company.active = "home"
+            this.props.reduxNavigation(navigation)
+            this.setState({ render: 'render' })
+
+        }
+
+   
+
 
 
 
@@ -285,114 +299,142 @@ class ViewCompany extends Component {
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this)
         const arrowHeight = construction.getArrowHeight.call(this)
-        if (this.state.navigation === "home") {
-            return (
 
-                <div style={{ ...styles.generalContainer }}>
+        return (
+
+            <div style={{ ...styles.generalContainer }}>
 
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.bottomMargin15, ...regularFont }}>
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...styles.bottomMargin15, ...regularFont }}>
 
-                            Company Info <button style={{ ...styles.generalButton, ...styles.addLeftMargin, ...arrowHeight }}>
-                                {scrollImageDown()}
-                            </button>
+                        Company Info <button style={{ ...styles.generalButton, ...styles.addLeftMargin, ...arrowHeight }}>
+                            {scrollImageDown()}
+                        </button>
 
-                        </div>
                     </div>
+                </div>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                            <span style={{ ...styles.regularFont, ...regularFont }}> Company </span><br />
-                            <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                value={this.getmycompany.call(this)}
-                                onChange={event => { this.handlemycompany.call(this, event.target.value) }} />
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
-                            <span style={{ ...styles.regularFont, ...regularFont }}>CompanyID </span> <br />
-                            <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                value={this.getmycompanyid.call(this)}
-                                onChange={event => { this.handlemycompanyid.call(this, event.target.value) }}
-                            />
-
-
-                        </div>
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                        <span style={{ ...styles.regularFont, ...regularFont }}> Company </span><br />
+                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
+                            value={this.getmycompany.call(this)}
+                            onChange={event => { this.handlemycompany.call(this, event.target.value) }} />
                     </div>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
+                        <span style={{ ...styles.regularFont, ...regularFont }}>CompanyID </span> <br />
+                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
+                            value={this.getmycompanyid.call(this)}
+                            onChange={event => { this.handlemycompanyid.call(this, event.target.value) }}
+                        />
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                            <span style={{ ...styles.regularFont, ...regularFont }}>Address </span> <br />
-                            <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                value={this.getaddress.call(this)}
-                                onChange={event => { this.handleaddress.call(this, event.target.value) }} />
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
-                            <span style={{ ...styles.regularFont, ...regularFont }}> City </span> <br />
-                            <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                value={this.getcity.call(this)}
-                                onChange={event => { this.handlecity.call(this, event.target.value) }} />
-                        </div>
+
                     </div>
+                </div>
 
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
-                            <span style={{ ...styles.regularFont, ...regularFont }}> State </span> <br />
-                            <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                value={this.getcontactstate.call(this)}
-                                onChange={event => { this.handlecontactstate.call(this, event.target.value) }}
-                            />
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
-                            <span style={{ ...styles.regularFont, ...regularFont }}> Zipcode  </span><br />
-                            <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                                value={this.getzipcode.call(this)}
-                                onChange={event => { this.handlezipcode.call(this, event.target.value) }} />
-                        </div>
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                        <span style={{ ...styles.regularFont, ...regularFont }}>Address </span> <br />
+                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
+                            value={this.getaddress.call(this)}
+                            onChange={event => { this.handleaddress.call(this, event.target.value) }} />
                     </div>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
+                        <span style={{ ...styles.regularFont, ...regularFont }}> City </span> <br />
+                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
+                            value={this.getcity.call(this)}
+                            onChange={event => { this.handlecity.call(this, event.target.value) }} />
+                    </div>
+                </div>
+
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
+                        <span style={{ ...styles.regularFont, ...regularFont }}> State </span> <br />
+                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
+                            value={this.getcontactstate.call(this)}
+                            onChange={event => { this.handlecontactstate.call(this, event.target.value) }}
+                        />
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
+                        <span style={{ ...styles.regularFont, ...regularFont }}> Zipcode  </span><br />
+                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
+                            value={this.getzipcode.call(this)}
+                            onChange={event => { this.handlezipcode.call(this, event.target.value) }} />
+                    </div>
+                </div>
 
 
-                </div>)
+            </div>)
 
-        }
+
 
     }
 
-    handlenavigation(navigation) {
-        this.setState({ navigation })
+    handlenavigation(getnavigation) {
+        const construction = new Construction();
+        const navigation = construction.getNavigation.call(this)
+        if(navigation.hasOwnProperty("company")) {
+            navigation.company.active =getnavigation
+        }
+        this.props.reduxNavigation(navigation)
+        this.setState({ render:'render' })
     }
 
     handledisplay() {
         const accounts = new Accounts();
         const employees = new Employees();
         const materials = new Materials();
-        const equipment = new Equipment();
-        const viewaccount = new ViewAccount();
-        const viewmaterial = new ViewMaterial();
-        const viewemployee = new ViewEmployee();
-        const viewequipment = new ViewEquipment();
-        switch (this.state.navigation) {
-            case "home":
-                return (this.showmycompany())
-            case "accounts":
-                return (accounts.showAccounts.call(this))
-            case "employees":
-                return (employees.showEmployees.call(this))
-            case "materials":
-                return (materials.showMaterials.call(this))
-            case "equipment":
-                return (equipment.showEquipment.call(this))
-            case "viewaccount":
-                return (viewaccount.showViewAccount.call(this))
-            case "viewmaterial":
-                return (viewmaterial.showViewMaterial.call(this))
-            case "viewemployee":
-                return (viewemployee.showViewEmployee.call(this))
-            case "viewequipment":
-                return (viewequipment.showViewEquipment.call(this))
+        const equipment = new Equipment();     
 
-            default:
-                return ("")
+        const construction = new Construction();
+        const navigation = construction.getNavigation.call(this)
+        if (navigation.hasOwnProperty("company")) {
+
+            if (navigation.company.hasOwnProperty("active")) {
+
+                switch (navigation.company.active) {
+                    case "employees":
+                        return (employees.showEmployees.call(this))
+                    case "accounts":
+                        return (accounts.showAccounts.call(this))
+                    case "materials":
+                        return (materials.showMaterials.call(this))
+                    case "equipment":
+                        return (equipment.showEquipment.call(this))
+                    case "viewaccount":
+                        return (accounts.showAccounts.call(this))
+                    case "viewmaterial":
+                        return (materials.showMaterials.call(this))
+                    case "viewemployee":
+                        return (employees.showEmployees.call(this))
+                    case "viewequipment":
+                          return (equipment.showEquipment.call(this))
+                    default:
+                        return (this.showmycompany())
+
+                }
+
+            } else {
+
+                return (this.showmycompany())
+
+            }
+
+
+        } else {
+
+            return (this.showmycompany())
+
         }
+        // switch (this.state.navigation) {
+
+
+
+
+        //     default:
+        //         return ("")
+        // }
     }
 
     async saveCompany() {
@@ -419,16 +461,26 @@ class ViewCompany extends Component {
             const company = construction.getcompany.call(this)
             if (company) {
 
+                const navigation = construction.getNavigation.call(this)
+
+                let active = "";
+                if (navigation.hasOwnProperty("company")) {
+                    if (navigation.company.hasOwnProperty("active")) {
+                        active = navigation.company.active;
+                    }
+
+                }
+
                 const activemenu = (menu) => {
-                    if (this.state.navigation === menu) {
+                    if (active === menu) {
                         return styles.activeBackground;
-                    } else if (this.state.navigation === "viewemployee" && menu === "employees") {
+                    } else if (active === "viewemployee" && menu === "employees") {
                         return styles.activeBackground;
-                    } else if (this.state.navigation === "viewaccount" && menu === "accounts") {
+                    } else if (active === "viewaccount" && menu === "accounts") {
                         return styles.activeBackground;
-                    } else if (this.state.navigation === "viewmaterial" && menu === "materials") {
+                    } else if (active === "viewmaterial" && menu === "materials") {
                         return styles.activeBackground;
-                    } else if (this.state.navigation === "viewequipment" && menu === "equipment") {
+                    } else if (active === "viewequipment" && menu === "equipment") {
                         return styles.activeBackground;
                     }
                     else {

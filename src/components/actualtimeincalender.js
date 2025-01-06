@@ -2,7 +2,7 @@ import React from 'react';
 import Construction from './construction';
 import { MyStylesheet } from './styles';
 import { removeIconSmall, dropDateIcon } from './svg';
-import { makeTimeString, monthstring, getFirstIsOnTime, check_29_feb_leapyear_time, check_30_time, check_31_time, UTCTimeStringfromTime, getDayString, trailingZeros} from './functions'
+import { makeTimeString, monthstring, getFirstIsOnTime, check_29_feb_leapyear_time, check_30_time, check_31_time, UTCTimeStringfromTime, getDayString, trailingZeros } from './functions'
 import TimeIn from './actualtimein';
 
 class CalenderTimeIn {
@@ -15,18 +15,27 @@ class CalenderTimeIn {
         timein.handleday.call(this, day);
     }
 
+    handleShowCalender(boolean) {
+        const construction = new Construction();
+        let projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.actual.timein.calendertimein = boolean
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+    }
+
     showicon() {
         const styles = MyStylesheet();
         const construction = new Construction();
         const removeIcon = construction.getremoveicon.call(this);
         const dropIcon = construction.getdropicon.call(this)
-        if (this.state.calendertimein) {
+        const calendertimein = new CalenderTimeIn();
+        if (this.props.projectnavigation.actual.timein.calendertimein) {
             return (
-                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.setState({ calendertimein: false }) }}>{removeIconSmall()} </button>
+                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => {calendertimein.handleShowCalender.call(this,false) }}>{removeIconSmall()} </button>
             )
         } else {
             return (
-                <button style={{ ...styles.generalButton, ...dropIcon }} onClick={() => { this.setState({ calendertimein: true }) }}>{dropDateIcon()} </button>
+                <button style={{ ...styles.generalButton, ...dropIcon }} onClick={() => { calendertimein.handleShowCalender.call(this,true) }}>{dropDateIcon()} </button>
             )
         }
 
@@ -35,19 +44,21 @@ class CalenderTimeIn {
         const construction = new Construction();
         const headerFont = construction.getHeaderFont.call(this);
         const styles = MyStylesheet();
-        if (this.state.calendertimein) {
-            const timeinday = trailingZeros(this.state.timeinday);
-            const timeinyear = this.state.timeinyear;
-            const timeinmonth = trailingZeros(this.state.timeinmonth);
-            const timeinhours = trailingZeros(this.state.timeinhours);
-            const timeinampm = this.state.timeinampm;
-            const timeinminutes = trailingZeros(this.state.timeinminutes);
-            let timein = makeTimeString(timeinyear, timeinmonth, timeinday, timeinhours, timeinminutes, timeinampm);
+        if (this.props.projectnavigation.actual.timein.calendertimein) {
+            let day = trailingZeros(this.props.projectnavigation.actual.timein.timeinday);
+            let year = this.props.projectnavigation.actual.timein.timeinyear;
+            let month = trailingZeros(this.props.projectnavigation.actual.timein.timeinmonth);
+            let hours = trailingZeros(this.props.projectnavigation.actual.timein.timeinhours);
+            let time = this.props.projectnavigation.actual.timein.timeinampm;
+            let minutes = trailingZeros(this.props.projectnavigation.actual.timein.timeinminutes);
+            let timein = makeTimeString(year, month, day, hours, minutes, time);
+
             timein = UTCTimeStringfromTime(timein)
-            const newDate = new Date(timein)
-            const month = monthstring(newDate.getMonth());
+
+            const newDate = new Date(`${timein}`)
+            month = monthstring(newDate.getMonth());
             const date = newDate.getDate();
-            const year = newDate.getFullYear();
+            year = newDate.getFullYear();
             const daystring = getDayString(newDate.getDay())
 
             return (<span className="createlink" style={{ ...styles.generalFont, ...headerFont }}>{daystring}, {month} {date}, {year}</span>
@@ -57,7 +68,7 @@ class CalenderTimeIn {
         }
     }
     activecell(num) {
-        if (Number(num) === Number(this.state.timeinday)) {
+        if (Number(num) === Number(this.props.projectnavigation.actual.timein.timeinday)) {
             return ({ backgroundColor: '#FED727', borderRadius: '5px' })
         } else {
             return;
@@ -70,15 +81,16 @@ class CalenderTimeIn {
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this);
         const calendertimein = new CalenderTimeIn();
-        let day = this.state.timeinday;
-        let year = this.state.timeinyear;
-        let month = this.state.timeinmonth;
-        let hours = this.state.timeinhours;
-        let time = this.state.timeinampm;
-        let minutes = this.state.timeinminutes;
+        let day = trailingZeros(this.props.projectnavigation.actual.timein.timeinday);
+        let year = this.props.projectnavigation.actual.timein.timeinyear;
+        let month = trailingZeros(this.props.projectnavigation.actual.timein.timeinmonth);
+        let hours = trailingZeros(this.props.projectnavigation.actual.timein.timeinhours);
+        let time = this.props.projectnavigation.actual.timein.timeinampm;
+        let minutes = trailingZeros(this.props.projectnavigation.actual.timein.timeinminutes);
         let timein = makeTimeString(year, month, day, hours, minutes, time);
 
         timein = UTCTimeStringfromTime(timein);
+
 
         const firstofmonth = getFirstIsOnTime(timein);
         const check29 = check_29_feb_leapyear_time(timein);
@@ -1113,7 +1125,7 @@ class CalenderTimeIn {
 
             }
         }
-        if (this.state.calendertimein) {
+        if (this.props.projectnavigation.actual.timein.calendertimein) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1 }}>
 

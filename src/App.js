@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { CheckUserNode, LogoutUserNode, LoadCSIs, LoadAllUsers } from './components/actions/api';
+import { CheckUser, LogoutUserNode, LoadCSIs, LoadAllUsers } from './components/actions/api';
 import * as actions from './components/actions';
 import { Link } from 'react-router-dom';
 import { firebaseConfig } from './firebaseconfig';
@@ -36,6 +36,7 @@ import BidLineItem from './components/bidlineitem'
 import BidScheduleLineItem from './components/schedulelineitem'
 import Construction from './components/construction'
 import Proposals from './components/proposals'
+import Connecting from './components/connecting';
 class App extends Component {
   constructor(props) {
     super(props);
@@ -61,7 +62,9 @@ class App extends Component {
       activeemployeeid: false,
       register: false,
       apple: '',
-      google: ''
+      google: '',
+      initalized:false,
+      login:false
     }
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
@@ -69,12 +72,13 @@ class App extends Component {
   componentDidMount() {
     document.title = 'construction.civilengineer.io'
     window.addEventListener('resize', this.updateWindowDimensions);
-    this.props.reduxNavigation({ position: 'open' })
+    const construction = new Construction();
+    let navigation = construction.getNavigation.call(this)
+    navigation.position = 'open'
+    this.props.reduxNavigation(navigation)
     firebase.initializeApp(firebaseConfig());
     this.checkuser();
-    this.loadMyCompany();
-    
-    this.loadAllUsers();
+
     this.updateWindowDimensions();
   }
   componentWillUnmount() {
@@ -101,108 +105,161 @@ class App extends Component {
     }
   }
 
-  async loadMyCompany() {
+  async createCompanyWebSocket() {
     const construction = new Construction();
-    try {
 
 
-      await construction.findMyCompany.call(this)
-      const mycompany = construction.getcompany.call(this)
 
-      if (mycompany) {
 
-        const companyid = mycompany._id;
+    const mycompany = construction.getcompany.call(this)
 
-        const socket = new WebSocket(`ws://localhost:8081/company/${companyid}/websocketapi`)
+    if (mycompany) {
 
-        socket.onopen = (evt) => {
-          let myuser = construction.getuser.call(this)
-          console.log("WEB SOCKET OPENED!!!");
-          const userid = myuser.UserID;
-          const data = { type: "join", userid };
-          socket.send(JSON.stringify(data));
+      const companyid = mycompany._id;
+
+      let server_api = process.env.REACT_APP_SERVER_API
+
+      const stripHttp = (server_api) => {
+  
+        return server_api.replace(/^https?:\/\//, '')
+  
+      }
+  
+      server_api = stripHttp(server_api)
+
+      const socket = new WebSocket(`ws://${server_api}/company/${companyid}/websocketapi`)
+
+      socket.onopen = (evt) => {
+        let myuser = construction.getuser.call(this)
+        console.log("WEB SOCKET OPENED!!!");
+        const userid = myuser.UserID;
+        const data = { type: "join", userid };
+        socket.send(JSON.stringify(data));
+      }
+
+
+      socket.onmessage = (evt) => {
+
+        const response = JSON.parse(evt.data);
+        console.log(response)
+
+        if (response.type === "join") {
+          console.log(response.text)
+        } else if
+          (response.type === "company") {
+
+          const updatecompany = response.response;
+          construction.handleCompanyResponse.call(this, updatecompany)
         }
 
-
-        socket.onmessage = (evt) => {
-
-          const response = JSON.parse(evt.data);
-          console.log(response)
-
-          if (response.type === "join") {
-            console.log(response.text)
-          } else if
-            (response.type === "company") {
-           
-            const updatecompany = response.response;
-            construction.handleCompanyResponse.call(this, updatecompany)
-          }
-
-        }
-
-        socket.onerror = (evt) => {
-          console.log("SOMETHING WENT WRONG!");
-          console.log(evt);
-        };
-
-        socket.onclose = (evt) => {
-          console.log("WEB SOCKET HAS BEEN CLOSED!!!!");
-        };
-
-
-        let websockets =  {};
-        websockets.company = socket
-        this.props.reduxWebSockets(websockets)
-
-        this.setState({ render: 'render' })
-
       }
 
-      } catch (err) {
-        alert(`Could not fetch company ${err}`)
-      }
+      socket.onerror = (evt) => {
+        console.log("SOMETHING WENT WRONG!");
+        console.log(evt);
+      };
 
-    
-
-  }
-
-
-
-  async loadAllUsers() {
-    try {
+      socket.onclose = (evt) => {
+        console.log("WEB SOCKET HAS BEEN CLOSED!!!!");
+      };
 
 
-      const allusers = await LoadAllUsers();
-      if(allusers.hasOwnProperty("allusers")) {
-        this.props.reduxAllUsers(allusers.allusers)
-      }
-     
+      let websockets = {};
+      websockets.company = socket
+      this.props.reduxWebSockets(websockets)
 
-    } catch (err) {
-      alert(err)
+      this.setState({ render: 'render' })
+
     }
 
+
+
+
+
   }
+
+  handleUserResponse(response) {
+
+    if (response.hasOwnProperty("myuser")) {
+      this.props.reduxUser(response.myuser)
+    }
+
+    if (response.hasOwnProperty("allusers")) {
+      this.props.reduxAllUsers(response.allusers)
+    }
+
+
+    if (response.hasOwnProperty("company")) {
+      this.props.reduxCompany(response.company)
+      this.createCompanyWebSocket()
+
+    }
+
+    if (response.hasOwnProperty("allcompanys")) {
+      this.props.reduxAllCompanys(response.allcompanys);
+    }
+
+    if (response.hasOwnProperty("allprojects")) {
+
+
+      this.props.reduxAllProjects(response.allprojects)
+    }
+
+    if(response.hasOwnProperty("Error")) {
+    this.setState({ spinner:false, initalized:true, message:response.Error })
+
+    }
+
+    this.setState({ spinner:false, initalized:true})
+
+  }
+
+
 
   async checkuser() {
     try {
       //let response = TestUser();
-
-      let response = CheckUserNode();
+      this.setState({spinner:true})
+      let response = CheckUser();
       response = await response;
-
       console.log(response)
 
-      if (response.hasOwnProperty("myuser")) {
-        this.props.reduxUser(response.myuser)
-      }
+      this.handleUserResponse(response)
 
 
 
 
     } catch (err) {
-
       alert(err)
+      this.setState({spinner:false})
+
+     setInterval(async()=> {
+      this.setState({spinner:true})
+
+      try {
+
+      if(!this.state.initalized) {
+      let response = CheckUser();
+      response = await response;
+      console.log(response)
+
+      this.handleUserResponse(response)
+
+      }
+
+    } catch(err) {
+      alert(err)
+      this.setState({spinner:false})
+    }
+
+     }, 30000)
+
+     
+
+    
+   
+
+    
     }
   }
   showRouter() {
@@ -338,7 +395,7 @@ class App extends Component {
             </div>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont }}>
               <Link onClick={() => { this.handlenavigation({ companyid, active: 'materials' }) }}
-                to={`/${profile}/company/${companyid}/materials`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
+                to={`/${profile}/company/${companyid}`} style={{ ...styles.generalLink, ...regularFont, ...styles.generalFont }}>
                 /materials
               </Link>
             </div>
@@ -355,6 +412,7 @@ class App extends Component {
   }
 
   handlenavigation(obj) {
+    console.log("handlenavigation")
 
     const construction = new Construction();
     const navigation = construction.getNavigation.call(this)
@@ -367,6 +425,8 @@ class App extends Component {
     }
 
     else if (obj.hasOwnProperty("companyid")) {
+
+   
 
       if (navigation.hasOwnProperty("project")) {
         delete navigation.project;
@@ -398,15 +458,15 @@ class App extends Component {
 
         const allprojects = construction.getAllProjects.call(this)
         if (allprojects) {
-    
+
           const companyid = company.companyid
           // eslint-disable-next-line
           allprojects.map(myproject => {
             let projectid = myproject.ProjectID;
             projectidlinks.push(
               <div style={{ ...styles.generalContainer }} key={`link${myproject.projectid}`}>
-                <Link  to={`/${myuser.UserID}/company/${companyid}/projects/${myproject.ProjectID
-                }`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}> /{myproject.ProjectID} </Link>
+                <Link to={`/${myuser.UserID}/company/${companyid}/projects/${myproject.ProjectID
+                  }`} style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont }}> /{myproject.ProjectID} </Link>
               </div>)
 
           })
@@ -582,6 +642,12 @@ class App extends Component {
       }
     }
 
+  }
+
+  showConnecting() {
+    if(this.state.spinner) {
+      return(<Connecting/>)
+    }
   }
   render() {
     const styles = MyStylesheet();
@@ -841,6 +907,11 @@ class App extends Component {
 
                 {this.showRouter()}
 
+                {this.showConnecting()}
+
+
+
+
 
 
               </div>
@@ -864,6 +935,7 @@ function mapStateToProps(state) {
     mycompany: state.mycompany,
     allusers: state.allusers,
     allprojects: state.allprojects,
+    allcompanys: state.allcompanys,
     websockets: state.websockets
   }
 }

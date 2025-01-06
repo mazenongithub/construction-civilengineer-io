@@ -9,6 +9,7 @@ import mycompany from './mycompanyreducer';
 import allprojects from './allprojectsreducer'
 import websockets from './websocketsreducer';
 import projectsockets from './projectsocketsreducer';
+import projectnavigation from './projectnavigationreducer'
 export default combineReducers({
     myusermodel,
     navigation,
@@ -19,5 +20,6 @@ export default combineReducers({
     mycompany,
     allprojects,
     websockets,
-    projectsockets
+    projectsockets,
+    projectnavigation
 })

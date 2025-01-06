@@ -15,18 +15,27 @@ class MaterialCalender {
         timein.handleday.call(this, day);
     }
 
+    toogleCalender(boolean) {
+        const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.materialdate.materialcalender = boolean;
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+    }
+
     showicon() {
         const styles = MyStylesheet();
         const construction = new Construction();
         const removeIcon = construction.getremoveicon.call(this);
         const dropIcon = construction.getdropicon.call(this)
-        if (this.state.materialcalender) {
+        const materialcalender = new MaterialCalender();
+        if (this.props.projectnavigation.schedule.materialdate.materialcalender) {
             return (
-                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.setState({ materialcalender: false }) }}>{removeIconSmall()} </button>
+                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { materialcalender.toogleCalender.call(this, false ) }}>{removeIconSmall()} </button>
             )
         } else {
             return (
-                <button style={{ ...styles.generalButton, ...dropIcon }} onClick={() => { this.setState({ materialcalender: true }) }}>{dropDateIcon()} </button>
+                <button style={{ ...styles.generalButton, ...dropIcon }} onClick={() => {materialcalender.toogleCalender.call(this, true ) }}>{dropDateIcon()} </button>
             )
         }
 
@@ -35,10 +44,10 @@ class MaterialCalender {
         const construction = new Construction();
         const headerFont = construction.getHeaderFont.call(this);
         const styles = MyStylesheet();
-        if (this.state.materialcalender) {
-            let day = this.state.materialdateday;
-            let year = this.state.materialdateyear;
-            let month = this.state.materialdatemonth;
+        if (this.props.projectnavigation.schedule.materialdate.materialcalender) {
+            let day = this.props.projectnavigation.schedule.materialdate.materialdateday;
+            let year = this.props.projectnavigation.schedule.materialdate.materialdateyear;
+            let month = this.props.projectnavigation.schedule.materialdate.materialdatemonth;
             const datestring = `${year}/${month}/${day}`
             const newDate = new Date(datestring);
             month = monthstring(newDate.getMonth());
@@ -53,7 +62,7 @@ class MaterialCalender {
         }
     }
     activecell(num) {
-        if (Number(num) === Number(this.state.materialdateday)) {
+        if (Number(num) === Number(this.props.projectnavigation.schedule.materialdate.materialdateday)) {
             return ({ backgroundColor: '#FED727', borderRadius: '5px' })
         } else {
             return;
@@ -66,9 +75,9 @@ class MaterialCalender {
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this);
         const calendertimein = new MaterialCalender();
-        let day = this.state.materialdateday;
-        let year = this.state.materialdateyear;
-        let month = this.state.materialdatemonth;
+        let day = this.props.projectnavigation.schedule.materialdate.materialdateday;
+        let year = this.props.projectnavigation.schedule.materialdate.materialdateyear;
+        let month = this.props.projectnavigation.schedule.materialdate.materialdatemonth;
         const datestring = `${year}/${month}/${day}`
         const newDate = new Date(datestring);
         const firstofmonth =  getFirstIsOnDate(newDate);
@@ -960,13 +969,13 @@ class MaterialCalender {
                     return (check29)
 
                 case "Thurs":
-                    return (27)
+                    return (28)
 
                 case "Fri":
-                    return (26)
+                    return (27)
 
                 case "Sat":
-                    return (25)
+                    return (26)
 
                 default:
                     break;
@@ -1104,7 +1113,7 @@ class MaterialCalender {
 
             }
         }
-        if (this.state.materialcalender) {
+        if (this.props.projectnavigation.schedule.materialdate.materialcalender) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1 }}>
 

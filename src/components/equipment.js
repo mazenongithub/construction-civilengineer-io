@@ -4,6 +4,7 @@ import { removeIconSmall, goToIcon, TouchtoEdit } from './svg'
 import { CreateEquipment } from './functions';
 import Construction from './construction';
 import { Link } from 'react-router-dom';
+import ViewEquipment from './viewequipment'
 
 import MakeID from './makeids';
 class Equipment {
@@ -106,7 +107,7 @@ class Equipment {
             }
 
         } else {
-            this.setState({ activeequipmentid: false}) 
+            this.setState({ activeequipmentid: false })
         }
 
     }
@@ -164,7 +165,12 @@ class Equipment {
         }
     }
     viewEquipment(activeequipmentid) {
-        this.setState({activeequipmentid, navigation:"viewequipment"})
+        const construction = new Construction();
+        const navigation = construction.getNavigation.call(this)
+        navigation.company.active = "viewequipment"
+        navigation.company.equipment = { activeequipmentid, equipmentdate: false, activecostid: false, purchase: false, sale: false }
+        this.props.reduxNavigation(navigation)
+        this.setState({ render: 'render' })
     }
     showequipmentid(getequipment) {
         const styles = MyStylesheet();
@@ -191,12 +197,12 @@ class Equipment {
 
                         <div style={{ ...styles.generalContainer, ...getactiveequipmentbackground(getequipment.equipmentid), ...styles.bottomMargin15 }}>
                             <a style={{ ...styles.generalFont, ...regularFont, ...styles.generalLink }}
-                                onClick={()=>{equipment.viewEquipment.call(this,getequipment.equipmentid)}}>
-                             {getequipment.equipment}</a>
-                                <button 
-                                 onClick={()=>{equipment.viewEquipment.call(this,getequipment.equipmentid)}}
-                                style={{ ...getactiveequipmentbackground(getequipment.equipmentid), ...buttonSize, ...styles.noBorder }}>{goToIcon()}</button> 
-                               
+                                onClick={() => { equipment.viewEquipment.call(this, getequipment.equipmentid) }}>
+                                {getequipment.equipment}</a>
+                            <button
+                                onClick={() => { equipment.viewEquipment.call(this, getequipment.equipmentid) }}
+                                style={{ ...getactiveequipmentbackground(getequipment.equipmentid), ...buttonSize, ...styles.noBorder }}>{goToIcon()}</button>
+
                         </div>
 
                         <div style={{ ...styles.generalFlex }} key={getequipment.equipmentid}>
@@ -215,6 +221,41 @@ class Equipment {
         }
     }
 
+    handeShowEquipment() {
+        const construction = new Construction();
+        const styles = MyStylesheet();
+        const regularFont = construction.getRegularFont.call(this)
+        const headerFont = construction.getHeaderFont.call(this)
+        const equipment = new Equipment()
+
+        const navigation = construction.getNavigation.call(this)
+        if (navigation.company.active === 'equipment') {
+
+           return( <div style={{ ...styles.generalContainer }}>
+
+                {equipment.showequipment.call(this)}
+                {equipment.showequipmentids.call(this)}
+
+            </div>)
+
+
+        } else if (navigation.company.active === 'viewequipment') {
+
+            return(<ViewEquipment/>)
+
+
+        }
+
+    }
+
+    equipmentNavigation() {
+        const construction = new Construction();
+        const navigation = construction.getNavigation.call(this)
+        navigation.company.active = "equipment"
+        this.props.reduxNavigation(navigation)
+        this.setState({render:'render'})
+    }
+
     showEquipment() {
         const construction = new Construction();
         const styles = MyStylesheet();
@@ -223,20 +264,36 @@ class Equipment {
         const equipment = new Equipment()
         const headerFont = construction.getHeaderFont.call(this)
 
+
+
         if (myuser) {
 
             const company = construction.getcompany.call(this)
 
             if (company) {
-                return (
-                    <div style={{ ...styles.generalFlex }}>
-                        <div style={{ ...styles.flex1 }}>
-                           
-                            {equipment.showequipment.call(this)}
-                            {equipment.showequipmentids.call(this)}
+
+                const navigation = construction.getNavigation.call(this)
+
+         
+                    return (
+                        <div style={{ ...styles.generalFlex }}>
+                            <div style={{ ...styles.flex1 }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }} 
+                                  onClick={()=>{equipment.equipmentNavigation.call(this)}}>
+                                    <span style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
+
+                                    > /equipment</span>
+                                </div>
+                                
+                                {equipment.handeShowEquipment.call(this)}
+
+
+                            </div>
                         </div>
-                    </div>
-                )
+                    )
+
+               
 
             } else {
 

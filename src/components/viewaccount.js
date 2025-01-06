@@ -7,12 +7,60 @@ import { StripeConnect } from './actions/api'
 import { inputUTCStringForLaborID, calculatetotalhours, sorttimes } from './functions'
 import { span } from 'react-router-dom';
 
-class ViewAccount  {
+class ViewAccount extends Component  {
+
+    constructor(props) {
+        super(props);
+
+              this.state = {
+
+            render: '', width: 0, height: 0 
+
+        }
+
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
+    }
+    componentDidMount() {
+
+        window.addEventListener('resize', this.updateWindowDimensions);
+        this.updateWindowDimensions();
+    
+
+
+    }
+
+
+    // this.checkAllCompany();
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+    updateWindowDimensions() {
+        this.setState({ width: window.innerWidth, height: window.innerHeight, });
+    }
+
+
+    getAccountID() {
+
+        const construction = new Construction()
+        let accountid = "";
+        const navigation = construction.getNavigation.call(this)
+        if(navigation) {
+            if(navigation.hasOwnProperty("company")) {
+                accountid = navigation.company.activeaccountid;
+            }
+        }
+
+        return accountid;
+
+    }
 
  
     checklaborid(providerid) {
-        let accountid = this.state.activeaccountid;
-        const construction = new Construction();
+        const construction = new Construction()
+        const viewaccount = new ViewAccount();
+        let accountid = viewaccount.getAccountID.call(this);
+      
         let check = false;
         const benefits = construction.getemployeebenefitsbyid.call(this, providerid)
         if (benefits) {
@@ -29,8 +77,8 @@ class ViewAccount  {
 
     getaccount() {
         const construction = new Construction();
-        
-        const account = construction.getaccountbyid.call(this,this.state.activeaccountid)
+        const viewaccount = new ViewAccount();
+        const account = construction.getaccountbyid.call(this,viewaccount.getAccountID.call(this))
         return account
     }
 
@@ -38,7 +86,8 @@ class ViewAccount  {
     checkmaterialid(mymaterialid) {
         const construction = new Construction();
         let check = false;
-        const accountid = this.state.activeaccountid;
+        const viewaccount = new ViewAccount();
+        const accountid = viewaccount.getAccountID.call(this);;
         const mymaterial = construction.getmymaterialfromid.call(this, mymaterialid)
         if (mymaterial) {
             if (mymaterial.accountid === accountid) {
@@ -53,7 +102,8 @@ class ViewAccount  {
     checkequipmentid(equipmentid) {
         const construction = new Construction();
         const myequipment = construction.getmyequipmentbyid.call(this, equipmentid)
-        const accountid = this.state.activeaccountid;
+        const viewaccount = new ViewAccount();
+        const accountid = viewaccount.getAccountID.call(this);;
         let check = false;
         if (myequipment) {
             if (myequipment.accountid === accountid) {
@@ -197,12 +247,13 @@ class ViewAccount  {
     async loadstripeconnect(myuser, stripe) {
         const construction = new Construction();
         const company = construction.getcompany.call(this)
+        const viewaccount = new ViewAccount();
 
         try {
             this.setState({ checkstripe:true  })
             let response = await StripeConnect(stripe)
             console.log(response)
-            let i = construction.getaccountkeybyid.call(this, this.state.activeaccountid)
+            let i = construction.getaccountkeybyid.call(this, viewaccount.getAccountID.call(this))
             if (response.url) {
                 company.accounts[i].stripedashboard = response.url;
                 this.props.reduxUser(myuser)
@@ -302,7 +353,7 @@ class ViewAccount  {
     }
 
 
-    showViewAccount() {
+    render() {
         const construction = new Construction();
         const myuser = construction.getuser.call(this)
         const headerFont = construction.getHeaderFont.call(this)
@@ -318,7 +369,7 @@ class ViewAccount  {
 
                 if (company.hasOwnProperty("accounts")) {
 
-                    const accountid = this.state.activeaccountid;
+                    const accountid = viewaccount.getAccountID.call(this);;
                     const account = construction.getaccountbyid.call(this, accountid)
          
                     if (account) {
@@ -342,7 +393,7 @@ class ViewAccount  {
                                         <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
                                             <span style={{ ...styles.generalFont, ...styles.boldFont, ...headerFont }}>Stripe Payments </span> <br />
                                             <a style={{ ...styles.generalFont, ...regularFont, ...styles.generalspan, ...styles.bluespan }}
-                                                href={`https://connect.stripe.com/express/oauth/authorize?response_type=code&redirect_uri=${process.env.REACT_APP_SERVER_API}/construction/stripe/accounts&client_id=${process.env.REACT_APP_STRIPE_CONNECT}&state=${this.state.activeaccountid}&scope=read_write`}>Connect Your Account to Stripe To Get Started and Accept Payments</a>
+                                                href={`https://connect.stripe.com/express/oauth/authorize?response_type=code&redirect_uri=${process.env.REACT_APP_SERVER_API}/construction/stripe/accounts&client_id=${process.env.REACT_APP_STRIPE_CONNECT}&state=${viewaccount.getAccountID.call(this)}&scope=read_write`}>Connect Your Account to Stripe To Get Started and Accept Payments</a>
                                         </div>)
                             
                         }
@@ -359,11 +410,7 @@ class ViewAccount  {
                             <div style={{ ...styles.generalContainer }}>
 
 
-                                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                    <span style={{ ...styles.generalspan, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                        to={`/${myuser.profile}/company/${company.companyid}/accounts`}
-                                    > /accounts</span>
-                                </div>
+                                
 
                                 <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                                     <span style={{ ...styles.generalspan, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
@@ -414,4 +461,16 @@ class ViewAccount  {
 }
 
 
-export default ViewAccount;
+function mapStateToProps(state) {
+    return {
+        myusermodel: state.myusermodel,
+        navigation: state.navigation,
+        allcompanys: state.allcompanys,
+        mycompany: state.mycompany,
+        allusers: state.allusers,
+        allprojects: state.allprojects,
+        websockets: state.websockets
+    }
+}
+
+export default connect(mapStateToProps, actions)(ViewAccount);

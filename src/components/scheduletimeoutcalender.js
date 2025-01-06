@@ -15,18 +15,27 @@ class CalenderTimeOut {
         timeout.handleday.call(this, day);
     }
 
+    handleShowCalender(boolean) {
+        const construction = new Construction();
+        let projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.timeout.calendertimeout = boolean
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+    }
+
     showicon() {
         const styles = MyStylesheet();
         const construction = new Construction();
         const removeIcon = construction.getremoveicon.call(this);
         const dropIcon = construction.getdropicon.call(this)
-        if (this.state.calendertimeout) {
+        const calendertimeout = new CalenderTimeOut();
+        if (this.props.projectnavigation.schedule.timeout.calendertimeout) {
             return (
-                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.setState({ calendertimeout: false }) }}>{removeIconSmall()} </button>
+                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { calendertimeout.handleShowCalender.call(this,false) }}>{removeIconSmall()} </button>
             )
         } else {
             return (
-                <button style={{ ...styles.generalButton, ...dropIcon }} onClick={() => { this.setState({ calendertimeout: true }) }}>{dropDateIcon()} </button>
+                <button style={{ ...styles.generalButton, ...dropIcon }} onClick={() => { calendertimeout.handleShowCalender.call(this,true) }}>{dropDateIcon()} </button>
             )
         }
 
@@ -35,13 +44,13 @@ class CalenderTimeOut {
         const construction = new Construction();
         const headerFont = construction.getHeaderFont.call(this);
         const styles = MyStylesheet();
-        if (this.state.calendertimeout) {
-            let day = trailingZeros(this.state.timeoutday);
-            let year = this.state.timeoutyear;
-            let month = trailingZeros(this.state.timeoutmonth);
-            let hours = trailingZeros(this.state.timeouthours);
-            let time = this.state.timeoutampm;
-            let minutes = trailingZeros(this.state.timeoutminutes);
+        if (this.props.projectnavigation.schedule.timeout.calendertimeout) {
+            let day = trailingZeros(this.props.projectnavigation.schedule.timeout.timeoutday);
+            let year = this.props.projectnavigation.schedule.timeout.timeoutyear;
+            let month = trailingZeros(this.props.projectnavigation.schedule.timeout.timeoutmonth);
+            let hours = trailingZeros(this.props.projectnavigation.schedule.timeout.timeouthours);
+            let time = this.props.projectnavigation.schedule.timeout.timeoutampm;
+            let minutes = trailingZeros(this.props.projectnavigation.schedule.timeout.timeoutminutes);
             let timeout = makeTimeString(year, month, day, hours, minutes, time);
             timeout = UTCTimeStringfromTime(timeout)
             const newDate = new Date(`${timeout}`)
@@ -57,7 +66,7 @@ class CalenderTimeOut {
         }
     }
     activecell(num) {
-        if (Number(num) === Number(this.state.timeoutday)) {
+        if (Number(num) === Number(this.props.projectnavigation.schedule.timeout.timeoutday)) {
             return ({ backgroundColor: '#FED727', borderRadius: '5px' })
         } else {
             return;
@@ -70,12 +79,12 @@ class CalenderTimeOut {
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this);
         const calendertimeout = new CalenderTimeOut();
-        let day = trailingZeros(this.state.timeoutday);
-        let year = this.state.timeoutyear;
-        let month = trailingZeros(this.state.timeoutmonth);
-        let hours = trailingZeros(this.state.timeouthours);
-        let time = this.state.timeoutampm;
-        let minutes = trailingZeros(this.state.timeoutminutes);
+        let day = trailingZeros(this.props.projectnavigation.schedule.timeout.timeoutday);
+        let year = this.props.projectnavigation.schedule.timeout.timeoutyear;
+        let month = trailingZeros(this.props.projectnavigation.schedule.timeout.timeoutmonth);
+        let hours = trailingZeros(this.props.projectnavigation.schedule.timeout.timeouthours);
+        let time = this.props.projectnavigation.schedule.timeout.timeoutampm;
+        let minutes = trailingZeros(this.props.projectnavigation.schedule.timeout.timeoutminutes);
         let timeout = makeTimeString(year, month, day, hours, minutes, time);
 
         timeout = UTCTimeStringfromTime(timeout);
@@ -1113,7 +1122,7 @@ class CalenderTimeOut {
 
             }
         }
-        if (this.state.calendertimeout) {
+        if (this.props.projectnavigation.schedule.timeout.calendertimeout) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1 }}>
 

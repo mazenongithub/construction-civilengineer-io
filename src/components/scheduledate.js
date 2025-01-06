@@ -9,29 +9,36 @@ class MaterialDate {
 
 
     handleyear(year) {
-        this.setState({ materialdateyear: year })
+
+
+
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.materialdate.materialdateyear = year;
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+
         const myprojects = construction.getOurProjects.call(this)
-        if(myprojects) {
+        if (myprojects) {
             const project_id = this.props.project_id;
             const myproject = construction.getOurProjectByID.call(this, project_id)
-            if(myproject) {
+            if (myproject) {
 
-                
 
-                const i = construction.getOurProjectKeyById.call(this,project_id);
+
+                const i = construction.getOurProjectKeyById.call(this, project_id);
                 if (year.length === 4) {
 
-                    if(validateYear(year)) {
+                    if (validateYear(year)) {
 
 
-                        if (this.state.activematerialid) {
-                            const mymaterial = construction.getschedulematerialbyid.call(this,  this.state.activematerialid);
+                        if (this.props.projectnavigation.schedule.activematerialid) {
+                            const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                             if (mymaterial) {
 
-                                const j = construction.getschedulematerialkeybyid.call(this,  this.state.activematerialid)
-                                let day = this.state.materialdateday;
-                                let month = this.state.materialdatemonth;
+                                const j = construction.getschedulematerialkeybyid.call(this, this.props.projectnavigation.schedule.activematerialid)
+                                let day = this.props.projectnavigation.schedule.materialdateday;
+                                let month = this.props.projectnavigation.schedule.materialdatemonth;
                                 const timein = `${year}-${month}-${day}`
 
                                 myprojects[i].schedule.materials[j].timein = timein;
@@ -47,7 +54,7 @@ class MaterialDate {
                         alert(`Invalid Year format ${year}`)
                     }
 
-                  
+
                 }
 
             }
@@ -56,34 +63,38 @@ class MaterialDate {
 
     handleday(day) {
         day = day.toString();
-        this.setState({ materialdateday: day })
         const construction = new Construction();
-        
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.materialdate.materialdateday = day;
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+
+
         const myprojects = construction.getOurProjects.call(this)
-        
-        if(myprojects) {
+
+        if (myprojects) {
 
             const project_id = this.props.project_id
 
-            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
-            if(myproject) {
+            const myproject = construction.getOurProjectByID.call(this, this.props.project_id)
+            if (myproject) {
 
-                
-                
 
-                const i = construction.getOurProjectKeyById.call(this,project_id);
+
+
+                const i = construction.getOurProjectKeyById.call(this, project_id);
                 if (day.length === 2) {
 
-            
-                        if(validateDate(day)) {
 
-                        if (this.state.activematerialid) {
-                            const mymaterial = construction.getschedulematerialbyid.call(this,  this.state.activematerialid);
+                    if (validateDate(day)) {
+
+                        if (this.props.projectnavigation.schedule.activematerialid) {
+                            const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                             if (mymaterial) {
 
-                                const j = construction.getschedulematerialkeybyid.call(this,this.state.activematerialid)
-                                let year = this.state.materialdateyear;
-                                let month = this.state.materialdatemonth;
+                                const j = construction.getschedulematerialkeybyid.call(this, this.props.projectnavigation.schedule.activematerialid)
+                                let year = this.props.projectnavigation.schedule.materialdateyear;
+                                let month = this.props.projectnavigation.schedule.materialdatemonth;
                                 const timein = `${year}-${month}-${day}`
                                 myprojects[i].schedule.materials[j].timein = timein;
                                 this.props.reduxMyProjects(myprojects)
@@ -94,65 +105,124 @@ class MaterialDate {
 
                         }
 
-                
 
-                } else {
-                    alert(`Invalid day format ${day}`)
+
+                    } else {
+                        alert(`Invalid day format ${day}`)
+                    }
+
                 }
-
-            }
 
             }
         }
     }
 
     handlemonth(month) {
-        this.setState({ materialdatemonth: month })
+
+
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.materialdate.materialdatemonth = month;
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+
         const myprojects = construction.getOurProjects.call(this)
-        if(myprojects) {
+        if (myprojects) {
             const project_id = this.props.project_id
-            const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
-            if(myproject) {
+            const myproject = construction.getOurProjectByID.call(this, this.props.project_id)
+            if (myproject) {
 
-              
 
-                const i = construction.getOurProjectKeyById.call(this,project_id);
+
+                const i = construction.getOurProjectKeyById.call(this, project_id);
                 if (month.length === 2) {
 
-                    if(validateMonth(month)) {
+                    if (validateMonth(month)) {
 
-                    if (this.state.active === 'materials') {
+                        if (this.state.activecomponent === 'materials') {
 
 
 
-                        if (this.state.activematerialid) {
-                            const mymaterial = construction.getschedulematerialbyid.call(this,  this.state.activematerialid);
-                            if (mymaterial) {
+                            if (this.props.projectnavigation.schedule.activematerialid) {
+                                const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid);
+                                if (mymaterial) {
 
-                                const j = construction.getschedulematerialkeybyid.call(this,  this.state.activematerialid)
-                                let day = this.state.materialdateday;
-                                let year = this.state.materialdateyear;
-                                const timein = `${year}-${month}-${day}`
-                                myprojects[i].schedule.materials[j].timein = timein;
-                                this.props.reduxMyProjects(myprojects)
-                                this.setState({ render: 'render' })
+                                    const j = construction.getschedulematerialkeybyid.call(this, this.props.projectnavigation.schedule.activematerialid)
+                                    let day = this.props.projectnavigation.schedule.materialdateday;
+                                    let year = this.props.projectnavigation.schedule.materialdateyear;
+                                    const timein = `${year}-${month}-${day}`
+                                    myprojects[i].schedule.materials[j].timein = timein;
+                                    this.props.reduxMyProjects(myprojects)
+                                    this.setState({ render: 'render' })
 
+
+                                }
 
                             }
 
                         }
 
-                    } 
-
-                } else {
-                    alert(`Invalid month format ${month}`)
-                }
+                    } else {
+                        alert(`Invalid month format ${month}`)
+                    }
 
                 }
 
             }
         }
+    }
+
+    getMonth() {
+        const construction = new Construction();
+        let month = "";
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        if (projectnavigation) {
+            if (projectnavigation.schedule) {
+                if (projectnavigation.schedule.materialdate) {
+                    month = projectnavigation.schedule.materialdate.materialdatemonth;
+                }
+            }
+        }
+
+        return month;
+
+
+    }
+
+    getDay() {
+
+        const construction = new Construction();
+
+        let day = "";
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        if (projectnavigation) {
+            if (projectnavigation.schedule) {
+                if (projectnavigation.schedule.materialdate) {
+                    day = projectnavigation.schedule.materialdate.materialdateday;
+                }
+            }
+        }
+
+        return day;
+
+    }
+
+    getYear() {
+
+        const construction = new Construction();
+
+        let year = "";
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        if (projectnavigation) {
+            if (projectnavigation.schedule) {
+                if (projectnavigation.schedule.materialdate) {
+                    year = projectnavigation.schedule.materialdate.materialdateyear;
+                }
+            }
+        }
+
+        return year;
+
     }
 
 
@@ -179,23 +249,23 @@ class MaterialDate {
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
-                            <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }} value={this.state.materialdatemonth}
+                            <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }} value={materialdate.getMonth.call(this)}
                                 onChange={event => { materialdate.handlemonth.call(this, event.target.value) }} />
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                             <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.state.materialdateday}
+                                value={materialdate.getDay.call(this)}
                                 onChange={event => { materialdate.handleday.call(this, event.target.value) }} />
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                             <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.state.materialdateyear}
+                                value={materialdate.getYear.call(this)}
                                 onChange={event => { materialdate.handleyear.call(this, event.target.value) }} />
                         </div>
-                        
-                       
+
+
                     </div>
                     {calender.showMaterialCalender.call(this)}
 

@@ -185,10 +185,16 @@ class ScheduleView {
         let ypos = 80;
         if (schedules) {
 
+            let dates = "";
+            if(type === "schedule") {
+                 dates = getScheduleDates(`${this.props.projectnavigation.schedule.timein.timeinyear}-${this.props.projectnavigation.schedule.timein.timeinmonth}-${this.props.projectnavigation.schedule.timein.timeinday}`)
+            } else if (type === "actual") {
+                dates = getScheduleDates(`${this.props.projectnavigation.actual.timein.timeinyear}-${this.props.projectnavigation.actual.timein.timeinmonth}-${this.props.projectnavigation.actual.timein.timeinday}`)
+            }
+        
 
-
-            const dates = getScheduleDates(`${this.state.timeinyear}-${this.state.timeinmonth}-${this.state.timeinday}`)
-
+          
+            
             // eslint-disable-next-line
             schedules.map(schedule => {
 
@@ -322,8 +328,15 @@ class ScheduleView {
     showschedule(type) {
         const scheduleview = new ScheduleView();
         const styles = MyStylesheet();
-        const dates = getScheduleDates(`${this.state.timeinyear}-${this.state.timeinmonth}-${this.state.timeinday}`)
+        let dates = "";
+        if(type === "schedule") {
+             dates = getScheduleDates(`${this.props.projectnavigation.schedule.timein.timeinyear}-${this.props.projectnavigation.schedule.timein.timeinmonth}-${this.props.projectnavigation.schedule.timein.timeinday}`)
+        } else if (type === "actual") {
+            dates = getScheduleDates(`${this.props.projectnavigation.actual.timein.timeinyear}-${this.props.projectnavigation.actual.timein.timeinmonth}-${this.props.projectnavigation.actual.timein.timeinday}`)
+        }
     
+        
+      
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this)
         const getypos = scheduleview.getypos.call(this)

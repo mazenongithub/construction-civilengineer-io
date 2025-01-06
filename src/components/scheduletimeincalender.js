@@ -15,18 +15,27 @@ class CalenderTimeIn {
         timein.handleday.call(this, day);
     }
 
+    handleShowCalender(boolean) {
+        const construction = new Construction();
+        let projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.timein.calendertimein = boolean
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+    }
+
     showicon() {
         const styles = MyStylesheet();
         const construction = new Construction();
         const removeIcon = construction.getremoveicon.call(this);
         const dropIcon = construction.getdropicon.call(this)
-        if (this.state.calendertimein) {
+        const calendertimein = new CalenderTimeIn();
+        if (this.props.projectnavigation.schedule.timein.calendertimein) {
             return (
-                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => { this.setState({ calendertimein: false }) }}>{removeIconSmall()} </button>
+                <button style={{ ...styles.generalButton, ...removeIcon }} onClick={() => {calendertimein.handleShowCalender.call(this,false) }}>{removeIconSmall()} </button>
             )
         } else {
             return (
-                <button style={{ ...styles.generalButton, ...dropIcon }} onClick={() => { this.setState({ calendertimein: true }) }}>{dropDateIcon()} </button>
+                <button style={{ ...styles.generalButton, ...dropIcon }} onClick={() => { calendertimein.handleShowCalender.call(this,true) }}>{dropDateIcon()} </button>
             )
         }
 
@@ -35,15 +44,15 @@ class CalenderTimeIn {
         const construction = new Construction();
         const headerFont = construction.getHeaderFont.call(this);
         const styles = MyStylesheet();
-        if (this.state.calendertimein) {
-            let day = trailingZeros(this.state.timeinday);
-            let year = this.state.timeinyear;
-            let month = trailingZeros(this.state.timeinmonth);
-            let hours = trailingZeros(this.state.timeinhours);
-            let time = this.state.timeinampm;
-            let minutes = trailingZeros(this.state.timeinminutes);
+        if (this.props.projectnavigation.schedule.timein.calendertimein) {
+            let day = trailingZeros(this.props.projectnavigation.schedule.timein.timeinday);
+            let year = this.props.projectnavigation.schedule.timein.timeinyear;
+            let month = trailingZeros(this.props.projectnavigation.schedule.timein.timeinmonth);
+            let hours = trailingZeros(this.props.projectnavigation.schedule.timein.timeinhours);
+            let time = this.props.projectnavigation.schedule.timein.timeinampm;
+            let minutes = trailingZeros(this.props.projectnavigation.schedule.timein.timeinminutes);
             let timein = makeTimeString(year, month, day, hours, minutes, time);
-         
+
             timein = UTCTimeStringfromTime(timein)
 
             const newDate = new Date(`${timein}`)
@@ -59,7 +68,7 @@ class CalenderTimeIn {
         }
     }
     activecell(num) {
-        if (Number(num) === Number(this.state.timeinday)) {
+        if (Number(num) === Number(this.props.projectnavigation.schedule.timein.timeinday)) {
             return ({ backgroundColor: '#FED727', borderRadius: '5px' })
         } else {
             return;
@@ -72,16 +81,16 @@ class CalenderTimeIn {
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this);
         const calendertimein = new CalenderTimeIn();
-        let day = trailingZeros(this.state.timeinday);
-        let year = this.state.timeinyear;
-        let month = trailingZeros(this.state.timeinmonth);
-        let hours = trailingZeros(this.state.timeinhours);
-        let time = this.state.timeinampm;
-        let minutes = trailingZeros(this.state.timeinminutes);
+        let day = trailingZeros(this.props.projectnavigation.schedule.timein.timeinday);
+        let year = this.props.projectnavigation.schedule.timein.timeinyear;
+        let month = trailingZeros(this.props.projectnavigation.schedule.timein.timeinmonth);
+        let hours = trailingZeros(this.props.projectnavigation.schedule.timein.timeinhours);
+        let time = this.props.projectnavigation.schedule.timein.timeinampm;
+        let minutes = trailingZeros(this.props.projectnavigation.schedule.timein.timeinminutes);
         let timein = makeTimeString(year, month, day, hours, minutes, time);
 
         timein = UTCTimeStringfromTime(timein);
-       
+
 
         const firstofmonth = getFirstIsOnTime(timein);
         const check29 = check_29_feb_leapyear_time(timein);
@@ -1116,7 +1125,7 @@ class CalenderTimeIn {
 
             }
         }
-        if (this.state.calendertimein) {
+        if (this.props.projectnavigation.schedule.timein.calendertimein) {
             return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1 }}>
 

@@ -8,8 +8,16 @@ class TimeIn {
 
     
     handleminutes(minutes) {
-        this.setState({ timeinminutes: minutes })
+     
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.actual.timein.timeinminutes = minutes
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+        const activelaborid = projectnavigation.actual.activelaborid;
+        const active = projectnavigation.actual.activecomponent;
+        const activeequipmentid = projectnavigation.actual.activeequipmentid;
+        
         const myprojects = construction.getOurProjects.call(this)
         if(myprojects) {
 
@@ -26,19 +34,19 @@ class TimeIn {
                     if (validateMinutes(minutes)) {
 
 
-                        if (this.state.active === 'labor') {
+                        if (active === 'labor') {
 
 
-                            if (this.state.activelaborid) {
-                                const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid);
+                            if (activelaborid) {
+                                const mylabor = construction.getactuallaborbyid.call(this, this.props.projectnavigation.actual.activelaborid);
                                 if (mylabor) {
 
-                                    const j = construction.getactuallaborkeybyid.call(this,  this.state.activelaborid)
-                                    let day = this.state.timeinday;
-                                    let year = this.state.timeinyear;
-                                    let month = this.state.timeinmonth;
-                                    let hours = this.state.timeinhours;
-                                    let time = this.state.timeinampm;
+                                    const j = construction.getactuallaborkeybyid.call(this,  this.props.projectnavigation.actual.activelaborid)
+                                    let day = projectnavigation.actual.timein.timeinday;
+                                    let year = projectnavigation.actual.timein.timeinyear;
+                                    let month = projectnavigation.actual.timein.timeinmonth;
+                                    let hours = projectnavigation.actual.timein.timeinhours;
+                                    let time = projectnavigation.actual.timein.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
                                     myprojects[i].actual.labor[j].timein = timein;
@@ -52,19 +60,19 @@ class TimeIn {
 
 
 
-                        } else if (this.state.active === 'equipment') {
+                        } else if (active === 'equipment') {
 
-                            if (this.state.activeequipmentid) {
-                                const myequipment = construction.getactualequipmentbyid.call(this,  this.state.activeequipmentid)
+                            if (activeequipmentid) {
+                                const myequipment = construction.getactualequipmentbyid.call(this,  this.props.projectnavigation.actual.activeequipmentid)
                                 if (myequipment) {
 
                                     if (myequipment) {
                                         const j = construction.getactualequipmentkeybyid.call(this,  myequipment.equipmentid)
-                                        let day = this.state.timeinday;
-                                        let year = this.state.timeinyear;
-                                        let month = this.state.timeinmonth;
-                                        let hours = this.state.timeinhours;
-                                        let time = this.state.timeinampm;
+                                        let day = projectnavigation.actual.timein.timeinday;
+                                        let year = projectnavigation.actual.timein.timeinyear;
+                                        let month = projectnavigation.actual.timein.timeinmonth;
+                                        let hours = projectnavigation.actual.timein.timeinhours;
+                                        let time = projectnavigation.actual.timein.timeinampm;
                                         let timein = makeTimeString(year, month, day, hours, minutes, time);
                                         timein = UTCTimeStringfromTime(timein);
                                         myprojects[i].actual.equipment[j].timein = timein;
@@ -87,8 +95,15 @@ class TimeIn {
     }
 
     handlehours(hours) {
-        this.setState({ timeinhours: hours })
+     
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.actual.timein.timeinhours = hours
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+        const activelaborid = projectnavigation.actual.activelaborid;
+        const active = projectnavigation.actual.activecomponent;
+        const activeequipmentid = projectnavigation.actual.activeequipmentid;
         const myprojects = construction.getOurProjects.call(this)
         if(myprojects) {
             
@@ -101,20 +116,20 @@ class TimeIn {
                 if (hours.length === 2) {
                     if (validateMonth(hours)) {
 
-                        if (this.state.active === 'labor') {
+                        if (active === 'labor') {
 
 
 
-                            if (this.state.activelaborid) {
-                                const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid);
+                            if (activelaborid) {
+                                const mylabor = construction.getactuallaborbyid.call(this, this.props.projectnavigation.actual.activelaborid);
                                 if (mylabor) {
 
-                                    const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
-                                    let day = this.state.timeinday;
-                                    let year = this.state.timeinyear;
-                                    let month = this.state.timeinmonth;
-                                    let minutes = this.state.timeinminutes;
-                                    let time = this.state.timeinampm;
+                                    const j = construction.getactuallaborkeybyid.call(this, this.props.projectnavigation.actual.activelaborid)
+                                    let day = projectnavigation.actual.timein.timeinday;
+                                    let year = projectnavigation.actual.timein.timeinyear;
+                                    let month = projectnavigation.actual.timein.timeinmonth;
+                                    let minutes = projectnavigation.actual.timein.timeinminutes;
+                                    let time = projectnavigation.actual.timein.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
                                     myprojects[i].actual.labor[j].timein = timein;
@@ -126,19 +141,19 @@ class TimeIn {
 
                             }
 
-                        } else if (this.state.active === 'equipment') {
+                        } else if (active === 'equipment') {
 
 
-                            if (this.state.activeequipmentid) {
-                                const myequipment = construction.getactualequipmentbyid.call(this,  this.state.activeequipmentid)
+                            if (activeequipmentid) {
+                                const myequipment = construction.getactualequipmentbyid.call(this,  this.props.projectnavigation.actual.activeequipmentid)
                                 if (myequipment) {
 
                                     const j = construction.getactualequipmentkeybyid.call(this,  myequipment.equipmentid)
-                                    let day = this.state.timeinday;
-                                    let year = this.state.timeinyear;
-                                    let month = this.state.timeinmonth;
-                                    let minutes = this.state.timeinminutes;
-                                    let time = this.state.timeinampm;
+                                    let day = projectnavigation.actual.timein.timeinday;
+                                    let year = projectnavigation.actual.timein.timeinyear;
+                                    let month = projectnavigation.actual.timein.timeinmonth;
+                                    let minutes = projectnavigation.actual.timein.timeinminutes;
+                                    let time = projectnavigation.actual.timein.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
                                     myprojects[i].actual.equipment[j].timein = timein;
@@ -161,8 +176,16 @@ class TimeIn {
     }
 
     handleyear(year) {
-        this.setState({ timeinyear: year })
+  
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.actual.timein.timeinyear = year
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+        const activelaborid = projectnavigation.actual.activelaborid;
+        const active = projectnavigation.actual.activecomponent;
+        const activeequipmentid = projectnavigation.actual.activeequipmentid;
+        
         const myprojects = construction.getOurProjects.call(this)
         if(myprojects) {
             
@@ -176,20 +199,20 @@ class TimeIn {
 
                     if (validateYear(year)) {
 
-                        if (this.state.active === 'labor') {
+                        if (active === 'labor') {
 
 
 
-                            if (this.state.activelaborid) {
-                                const mylabor = construction.getactuallaborbyid.call(this, this.state.activelaborid);
+                            if (activelaborid) {
+                                const mylabor = construction.getactuallaborbyid.call(this, this.props.projectnavigation.actual.activelaborid);
                                 if (mylabor) {
 
-                                    const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
-                                    let day = this.state.timeinday;
-                                    let month = this.state.timeinmonth;
-                                    let hours = this.state.timeinhours;
-                                    let minutes = this.state.timeinminutes;
-                                    let time = this.state.timeinampm;
+                                    const j = construction.getactuallaborkeybyid.call(this, this.props.projectnavigation.actual.activelaborid)
+                                    let day = projectnavigation.actual.timein.timeinday;
+                                    let month = projectnavigation.actual.timein.timeinmonth;
+                                    let hours = projectnavigation.actual.timein.timeinhours;
+                                    let minutes = projectnavigation.actual.timein.timeinminutes;
+                                    let time = projectnavigation.actual.timein.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
                                     myprojects[i].actual.labor[j].timein = timein;
@@ -201,17 +224,17 @@ class TimeIn {
 
                             }
 
-                        } else if (this.state.active === 'equipment') {
+                        } else if (active === 'equipment') {
 
-                            if (this.state.activeequipmentid) {
-                                const myequipment = construction.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                            if (activeequipmentid) {
+                                const myequipment = construction.getactualequipmentbyid.call(this, this.props.projectnavigation.actual.activeequipmentid)
                                 if (myequipment) {
                                     const j = construction.getactualequipmentkeybyid.call(this, myequipment.equipmentid)
-                                    let day = this.state.timeinday;
-                                    let minutes = this.state.timeinminutes;
-                                    let month = this.state.timeinmonth;
-                                    let hours = this.state.timeinhours;
-                                    let time = this.state.timeinampm;
+                                    let day = projectnavigation.actual.timein.timeinday;
+                                    let minutes = projectnavigation.actual.timein.timeinminutes;
+                                    let month = projectnavigation.actual.timein.timeinmonth;
+                                    let hours = projectnavigation.actual.timein.timeinhours;
+                                    let time = projectnavigation.actual.timein.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
                                     myprojects[i].actual.equipment[j].timein = timein;
@@ -233,8 +256,15 @@ class TimeIn {
 
     handleday(day) {
         day = day.toString();
-        this.setState({ timeinday: day })
+
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.actual.timein.timeinday = day
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+        const activelaborid = projectnavigation.actual.activelaborid;
+        const active = projectnavigation.actual.activecomponent;
+        const activeequipmentid = projectnavigation.actual.activeequipmentid;
         const myprojects = construction.getOurProjects.call(this)
         if(myprojects) {
             
@@ -248,20 +278,20 @@ class TimeIn {
 
                     if (validateDate(day)) {
 
-                        if (this.state.active === 'labor') {
+                        if (active === 'labor') {
 
 
 
-                            if (this.state.activelaborid) {
-                                const mylabor = construction.getactuallaborbyid.call(this,  this.state.activelaborid);
+                            if (activelaborid) {
+                                const mylabor = construction.getactuallaborbyid.call(this,  this.props.projectnavigation.actual.activelaborid);
                                 if (mylabor) {
 
-                                    const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
-                                    let year = this.state.timeinyear;
-                                    let month = this.state.timeinmonth;
-                                    let hours = this.state.timeinhours;
-                                    let minutes = this.state.timeinminutes;
-                                    let time = this.state.timeinampm;
+                                    const j = construction.getactuallaborkeybyid.call(this, this.props.projectnavigation.actual.activelaborid)
+                                    let year = projectnavigation.actual.timein.timeinyear;
+                                    let month = projectnavigation.actual.timein.timeinmonth;
+                                    let hours = projectnavigation.actual.timein.timeinhours;
+                                    let minutes = projectnavigation.actual.timein.timeinminutes;
+                                    let time = projectnavigation.actual.timein.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
                                     myprojects[i].actual.labor[j].timein = timein;
@@ -273,17 +303,17 @@ class TimeIn {
 
                             }
 
-                        } else if (this.state.active === 'equipment') {
-                            if (this.state.activeequipmentid) {
-                                const myequipment = construction.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                        } else if (active === 'equipment') {
+                            if (activeequipmentid) {
+                                const myequipment = construction.getactualequipmentbyid.call(this, this.props.projectnavigation.actual.activeequipmentid)
 
                                 if (myequipment) {
                                     const j = construction.getactualequipmentkeybyid.call(this,  myequipment.equipmentid)
-                                    let minutes = this.state.timeinminutes;
-                                    let year = this.state.timeinyear;
-                                    let month = this.state.timeinmonth;
-                                    let hours = this.state.timeinhours;
-                                    let time = this.state.timeinampm;
+                                    let minutes = projectnavigation.actual.timein.timeinminutes;
+                                    let year = projectnavigation.actual.timein.timeinyear;
+                                    let month = projectnavigation.actual.timein.timeinmonth;
+                                    let hours = projectnavigation.actual.timein.timeinhours;
+                                    let time = projectnavigation.actual.timein.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
                                     myprojects[i].actual.equipment[j].timein = timein;
@@ -304,9 +334,17 @@ class TimeIn {
     }
 
     handlemonth(month) {
-        this.setState({ timeinmonth: month })
+       
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.actual.timein.timeinmonth = month
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+        const activelaborid = projectnavigation.actual.activelaborid;
+        const active = projectnavigation.actual.activecomponent;
+        const activematerialid = projectnavigation.actual.activematerialid;
+        const activeequipmentid = projectnavigation.actual.activeequipmentid;
         if(myprojects) {
             
             const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
@@ -319,20 +357,20 @@ class TimeIn {
 
                     if (validateMonth(month)) {
 
-                        if (this.state.active === 'labor') {
+                        if (active === 'labor') {
 
 
 
-                            if (this.state.activelaborid) {
-                                const mylabor = construction.getactuallaborbyid.call(this,  this.state.activelaborid);
+                            if (activelaborid) {
+                                const mylabor = construction.getactuallaborbyid.call(this, activelaborid);
                                 if (mylabor) {
 
-                                    const j = construction.getactuallaborkeybyid.call(this,  this.state.activelaborid)
-                                    let day = this.state.timeinday;
-                                    let year = this.state.timeinyear;
-                                    let hours = this.state.timeinhours;
-                                    let minutes = this.state.timeinminutes;
-                                    let time = this.state.timeinampm;
+                                    const j = construction.getactuallaborkeybyid.call(this, activelaborid)
+                                    let day = projectnavigation.actual.timein.timeinday;
+                                    let year = projectnavigation.actual.timein.timeinyear;
+                                    let hours = projectnavigation.actual.timein.timeinhours;
+                                    let minutes = projectnavigation.actual.timein.timeinminutes;
+                                    let time = projectnavigation.actual.timein.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
                                     myprojects[i].actual.labor[j].timein = timein;
@@ -344,16 +382,16 @@ class TimeIn {
 
                             }
 
-                        } else if (this.state.active === 'equipment') {
-                            if (this.state.activeequipmentid) {
-                                const myequipment = construction.getactualequipmentbyid.call(this, this.state.activeequipmentid)
+                        } else if (active === 'equipment') {
+                            if (activeequipmentid) {
+                                const myequipment = construction.getactualequipmentbyid.call(this, this.props.projectnavigation.actual.activeequipmentid)
                                 if (myequipment) {
                                     const j = construction.getactualequipmentkeybyid.call(this,  myequipment.equipmentid)
-                                    let day = this.state.timeinday;
-                                    let year = this.state.timeinyear;
-                                    let minutes = this.state.timeinminutes;
-                                    let hours = this.state.timeinhours;
-                                    let time = this.state.timeinampm;
+                                    let day = projectnavigation.actual.timein.timeinday;
+                                    let year = projectnavigation.actual.timein.timeinyear;
+                                    let minutes = projectnavigation.actual.timein.timeinminutes;
+                                    let hours = projectnavigation.actual.timein.timeinhours;
+                                    let time = projectnavigation.actual.timein.timeinampm;
                                     let timein = makeTimeString(year, month, day, hours, minutes, time);
                                     timein = UTCTimeStringfromTime(timein);
                                     myprojects[i].actual.equipment[j].timein = timein;
@@ -376,13 +414,33 @@ class TimeIn {
     }
 
     toggleampm(ampm) {
-        if (this.state.timeinampm === 'am' && ampm === 'pm') {
-            this.setState({ timeinampm: 'pm' })
-        } else if (this.state.timeinampm === 'pm' && ampm === 'am') {
-            this.setState({ timeinampm: 'am' })
-        }
+    
+
+     
 
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        
+        const timeinampm = projectnavigation.actual.timein.timeinampm;
+        if (timeinampm === 'am' && ampm === 'pm') {
+
+            projectnavigation.actual.timein.timeinampm = 'pm'
+
+            this.props.reduxProjectNavigation(projectnavigation)
+            this.setState({render:'render'})
+        } else if (timeinampm === 'pm' && ampm === 'am') {
+
+             projectnavigation.actual.timein.timeinampm = 'am'
+             this.props.reduxProjectNavigation(projectnavigation)
+             this.setState({render:'render'})
+          
+        }
+
+      
+        const activelaborid = projectnavigation.actual.activelaborid;
+        const active = projectnavigation.actual.activecomponent;
+        const activematerialid = projectnavigation.actual.activematerialid;
+        const activeequipmentid = projectnavigation.actual.activeequipmentid;
         const myprojects = construction.getOurProjects.call(this)
         if(myprojects) {
             
@@ -393,25 +451,25 @@ class TimeIn {
 
                 const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
 
-                if (this.state.active === 'labor') {
+                if (active === 'labor') {
 
 
 
-                    if (this.state.activelaborid) {
-                        const mylabor = construction.getactuallaborbyid.call(this,  this.state.activelaborid);
+                    if (activelaborid) {
+                        const mylabor = construction.getactuallaborbyid.call(this,  this.props.projectnavigation.actual.activelaborid);
                         if (mylabor) {
 
-                            const j = construction.getactuallaborkeybyid.call(this, this.state.activelaborid)
-                            let day = this.state.timeinday;
-                            let year = this.state.timeinyear;
-                            let month = this.state.timeinmonth;
-                            let hours = this.state.timeinhours;
+                            const j = construction.getactuallaborkeybyid.call(this, this.props.projectnavigation.actual.activelaborid)
+                            let day = projectnavigation.actual.timein.timeinday;
+                            let year = projectnavigation.actual.timein.timeinyear;
+                            let month = projectnavigation.actual.timein.timeinmonth;
+                            let hours = projectnavigation.actual.timein.timeinhours;
                             let time = ampm;
-                            let minutes = this.state.timeinminutes;
+                            let minutes =projectnavigation.actual.timein.timeinminutes;
                             let timein = makeTimeString(year, month, day, hours, minutes, time);
-                            console.log(timein)
+                      
                             timein = UTCTimeStringfromTime(timein);
-                            console.log(timein)
+                            
                             myprojects[i].actual.labor[j].timein = timein;
                             this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
@@ -421,17 +479,17 @@ class TimeIn {
 
                     }
 
-                } else if (this.state.active === 'equipment') {
+                } else if (active === 'equipment') {
 
-                    if (this.state.activeequipmentid) {
-                        const myequipment = construction.getactualequipmentbyid.call(this,  this.state.activeequipmentid)
+                    if (activeequipmentid) {
+                        const myequipment = construction.getactualequipmentbyid.call(this,  this.props.projectnavigation.actual.activeequipmentid)
                         if (myequipment) {
                             const j = construction.getactualequipmentkeybyid.call(this,  myequipment.equipmentid)
-                            let day = this.state.timeinday;
-                            let year = this.state.timeinyear;
-                            let month = this.state.timeinmonth;
-                            let hours = this.state.timeinhours;
-                            let minutes = this.state.timeinminutes;
+                            let day = projectnavigation.actual.timein.timeinday;
+                            let year = projectnavigation.actual.timein.timeinyear;
+                            let month = projectnavigation.actual.timein.timeinmonth;
+                            let hours = projectnavigation.actual.timein.timeinhours;
+                            let minutes = projectnavigation.actual.timein.timeinminutes;
                             let time = ampm
                             let timein = makeTimeString(year, month, day, hours, minutes, time);
                             timein = UTCTimeStringfromTime(timein);
@@ -470,9 +528,9 @@ class TimeIn {
 
 
 
-        if (this.state.timeinampm === 'am') {
+        if (this.props.projectnavigation.actual.timein.timeinampm === 'am') {
             return showam()
-        } else if (this.state.timeinampm === 'pm') {
+        } else if (this.props.projectnavigation.actual.timein.timeinampm === 'pm') {
             return showpm()
         }
 
@@ -499,31 +557,31 @@ class TimeIn {
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
-                            <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }} value={this.state.timeinmonth}
+                            <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }} value={this.props.projectnavigation.actual.timein.timeinmonth}
                                 onChange={event => { timein.handlemonth.call(this, event.target.value) }} />
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                             <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.state.timeinday}
+                                value={this.props.projectnavigation.actual.timein.timeinday}
                                 onChange={event => { timein.handleday.call(this, event.target.value) }} />
                         </div>
                         <div style={{ ...styles.flex2, ...styles.addMargin }}>
 
                             <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.state.timeinyear}
+                                value={this.props.projectnavigation.actual.timein.timeinyear}
                                 onChange={event => { timein.handleyear.call(this, event.target.value) }} />
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                             <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.state.timeinhours}
+                                value={this.props.projectnavigation.actual.timein.timeinhours}
                                 onChange={event => { timein.handlehours.call(this, event.target.value) }} />
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                             <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.state.timeinminutes}
+                                value={this.props.projectnavigation.actual.timein.timeinminutes}
                                 onChange={event => { timein.handleminutes.call(this, event.target.value) }}
                             />
                         </div>

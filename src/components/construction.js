@@ -17,7 +17,7 @@ class Construction {
         if (allusers) {
             for (let user of allusers) {
 
-                if (user._ID === user_id) {
+                if (user.User_ID === user_id) {
                     getuser = user;
                 }
 
@@ -31,6 +31,7 @@ class Construction {
         const allusers = construction.getallusers.call(this)
         let getuser = false;
         if (allusers) {
+           
             for (let user of allusers) {
 
                 if (user.User_ID === user_id) {
@@ -64,7 +65,9 @@ class Construction {
     getallusers() {
         let allusers = false;
         if (this.props.allusers) {
+            if(this.props.allusers.hasOwnProperty("length")) {
             allusers = this.props.allusers;
+            }
         }
 
         return allusers;
@@ -1647,45 +1650,72 @@ class Construction {
     }
 
     async clientlogin() {
-
         const construction = new Construction();
-
-        let emailaddress = this.state.emailaddress;
-        let client = this.state.client;
-        let clientid = this.state.clientid;
+    
+    
+        let apple = this.state.apple;
+        let google = this.state.google;
         let firstname = this.state.firstname;
         let lastname = this.state.lastname;
-        let profile = this.state.profile;
-        let userid = profile;
-        let phonenumber = this.state.phonenumber;
+        let emailaddress = this.state.emailaddress;
         let profileurl = this.state.profileurl;
-        let google = this.state.google;
-        let apple = this.state.apple;
-
-        let values = { emailaddress, client, clientid, firstname, lastname, userid, profile, phonenumber, profileurl, apple, google }
-      
+        let phonenumber = this.state.phonumber;
+        let profile = this.state.profile
+        let myuser = { apple, google, firstname, lastname, emailaddress, profileurl, phonenumber, profile }
+        
+    
         try {
-            this.setState({ spinner: true })
-            let response = await AppleLogin(values)
-            this.setState({ spinner: false })
-
-
-            if (response.hasOwnProperty("myuser")) {
-                construction.loadMyCompany.call(this)
-                console.log(response.myuser)
-                this.props.reduxUser(response.myuser)
-                this.setState({ client: '', clientid: '', emailaddress: '', message: '', emailaddresscheck: false, profilecheck: false, profile: '', firstname: '', lastname: '', profileurl: '' })
+    
+            this.setState({login: true, message:'' })
+    
+            let response = await AppleLogin(myuser);
+            console.log(response)
+            if (response) {
+                this.handleUserResponse(response)
+                this.setState({login:false, initialized:true})
+           
             }
-            if (response.hasOwnProperty("message")) {
-                this.setState({ message: response.message })
-            }
-
-            if (response.hasOwnProperty("register")) {
-                this.setState({ register: response.register })
-            }
+    
+    
+    
         } catch (err) {
-            alert(err)
-        }
+    
+            // retry_1
+    
+            this.setState({ login: false, message: `Azure Server Timeout, retrying` })
+    
+    
+            setInterval(async () => {
+                if (!this.state.initialized) {
+                    try {
+    
+                        this.setState({ login: true })
+                        let response = await AppleLogin(myuser);
+                        console.log(response)
+                        this.handleUserResponse(response)
+                        this.setState({login:false})
+    
+    
+                    } catch (err) {
+    
+                        this.setState({ login:false, client: '', clientid: '', emailaddress: '' })
+                        alert(err)
+    
+                    }
+    
+                }
+    
+    
+            }, 35000)
+    
+    
+    
+    
+    
+    
+        } // end of catch error_1
+    
+    
     }
 
     getprojects() {
@@ -2205,7 +2235,7 @@ class Construction {
         if (myemployees) {
             // eslint-disable-next-line
             myemployees.map(employee => {
-                if (employee._id === _id) {
+                if (employee.user_id === _id) {
                     employees = employee;
                 }
             })
@@ -3432,6 +3462,7 @@ class Construction {
     getequipmentfromid(equipmentid) {
         let construction = new Construction();
         let myequipment = construction.getmyequipment.call(this)
+       
         let equipment = false;
         if (myequipment) {
             // eslint-disable-next-line
@@ -3669,6 +3700,12 @@ class Construction {
 
     }
 
+    getProjectNavigation() {
+        if(this.props.projectnavigation) {
+            return this.props.projectnavigation;
+        }
+    }
+
 
 
     getOurProjectKeyById(project_id) {
@@ -3893,7 +3930,7 @@ class Construction {
         if (myemployees) {
             // eslint-disable-next-line
             myemployees.map((employee, i) => {
-                if (employee._id === _id) {
+                if (employee.user_id === _id) {
                     key = i;
                 }
             })

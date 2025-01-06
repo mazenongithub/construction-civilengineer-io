@@ -17,7 +17,8 @@ import {
     CreateScheduleLabor,
     CreateScheduleEquipment,
     CreateMyMaterial,
-    isNumeric
+    isNumeric,
+    sortcode, validatecode, findString
 } from './functions'
 import Construction from './construction'
 import TimeIn from './scheduletimein';
@@ -36,26 +37,21 @@ import { Link } from 'react-router-dom';
 class Schedule extends Component {
     constructor(props) {
         super(props);
-        this.state = { render: '', width: 0, height: 0, active: '', activelaborid: false, activeequipmentid: false, activematerialid: false, providerid: '', timeinmonth: '', timeinday: '', timeinyear: '', timeinhours: '', timeinminutes: '', timeinampm: '', csi_1: '', csi_2: '', csi_3: '', csi_4: '', timeoutmonth: '', timeoutday: '', timeoutminutes: '', timeouthours: '', timeoutyear: '', timeoutampm: '', milestoneid: '', csiid: '', laborrate: 0, equipmentrate: 0, mymaterialid: '', myequipmentid: '', materialdateday: '', materialdatemonth: '', materialdateyear: '', quantity: '', unit: '', unitcost: '', calendertimein: true, calendertimeout: true, materialcalender: true, spinner: false, title:'' }
+        this.state = { render: '', width: 0, height: 0, active: '', activelaborid: false, activeequipmentid: false, activematerialid: false, providerid: '', timeinmonth: '', timeinday: '', timeinyear: '', timeinhours: '', timeinminutes: '', timeinampm: '', csi_1: '', csi_2: '', csi_3: '', csi_4: '', timeoutmonth: '', timeoutday: '', timeoutminutes: '', timeouthours: '', timeoutyear: '', timeoutampm: '', milestoneid: '', csiid: '', laborrate: 0, equipmentrate: 0, mymaterialid: '', myequipmentid: '', materialdateday: '', materialdatemonth: '', materialdateyear: '', quantity: '', unit: '', unitcost: '', calendertimein: true, calendertimeout: true, materialcalender: true, spinner: false, title: '' }
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
     }
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
-        this.timeindefault()
-        this.timeoutdefault();
-        this.materialdatedefault();
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+      
+            if(!projectnavigation.schedule.hasOwnProperty("activelaborid")) {
+                this.reset()
+            }
+           
         
         
-
-        const csicodes = construction.getcsis.call(this)
-        if (!csicodes) {
-            construction.loadcsis.call(this)
-        }
-
-       
-
 
     }
     componentWillUnmount() {
@@ -65,7 +61,50 @@ class Schedule extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
-   
+    uidefault() {
+
+        const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.csi = {csi_1:"", csi_2:"", csi_3:"", csi_4:"", title:""}
+        projectnavigation.schedule.milestoneid = "";
+        projectnavigation.schedule.csiid= "";
+
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+
+    }
+
+    reset() {
+        const construction = new Construction();
+        let projectnavigation = construction.getProjectNavigation.call(this)
+        this.timeindefault()
+        this.timeoutdefault();
+        this.materialdatedefault();
+        projectnavigation.schedule.activelaborid = '';
+        projectnavigation.schedule.activematerialid = '';
+        projectnavigation.schedule.activeequipmentid = '';
+        projectnavigation.schedule.quantity = "";
+        projectnavigation.schedule.unit = "";
+        projectnavigation.schedule.unitcost = "";
+        projectnavigation.schedule.equipmentrate = "";
+        projectnavigation.schedule.csi = {};
+        projectnavigation.schedule.csi.csi_1 = "";
+        projectnavigation.schedule.csi.csi_2 = "";
+        projectnavigation.schedule.csi.csi_3 = "";
+        projectnavigation.schedule.csi.csi_4 = "";
+        projectnavigation.schedule.csi.csiid = "";
+        projectnavigation.schedule.csi.title = "";
+        projectnavigation.schedule.milestoneid = "";
+        projectnavigation.schedule.laborrate = "";
+       
+
+
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+
+    }
+
+
     materialdatedefault() {
         const materialdatemonth = () => {
             let month = new Date().getMonth() + 1;
@@ -86,11 +125,16 @@ class Schedule extends Component {
 
             return year;
         }
-        this.setState({ materialdateyear: materialdateyear(), materialdatemonth: materialdatemonth(), materialdateday: materialdateday() })
+        const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.materialdate = { materialdateyear: materialdateyear(), materialdatemonth: materialdatemonth(), materialdateday: materialdateday(), materialcalender:true }
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
     }
 
 
     timeoutdefault() {
+        const construction = new Construction();
         const timeoutmonth = () => {
             let month = new Date().getMonth() + 1;
             if (month < 10) {
@@ -135,9 +179,13 @@ class Schedule extends Component {
                 return 'pm'
             }
         }
-        this.setState({ timeoutmonth: timeoutmonth(), timeoutday: timeoutday(), timeoutyear: timeoutyear(), timeouthours: timeouthours(), timeoutminutes: timeoutminutes(), timeoutampm: timeoutampm() })
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.timeout = { timeoutmonth: timeoutmonth(), timeoutday: timeoutday(), timeoutyear: timeoutyear(), timeouthours: timeouthours(), timeoutminutes: timeoutminutes(), timeoutampm: timeoutampm(), calendertimeout:true }
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
     }
     timeindefault() {
+        const construction = new Construction();
         const timeinmonth = () => {
             let month = new Date().getMonth() + 1;
             if (month < 10) {
@@ -182,13 +230,22 @@ class Schedule extends Component {
                 return 'pm'
             }
         }
-        this.setState({ timeinmonth: timeinmonth(), timeinday: timeinday(), timeinyear: timeinyear(), timeinhours: timeinhours(), timeinminutes: timeinminutes(), timeinampm: timeinampm() })
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.timein = { timeinmonth: timeinmonth(), timeinday: timeinday(), timeinyear: timeinyear(), timeinhours: timeinhours(), timeinminutes: timeinminutes(), timeinampm: timeinampm(), calendertimein: true }
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
     }
 
     getcsiid() {
         const construction = new Construction();
-        if (this.state.activelaborid && this.state.active === 'labor') {
-            const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid)
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        const activelaborid = projectnavigation.schedule.activelaborid;
+        const active = projectnavigation.schedule.activecomponent;
+        const activematerialid = projectnavigation.schedule.activematerialid;
+        const activeequipmentid = projectnavigation.schedule.activeequipmentid;
+
+        if (activelaborid && active === 'labor') {
+            const mylabor = construction.getschedulelaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid)
             if (mylabor) {
                 let csi = construction.getcsibyid.call(this, mylabor.csiid)
                 if (csi) {
@@ -197,16 +254,16 @@ class Schedule extends Component {
                 }
 
             }
-        } else if (this.state.activematerialid && this.state.active === 'materials') {
-            const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid)
+        } else if (activematerialid && active === 'materials') {
+            const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid)
             if (mymaterial) {
                 let csi = construction.getcsibyid.call(this, mymaterial.csiid);
                 if (csi) {
                     return `${csi.csi}-${csi.title}`
                 }
             }
-        } else if (this.state.activeequipmentid && this.state.active === 'equipment') {
-            const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+        } else if (activeequipmentid && active === 'equipment') {
+            const myequipment = construction.getscheduleequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
 
             if (myequipment) {
                 let csi = construction.getcsibyid.call(this, myequipment.csiid);
@@ -215,9 +272,9 @@ class Schedule extends Component {
                 }
             }
 
-        } else if (this.state.csiid) {
+        } else if (this.props.projectnavigation.schedule.csi.csiid) {
 
-            let csi = construction.getcsibyid.call(this, this.state.csiid);
+            let csi = construction.getcsibyid.call(this, this.props.projectnavigation.schedule.csi.csiid);
             if (csi) {
                 return `${csi.csi}-${csi.title}`
             }
@@ -225,41 +282,276 @@ class Schedule extends Component {
 
     }
 
+    handleCSI_1(csi_1) {
+
+        const construction = new Construction();
+        let projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.csi.csi_1 = csi_1
+        projectnavigation.schedule.csi.title = "";
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+
+    }
+    handleCSI_2(csi_2) {
+
+        const construction = new Construction();
+        let projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.csi.csi_2 = csi_2
+        projectnavigation.schedule.csi.title = "";
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+
+    }
+
+    handleCSI_3(csi_3) {
+
+        const construction = new Construction();
+        let projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.csi.csi_3 = csi_3
+        projectnavigation.schedule.csi.title = "";
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+
+    }
+
+    handleCSI_4(csi_4) {
+
+        const construction = new Construction();
+        let projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.csi.csi_4 = csi_4
+        projectnavigation.schedule.csi.title = "";
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+
+    }
+
+    handleTitle(title) {
+        const construction = new Construction();
+        let projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.csi.title = title
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
+
+    }
+
+    getAction() {
+        
+            if (this.props.projectnavigation.schedule.activelaborid || this.props.projectnavigation.schedule.activematerialid || this.props.projectnavigation.schedule.activeequipmentid) {
+                return (`Update`)
+            } else {
+                return (`Select`)
+            }
+        
+    }
+
+    getCSI_1() {
+
+        let csi_1 = "";
+
+        if(this.props.projectnavigation) {
+            if(this.props.projectnavigation.schedule) {
+                if(this.props.projectnavigation.schedule.csi) {
+                    csi_1 = this.props.projectnavigation.schedule.csi.csi_1;
+                }
+            }
+        }
+
+
+        return csi_1;
+
+    }
+
+    getCSI_2() {
+
+        let csi_2 = "";
+
+        
+        if(this.props.projectnavigation) {
+            if(this.props.projectnavigation.schedule) {
+                if(this.props.projectnavigation.schedule.csi) {
+                    csi_2 = this.props.projectnavigation.schedule.csi.csi_2;
+                }
+            }
+        }
+
+
+        return csi_2;
+
+    }
+
+    getCSI_3() {
+
+        let csi_3 = "";
+
+        
+        if(this.props.projectnavigation) {
+            if(this.props.projectnavigation.schedule) {
+                if(this.props.projectnavigation.schedule.csi) {
+                    csi_3 = this.props.projectnavigation.schedule.csi.csi_3;
+                }
+            }
+        }
+
+
+        return csi_3;
+
+    }
+
+    getCSI_4() {
+
+        let csi_4 = "";
+
+        
+        if(this.props.projectnavigation) {
+            if(this.props.projectnavigation.schedule) {
+                if(this.props.projectnavigation.schedule.csi) {
+                    csi_4 = this.props.projectnavigation.schedule.csi.csi_4;
+                }
+            }
+        }
+
+
+        return csi_4;
+
+    }
+
+    getTitle() {
+
+        let title = "";
+
+        
+        if(this.props.projectnavigation) {
+            if(this.props.projectnavigation.schedule) {
+                if(this.props.projectnavigation.schedule.csi) {
+                    title = this.props.projectnavigation.schedule.csi.title;
+                }
+            }
+        }
+
+
+        return title;
+
+    }
+
+    getCSIID() {
+        const construction = new Construction();
+        const styles = MyStylesheet();
+
+   
+        const regularFont = construction.getRegularFont.call(this);
+        const csi = new CSI();
+        let getnumber = 0
+
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        const activelaborid = projectnavigation.schedule.activelaborid;
+        const active = projectnavigation.schedule.activecomponent;
+        const activematerialid = projectnavigation.schedule.activematerialid;
+        const activeequipmentid = projectnavigation.schedule.activeequipmentid;
+
+        let _csiid = "";
+
+        if (activelaborid && active === 'labor') {
+            const mylabor = construction.getlaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid)
+            if (mylabor) {
+                let csi = construction.getcsibyid.call(this, mylabor.csiid)
+
+                if (csi) {
+
+                    _csiid = `${csi.csi}-${csi.title}`
+
+                }
+
+            }
+        } else if (activematerialid && active === 'materials') {
+            const mymaterial = construction.getmaterialbyid.call(this, this.props.projectnavigation.schedule.activematerialid)
+            if (mymaterial) {
+                let csi = construction.getcsibyid.call(this, mymaterial.csiid);
+                if (csi) {
+                    _csiid = `${csi.csi}-${csi.title}`
+                }
+            }
+        } else if (activeequipmentid && active === 'equipment') {
+            const myequipment = construction.getequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
+
+            if (myequipment) {
+                let csi = construction.getcsibyid.call(this, myequipment.csiid);
+                if (csi) {
+                    _csiid = `${csi.csi}-${csi.title}`
+                }
+            }
+
+        } else if(this.getcsiid()) {
+            let getcsi = construction.getcsibyid.call(this, this.getcsiid()(this));
+                if (getcsi) {
+                    _csiid = `${getcsi.csi}-${getcsi.title}`
+                }
+        }
+
+        if (_csiid) {
+
+            return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.redBorder, ...styles.generalPadding }}>
+                <span style={{ ...styles.generalFont, ...regularFont }}>{_csiid}</span>
+            </div>)
+        }
+    }
+
+    getcsiid() {
+        if(this.props.projectnavigation) {
+            if(this.props.projectnavigation.schedule) {
+                return this.props.projectnavigation.schedule.csiid;
+            }
+        }
+    }
+
+
     getProject() {
-    
+
         const project_id = this.props.project_id;
         const construction = new Construction();
         const ourproject = construction.getOurProjectByID.call(this, project_id)
         return ourproject;
-        
+
 
     }
 
     getmilestoneid() {
         const construction = new Construction();
         const project = this.getProject();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        const activelaborid = projectnavigation.schedule.activelaborid;
+        const active = projectnavigation.schedule.activecomponent;
+        const activematerialid = projectnavigation.schedule.activematerialid;
+        const activeequipmentid = projectnavigation.schedule.activeequipmentid;
         let milestoneid = ""
         if (project) {
 
-            if (this.state.active === 'labor') {
-                if (this.state.activelaborid) {
-                    const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
+            if (active === 'labor') {
+                if (activelaborid) {
+                    const mylabor = construction.getschedulelaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid);
                     milestoneid = mylabor.milestoneid;
-                } 
+                } else {
+                    milestoneid = this.props.projectnavigation.schedule.milestoneid;
+                }
 
-            } else if (this.state.active === 'equipment') {
-                if (this.state.activeequipmentid) {
-                    const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
+            } else if (active === 'equipment') {
+                if (activeequipmentid) {
+                    const myequipment = construction.getscheduleequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid);
                     milestoneid = myequipment.milestoneid;
+                } else {
+                    milestoneid = this.props.projectnavigation.schedule.milestoneid;
                 }
 
-            } else if (this.state.active === 'materials') {
+            } else if (active === 'materials') {
 
-                if (this.state.activematerialid) {
-                    const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
+                if (activematerialid) {
+                    const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                     milestoneid = mymaterial.milestoneid;
+                } else {
+                    milestoneid = this.props.projectnavigation.schedule.milestoneid;
                 }
 
+            }  else {
+                milestoneid = this.props.projectnavigation.schedule.milestoneid;
             }
 
         }
@@ -267,11 +559,144 @@ class Schedule extends Component {
 
     }
 
+    getsearchresults() {
+        const construction = new Construction();
+        let csi_1 = "";
+        let csi_2 = "";
+        let csi_3 = "";
+        let csi_4 = "";
+        let title = "";
+        if (this.props.projectnavigation) {
+            if (this.props.projectnavigation.schedule) {
+
+                if (this.props.projectnavigation.schedule.csi) {
+                    csi_1 = this.props.projectnavigation.schedule.csi.csi_1;
+                    csi_2 = this.props.projectnavigation.schedule.csi.csi_2;
+                    csi_3 = this.props.projectnavigation.schedule.csi.csi_3;
+                    csi_4 = this.props.projectnavigation.schedule.csi.csi_4;
+                    title = this.props.projectnavigation.schedule.csi.title;
+
+                }
+
+            }
+        }
+        let searchcsi = "";
+
+        let results = [];
+
+        if (csi_1.length === 2) {
+            searchcsi = csi_1.substr(0, 2);
+        }
+        if (csi_2.length === 2) {
+            searchcsi += csi_2.substr(0, 2);
+        }
+        if (csi_3.length === 2) {
+            searchcsi += csi_3.substr(0, 2);
+        }
+        if (csi_4.length === 2) {
+            searchcsi += csi_4.substr(0, 2);
+        }
+
+      
+
+        const codes = construction.getcsis.call(this)
+        if (codes) {
+
+
+
+            if (codes) {
+
+                // eslint-disable-next-line
+                codes.map(code => {
+
+                    if (searchcsi) {
+
+                        if (code.csi.replace(".", "").startsWith(searchcsi)) {
+
+
+                            if (title.length > 1) {
+
+                                if (findString(title, code.title)) {
+
+                                    if (validatecode(results, code)) {
+                                        results.push(code)
+                                    }
+
+                                }
+
+
+                            } else {
+
+                                if (validatecode(results, code)) {
+                                    results.push(code)
+                                }
+
+                            }
+
+
+                        }
+
+                    }
+
+                    if(title) {
+
+                    if (title.length > 1) {
+
+                        if (findString(title, code.title)) {
+
+                            if (searchcsi) {
+
+                                if (code.csi.startsWith(searchcsi)) {
+
+                                    if (validatecode(results, code)) {
+                                        results.push(code)
+                                    }
+
+                                }
+
+                            } else {
+
+                                if (validatecode(results, code)) {
+                                    results.push(code)
+                                }
+
+                            }
+
+
+                        }
+
+                    }
+
+                }
+
+
+
+                })
+
+            }
+
+            results.sort((codeb, codea) => {
+
+                return sortcode(codeb, codea)
+            })
+
+
+
+        }
+
+        return results;
+    }
+
     handlecsiid(csiid) {
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        const active = projectnavigation.schedule.activecomponent;
+        const activelaborid = projectnavigation.schedule.activelaborid;
+        const activematerialid = projectnavigation.schedule.activematerialid;
+        const activeequipmentid = projectnavigation.schedule.activeequipmentid;
 
-        if(myprojects) {
+        if (myprojects) {
             const csi = construction.getcsibyid.call(this, csiid);
             if (csi) {
 
@@ -283,56 +708,69 @@ class Schedule extends Component {
                 if (csi.csi.length > 6) {
                     csi_4 = csi.csi.substring(7, 9);
                 }
-                this.setState({ csi_4, csi_3, csi_2, csi_1, title })
+                let projectnavigation = construction.getProjectNavigation.call(this)
+                projectnavigation.schedule.csi = { csi_4, csi_3, csi_2, csi_1, title }
+                this.props.reduxProjectNavigation(projectnavigation)
+                this.setState({ render: 'render' })
                 const project = this.getProject()
                 if (project) {
                     const project_id = this.props.project_id;
                     const i = construction.getOurProjectKeyById.call(this, project_id)
-                    if (this.state.active === 'labor') {
+                    if (active === 'labor') {
 
-                        if (this.state.activelaborid) {
-                            const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
+                        if (activelaborid) {
+                            const mylabor = construction.getschedulelaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid);
                             if (mylabor) {
-                                const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                                const j = construction.getschedulelaborkeybyid.call(this, this.props.projectnavigation.schedule.activelaborid)
                                 myprojects[i].schedule.labor[j].csiid = csiid;
                                 this.props.reduxMyProjects(myprojects)
                                 this.setState({ render: 'render' })
                             }
 
                         } else {
-                            this.setState({ csiid })
+
+                            projectnavigation.schedule.csiid = csiid;
+                            this.props.reduxProjectNavigation(projectnavigation)
+                            this.setState({ render: 'render' })
                         }
 
-                    } else if (this.state.active === 'materials') {
+                    } else if (active === 'materials') {
 
-                        if (this.state.activematerialid) {
-                            const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
+                        if (activematerialid) {
+                            const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                             if (mymaterial) {
-                                const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                                const j = construction.getschedulematerialkeybyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                                 myprojects[i].schedule.materials[j].csiid = csiid;
                                 this.props.reduxMyProjects(myprojects)
                                 this.setState({ render: 'render' })
                             }
                         } else {
-                            this.setState({ csiid })
+                            projectnavigation.schedule.csiid = csiid;
+                            this.props.reduxProjectNavigation(projectnavigation)
+                            this.setState({ render: 'render' })
+
                         }
 
-                    } else if (this.state.active === 'equipment') {
+                    } else if (active === 'equipment') {
 
-                        if (this.state.activeequipmentid) {
-                            const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
+                        if (activeequipmentid) {
+                            const myequipment = construction.getscheduleequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid);
                             if (myequipment) {
-                                const j = construction.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
+                                const j = construction.getscheduleequipmentkeybyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
                                 myprojects[i].schedule.equipment[j].csiid = csiid;
                                 this.props.reduxMyProjects(myprojects)
                                 this.setState({ render: 'render' })
                             }
                         } else {
-                            this.setState({ csiid })
+                            projectnavigation.schedule.csiid = csiid;
+                            this.props.reduxProjectNavigation(projectnavigation)
+                            this.setState({ render: 'render' })
                         }
 
                     } else {
-                        this.setState({ csiid })
+                        projectnavigation.schedule.csiid = csiid;
+                        this.props.reduxProjectNavigation(projectnavigation)
+                        this.setState({ render: 'render' })
                     }
 
                 }
@@ -346,56 +784,73 @@ class Schedule extends Component {
     handlemilestoneid(milestoneid) {
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
-        if(myprojects) {
+        let projectnavigation = construction.getProjectNavigation.call(this)
+        const active = projectnavigation.schedule.activecomponent;
+        const activelaborid = projectnavigation.schedule.activelaborid;
+        const activematerialid = projectnavigation.schedule.activematerialid;
+        const activeequipmentid = projectnavigation.schedule.activeequipmentid;
+        if (myprojects) {
             const project = this.getProject()
             if (project) {
                 const project_id = this.props.project_id;
                 const i = construction.getOurProjectKeyById.call(this, project_id)
-                if (this.state.active === 'labor') {
+                if (active === 'labor') {
 
-                    if (this.state.activelaborid) {
-                        const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
+                    if (activelaborid) {
+                        const mylabor = construction.getschedulelaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid);
                         if (mylabor) {
-                            const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                            const j = construction.getschedulelaborkeybyid.call(this, this.props.projectnavigation.schedule.activelaborid)
                             myprojects[i].schedule.labor[j].milestoneid = milestoneid;
                             this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
 
                     } else {
-                        this.setState({ milestoneid })
+                        projectnavigation.schedule.milestoneid = milestoneid;
+                        this.props.reduxProjectNavigation(projectnavigation)
+                        this.setState({ render:'render' })
+                     
                     }
 
-                } else if (this.state.active === 'materials') {
+                } else if (active === 'materials') {
 
-                    if (this.state.activematerialid) {
-                        const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
+                    if (activematerialid) {
+                        const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                         if (mymaterial) {
-                            const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                            const j = construction.getschedulematerialkeybyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                             myprojects[i].schedule.materials[j].milestoneid = milestoneid;
                             this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
                     } else {
-                        this.setState({ milestoneid })
+                        projectnavigation.schedule.milestoneid = milestoneid;
+                        this.props.reduxProjectNavigation(projectnavigation)
+                        this.setState({ render:'render' })
+                  
                     }
 
-                } else if (this.state.active === 'equipment') {
+                } else if (active === 'equipment') {
 
-                    if (this.state.activeequipmentid) {
-                        const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
+                    if (activeequipmentid) {
+                        const myequipment = construction.getscheduleequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid);
                         if (myequipment) {
-                            const j = construction.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
+                            const j = construction.getscheduleequipmentkeybyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
                             myprojects[i].schedule.equipment[j].milestoneid = milestoneid;
                             this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
                     } else {
-                        this.setState({ milestoneid })
+                        projectnavigation.schedule.milestoneid = milestoneid;
+                        this.props.reduxProjectNavigation(projectnavigation)
+                        this.setState({ render:'render' })
+                    
                     }
 
                 } else {
-                    this.setState({ milestoneid })
+                    projectnavigation.schedule.milestoneid = milestoneid;
+                    this.props.reduxProjectNavigation(projectnavigation)
+                    this.setState({ render:'render' })
+               
                 }
 
             }
@@ -414,13 +869,13 @@ class Schedule extends Component {
         let equipmentid = "";
         if (project) {
 
-            if (this.state.activeequipmentid) {
-                const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+            if (this.props.projectnavigation.schedule.activeequipmentid) {
+                const myequipment = construction.getscheduleequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
                 if (myequipment) {
                     equipmentid = myequipment.myequipmentid;
                 }
             } else {
-                equipmentid = this.state.myequipmentid;
+                equipmentid = this.props.projectnavigation.schedule.myequipmentid;
             }
 
         }
@@ -431,10 +886,10 @@ class Schedule extends Component {
     removelaborid(labor) {
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
-    
-        const user = construction.getuserbyID.call(this,labor.user_id)
+
+        const user = construction.getuserbyID.call(this, labor.user_id)
         if (window.confirm(`Are you sure you want to delete labor for ${user.UserID}`)) {
-            if(myprojects) {
+            if (myprojects) {
                 const project = this.getProject()
                 if (project) {
                     const project_id = this.props.project_id;
@@ -459,13 +914,13 @@ class Schedule extends Component {
         let employeeid = "";
         if (project) {
 
-            if (this.state.activelaborid) {
-                const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid)
+            if (this.props.projectnavigation.schedule.activelaborid) {
+                const mylabor = construction.getschedulelaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid)
                 if (mylabor) {
 
                     employeeid = mylabor.user_id
                 }
-            } 
+            }
 
         }
         return employeeid;
@@ -474,11 +929,15 @@ class Schedule extends Component {
     makematerialactive(materialid) {
         const construction = new Construction();
         const project = this.getProject()
+        let projectnavigation = construction.getProjectNavigation.call(this)
         if (project) {
 
-            if (this.state.activematerialid === materialid) {
+            if (this.props.projectnavigation.schedule.activematerialid === materialid) {
                 this.materialdatedefault();
-                this.setState({ activematerialid: false })
+
+                projectnavigation.schedule.activematerialid = false;
+                this.props.reduxProjectNavigation(projectnavigation)
+                this.setState({ render:'render' })
                 this.reset()
 
             } else {
@@ -505,9 +964,13 @@ class Schedule extends Component {
                         }
                         title = csi.title
                     }
+                    projectnavigation.schedule.materialdate = { materialdatemonth, materialdateday, materialdateyear }
+                    projectnavigation.schedule.activematerialid = materialid
+                    projectnavigation.schedule.csi = { csi_1, csi_2, csi_3, csi_4, title }
+                    this.props.reduxProjectNavigation(projectnavigation)
 
 
-                    this.setState({ materialdatemonth, materialdateday, materialdateyear, activematerialid: materialid, csi_1, csi_2, csi_3, csi_4, title })
+                    this.setState({render:'render' })
 
                 }
 
@@ -521,11 +984,13 @@ class Schedule extends Component {
 
         const construction = new Construction();
         const project = this.getProject()
+        let projectnavigation = construction.getProjectNavigation.call(this)
         if (project) {
 
-            if (this.state.activeequipmentid === equipmentid) {
-
-                this.setState({ activeequipmentid: false })
+            if (this.props.projectnavigation.schedule.activeequipmentid === equipmentid) {
+                projectnavigation.schedule.activeequipmentid = false;
+                this.props.reduxProjectNavigation(projectnavigation)
+                this.setState({ render:'render' })
                 this.reset();
             } else {
 
@@ -563,8 +1028,13 @@ class Schedule extends Component {
                         }
                         title = csi.title
                     }
-
-                    this.setState({ activeequipmentid: equipmentid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4, title })
+                    projectnavigation.schedule.activeequipmentid = equipmentid;
+                    projectnavigation.schedule.timein = { timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm }
+                    projectnavigation.schedule.timeout = { timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm }
+                    projectnavigation.schedule.csi = { csi_1, csi_2, csi_3, csi_4, title }
+                    projectnavigation.schedule.equipmentid = equipmentid;
+                    this.props.reduxProjectNavigation(projectnavigation)
+                    this.setState({ render:'render' })
 
                 }
             }
@@ -576,11 +1046,14 @@ class Schedule extends Component {
 
         const construction = new Construction();
         const project = this.getProject()
+        let projectnavigation = construction.getProjectNavigation.call(this)
         if (project) {
 
-            if (this.state.activelaborid === laborid) {
+            if (this.props.projectnavigation.schedule.activelaborid === laborid) {
                 this.reset();
-                this.setState({ activelaborid: false })
+                projectnavigation.schedule.activelaborid = false;
+                this.props.reduxProjectNavigation(projectnavigation)
+                this.setState({  render:'render' })
             } else {
 
                 const mylabor = construction.getschedulelaborbyid.call(this, laborid)
@@ -618,9 +1091,15 @@ class Schedule extends Component {
                         title = csi.title
                     }
 
+                    projectnavigation.schedule.activelaborid = laborid;
+                    projectnavigation.schedule.timein = { timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm }
+                    projectnavigation.schedule.timeout = { timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm }
+                    projectnavigation.schedule.csi = { csi_1, csi_2, csi_3, csi_4, title }
+                    projectnavigation.schedule.laborid = laborid;
+                    this.props.reduxProjectNavigation(projectnavigation)
 
 
-                    this.setState({ activelaborid: laborid, timeinmonth, timeinday, timeinyear, timeinhours, timeinminutes, timeinampm, timeoutmonth, timeoutday, timeoutyear, timeouthours, timeoutminutes, timeoutampm, csi_1, csi_2, csi_3, csi_4, title })
+                    this.setState({ render:'render' })
 
                 }
             }
@@ -645,14 +1124,17 @@ class Schedule extends Component {
         let employee = construction.getuserby_id.call(this, labor.user_id)
         let hourlyrate = labor.laborrate;
         const project = this.getProject()
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        const active = projectnavigation.schedule.activecomponent;
+
         if (project) {
 
             const milestone = construction.getmilestonebyid.call(this, labor.milestoneid)
-        
+
 
 
             const getbutton = () => {
-                if (this.state.activelaborid === labor.laborid) {
+                if (this.props.projectnavigation.schedule.activelaborid === labor.laborid) {
                     return (styles.activeButton);
                 } else {
                     return (styles.generalButton);
@@ -661,20 +1143,22 @@ class Schedule extends Component {
 
 
             const getactivelaborbackground = (laborid) => {
-                if (this.state.activelaborid === laborid) {
+                if (this.props.projectnavigation.schedule.activelaborid === laborid) {
                     return styles.activeBackground;
                 }
 
             }
 
-            if (this.state.active === 'labor') {
+
+
+            if (active === 'labor') {
 
                 return (
-                    <div key={labor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont,...styles.bottomMargin10, }}>
+                    <div key={labor.laborid} style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin10, }}>
                         <span style={{ ...getactivelaborbackground(labor.laborid) }} onClick={() => { this.makelaboractive(labor.laborid) }}>
                             {employee.FirstName} {employee.LastName}: {labor.description} Milestone {milestone.milestone} CSI:{csi.csi}-{csi.title}<br />
-                From {inputUTCStringForLaborID(labor.timein)} to {inputUTCStringForLaborID(labor.timeout)}
-                ${Number(hourlyrate).toFixed(2)}/Hr x {calculatetotalhours(labor.timeout, labor.timein)} Hrs = ${(Number(calculatetotalhours(labor.timeout, labor.timein)) * hourlyrate).toFixed(2)}
+                            From {inputUTCStringForLaborID(labor.timein)} to {inputUTCStringForLaborID(labor.timeout)}
+                            ${Number(hourlyrate).toFixed(2)}/Hr x {calculatetotalhours(labor.timeout, labor.timein)} Hrs = ${(Number(calculatetotalhours(labor.timeout, labor.timein)) * hourlyrate).toFixed(2)}
                         </span>
                         <button style={{ ...getbutton(), ...removeIcon }} onClick={() => { this.removelaborid(labor) }}>{removeIconSmall()} </button>
                     </div>)
@@ -689,16 +1173,16 @@ class Schedule extends Component {
         const project = this.getProject()
         let laborids = [];
         const myprojects = construction.getOurProjects.call(this)
-        if(myprojects) {
+        if (myprojects) {
             if (project) {
                 const labors = construction.getschedulelabor.call(this)
                 if (labors) {
                     // eslint-disable-next-line
                     labors.map(labor => {
-                   
-                   
-                            laborids.push(this.showlaborid(labor))
-                        
+
+
+                        laborids.push(this.showlaborid(labor))
+
 
                     })
                 }
@@ -715,7 +1199,7 @@ class Schedule extends Component {
         const myprojects = construction.getOurProjects.call(this)
         const material = construction.getmymaterialfromid.call(this, mymaterial.mymaterialid)
         if (window.confirm(`Are you sure you want to delete material for ${material.material}`)) {
-            if(myprojects) {
+            if (myprojects) {
                 const project = this.getProject()
                 if (project) {
                     const project_id = this.props.project_id;
@@ -736,13 +1220,7 @@ class Schedule extends Component {
         }
     }
 
-    reset() {
-        this.timeindefault()
-        this.timeoutdefault();
-        this.materialdatedefault();
-        this.setState({ quantity: '', unit: '', unitcost: '', laborrate: '', equipmentrate: '', activeequipmentid: '', activematerialid: '', activelaborid: '' })
-
-    }
+  
 
     showmaterialid(mymaterial) {
         const styles = MyStylesheet();
@@ -752,8 +1230,11 @@ class Schedule extends Component {
         const project = this.getProject()
         const csi = construction.getcsibyid.call(this, mymaterial.csiid);
         const material = construction.getmymaterialfromid.call(this, mymaterial.mymaterialid)
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        const active = projectnavigation.schedule.activecomponent;
+
         const getbutton = () => {
-            if (this.state.activematerialid === mymaterial.materialid) {
+            if (this.props.projectnavigation.schedule.activematerialid === mymaterial.materialid) {
                 return (styles.activeButton);
             } else {
                 return (styles.generalButton);
@@ -762,12 +1243,12 @@ class Schedule extends Component {
 
         }
         const activebackground = (materialid) => {
-            if (this.state.activematerialid === materialid) {
+            if (this.props.projectnavigation.schedule.activematerialid === materialid) {
                 return (styles.activeBackground)
             }
 
         }
-        if (this.state.active === 'materials') {
+        if (active === 'materials') {
             if (project) {
 
                 const milestone = construction.getmilestonebyid.call(this, mymaterial.milestoneid)
@@ -808,7 +1289,7 @@ class Schedule extends Component {
         const myprojects = construction.getOurProjects.call(this)
         const myequipment = construction.getmyequipmentbyid.call(this, equipment.myequipmentid)
         if (window.confirm(`Are you sure you want to delete material for ${myequipment.equipment}`)) {
-            if(myprojects) {
+            if (myprojects) {
                 const project = this.getProject()
                 if (project) {
                     const project_id = this.props.project_id;
@@ -832,6 +1313,7 @@ class Schedule extends Component {
     }
 
     showequipmentid(equipment) {
+
         const styles = MyStylesheet();
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this);
@@ -842,7 +1324,7 @@ class Schedule extends Component {
         const removeIcon = construction.getremoveicon.call(this)
         const amount = (calculatetotalhours(equipment.timeout, equipment.timein) * Number(equipment.equipmentrate))
         const getbutton = () => {
-            if (this.state.activeequipmentid === equipment.equipmentid) {
+            if (this.props.projectnavigation.schedule.activeequipmentid === equipment.equipmentid) {
                 return (styles.activeButton);
             } else {
                 return (styles.generalButton);
@@ -850,7 +1332,7 @@ class Schedule extends Component {
         }
 
         const activeequipment = (equipmentid) => {
-            if (this.state.activeequipmentid === equipmentid) {
+            if (this.props.projectnavigation.schedule.activeequipmentid === equipmentid) {
                 return (styles.activeBackground)
             }
 
@@ -858,13 +1340,14 @@ class Schedule extends Component {
         if (project) {
 
             const milestone = construction.getmilestonebyid.call(this, equipment.milestoneid)
-            const myequipment = construction.getequipmentfromid.call(this, equipment.equipmentid);
+            const myequipment = construction.getequipmentfromid.call(this, equipment.myequipmentid);
+            console.log(myequipment, equipment.equipmentid)
 
             return (<div style={{ ...styles.generalContainer, ...styles.generalFont, ...regularFont, ...styles.bottomMargin10 }} key={equipment.equipmentid}>
                 <span style={{ ...activeequipment(equipment.equipmentid) }} onClick={() => { this.makeequipmentactive(equipment.equipmentid) }}>
                     {myequipment.equipment} From: {inputUTCStringForLaborID(equipment.timein)} to {inputUTCStringForLaborID(equipment.timeout)}
-                 CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone}
-                Total Hours: {totalhours} x  {equipmentrate} = ${amount.toFixed(2)}
+                    CSI: {csi.csi} - {csi.title} Milestone: {milestone.milestone}
+                    Total Hours: {totalhours} x  {equipmentrate} = ${amount.toFixed(2)}
                 </span>
                 <button style={{ ...getbutton(), ...removeIcon }}
                     onClick={() => { this.removeequipment(equipment) }}>{removeIconSmall()} </button>
@@ -878,7 +1361,10 @@ class Schedule extends Component {
         const construction = new Construction();
         const project = this.getProject();
         let equipmentids = [];
-        if (this.state.active === 'equipment') {
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        const active = projectnavigation.schedule.activecomponent;
+
+        if (active === 'equipment') {
             if (project) {
 
                 const equipments = construction.getscheduleequipment.call(this)
@@ -901,15 +1387,15 @@ class Schedule extends Component {
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
         const makeid = new MakeID();
-        if(myprojects) {
+        if (myprojects) {
             const project = this.getProject();
             if (project) {
                 const project_id = this.props.project_id;
                 const i = construction.getOurProjectKeyById.call(this, project_id)
-                if (this.state.activeequipmentid) {
-                    const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                if (this.props.projectnavigation.schedule.activeequipmentid) {
+                    const myequipment = construction.getscheduleequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
                     if (myequipment) {
-                        const j = construction.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
+                        const j = construction.getscheduleequipmentkeybyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
                         myprojects[i].schedule.equipment[j].myequipmentid = myequipmentid;
                         this.props.reduxMyProjects(myprojects)
                         this.setState({ render: 'render' })
@@ -917,26 +1403,26 @@ class Schedule extends Component {
 
                 } else {
                     const equipmentid = makeid.equipmentid.call(this)
-                    const milestoneid = this.state.milestoneid;
-                    const csiid = this.state.csiid;
-                    const dayin = this.state.timeinday;
-                    const yearin = this.state.timeinyear;
-                    const monthin = this.state.timeinmonth;
-                    const hoursin = this.state.timeinhours;
-                    const timetimein = this.state.timeinampm;
-                    const minutesin = this.state.timeinminutes;
+                    const milestoneid = this.props.projectnavigation.schedule.milestoneid;
+                    const csiid = this.props.projectnavigation.schedule.csiid
+                    const dayin = this.props.projectnavigation.schedule.timein.timeinday;
+                    const yearin = this.props.projectnavigation.schedule.timein.timeinyear;
+                    const monthin = this.props.projectnavigation.schedule.timein.timeinmonth;
+                    const hoursin = this.props.projectnavigation.schedule.timein.timeinhours;
+                    const timetimein = this.props.projectnavigation.schedule.timein.timeinampm;
+                    const minutesin = this.props.projectnavigation.schedule.timein.timeinminutes;
                     let timein = makeTimeString(yearin, monthin, dayin, hoursin, minutesin, timetimein);
                     timein = UTCTimeStringfromTime(timein);
-                    const dayout = this.state.timeoutday;
-                    const yearout = this.state.timeoutyear;
-                    const monthout = this.state.timeoutmonth;
-                    const hoursout = this.state.timeouthours;
-                    const minutesout = this.state.timeoutminutes;
-                    const timetimeout = this.state.timeoutampm;
+                    const dayout = this.props.projectnavigation.schedule.timeout.timeoutday;
+                    const yearout = this.props.projectnavigation.schedule.timeout.timeoutyear;
+                    const monthout = this.props.projectnavigation.schedule.timeout.timeoutmonth;
+                    const hoursout = this.props.projectnavigation.schedule.timeout.timeouthours;
+                    const minutesout = this.props.projectnavigation.schedule.timeout.timeoutminutes;
+                    const timetimeout = this.props.projectnavigation.schedule.timeout.timeoutampm;
                     let timeout = makeTimeString(yearout, monthout, dayout, hoursout, minutesout, timetimeout);
                     timeout = UTCTimeStringfromTime(timeout);
                     const equipmentrate = construction.calculateequipmentratebyownership.call(this, myequipmentid) > 0 ? Number(construction.calculateequipmentratebyownership.call(this, myequipmentid)).toFixed(2) : 0;
-                  
+
 
 
                     const newEquipment = CreateScheduleEquipment(equipmentid, myequipmentid, csiid, milestoneid, timein, timeout, equipmentrate, '', 0)
@@ -945,11 +1431,14 @@ class Schedule extends Component {
                     if (equipments) {
                         myprojects[i].schedule.equipment.push(newEquipment)
                     } else {
-                   
+
                         myprojects[i].schedule.equipment = [newEquipment]
                     }
                     this.props.reduxMyProjects(myprojects)
-                    this.setState({ activeequipmentid: equipmentid })
+                    let projectnavigation = construction.getProjectNavigation.call(this)
+                    projectnavigation.schedule.activeequipmentid = equipmentid;
+                    this.props.reduxProjectNavigation(projectnavigation)
+                    this.setState({ render:'render' })
 
 
                 }
@@ -961,58 +1450,61 @@ class Schedule extends Component {
 
         const construction = new Construction();
         const makeid = new MakeID();
- 
+
         const myprojects = construction.getOurProjects.call(this);
         if (myprojects) {
-          
+
             const project = this.getProject();
             if (project) {
                 const project_id = this.props.project_id;
                 const i = construction.getOurProjectKeyById.call(this, project_id)
-                if (this.state.activelaborid) {
-                    const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid)
+                if (this.props.projectnavigation.schedule.activelaborid) {
+                    const mylabor = construction.getschedulelaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid)
                     if (mylabor) {
-                        const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                        const j = construction.getschedulelaborkeybyid.call(this, this.props.projectnavigation.schedule.activelaborid)
                         myprojects[i].schedule.labor[j].user_id = user_id;
                         this.props.reduxMyProjects(myprojects)
                         this.setState({ render: 'render' })
                     }
                 } else {
                     const laborid = makeid.schedulelaborid.call(this)
-                    const milestoneid = this.state.milestoneid;
-                    const csiid = this.state.csiid;
-                    const dayin = this.state.timeinday;
-                    const yearin = this.state.timeinyear;
-                    const monthin = this.state.timeinmonth;
-                    const hoursin = this.state.timeinhours;
-                    const timetimein = this.state.timeinampm;
-                    const minutesin = this.state.timeinminutes;
+                    const milestoneid = this.props.projectnavigation.schedule.milestoneid;
+                    const csiid = this.props.projectnavigation.schedule.csiid
+                    const dayin = this.props.projectnavigation.schedule.timein.timeinday;
+                    const yearin = this.props.projectnavigation.schedule.timein.timeinyear;
+                    const monthin = this.props.projectnavigation.schedule.timein.timeinmonth;
+                    const hoursin = this.props.projectnavigation.schedule.timein.timeinhours;
+                    const timetimein = this.props.projectnavigation.schedule.timein.timeinampm;
+                    const minutesin = this.props.projectnavigation.schedule.timein.timeinminutes;
                     let timein = makeTimeString(yearin, monthin, dayin, hoursin, minutesin, timetimein);
                     timein = UTCTimeStringfromTime(timein);
-                    const dayout = this.state.timeoutday;
-                    const yearout = this.state.timeoutyear;
-                    const monthout = this.state.timeoutmonth;
-                    const hoursout = this.state.timeouthours;
-                    const minutesout = this.state.timeoutminutes;
-                    const timetimeout = this.state.timeoutampm;
+                    const dayout = this.props.projectnavigation.schedule.timeout.timeoutday;
+                    const yearout = this.props.projectnavigation.schedule.timeout.timeoutyear;
+                    const monthout = this.props.projectnavigation.schedule.timeout.timeoutmonth;
+                    const hoursout = this.props.projectnavigation.schedule.timeout.timeouthours;
+                    const minutesout = this.props.projectnavigation.schedule.timeout.timeoutminutes;
+                    const timetimeout = this.props.projectnavigation.schedule.timeout.timeoutampm;
                     let timeout = makeTimeString(yearout, monthout, dayout, hoursout, minutesout, timetimeout);
                     timeout = UTCTimeStringfromTime(timeout);
                     const laborrate = construction.calculateLaborRatebyID.call(this, user_id).toFixed(2)
                     const profit = 0;
-                    
+
 
                     const newLabor = CreateScheduleLabor(laborid, user_id, milestoneid, csiid, timein, timeout, laborrate, '', '', profit)
 
                     const labors = construction.getschedulelabor.call(this)
                     if (labors) {
-                  
+
                         myprojects[i].schedule.labor.push(newLabor)
                     } else {
-                   
+
                         myprojects[i].schedule.labor = [newLabor]
                     }
                     this.props.reduxMyProjects(myprojects)
-                    this.setState({ activelaborid: laborid })
+                    let projectnavigation = construction.getProjectNavigation.call(this)
+                    projectnavigation.schedule.activelaborid = laborid;
+                    this.props.reduxProjectNavigation(projectnavigation)
+                    this.setState({ render: 'render' })
                 }
             }
         }
@@ -1024,12 +1516,12 @@ class Schedule extends Component {
         let equipmentrate = 0;
         if (project) {
 
-            if (this.state.activeequipmentid) {
-                const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid);
+            if (this.props.projectnavigation.schedule.activeequipmentid) {
+                const myequipment = construction.getscheduleequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid);
                 if (myequipment) {
                     equipmentrate = myequipment.equipmentrate;
                 }
-            
+
             }
 
         }
@@ -1047,13 +1539,13 @@ class Schedule extends Component {
         let laborrate = "";
         if (project) {
 
-            if (this.state.activelaborid) {
-                const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
+            if (this.props.projectnavigation.schedule.activelaborid) {
+                const mylabor = construction.getschedulelaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid);
                 if (mylabor) {
                     laborrate = mylabor.laborrate;
                 }
             } else {
-                laborrate = this.state.laborrate;
+                laborrate = this.props.projectnavigation.schedule.laborrate;
             }
         }
         return laborrate;
@@ -1063,27 +1555,31 @@ class Schedule extends Component {
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
         if (isNumeric(equipmentrate)) {
-            if(myprojects) {
+            if (myprojects) {
                 const project = this.getProject()
                 if (project) {
                     const project_id = this.props.project_id;
                     const i = construction.getOurProjectKeyById.call(this, project_id)
-                    if (this.state.activeequipmentid) {
-                        const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                    if (this.props.projectnavigation.schedule.activeequipmentid) {
+                        const myequipment = construction.getscheduleequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
                         if (myequipment) {
-                            const j = construction.getscheduleequipmentkeybyid.call(this, this.state.activeequipmentid)
+                            const j = construction.getscheduleequipmentkeybyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
                             myprojects[i].schedule.equipment[j].equipmentrate = equipmentrate;
                             this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
 
                     } else {
-                        this.setState({ equipmentrate })
+                        let projectnavigation = construction.getProjectNavigation.call(this)
+                        projectnavigation.schedule.equipmentrate = equipmentrate;
+                        this.setState({ render: 'render' })
                     }
                 }
             }
         } else {
-            this.setState({ equipmentrate })
+            let projectnavigation = construction.getProjectNavigation.call(this)
+            projectnavigation.schedule.equipmentrate = equipmentrate
+            this.setState({ render: 'render' })
             alert(`Equipment rate ${equipmentrate} must be numeric `)
         }
     }
@@ -1093,22 +1589,25 @@ class Schedule extends Component {
         const myprojects = construction.getOurProjects.call(this)
 
         if (isNumeric(laborrate)) {
-            if(myprojects) {
+            if (myprojects) {
                 const project = this.getProject()
                 if (project) {
                     const project_id = this.props.project_id;
                     const i = construction.getOurProjectKeyById.call(this, project_id)
-                    if (this.state.activelaborid) {
-                        const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid)
+                    if (this.props.projectnavigation.schedule.activelaborid) {
+                        const mylabor = construction.getschedulelaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid)
                         if (mylabor) {
-                            const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
+                            const j = construction.getschedulelaborkeybyid.call(this, this.props.projectnavigation.schedule.activelaborid)
                             myprojects[i].schedule.labor[j].laborrate = laborrate;
                             this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
 
                     } else {
-                        this.setState({ laborrate })
+                        let projectnavigation = construction.getProjectNavigation.call(this)
+                        projectnavigation.schedule.laborrate = laborrate;
+                        this.props.reduxProjectNavigation(projectnavigation);
+                        this.setState({ render: 'render' })
                     }
                 }
             }
@@ -1120,11 +1619,11 @@ class Schedule extends Component {
     getquantity() {
         const construction = new Construction();
         const project = this.getProject();
-        let quantity = this.state.quantity;
+        let quantity = this.props.projectnavigation.schedule.quantity;
         if (project) {
 
-            if (this.state.activematerialid) {
-                const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
+            if (this.props.projectnavigation.schedule.activematerialid) {
+                const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                 quantity = mymaterial.quantity;
 
             }
@@ -1136,11 +1635,11 @@ class Schedule extends Component {
     getunit() {
         const construction = new Construction();
         const project = this.getProject();
-        let unit = this.state.unit;
+        let unit = this.props.projectnavigation.schedule.unit;
         if (project) {
 
-            if (this.state.activematerialid) {
-                const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
+            if (this.props.projectnavigation.schedule.activematerialid) {
+                const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                 unit = mymaterial.unit;
 
             }
@@ -1152,11 +1651,11 @@ class Schedule extends Component {
     getunitcost() {
         const construction = new Construction();
         const project = this.getProject();
-        let unitcost = this.state.unitcost;
+        let unitcost = this.props.projectnavigation.schedule.unitcost;
         if (project) {
 
-            if (this.state.activematerialid) {
-                const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
+            if (this.props.projectnavigation.schedule.activematerialid) {
+                const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                 unitcost = mymaterial.unitcost;
 
             }
@@ -1174,22 +1673,28 @@ class Schedule extends Component {
                 if (project) {
                     const project_id = this.props.project_id;
                     const i = construction.getOurProjectKeyById.call(this, project_id);
-                    if (this.state.activematerialid) {
-                        const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid)
+                    if (this.props.projectnavigation.schedule.activematerialid) {
+                        const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid)
                         if (mymaterial) {
-                            const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                            const j = construction.getschedulematerialkeybyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                             projects[i].schedule.materials[j].quantity = quantity;
                             this.props.reduxMyProjects(projects)
                             this.setState({ render: 'render' })
                         }
                     } else {
-                        this.setState({ quantity })
+                        let projectnavigation = construction.getProjectNavigation.call(this)
+                        projectnavigation.schedule.quantity = quantity;
+                        this.props.reduxProjectNavigation(projectnavigation)
+                        this.setState({ render:'render' })
                     }
                 }
             }
 
         } else {
-            this.setState({ quantity })
+            let projectnavigation = construction.getProjectNavigation.call(this)
+            projectnavigation.schedule.quantity = quantity;
+            this.props.reduxProjectNavigation(projectnavigation)
+            this.setState({ render:'render' })
             alert(`Quantity ${quantity} must be numeric`)
         }
 
@@ -1197,21 +1702,24 @@ class Schedule extends Component {
     handleunit(unit) {
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
-        if(myprojects) {
+        if (myprojects) {
             const project = this.getProject()
             if (project) {
                 const project_id = this.props.project_id;
                 const i = construction.getOurProjectKeyById.call(this, project_id);
-                if (this.state.activematerialid) {
-                    const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid)
+                if (this.props.projectnavigation.schedule.activematerialid) {
+                    const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid)
                     if (mymaterial) {
-                        const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                        const j = construction.getschedulematerialkeybyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                         myprojects[i].schedule.materials[j].unit = unit;
                         this.props.reduxMyProjects(myprojects)
                         this.setState({ render: 'render' })
                     }
                 } else {
-                    this.setState({ unit })
+                    let projectnavigation = construction.getProjectNavigation.call(this)
+                    projectnavigation.schedule.unit = unit;
+                    this.props.reduxProjectNavigation(projectnavigation)
+                    this.setState({ render: 'render' })
                 }
             }
         }
@@ -1221,27 +1729,35 @@ class Schedule extends Component {
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
         if (isNumeric(unitcost)) {
-            if(myprojects) {
+            if (myprojects) {
                 const project = this.getProject()
                 if (project) {
                     const project_id = this.props.project_id;
                     const i = construction.getOurProjectKeyById.call(this, project_id);
-                    if (this.state.activematerialid) {
-                        const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid)
+                    if (this.props.projectnavigation.schedule.activematerialid) {
+                        const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid)
                         if (mymaterial) {
-                            const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid);
+                            const j = construction.getschedulematerialkeybyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                             myprojects[i].schedule.materials[j].unitcost = unitcost;
                             this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
                         }
                     } else {
-                        this.setState({ unitcost })
+                        let projectnavigation = construction.getProjectNavigation.call(this)
+                        projectnavigation.schedule.unitcost = unitcost;
+                        this.props.reduxProjectNavigation(projectnavigation)
+                        this.setState({ render: 'render' })
+
                     }
                 }
             }
 
         } else {
-            this.setState({ unitcost })
+            let projectnavigation = construction.getProjectNavigation.call(this)
+            projectnavigation.schedule.unitcost = unitcost;
+            this.props.reduxProjectNavigation(projectnavigation)
+            this.setState({ render: 'render' })
+
             alert(`Unit cost ${unitcost} must be numeric`)
         }
 
@@ -1252,45 +1768,88 @@ class Schedule extends Component {
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
         const makeid = new MakeID();
-        if(myprojects) {
+        if (myprojects) {
             const project = this.getProject()
             if (project) {
                 const project_id = this.props.project_id;
                 const i = construction.getOurProjectKeyById.call(this, project_id)
-                if (this.state.activematerialid) {
-                    const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid);
+                if (this.props.projectnavigation.schedule.activematerialid) {
+                    const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid);
                     if (mymaterial) {
-                        const j = construction.getschedulematerialkeybyid.call(this, this.state.activematerialid)
+                        const j = construction.getschedulematerialkeybyid.call(this, this.props.projectnavigation.schedule.activematerialid)
                         myprojects[i].schedule.materials[j].mymaterialid = mymaterialid;
                         this.props.reduxMyProjects(myprojects)
                         this.setState({ render: 'render' })
                     }
 
                 } else {
+
+                    const calcunitcost = (mymaterial) => {
+                        let getunitcost = 0;
+                        if(this.props.projectnavigation) {
+                            if(this.props.projectnavigation.schedule) {
+                                if(this.props.projectnavigation.schedule.unitcost) {
+                                    getunitcost = this.props.projectnavigation.schedule.unitcost 
+                                }
+                            }
+                        }
+
+                        if(getunitcost === 0) {
+                            getunitcost = mymaterial.unitcost;
+                        }
+
+
+                        return getunitcost;
+                    }
+
+
+                    const calcunit = (mymaterial) => {
+                        let getunit = "";
+                        if(this.props.projectnavigation) {
+                            if(this.props.projectnavigation.schedule) {
+                                if(this.props.projectnavigation.schedule.unit) {
+                                    getunit = this.props.projectnavigation.schedule.unit 
+                                }
+                            }
+                        }
+                    
+                        if(!getunit) {
+                            getunit = mymaterial.unit;
+                        }
+                    
+                    
+                        return getunit;
+                    }
+                    
+
+
                     const materialid = makeid.materialid.call(this)
-                    const milestoneid = this.state.milestoneid;
+                    const milestoneid = this.props.projectnavigation.schedule.milestoneid;
                     const mymaterial = construction.getmymaterialfromid.call(this, mymaterialid)
-                    const csiid = this.state.csiid;
-                    const year = this.state.materialdateyear;
-                    const day = this.state.materialdateday;
-                    const month = this.state.materialdatemonth;
+                    const csiid = this.props.projectnavigation.schedule.csiid
+                    const year = this.props.projectnavigation.schedule.materialdate.materialdateyear;
+                    const day = this.props.projectnavigation.schedule.materialdate.materialdateday;
+                    const month = this.props.projectnavigation.schedule.materialdate.materialdatemonth;
                     const timein = `${year}-${month}-${day}`;
-                    const quantity = this.state.quantity;
-                    const unitcost = mymaterial.unitcost;
-                    const unit = mymaterial.unit;
-                 
+                    const quantity = this.props.projectnavigation.schedule.quantity;
+                    const unitcost = calcunitcost(mymaterial);
+                    const unit = calcunit(mymaterial)
+
                     const newMaterial = CreateMyMaterial(materialid, mymaterialid, milestoneid, csiid, timein, quantity, unit, unitcost, '', 0);
                     const materials = construction.getschedulematerials.call(this);
                     if (materials) {
                         myprojects[i].schedule.materials.push(newMaterial)
 
                     } else {
-                  
+
                         myprojects[i].schedule.materials = [newMaterial];
                     }
 
                     this.props.reduxMyProjects(myprojects)
-                    this.setState({ activematerialid: materialid })
+                    let projectnavigation = construction.getProjectNavigation.call(this)
+                    projectnavigation.schedule.activematerialid = materialid;
+                    this.props.reduxProjectNavigation(projectnavigation)
+                    this.setState({ render:'render' })
 
                 }
             }
@@ -1302,13 +1861,13 @@ class Schedule extends Component {
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
         let materialid = this.stateid;
-        if(myprojects) {
+        if (myprojects) {
             const project = this.getProject()
             if (project) {
 
 
-                if (this.state.activematerialid) {
-                    const mymaterial = construction.getschedulematerialbyid.call(this, this.state.activematerialid)
+                if (this.props.projectnavigation.schedule.activematerialid) {
+                    const mymaterial = construction.getschedulematerialbyid.call(this, this.props.projectnavigation.schedule.activematerialid)
                     if (mymaterial) {
                         materialid = mymaterial.mymaterialid;
                     }
@@ -1319,6 +1878,34 @@ class Schedule extends Component {
         }
         return materialid;
 
+    }
+    handleactivecomponent(component) {
+
+        const construction = new Construction();
+        let projectnavigation = construction.getProjectNavigation.call(this)
+
+        const checkreset = (projectnavigation) => {
+            if(projectnavigation.schedule.activecomponent) {
+                if(projectnavigation.schedule.activecomponent !== component) {
+
+            
+                    projectnavigation.schedule.activelaborid = '';
+                    projectnavigation.schedule.activematerialid = '';
+                    projectnavigation.schedule.activeequipmentid = '';
+                    projectnavigation.schedule.quantity = "";
+                    projectnavigation.schedule.unit = "";
+                    projectnavigation.schedule.unitcost = "";
+                    projectnavigation.schedule.equipmentrate = "";
+                
+
+                }
+            }
+        }
+      
+        checkreset(projectnavigation);
+        projectnavigation.schedule.activecomponent = component;
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({ render: 'render' })
     }
 
 
@@ -1340,11 +1927,14 @@ class Schedule extends Component {
         const menu = construction.getNavigation.call(this)
         const project_id = this.props.project_id;
 
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        const active = projectnavigation.schedule.activecomponent;
+
 
 
 
         const equipmentrate = () => {
-            if (this.state.active === 'equipment' && this.state.activeequipmentid) {
+            if (active === 'equipment' && this.props.projectnavigation.schedule.activeequipmentid) {
                 return (
                     <div style={{ ...styles.generalContainer }}>
                         <div style={{ ...styles.generalContainer }}>
@@ -1363,7 +1953,7 @@ class Schedule extends Component {
             }
         }
         const laborrate = () => {
-            if (this.state.active === 'labor' && this.state.activelaborid) {
+            if (active === 'labor' && this.props.projectnavigation.schedule.activelaborid) {
                 return (
                     <div style={{ ...styles.generalContainer }}>
                         <div style={{ ...styles.generalContainer }}>
@@ -1382,14 +1972,14 @@ class Schedule extends Component {
             }
         }
         const laborbackground = () => {
-            if (this.state.active === 'labor') {
+            if (active === 'labor') {
                 return (styles.activebutton)
             } else {
                 return (styles.notactivebutton)
             }
         }
         const equipmentbackground = () => {
-            if (this.state.active === 'equipment') {
+            if (active === 'equipment') {
                 return (styles.activebutton)
             } else {
                 return (styles.notactivebutton)
@@ -1397,7 +1987,7 @@ class Schedule extends Component {
         }
 
         const materialbackground = () => {
-            if (this.state.active === 'materials') {
+            if (active === 'materials') {
                 return (styles.activebutton)
             } else {
                 return (styles.notactivebutton)
@@ -1405,7 +1995,7 @@ class Schedule extends Component {
         }
 
         const showmaterialquantity = () => {
-            if (this.state.active === 'materials') {
+            if (active === 'materials') {
                 return (
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
@@ -1455,21 +2045,21 @@ class Schedule extends Component {
 
 
         const showtimein = () => {
-            if (this.state.active === 'labor' || this.state.active === 'equipment') {
+            if (active === 'labor' || active === 'equipment') {
                 return (timein.showtimein.call(this))
             }
         }
         const showtimeout = () => {
-            if (this.state.active === 'labor' || this.state.active === 'equipment') {
+            if (active === 'labor' || active === 'equipment') {
                 return (timeout.showtimeout.call(this))
             }
         }
         const showmaterialdate = () => {
-            if (this.state.active === 'materials') {
+            if (active === 'materials') {
                 return (materialdate.showmaterialdate.call(this))
             }
         }
-    
+
         const showtimes = () => {
             if (this.state.width > 1200 && menu.position === 'closed') {
 
@@ -1529,7 +2119,7 @@ class Schedule extends Component {
         }
 
         const showemployeeid = () => {
-            if (this.state.active === 'labor') {
+            if (active === 'labor') {
                 return (employeeid.showemployeeid.call(this))
             } else {
                 return;
@@ -1538,25 +2128,36 @@ class Schedule extends Component {
         }
 
         const showequipmentid = () => {
-            if (this.state.active === 'equipment') {
+            if (active === 'equipment') {
                 return (equipmentid.showEquipmentID.call(this))
             }
 
         }
 
         const showmaterialid = () => {
-            if (this.state.active === 'materials') {
+            if (active === 'materials') {
                 return (materialid.showmaterialid.call(this))
-            } 
+            }
 
         }
+
+        const handleScheduleView = () => {
+            if(this.props.projectnavigation) {
+                if(this.props.projectnavigation.hasOwnProperty("schedule")) {
+                    if(this.props.projectnavigation.schedule.hasOwnProperty("timein")) {
+                        return(scheduleview.showschedule.call(this, "schedule"))
+                    }
+
+                }
+            }
+        }
         const myprojects = construction.getOurProjects.call(this)
-        if(myprojects) {
+        if (myprojects) {
 
             const project = this.getProject()
-    
+
             if (project) {
-              
+
 
 
                 return (
@@ -1564,18 +2165,18 @@ class Schedule extends Component {
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
 
-                      
+
 
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                    <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...laborbackground() }} onClick={() => { this.setState({ active: 'labor' }) }}><span style={{ ...styles.specialButton }}>LABOR</span></button>
+                                    <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...laborbackground() }} onClick={() => { this.handleactivecomponent('labor') }}><span style={{ ...styles.specialButton }}>LABOR</span></button>
                                 </div>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                    <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...equipmentbackground() }} onClick={() => { this.setState({ active: 'equipment' }) }}><span style={{ ...styles.specialButton }}>Equipment</span></button>
+                                    <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...equipmentbackground() }} onClick={() => { this.handleactivecomponent('equipment') }}><span style={{ ...styles.specialButton }}>Equipment</span></button>
                                 </div>
                                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                    <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...materialbackground() }} onClick={() => { this.setState({ active: 'materials' }) }}><span style={{ ...styles.specialButton }}>Materials</span></button>
+                                    <button style={{ ...headerFont, ...styles.headerFamily, ...styles.boldFont, ...styles.addRadius, ...buttonheight, ...materialbackground() }} onClick={() => { this.handleactivecomponent('materials') }}><span style={{ ...styles.specialButton }}>Materials</span></button>
                                 </div>
                             </div>
 
@@ -1595,8 +2196,8 @@ class Schedule extends Component {
                             {equipmentrate()}
                             {showmaterialquantity()}
 
-                          
-                            {scheduleview.showschedule.call(this, "schedule", project_id)}
+
+                           {handleScheduleView()}
 
                             {this.showlaborids()}
                             {this.showmaterialids()}
@@ -1633,10 +2234,11 @@ function mapStateToProps(state) {
         allusers: state.allusers,
         allcompanys: state.allcompanys,
         allprojects: state.allprojects,
-        websockets:state.websockets,
-        csis:state.csis,
-        projectsockets:state.projectsockets
+        websockets: state.websockets,
+        csis: state.csis,
+        projectsockets: state.projectsockets,
+        projectnavigation: state.projectnavigation
     }
-    }
+}
 
 export default connect(mapStateToProps, actions)(Schedule);

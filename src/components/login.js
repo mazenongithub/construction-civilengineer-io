@@ -4,14 +4,22 @@ import Construction from './construction';
 import ClientID from './clientid';
 import Profile from './profile';
 import { Link } from 'react-router-dom';
+import Connecting from './connecting';
 
 class Login {
+
+    showConnecting() {
+        if(this.state.login) {
+            return(<Connecting/>)
+        }
+    }
 
     showLogin() {
         const construction = new Construction();
         const styles = MyStylesheet();
         const clientid = new ClientID();
         const profile = new Profile();
+        const login = new Login()
 
         const myuser = construction.getuser.call(this)
         if (myuser) {
@@ -37,6 +45,11 @@ class Login {
                             {this.state.message}
                         </span>
                     </div>
+
+                 
+
+                    {login.showConnecting.call(this)}
+
 
 
                 </div>

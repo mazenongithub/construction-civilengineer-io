@@ -15,11 +15,65 @@ import Frequency from './frequency';
 import EquipmentID from './equipmentid';
 
 
-class ViewEquipment {
+class ViewEquipment extends Component {
+
+    constructor(props) {
+        super(props);
+
+              this.state = {
+
+            render: '', width: 0, height: 0 
+
+        }
+
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
+    }
+    componentDidMount() {
+
+        window.addEventListener('resize', this.updateWindowDimensions);
+        this.updateWindowDimensions();
+        const construction = new Construction();
+        const navigation = construction.getNavigation.call(this)
+        if(!navigation.company.equipment.equipmentdate) {
+            this.equipmentdatedefault()
+        }
+    
+
+
+    }
+
+
+    // this.checkAllCompany();
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+    updateWindowDimensions() {
+        this.setState({ width: window.innerWidth, height: window.innerHeight, });
+    }
+
+    getActiveEquipmentID() {
+        const construction = new Construction();
+        let activeequipmentid = "";
+        const navigation = construction.getNavigation.call(this)
+        activeequipmentid = navigation.company.equipment.activeequipmentid;
+        return activeequipmentid;
+    }
+
+    getActiveCostID() {
+        const construction = new Construction();
+        let activecostid = "";
+        const navigation = construction.getNavigation.call(this)
+        activecostid  = navigation.company.equipment.activecostid;
+        console.log(activecostid)
+        return activecostid 
+    }
 
 
 
     equipmentdatedefault() {
+        const construction = new Construction();
+        const navigation = construction.getNavigation.call(this)
         const equipmentdatemonth = () => {
             let month = new Date().getMonth() + 1;
             if (month < 10) {
@@ -39,7 +93,9 @@ class ViewEquipment {
 
             return year;
         }
-        this.setState({ equipmentdateyear: equipmentdateyear(), equipmentdatemonth: equipmentdatemonth(), equipmentdateday: equipmentdateday() })
+        navigation.company.equipment.equipmentdate = { equipmentdateyear: equipmentdateyear(), equipmentdatemonth: equipmentdatemonth(), equipmentdateday: equipmentdateday() }
+        this.props.reduxNavigation(navigation)
+        this.setState({render:'render'})
     }
 
 
@@ -95,7 +151,7 @@ class ViewEquipment {
 
         const getactivecostbackground = (costid) => {
 
-            if (this.state.activecostid === costid) {
+            if (this.getActiveCostID() === costid) {
                 return ({ backgroundColor: '#F2C4D2' })
             } else {
                 return;
@@ -149,11 +205,11 @@ class ViewEquipment {
             if (equipment) {
                 let i = construction.getequipmentkeybyid.call(this, equipment.equipmentid);
 
-                if (this.state.activecostid) {
-                    const mycost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                if (this.getActiveCostID()) {
+                    const mycost = construction.getcostbyid.call(this, equipment.equipmentid, this.getActiveCostID())
                     if (mycost) {
 
-                        let j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
+                        let j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.getActiveCostID())
                         company.equipment[i].ownership.cost[j].detail = detail;
                         this.props.reduxCompany(company)
                         this.setState({ render: 'render' })
@@ -163,9 +219,11 @@ class ViewEquipment {
                 } else {
 
                     let costid = makeID.costid.call(this);
-                    const year = this.state.equipmentdateyear;
-                    const day = this.state.equipmentdateday;
-                    const month = this.state.equipmentdatemonth;
+                    const navigation = construction.getNavigation.call(this)
+                    const year = navigation.company.equipment.equipmentdate.equipmentdateyear
+                
+                    const day = navigation.company.equipment.equipmentdate.equipmentdateday;
+                    const month = navigation.company.equipment.equipmentdate.equipmentdatemonth;
                     const datein = `${year}-${month}-${day}`;
                     let newcost = CreateCostID(costid, 0, detail, datein)
 
@@ -178,7 +236,10 @@ class ViewEquipment {
                     }
 
                     this.props.reduxCompany(company)
-                    this.setState({ activecostid: costid, render: 'render' })
+                 
+                    navigation.company.equipment.activecostid = costid;
+                    this.props.reduxNavigation(navigation)
+                    this.setState({  render: 'render' })
 
                 }
 
@@ -202,11 +263,11 @@ class ViewEquipment {
             if (equipment) {
                 let i = construction.getequipmentkeybyid.call(this, equipment.equipmentid);
 
-                if (this.state.activecostid) {
-                    const mycost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                if (this.getActiveCostID()) {
+                    const mycost = construction.getcostbyid.call(this, equipment.equipmentid, this.getActiveCostID())
                     if (mycost) {
 
-                        let j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
+                        let j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.getActiveCostID())
                         company.equipment[i].ownership.cost[j].cost = cost;
                         this.props.reduxCompany(company)
                         this.setState({ render: 'render' })
@@ -214,11 +275,11 @@ class ViewEquipment {
                     }
 
                 } else {
-
+                    const navigation = construction.getNavigation.call(this)
                     let costid = makeID.costid.call(this);
-                    const year = this.state.equipmentdateyear;
-                    const day = this.state.equipmentdateday;
-                    const month = this.state.equipmentdatemonth;
+                    const year = navigation.company.equipment.equipmentdate.equipmentdateyear;
+                    const day = navigation.company.equipment.equipmentdate.equipmentdateday;
+                    const month = navigation.company.equipment.equipmentdate.equipmentdatemonth;
                     const datein = `${year}-${month}-${day}`;
                     let detail = "";
                     let newcost = CreateCostID(costid, cost, detail, datein)
@@ -232,7 +293,11 @@ class ViewEquipment {
                     }
 
                     this.props.reduxCompany(company)
-                    this.setState({ activecostid: costid, render: 'render' })
+                    
+                    navigation.company.equipment.activecostid = costid;
+                    this.props.reduxNavigation(navigation)
+                    this.setState({  render: 'render' })
+                   
 
                 }
 
@@ -259,7 +324,7 @@ class ViewEquipment {
 
         if (company) {
 
-            const equipmentid = this.state.activeequipmentid;
+            const equipmentid = this.getActiveEquipmentID();
 
             const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
             if (equipment) {
@@ -295,7 +360,7 @@ class ViewEquipment {
 
         if (company) {
 
-            const equipmentid = this.state.activeequipmentid;
+            const equipmentid = this.getActiveEquipmentID();
 
             const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
             if (equipment) {
@@ -331,7 +396,7 @@ class ViewEquipment {
 
         if (company) {
 
-            const equipmentid = this.state.activeequipmentid;
+            const equipmentid = this.getActiveEquipmentID();
 
             const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
             if (equipment) {
@@ -366,7 +431,7 @@ class ViewEquipment {
 
         if (company) {
 
-            const equipmentid = this.state.activeequipmentid;
+            const equipmentid = this.getActiveEquipmentID();
 
             const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
             if (equipment) {
@@ -495,8 +560,8 @@ class ViewEquipment {
 
                 const getreoccuring = (equipment) => {
 
-                    if (this.state.activecostid) {
-                        const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                    if (this.getActiveCostID()) {
+                        const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.getActiveCostID())
 
                         if (cost) {
                             if (cost.hasOwnProperty("reoccurring")) {
@@ -515,9 +580,9 @@ class ViewEquipment {
                 }
 
                 const showfrequency = (equipment) => {
-                    if (this.state.activecostid) {
+                    if (this.getActiveCostID()) {
 
-                        const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                        const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.getActiveCostID())
 
                         if (cost.hasOwnProperty("reoccurring")) {
                             return (viewequipment.showFrequency.call(this))
@@ -529,7 +594,7 @@ class ViewEquipment {
 
                 const Reoccurring = (equipment) => {
 
-                    if (this.state.activecostid) {
+                    if (this.getActiveCostID()) {
                         return (<div style={{ ...styles.generalContainer }}>
                             <button style={{ ...styles.generalButton, ...buttonWidth() }} onClick={() => viewequipment.handlereoccurring.call(this)}> {getreoccuring(equipment)}</button>
                             <span style={{ ...regularFont, ...styles.generalFont }}>
@@ -604,9 +669,9 @@ class ViewEquipment {
         const construction = new Construction();
         const company = construction.getcompany.call(this);
         if (company) {
-            const equipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+            const equipment = construction.getmyequipmentbyid.call(this, this.getActiveEquipmentID())
             if (equipment) {
-                let i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                let i = construction.getequipmentkeybyid.call(this, this.getActiveEquipmentID())
                 company.equipment[i].ownership.workinghours = workinghours;
                 this.props.reduxCompany(company)
                 this.setState({ render: 'render' })
@@ -622,12 +687,12 @@ class ViewEquipment {
         const company = construction.getcompany.call(this);
 
         if (company) {
-            if (this.state.activeequipmentid) {
-                const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+            if (this.getActiveEquipmentID()) {
+                const myequipment = construction.getmyequipmentbyid.call(this, this.getActiveEquipmentID());
                 if (myequipment) {
 
 
-                    const i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                    const i = construction.getequipmentkeybyid.call(this, this.getActiveEquipmentID())
 
 
                     company.equipment[i].ownership.loaninterest = loaninterest;
@@ -654,7 +719,7 @@ class ViewEquipment {
 
     getaccountid() {
         const construction = new Construction();
-        const equipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+        const equipment = construction.getmyequipmentbyid.call(this, this.getActiveEquipmentID())
         let accountid = "";
         if (equipment) {
             if (equipment.accountid) {
@@ -670,11 +735,11 @@ class ViewEquipment {
 
         const company = construction.getcompany.call(this);
         if (company) {
-            if (this.state.activeequipmentid) {
-                const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+            if (this.getActiveEquipmentID()) {
+                const myequipment = construction.getmyequipmentbyid.call(this, this.getActiveEquipmentID())
                 if (myequipment) {
 
-                    let i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                    let i = construction.getequipmentkeybyid.call(this, this.getActiveEquipmentID())
                     company.equipment[i].accountid = accountid;
                     this.props.reduxCompany(company)
                     this.setState({ render: 'render' })
@@ -688,7 +753,7 @@ class ViewEquipment {
     }
     getequipment() {
         const construction = new Construction();
-        return construction.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+        return construction.getmyequipmentbyid.call(this, this.getActiveEquipmentID())
 
     }
 
@@ -699,9 +764,14 @@ class ViewEquipment {
 
         if (equipment) {
 
-            if (this.state.activecostid === costid) {
+            if (this.getActiveCostID() === costid) {
 
-                this.setState({ activecostid: false })
+                const navigation = construction.getNavigation.call(this)
+                navigation.company.equipment.activecostid = false
+                this.props.reduxNavigation(navigation)
+                this.setState({  render: 'render' })
+
+               
                 viewequipment.equipmentdatedefault.call(this)
             } else {
 
@@ -710,7 +780,12 @@ class ViewEquipment {
                     const equipmentdateyear = cost.timein.substring(0, 4)
                     const equipmentdatemonth = cost.timein.substring(5, 7);
                     const equipmentdateday = cost.timein.substring(8, 10);
-                    this.setState({ activecostid: costid, equipmentdateday, equipmentdatemonth, equipmentdateyear })
+                    const navigation = construction.getNavigation.call(this)
+                    navigation.company.equipment.activecostid = costid;
+                    navigation.company.equipment.equipmentdate = {equipmentdateday, equipmentdatemonth, equipmentdateyear}
+                    this.props.reduxNavigation(navigation)
+                    this.setState({  render: 'render' })
+                    
 
                 }
             }
@@ -865,12 +940,12 @@ class ViewEquipment {
         const company = construction.getcompany.call(this);
         if (company) {
 
-            const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+            const myequipment = construction.getmyequipmentbyid.call(this, this.getActiveEquipmentID());
             if (myequipment) {
             
 
 
-                const i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                const i = construction.getequipmentkeybyid.call(this, this.getActiveEquipmentID())
 
                 company.equipment[i].ownership.purchase = purchasevalue;
                 company.equipment[i].ownership.purchasedate = new Date();
@@ -893,11 +968,11 @@ class ViewEquipment {
         const construction = new Construction();
         const company = construction.getcompany.call(this);
         if (company) {
-            if (this.state.activeequipmentid) {
-                const myequipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid);
+            if (this.getActiveEquipmentID()) {
+                const myequipment = construction.getmyequipmentbyid.call(this, this.getActiveEquipmentID());
                 if (myequipment) {
 
-                    const i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                    const i = construction.getequipmentkeybyid.call(this, this.getActiveEquipmentID())
                     company.equipment[i].ownership.resalevalue = resalevalue;
 
 
@@ -927,9 +1002,9 @@ class ViewEquipment {
         const construction = new Construction();
         const company = construction.getcompany.call(this)
         if (company) {
-            const equipment = construction.getmyequipmentbyid.call(this, this.state.activeequipmentid)
+            const equipment = construction.getmyequipmentbyid.call(this, this.getActiveEquipmentID())
             if (equipment) {
-                const i = construction.getequipmentkeybyid.call(this, this.state.activeequipmentid)
+                const i = construction.getequipmentkeybyid.call(this, this.getActiveEquipmentID())
 
                 if (type === 'owned') {
 
@@ -959,7 +1034,10 @@ class ViewEquipment {
                     }
 
                     this.props.reduxCompany(company)
-                    this.setState({ activecostid:false })
+                    const navigation = construction.getNavigation.call(this)
+                    navigation.company.equipment.activecostid = false;
+                    this.props.reduxNavigation(navigation)
+                    this.setState({ render:'render'})
 
 
 
@@ -978,6 +1056,7 @@ class ViewEquipment {
     }
 
     setDefaultState(equipment) {
+        const construction = new Construction()
         if (equipment.hasOwnProperty("ownership")) {
             const purchasedateyear = equipment.ownership.purchasedate.substring(0, 4)
             const purchasedatemonth = equipment.ownership.purchasedate.substring(5, 7);
@@ -987,7 +1066,11 @@ class ViewEquipment {
             const saledatemonth = equipment.ownership.saledate.substring(5, 7);
             const saledateday = equipment.ownership.saledate.substring(8, 10);
 
-            this.setState({ purchasedateyear, purchasedatemonth, purchasedateday, saledateyear, saledatemonth, saledateday })
+            const navigation = construction.getNavigation.call(this)
+            navigation.company.equipment.purchase  = {purchasedateyear, purchasedatemonth, purchasedateday}
+            navigation.company.equipment.sale = {saledateyear, saledatemonth, saledateday }
+            this.props.reduxNavigation(navigation)
+            this.setState({render: 'render'  })
 
         }
     }
@@ -1003,8 +1086,8 @@ class ViewEquipment {
     getdetail(equipment) {
         const construction = new Construction();
         let detail = "";
-        if (this.state.activecostid) {
-            const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+        if (this.getActiveCostID()) {
+            const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.getActiveCostID())
             if (cost) {
                 detail = cost.detail;
             }
@@ -1017,8 +1100,8 @@ class ViewEquipment {
     getcost(equipment) {
         const construction = new Construction();
         let getcost = "";
-        if (this.state.activecostid) {
-            const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+        if (this.getActiveCostID()) {
+            const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.getActiveCostID())
             if (cost) {
                 getcost = cost.cost;
             }
@@ -1037,11 +1120,11 @@ class ViewEquipment {
             const equipment = viewequipment.getequipment.call(this)
             if (equipment) {
                 const i = construction.getequipmentkeybyid.call(this, equipment.equipmentid)
-                if (this.state.activecostid) {
-                    const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                if (this.getActiveCostID()) {
+                    const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.getActiveCostID())
                     if (cost) {
                         if (cost.hasOwnProperty("reoccurring")) {
-                            const j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
+                            const j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.getActiveCostID())
                             company.equipment[i].ownership.cost[j].reoccurring.frequency = amount;
                             this.props.reduxCompany(company)
                             this.setState({ render: 'render' })
@@ -1064,8 +1147,8 @@ class ViewEquipment {
         const construction = new Construction();
         const equipment = viewequipment.getequipment.call(this)
         if (equipment) {
-            if (this.state.activecostid) {
-                const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+            if (this.getActiveCostID()) {
+                const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.getActiveCostID())
 
                 if (cost.hasOwnProperty("reoccurring")) {
                     return cost.reoccurring.frequency;
@@ -1085,10 +1168,10 @@ class ViewEquipment {
             const equipment = viewequipment.getequipment.call(this)
             if (equipment) {
                 const i = construction.getequipmentkeybyid.call(this, equipment.equipmentid)
-                if (this.state.activecostid) {
-                    const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.state.activecostid)
+                if (this.getActiveCostID()) {
+                    const cost = construction.getcostbyid.call(this, equipment.equipmentid, this.getActiveCostID())
                     if (cost) {
-                        const j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.state.activecostid)
+                        const j = construction.getequipmentcostskeybyid.call(this, equipment.equipmentid, this.getActiveCostID())
                         if (cost.hasOwnProperty("reoccurring")) {
                             delete company.equipment[i].ownership.cost[j].reoccurring
                         } else {
@@ -1108,14 +1191,7 @@ class ViewEquipment {
 
     }
 
-    makematerialactive(materialid) {
-        if (this.state.activematerialid === materialid) {
-            this.setState({ activematerialid: false })
-        } else {
-            this.setState({ activematerialid: materialid })
-        }
-
-    }
+   
     validatematerial(material) {
         const construction = new Construction();
         const myprojects = construction.getmyprojects.call(this);
@@ -1153,29 +1229,7 @@ class ViewEquipment {
         return { validate, validatemessage }
     }
 
-    removematerial(material) {
-        const construction = new Construction();
-        const viewequipment = new ViewEquipment();
-
-        if (window.confirm(`Are you sure you want to delete ${material.material}?`)) {
-            const validate = viewequipment.validatematerial.call(this, material);
-            if (validate.validate) {
-                const company = construction.getcompany.call(this);
-                const mymaterial = construction.getmymaterialfromid.call(this, material.materialid)
-                if (mymaterial) {
-                    const i = construction.getmaterialkeybyid.call(this, material.materialid);
-                    company.materials.mymaterial.splice(i, 1);
-                    this.props.reduxCompany(company);
-                    this.setState({ activematerialid: false, message: '' })
-
-                }
-            } else {
-                this.setState({ message: validate.validatemessage })
-            }
-
-        }
-
-    }
+   
 
     loadaccounts() {
         const construction = new Construction();
@@ -1230,7 +1284,7 @@ class ViewEquipment {
     }
 
 
-    showViewEquipment() {
+    render() {
         const accountid = new AccountID();
         const construction = new Construction();
         const myuser = construction.getuser.call(this)
@@ -1256,7 +1310,7 @@ class ViewEquipment {
         const company = construction.getcompany.call(this)
         if (myuser) {
             if (company) {
-                const equipmentid = this.state.activeequipmentid;
+                const equipmentid = this.getActiveEquipmentID();
                 const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
                 if (equipment) {
 
@@ -1387,4 +1441,16 @@ class ViewEquipment {
 }
 
 
-export default ViewEquipment;
+function mapStateToProps(state) {
+    return {
+        myusermodel: state.myusermodel,
+        navigation: state.navigation,
+        allcompanys: state.allcompanys,
+        mycompany: state.mycompany,
+        allusers: state.allusers,
+        allprojects: state.allprojects,
+        websockets: state.websockets
+    }
+}
+
+export default connect(mapStateToProps, actions)(ViewEquipment);

@@ -134,9 +134,9 @@ export async function StripeConnect(stripe) {
 
 }
 
-export async function FindProject(projectid) {
+export async function FindProject(companyid, projectid) {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/projects/${projectid}/findproject`
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/${companyid}/project/${projectid}/findproject`
 
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
 
@@ -181,9 +181,9 @@ export async function FindMyCompany() {
     })
 }
 
-export async function CheckUserNode() {
+export async function CheckUser() {
 
-    let APIURL = `${process.env.REACT_APP_SERVER_API}/myuser/checkuser`
+    let APIURL = `${process.env.REACT_APP_SERVER_API}/construction/loadconstruction`
 
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
 
@@ -325,7 +325,7 @@ export async function CheckEmailAddress(emailaddress) {
 
 export async function AppleLogin(values) {
    
-    var APIURL = `${process.env.REACT_APP_SERVER_API}/myuser/loginuser`
+    var APIURL = `${process.env.REACT_APP_SERVER_API}/construction/loginuser`
     return fetch(APIURL, {
         method: 'post',
         credentials: 'include',

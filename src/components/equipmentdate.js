@@ -16,15 +16,15 @@ class EquipmentDate {
         const makeid = new MakeID();
         if (company) {
 
-            const equipmentid = this.state.activeequipmentid;
+            const equipmentid = this.getActiveEquipmentID();
 
 
             const myequipment = construction.getmyequipmentbyid.call(this, equipmentid);
             if (myequipment) {
 
                 const i = construction.getequipmentkeybyid.call(this, equipmentid)
-                if (this.state.activecostid) {
-                    const cost = construction.getcostbyid.call(this, equipmentid, this.state.activecostid)
+                if (this.getActiveCostID()) {
+                    const cost = construction.getcostbyid.call(this, equipmentid, this.getActiveCostID())
                     if (cost) {
                         const j = construction.getequipmentcostskeybyid.call(this, myequipment.equipmentid, cost.costid)
 
@@ -50,8 +50,11 @@ class EquipmentDate {
                         company.equipment[i].ownership.cost = [newcost]
                     }
 
+                    const navigation = construction.getNavigation.call(this)
                     this.props.reduxCompany(company)
-                    this.setState({ activecostid: costid, render: 'render' })
+                    navigation.company.equipment.activecostid = costid;
+                    this.props.reduxNavigation(navigation)
+                    this.setState({ render: 'render' })
 
                 }
 
@@ -71,14 +74,14 @@ class EquipmentDate {
         console.log("getdate")
         const construction = new Construction();
         let getdate = "";
-        const equipmentid = this.state.activeequipmentid;
+        const equipmentid = this.getActiveEquipmentID();
    
         const equipment = construction.getmyequipmentbyid.call(this, equipmentid)
    
         if (equipment) {
       
-            if (this.state.activecostid) {
-                const cost = construction.getcostbyid.call(this, equipmentid, this.state.activecostid)
+            if (this.getActiveCostID()) {
+                const cost = construction.getcostbyid.call(this, equipmentid, this.getActiveCostID())
                 console.log(cost)
                 if (cost) {
                     getdate = cost.timein;

@@ -504,10 +504,11 @@ class Bid extends Component {
         const styles = MyStylesheet();
         const construction = new Construction();
         const regularFont = construction.getRegularFont.call(this)
-        if (this.state.activecsiid) {
+        const activecsiid = this.getActiveCSIID();
+        if (activecsiid) {
 
 
-            return (<BidLineItem project_id={this.props.project_id} csiid={this.state.activecsiid} />)
+            return (<BidLineItem project_id={this.props.project_id} csiid={activecsiid} />)
 
         } else {
             const amount = `$${Number(this.getamount()).toFixed(2)}`;
@@ -532,12 +533,31 @@ class Bid extends Component {
 
     }
 
-    handleCSIID(csiid) {
-        if (this.state.activecsiid === csiid) {
-            this.setState({ activecsiid: false })
-        } else {
-            this.setState({ activecsiid: csiid })
+    getActiveCSIID() {
+        const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        let activecsiid = "";
+        if(projectnavigation.bid.activecsiid) {
+            activecsiid = projectnavigation.bid.activecsiid
         }
+        return activecsiid;
+    }
+
+    handleCSIID(csiid) {
+        const construction = new Construction();
+
+        const activecsiid = this.getActiveCSIID();
+
+        let projectnavigation = construction.getProjectNavigation.call(this)
+       
+        if (activecsiid === csiid) {
+            projectnavigation.bid.activecsiid = false;
+        } else {
+            projectnavigation.bid.activecsiid = csiid 
+        }
+
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
     }
 
 
@@ -559,7 +579,7 @@ class Bid extends Component {
 
                             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
                                 <a style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont }}
-                                    onClick={() => { this.setState({ activecsiid: false }) }}>/bid</a>
+                                    onClick={() => { this.handleCSIID( false ) }}>/bid</a>
                             </div>
 
 
@@ -596,7 +616,8 @@ function mapStateToProps(state) {
         allcompanys: state.allcompanys,
         allprojects: state.allprojects,
         websockets: state.websockets,
-        csis: state.csis
+        csis: state.csis,
+        projectnavigation:state.projectnavigation
     }
 }
 

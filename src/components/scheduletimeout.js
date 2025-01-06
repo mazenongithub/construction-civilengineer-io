@@ -8,8 +8,16 @@ class TimeOut {
 
     
     handleminutes(minutes) {
-        this.setState({ timeoutminutes: minutes })
+     
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.timeout.timeoutminutes = minutes
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+        const activelaborid = projectnavigation.schedule.activelaborid;
+        const active = projectnavigation.schedule.activecomponent;
+        const activeequipmentid = projectnavigation.schedule.activeequipmentid;
+        
         const myprojects = construction.getOurProjects.call(this)
         if(myprojects) {
 
@@ -26,19 +34,19 @@ class TimeOut {
                     if (validateMinutes(minutes)) {
 
 
-                        if (this.state.active === 'labor') {
+                        if (active === 'labor') {
 
 
-                            if (this.state.activelaborid) {
-                                const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
+                            if (activelaborid) {
+                                const mylabor = construction.getschedulelaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid);
                                 if (mylabor) {
 
-                                    const j = construction.getschedulelaborkeybyid.call(this,  this.state.activelaborid)
-                                    let day = this.state.timeoutday;
-                                    let year = this.state.timeoutyear;
-                                    let month = this.state.timeoutmonth;
-                                    let hours = this.state.timeouthours;
-                                    let time = this.state.timeoutampm;
+                                    const j = construction.getschedulelaborkeybyid.call(this,  this.props.projectnavigation.schedule.activelaborid)
+                                    let day = projectnavigation.schedule.timeout.timeoutday;
+                                    let year = projectnavigation.schedule.timeout.timeoutyear;
+                                    let month = projectnavigation.schedule.timeout.timeoutmonth;
+                                    let hours = projectnavigation.schedule.timeout.timeouthours;
+                                    let time = projectnavigation.schedule.timeout.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
                                     myprojects[i].schedule.labor[j].timeout = timeout;
@@ -52,19 +60,19 @@ class TimeOut {
 
 
 
-                        } else if (this.state.active === 'equipment') {
+                        } else if (active === 'equipment') {
 
-                            if (this.state.activeequipmentid) {
-                                const myequipment = construction.getscheduleequipmentbyid.call(this,  this.state.activeequipmentid)
+                            if (activeequipmentid) {
+                                const myequipment = construction.getscheduleequipmentbyid.call(this,  this.props.projectnavigation.schedule.activeequipmentid)
                                 if (myequipment) {
 
                                     if (myequipment) {
                                         const j = construction.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
-                                        let day = this.state.timeoutday;
-                                        let year = this.state.timeoutyear;
-                                        let month = this.state.timeoutmonth;
-                                        let hours = this.state.timeouthours;
-                                        let time = this.state.timeoutampm;
+                                        let day = projectnavigation.schedule.timeout.timeoutday;
+                                        let year = projectnavigation.schedule.timeout.timeoutyear;
+                                        let month = projectnavigation.schedule.timeout.timeoutmonth;
+                                        let hours = projectnavigation.schedule.timeout.timeouthours;
+                                        let time = projectnavigation.schedule.timeout.timeoutampm;
                                         let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                         timeout = UTCTimeStringfromTime(timeout);
                                         myprojects[i].schedule.equipment[j].timeout = timeout;
@@ -87,8 +95,15 @@ class TimeOut {
     }
 
     handlehours(hours) {
-        this.setState({ timeouthours: hours })
+     
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.timeout.timeouthours = hours
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+        const activelaborid = projectnavigation.schedule.activelaborid;
+        const active = projectnavigation.schedule.activecomponent;
+        const activeequipmentid = projectnavigation.schedule.activeequipmentid;
         const myprojects = construction.getOurProjects.call(this)
         if(myprojects) {
             
@@ -101,20 +116,20 @@ class TimeOut {
                 if (hours.length === 2) {
                     if (validateMonth(hours)) {
 
-                        if (this.state.active === 'labor') {
+                        if (active === 'labor') {
 
 
 
-                            if (this.state.activelaborid) {
-                                const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
+                            if (activelaborid) {
+                                const mylabor = construction.getschedulelaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid);
                                 if (mylabor) {
 
-                                    const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
-                                    let day = this.state.timeoutday;
-                                    let year = this.state.timeoutyear;
-                                    let month = this.state.timeoutmonth;
-                                    let minutes = this.state.timeoutminutes;
-                                    let time = this.state.timeoutampm;
+                                    const j = construction.getschedulelaborkeybyid.call(this, this.props.projectnavigation.schedule.activelaborid)
+                                    let day = projectnavigation.schedule.timeout.timeoutday;
+                                    let year = projectnavigation.schedule.timeout.timeoutyear;
+                                    let month = projectnavigation.schedule.timeout.timeoutmonth;
+                                    let minutes = projectnavigation.schedule.timeout.timeoutminutes;
+                                    let time = projectnavigation.schedule.timeout.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
                                     myprojects[i].schedule.labor[j].timeout = timeout;
@@ -126,19 +141,19 @@ class TimeOut {
 
                             }
 
-                        } else if (this.state.active === 'equipment') {
+                        } else if (active === 'equipment') {
 
 
-                            if (this.state.activeequipmentid) {
-                                const myequipment = construction.getscheduleequipmentbyid.call(this,  this.state.activeequipmentid)
+                            if (activeequipmentid) {
+                                const myequipment = construction.getscheduleequipmentbyid.call(this,  this.props.projectnavigation.schedule.activeequipmentid)
                                 if (myequipment) {
 
                                     const j = construction.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
-                                    let day = this.state.timeoutday;
-                                    let year = this.state.timeoutyear;
-                                    let month = this.state.timeoutmonth;
-                                    let minutes = this.state.timeoutminutes;
-                                    let time = this.state.timeoutampm;
+                                    let day = projectnavigation.schedule.timeout.timeoutday;
+                                    let year = projectnavigation.schedule.timeout.timeoutyear;
+                                    let month = projectnavigation.schedule.timeout.timeoutmonth;
+                                    let minutes = projectnavigation.schedule.timeout.timeoutminutes;
+                                    let time = projectnavigation.schedule.timeout.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
                                     myprojects[i].schedule.equipment[j].timeout = timeout;
@@ -161,8 +176,16 @@ class TimeOut {
     }
 
     handleyear(year) {
-        this.setState({ timeoutyear: year })
+  
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.timeout.timeoutyear = year
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+        const activelaborid = projectnavigation.schedule.activelaborid;
+        const active = projectnavigation.schedule.activecomponent;
+        const activeequipmentid = projectnavigation.schedule.activeequipmentid;
+        
         const myprojects = construction.getOurProjects.call(this)
         if(myprojects) {
             
@@ -176,20 +199,20 @@ class TimeOut {
 
                     if (validateYear(year)) {
 
-                        if (this.state.active === 'labor') {
+                        if (active === 'labor') {
 
 
 
-                            if (this.state.activelaborid) {
-                                const mylabor = construction.getschedulelaborbyid.call(this, this.state.activelaborid);
+                            if (activelaborid) {
+                                const mylabor = construction.getschedulelaborbyid.call(this, this.props.projectnavigation.schedule.activelaborid);
                                 if (mylabor) {
 
-                                    const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
-                                    let day = this.state.timeoutday;
-                                    let month = this.state.timeoutmonth;
-                                    let hours = this.state.timeouthours;
-                                    let minutes = this.state.timeoutminutes;
-                                    let time = this.state.timeoutampm;
+                                    const j = construction.getschedulelaborkeybyid.call(this, this.props.projectnavigation.schedule.activelaborid)
+                                    let day = projectnavigation.schedule.timeout.timeoutday;
+                                    let month = projectnavigation.schedule.timeout.timeoutmonth;
+                                    let hours = projectnavigation.schedule.timeout.timeouthours;
+                                    let minutes = projectnavigation.schedule.timeout.timeoutminutes;
+                                    let time = projectnavigation.schedule.timeout.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
                                     myprojects[i].schedule.labor[j].timeout = timeout;
@@ -201,17 +224,17 @@ class TimeOut {
 
                             }
 
-                        } else if (this.state.active === 'equipment') {
+                        } else if (active === 'equipment') {
 
-                            if (this.state.activeequipmentid) {
-                                const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                            if (activeequipmentid) {
+                                const myequipment = construction.getscheduleequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
                                 if (myequipment) {
                                     const j = construction.getscheduleequipmentkeybyid.call(this, myequipment.equipmentid)
-                                    let day = this.state.timeoutday;
-                                    let minutes = this.state.timeoutminutes;
-                                    let month = this.state.timeoutmonth;
-                                    let hours = this.state.timeouthours;
-                                    let time = this.state.timeoutampm;
+                                    let day = projectnavigation.schedule.timeout.timeoutday;
+                                    let minutes = projectnavigation.schedule.timeout.timeoutminutes;
+                                    let month = projectnavigation.schedule.timeout.timeoutmonth;
+                                    let hours = projectnavigation.schedule.timeout.timeouthours;
+                                    let time = projectnavigation.schedule.timeout.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
                                     myprojects[i].schedule.equipment[j].timeout = timeout;
@@ -233,8 +256,15 @@ class TimeOut {
 
     handleday(day) {
         day = day.toString();
-        this.setState({ timeoutday: day })
+
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.timeout.timeoutday = day
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+        const activelaborid = projectnavigation.schedule.activelaborid;
+        const active = projectnavigation.schedule.activecomponent;
+        const activeequipmentid = projectnavigation.schedule.activeequipmentid;
         const myprojects = construction.getOurProjects.call(this)
         if(myprojects) {
             
@@ -248,20 +278,20 @@ class TimeOut {
 
                     if (validateDate(day)) {
 
-                        if (this.state.active === 'labor') {
+                        if (active === 'labor') {
 
 
 
-                            if (this.state.activelaborid) {
-                                const mylabor = construction.getschedulelaborbyid.call(this,  this.state.activelaborid);
+                            if (activelaborid) {
+                                const mylabor = construction.getschedulelaborbyid.call(this,  this.props.projectnavigation.schedule.activelaborid);
                                 if (mylabor) {
 
-                                    const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
-                                    let year = this.state.timeoutyear;
-                                    let month = this.state.timeoutmonth;
-                                    let hours = this.state.timeouthours;
-                                    let minutes = this.state.timeoutminutes;
-                                    let time = this.state.timeoutampm;
+                                    const j = construction.getschedulelaborkeybyid.call(this, this.props.projectnavigation.schedule.activelaborid)
+                                    let year = projectnavigation.schedule.timeout.timeoutyear;
+                                    let month = projectnavigation.schedule.timeout.timeoutmonth;
+                                    let hours = projectnavigation.schedule.timeout.timeouthours;
+                                    let minutes = projectnavigation.schedule.timeout.timeoutminutes;
+                                    let time = projectnavigation.schedule.timeout.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
                                     myprojects[i].schedule.labor[j].timeout = timeout;
@@ -273,17 +303,17 @@ class TimeOut {
 
                             }
 
-                        } else if (this.state.active === 'equipment') {
-                            if (this.state.activeequipmentid) {
-                                const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                        } else if (active === 'equipment') {
+                            if (activeequipmentid) {
+                                const myequipment = construction.getscheduleequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
 
                                 if (myequipment) {
                                     const j = construction.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
-                                    let minutes = this.state.timeoutminutes;
-                                    let year = this.state.timeoutyear;
-                                    let month = this.state.timeoutmonth;
-                                    let hours = this.state.timeouthours;
-                                    let time = this.state.timeoutampm;
+                                    let minutes = projectnavigation.schedule.timeout.timeoutminutes;
+                                    let year = projectnavigation.schedule.timeout.timeoutyear;
+                                    let month = projectnavigation.schedule.timeout.timeoutmonth;
+                                    let hours = projectnavigation.schedule.timeout.timeouthours;
+                                    let time = projectnavigation.schedule.timeout.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
                                     myprojects[i].schedule.equipment[j].timeout = timeout;
@@ -304,9 +334,17 @@ class TimeOut {
     }
 
     handlemonth(month) {
-        this.setState({ timeoutmonth: month })
+       
         const construction = new Construction();
         const myprojects = construction.getOurProjects.call(this)
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        projectnavigation.schedule.timeout.timeoutmonth = month
+        this.props.reduxProjectNavigation(projectnavigation)
+        this.setState({render:'render'})
+        const activelaborid = projectnavigation.schedule.activelaborid;
+        const active = projectnavigation.schedule.activecomponent;
+        const activematerialid = projectnavigation.schedule.activematerialid;
+        const activeequipmentid = projectnavigation.schedule.activeequipmentid;
         if(myprojects) {
             
             const myproject = construction.getOurProjectByID.call(this,this.props.project_id)
@@ -319,20 +357,20 @@ class TimeOut {
 
                     if (validateMonth(month)) {
 
-                        if (this.state.active === 'labor') {
+                        if (active === 'labor') {
 
 
 
-                            if (this.state.activelaborid) {
-                                const mylabor = construction.getschedulelaborbyid.call(this,  this.state.activelaborid);
+                            if (activelaborid) {
+                                const mylabor = construction.getschedulelaborbyid.call(this, activelaborid);
                                 if (mylabor) {
 
-                                    const j = construction.getschedulelaborkeybyid.call(this,  this.state.activelaborid)
-                                    let day = this.state.timeoutday;
-                                    let year = this.state.timeoutyear;
-                                    let hours = this.state.timeouthours;
-                                    let minutes = this.state.timeoutminutes;
-                                    let time = this.state.timeoutampm;
+                                    const j = construction.getschedulelaborkeybyid.call(this, activelaborid)
+                                    let day = projectnavigation.schedule.timeout.timeoutday;
+                                    let year = projectnavigation.schedule.timeout.timeoutyear;
+                                    let hours = projectnavigation.schedule.timeout.timeouthours;
+                                    let minutes = projectnavigation.schedule.timeout.timeoutminutes;
+                                    let time = projectnavigation.schedule.timeout.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
                                     myprojects[i].schedule.labor[j].timeout = timeout;
@@ -344,16 +382,16 @@ class TimeOut {
 
                             }
 
-                        } else if (this.state.active === 'equipment') {
-                            if (this.state.activeequipmentid) {
-                                const myequipment = construction.getscheduleequipmentbyid.call(this, this.state.activeequipmentid)
+                        } else if (active === 'equipment') {
+                            if (activeequipmentid) {
+                                const myequipment = construction.getscheduleequipmentbyid.call(this, this.props.projectnavigation.schedule.activeequipmentid)
                                 if (myequipment) {
                                     const j = construction.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
-                                    let day = this.state.timeoutday;
-                                    let year = this.state.timeoutyear;
-                                    let minutes = this.state.timeoutminutes;
-                                    let hours = this.state.timeouthours;
-                                    let time = this.state.timeoutampm;
+                                    let day = projectnavigation.schedule.timeout.timeoutday;
+                                    let year = projectnavigation.schedule.timeout.timeoutyear;
+                                    let minutes = projectnavigation.schedule.timeout.timeoutminutes;
+                                    let hours = projectnavigation.schedule.timeout.timeouthours;
+                                    let time = projectnavigation.schedule.timeout.timeoutampm;
                                     let timeout = makeTimeString(year, month, day, hours, minutes, time);
                                     timeout = UTCTimeStringfromTime(timeout);
                                     myprojects[i].schedule.equipment[j].timeout = timeout;
@@ -376,13 +414,33 @@ class TimeOut {
     }
 
     toggleampm(ampm) {
-        if (this.state.timeoutampm === 'am' && ampm === 'pm') {
-            this.setState({ timeoutampm: 'pm' })
-        } else if (this.state.timeoutampm === 'pm' && ampm === 'am') {
-            this.setState({ timeoutampm: 'am' })
-        }
+    
+
+     
 
         const construction = new Construction();
+        const projectnavigation = construction.getProjectNavigation.call(this)
+        
+        const timeoutampm = projectnavigation.schedule.timeout.timeoutampm;
+        if (timeoutampm === 'am' && ampm === 'pm') {
+
+            projectnavigation.schedule.timeout.timeoutampm = 'pm'
+
+            this.props.reduxProjectNavigation(projectnavigation)
+            this.setState({render:'render'})
+        } else if (timeoutampm === 'pm' && ampm === 'am') {
+
+             projectnavigation.schedule.timeout.timeoutampm = 'am'
+             this.props.reduxProjectNavigation(projectnavigation)
+             this.setState({render:'render'})
+          
+        }
+
+      
+        const activelaborid = projectnavigation.schedule.activelaborid;
+        const active = projectnavigation.schedule.activecomponent;
+        const activematerialid = projectnavigation.schedule.activematerialid;
+        const activeequipmentid = projectnavigation.schedule.activeequipmentid;
         const myprojects = construction.getOurProjects.call(this)
         if(myprojects) {
             
@@ -393,25 +451,25 @@ class TimeOut {
 
                 const i = construction.getOurProjectKeyById.call(this,this.props.project_id);
 
-                if (this.state.active === 'labor') {
+                if (active === 'labor') {
 
 
 
-                    if (this.state.activelaborid) {
-                        const mylabor = construction.getschedulelaborbyid.call(this,  this.state.activelaborid);
+                    if (activelaborid) {
+                        const mylabor = construction.getschedulelaborbyid.call(this,  this.props.projectnavigation.schedule.activelaborid);
                         if (mylabor) {
 
-                            const j = construction.getschedulelaborkeybyid.call(this, this.state.activelaborid)
-                            let day = this.state.timeoutday;
-                            let year = this.state.timeoutyear;
-                            let month = this.state.timeoutmonth;
-                            let hours = this.state.timeouthours;
+                            const j = construction.getschedulelaborkeybyid.call(this, this.props.projectnavigation.schedule.activelaborid)
+                            let day = projectnavigation.schedule.timeout.timeoutday;
+                            let year = projectnavigation.schedule.timeout.timeoutyear;
+                            let month = projectnavigation.schedule.timeout.timeoutmonth;
+                            let hours = projectnavigation.schedule.timeout.timeouthours;
                             let time = ampm;
-                            let minutes = this.state.timeoutminutes;
+                            let minutes =projectnavigation.schedule.timeout.timeoutminutes;
                             let timeout = makeTimeString(year, month, day, hours, minutes, time);
-                   
+                      
                             timeout = UTCTimeStringfromTime(timeout);
-
+                            
                             myprojects[i].schedule.labor[j].timeout = timeout;
                             this.props.reduxMyProjects(myprojects)
                             this.setState({ render: 'render' })
@@ -421,17 +479,17 @@ class TimeOut {
 
                     }
 
-                } else if (this.state.active === 'equipment') {
+                } else if (active === 'equipment') {
 
-                    if (this.state.activeequipmentid) {
-                        const myequipment = construction.getscheduleequipmentbyid.call(this,  this.state.activeequipmentid)
+                    if (activeequipmentid) {
+                        const myequipment = construction.getscheduleequipmentbyid.call(this,  this.props.projectnavigation.schedule.activeequipmentid)
                         if (myequipment) {
                             const j = construction.getscheduleequipmentkeybyid.call(this,  myequipment.equipmentid)
-                            let day = this.state.timeoutday;
-                            let year = this.state.timeoutyear;
-                            let month = this.state.timeoutmonth;
-                            let hours = this.state.timeouthours;
-                            let minutes = this.state.timeoutminutes;
+                            let day = projectnavigation.schedule.timeout.timeoutday;
+                            let year = projectnavigation.schedule.timeout.timeoutyear;
+                            let month = projectnavigation.schedule.timeout.timeoutmonth;
+                            let hours = projectnavigation.schedule.timeout.timeouthours;
+                            let minutes = projectnavigation.schedule.timeout.timeoutminutes;
                             let time = ampm
                             let timeout = makeTimeString(year, month, day, hours, minutes, time);
                             timeout = UTCTimeStringfromTime(timeout);
@@ -470,9 +528,9 @@ class TimeOut {
 
 
 
-        if (this.state.timeoutampm === 'am') {
+        if (this.props.projectnavigation.schedule.timeout.timeoutampm === 'am') {
             return showam()
-        } else if (this.state.timeoutampm === 'pm') {
+        } else if (this.props.projectnavigation.schedule.timeout.timeoutampm === 'pm') {
             return showpm()
         }
 
@@ -492,38 +550,38 @@ class TimeOut {
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1 }}>
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Time In (MM-DD-YYYY HH mm) </span>
+                            <span style={{ ...styles.generalFont, ...regularFont }}>Time Out (MM-DD-YYYY HH mm) </span>
                         </div>
                     </div>
 
                     <div style={{ ...styles.generalFlex }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
-                            <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }} value={this.state.timeoutmonth}
+                            <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }} value={this.props.projectnavigation.schedule.timeout.timeoutmonth}
                                 onChange={event => { timeout.handlemonth.call(this, event.target.value) }} />
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                             <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.state.timeoutday}
+                                value={this.props.projectnavigation.schedule.timeout.timeoutday}
                                 onChange={event => { timeout.handleday.call(this, event.target.value) }} />
                         </div>
                         <div style={{ ...styles.flex2, ...styles.addMargin }}>
 
                             <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.state.timeoutyear}
+                                value={this.props.projectnavigation.schedule.timeout.timeoutyear}
                                 onChange={event => { timeout.handleyear.call(this, event.target.value) }} />
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                             <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.state.timeouthours}
+                                value={this.props.projectnavigation.schedule.timeout.timeouthours}
                                 onChange={event => { timeout.handlehours.call(this, event.target.value) }} />
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                             <input type="text" style={{ ...styles.generalFont, ...headerFont, ...styles.generalField, ...styles.alignCenter }}
-                                value={this.state.timeoutminutes}
+                                value={this.props.projectnavigation.schedule.timeout.timeoutminutes}
                                 onChange={event => { timeout.handleminutes.call(this, event.target.value) }}
                             />
                         </div>
