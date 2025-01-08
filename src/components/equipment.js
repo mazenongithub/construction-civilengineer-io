@@ -43,7 +43,7 @@ class Equipment {
                 let equipmentid = makeID.equipmentid.call(this);
 
 
-                let accountid = this.state.accountid;
+                let accountid = this.state.accountid
 
 
                 let newEquipment = CreateEquipment(equipmentid, equipment, accountid)

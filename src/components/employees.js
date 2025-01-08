@@ -134,7 +134,7 @@ class Employees {
 
             </div>)
 
-        } else if (navigation.company.active = 'viewaccount') {
+        } else if (navigation.company.active = 'viewemployee') {
             return (<ViewEmployee />)
         }
     }

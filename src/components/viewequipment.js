@@ -98,6 +98,32 @@ class ViewEquipment extends Component {
         this.setState({render:'render'})
     }
 
+    defaultdate() {
+
+        const equipmentdatemonth = () => {
+            let month = new Date().getMonth() + 1;
+            if (month < 10) {
+                month = `0${month}`
+            }
+            return month;
+        }
+        const equipmentdateday = () => {
+            let day = new Date().getDate();
+            if (day < 10) {
+                day = `0${day}`
+            }
+            return day;
+        }
+        const equipmentdateyear = () => {
+            let year = new Date().getFullYear();
+
+            return year;
+        }
+
+        return `${equipmentdateyear()}-${equipmentdatemonth()}-${equipmentdateday()}`
+
+    }
+
 
 
     removeequipmentcost(cost) {
@@ -541,7 +567,7 @@ class ViewEquipment extends Component {
 
         if (equipment) {
 
-            if (!equipment.hasOwnProperty("rented")) {
+            if (equipment.hasOwnProperty("ownership")) {
 
                 const buttonWidth = () => {
                     if (this.state.width > 1200) {
@@ -824,7 +850,7 @@ class ViewEquipment extends Component {
 
         if (equipment) {
 
-            if (!equipment.hasOwnProperty("rented")) {
+            if (equipment.hasOwnProperty("ownership")) {
 
                 const getsaledate = () => {
                     if (this.state.width > 1200) {
@@ -948,7 +974,7 @@ class ViewEquipment extends Component {
                 const i = construction.getequipmentkeybyid.call(this, this.getActiveEquipmentID())
 
                 company.equipment[i].ownership.purchase = purchasevalue;
-                company.equipment[i].ownership.purchasedate = new Date();
+            
 
 
 
@@ -999,22 +1025,27 @@ class ViewEquipment extends Component {
     }
 
     handleownership(type) {
+        console.log(type)
         const construction = new Construction();
         const company = construction.getcompany.call(this)
         if (company) {
             const equipment = construction.getmyequipmentbyid.call(this, this.getActiveEquipmentID())
             if (equipment) {
+                console.log(equipment)
                 const i = construction.getequipmentkeybyid.call(this, this.getActiveEquipmentID())
 
                 if (type === 'owned') {
 
                     company.equipment[i].ownership = {};
+                    company.equipment[i].ownership.purchasedate = this.defaultdate()
+                    company.equipment[i].ownership.saledate = this.defaultdate()
+                
+
 
                     if (equipment.hasOwnProperty("rented")) {
 
                         delete company.equipment[i].rented;
-                        this.props.reduxCompany(company)
-                        this.setState({ render:'render'})
+                     
                     }
 
 
@@ -1033,15 +1064,18 @@ class ViewEquipment extends Component {
 
                     }
 
-                    this.props.reduxCompany(company)
+                  
                     const navigation = construction.getNavigation.call(this)
                     navigation.company.equipment.activecostid = false;
                     this.props.reduxNavigation(navigation)
-                    this.setState({ render:'render'})
+                   
 
 
 
                 }
+
+                this.props.reduxCompany(company)
+                this.setState({ render:'render'})
 
 
 
@@ -1317,6 +1351,7 @@ class ViewEquipment extends Component {
 
 
                     const ownershipbox = (equipment) => {
+                
                         if (equipment.hasOwnProperty("rented")) {
                             return (
                                 <div style={{ ...styles.generalContainer }}>

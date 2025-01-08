@@ -47,7 +47,7 @@ class ViewCompany extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', navigation: "home", activeaccountid: false, activeemployeeid: false, activecostid: '', purchasecalender: true, purchasedateday: '', purchasedatemonth: '', purchasedateyear: '', saledateday: '', saledatemonth: '', saledateyear: '', salecalender: true, equipmentcalender: true, equipmentdateday: equipmentdateday(), equipmentdateyear: equipmentdateyear(), equipmentdatemonth: equipmentdatemonth(), spinner: false
+            render: '', width: 0, height: 0, message: '', navigation: "home", accountid:'', activeaccountid: false, activeemployeeid: false, activecostid: '', purchasecalender: true, purchasedateday: '', purchasedatemonth: '', purchasedateyear: '', saledateday: '', saledatemonth: '', saledateyear: '', salecalender: true, equipmentcalender: true, equipmentdateday: equipmentdateday(), equipmentdateyear: equipmentdateyear(), equipmentdatemonth: equipmentdatemonth(), spinner: false
 
         }
 
@@ -375,7 +375,8 @@ class ViewCompany extends Component {
         const construction = new Construction();
         const navigation = construction.getNavigation.call(this)
         if(navigation.hasOwnProperty("company")) {
-            navigation.company.active =getnavigation
+
+            navigation.company = {active:getnavigation}
         }
         this.props.reduxNavigation(navigation)
         this.setState({ render:'render' })
@@ -392,8 +393,9 @@ class ViewCompany extends Component {
         if (navigation.hasOwnProperty("company")) {
 
             if (navigation.company.hasOwnProperty("active")) {
-
+                console.log(navigation.company.active)
                 switch (navigation.company.active) {
+                  
                     case "employees":
                         return (employees.showEmployees.call(this))
                     case "accounts":
@@ -481,6 +483,8 @@ class ViewCompany extends Component {
                     } else if (active === "viewmaterial" && menu === "materials") {
                         return styles.activeBackground;
                     } else if (active === "viewequipment" && menu === "equipment") {
+                        return styles.activeBackground;
+                    } else if (active === "home" && menu === "home") {
                         return styles.activeBackground;
                     }
                     else {

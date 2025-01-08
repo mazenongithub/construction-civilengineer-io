@@ -412,8 +412,7 @@ class App extends Component {
   }
 
   handlenavigation(obj) {
-    console.log("handlenavigation")
-
+   
     const construction = new Construction();
     const navigation = construction.getNavigation.call(this)
     if (obj.hasOwnProperty("projectid")) {
@@ -437,6 +436,8 @@ class App extends Component {
 
       if (obj.hasOwnProperty("active")) {
         navigation.company.active = obj.active
+      } else {
+        navigation.company.active = "home"
       }
 
 

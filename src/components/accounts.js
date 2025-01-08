@@ -194,7 +194,7 @@ class Accounts {
         const construction = new Construction();
         let navigation = construction.getNavigation.call(this)
         navigation.company.active = "viewaccount"
-        navigation.company.activeaccountid = accountid;
+        navigation.company.accounts = {activeaccountid: accountid}
 
         this.props.reduxNavigation(navigation)
         this.setState({ render: 'render' })

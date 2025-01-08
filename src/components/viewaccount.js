@@ -47,7 +47,7 @@ class ViewAccount extends Component  {
         const navigation = construction.getNavigation.call(this)
         if(navigation) {
             if(navigation.hasOwnProperty("company")) {
-                accountid = navigation.company.activeaccountid;
+                accountid = navigation.company.accounts.activeaccountid;
             }
         }
 
