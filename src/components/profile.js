@@ -362,9 +362,9 @@ class Profile  {
         const regularFont = construction.getRegularFont.call(this);
         const saveprojecticon = construction.getsaveprojecticon.call(this);
         const styles = MyStylesheet();
-        if (!this.state.spinner) {
+       
             return (
-                <div style={{ ...styles.generalContainer }}>
+                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont, ...regularFont, ...styles.topMargin15, ...styles.bottomMargin15 }}>
                         {this.state.message}
                     </div>
@@ -374,9 +374,7 @@ class Profile  {
                     </div>
                 </div>)
 
-        } else {
-            return (<Spinner />)
-        }
+      
     }
 
     showProfile() {

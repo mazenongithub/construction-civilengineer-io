@@ -567,7 +567,7 @@ class ViewEquipment extends Component {
 
         if (equipment) {
 
-            if (equipment.hasOwnProperty("ownership")) {
+            if (!equipment.hasOwnProperty("rented") && equipment.hasOwnProperty("ownership")) {
 
                 const buttonWidth = () => {
                     if (this.state.width > 1200) {
@@ -850,7 +850,7 @@ class ViewEquipment extends Component {
 
         if (equipment) {
 
-            if (equipment.hasOwnProperty("ownership")) {
+            if (!equipment.hasOwnProperty("rented") && equipment.hasOwnProperty("ownership")) {
 
                 const getsaledate = () => {
                     if (this.state.width > 1200) {

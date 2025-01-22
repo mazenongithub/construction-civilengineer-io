@@ -115,7 +115,8 @@ class App extends Component {
 
     if (mycompany) {
 
-      const companyid = mycompany._id;
+      const company_id = mycompany._id;
+      const companyid = mycompany.companyid;
 
       let server_api = process.env.REACT_APP_SERVER_API
 
@@ -127,7 +128,7 @@ class App extends Component {
   
       server_api = stripHttp(server_api)
 
-      const socket = new WebSocket(`ws://${server_api}/company/${companyid}/websocketapi`)
+      const socket = new WebSocket(`ws://${server_api}/company/${company_id}/websocketapi/${companyid}`)
 
       socket.onopen = (evt) => {
         let myuser = construction.getuser.call(this)

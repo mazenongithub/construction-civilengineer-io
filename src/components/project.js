@@ -176,7 +176,7 @@ class Project extends Component {
             server_api = stripHttp(server_api)
 
 
-            const socket = new WebSocket(`ws://${server_api}/projects/${project_id}/websocketapi`)
+            const socket = new WebSocket(`ws://${server_api}/projects/${project_id}/websocketapi/${projectid}`)
 
             socket.onopen = (evt) => {
 
@@ -189,6 +189,8 @@ class Project extends Component {
             socket.onmessage = (evt) => {
                 const response = JSON.parse(evt.data);
                 console.log(response)
+
+                
 
                 if (response.type === "construction") {
 

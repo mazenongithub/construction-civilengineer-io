@@ -78,44 +78,11 @@ class ViewCompany extends Component {
 
 
 
-        // const messages = this.state.messages;
-
-        // if(msg.type === "chat") {
-        // messages.push(msg)
-        // this.setState({render:'render', messages})
-        // }
-        // if (msg.type === "note") {
-        //   const item = document.createElement("li");
-        //   const text = document.createElement("i");
-        //   text.textContent = msg.text;
-        //   item.appendChild(text);
-        //   document.querySelector("#messages").appendChild(item);
-        // } else if (msg.type === "chat") {
-        //   const item = document.createElement("li");
-        //   item.innerHTML = `<b>${msg.name}:</b> ${msg.text}`;
-        //   document.querySelector("#messages").appendChild(item);
-        // }
-
-
-
-        console.log("I am a JS File")
-
-
-
-
-
-
 
     }
 
 
 
-
-
-
-
-
-    // this.checkAllCompany();
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -322,15 +289,7 @@ class ViewCompany extends Component {
                             value={this.getmycompany.call(this)}
                             onChange={event => { this.handlemycompany.call(this, event.target.value) }} />
                     </div>
-                    <div style={{ ...styles.flex1, ...styles.regularFont, ...regularFont, ...styles.addMargin }}>
-                        <span style={{ ...styles.regularFont, ...regularFont }}>CompanyID </span> <br />
-                        <input type="text" style={{ ...styles.generalField, ...styles.regularFont, ...regularFont }}
-                            value={this.getmycompanyid.call(this)}
-                            onChange={event => { this.handlemycompanyid.call(this, event.target.value) }}
-                        />
-
-
-                    </div>
+                   
                 </div>
 
                 <div style={{ ...styles.generalFlex }}>
@@ -393,7 +352,7 @@ class ViewCompany extends Component {
         if (navigation.hasOwnProperty("company")) {
 
             if (navigation.company.hasOwnProperty("active")) {
-                console.log(navigation.company.active)
+        
                 switch (navigation.company.active) {
                   
                     case "employees":
